@@ -87,7 +87,7 @@
 <meta property="og:description" content="2024-08-11 星期日 晴  准备 前置条件：1、本地可以正常运行hexo2、已经安装git3、已经注册了Github账号  首先需要拿到Github的仓库域名，接着上传本地的公钥到Github 获取域名在Github上新建一个仓库，仓库命名：eiSouthBoy.github.io，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：Public，最后点击创建。 此时">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-11T07:39:58.000Z">
-<meta property="article:modified_time" content="2024-08-11T10:11:30.258Z">
+<meta property="article:modified_time" content="2024-08-11T10:54:42.022Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="Github">
 <meta property="article:tag" content="hexo">
@@ -393,7 +393,7 @@
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
-<p>在部署前，必须要修改 <code>/workspace/blog/_config..yml</code> 文件，修改的部分内容有：</p>
+<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>现在可以部署到Github上了，过程如下：</p>
