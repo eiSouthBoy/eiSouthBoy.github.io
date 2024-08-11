@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/08/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>博客部署至Github</title>
     <url>/2024/08/11/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E8%87%B3Github/</url>
     <content><![CDATA[<blockquote>
@@ -64,11 +46,37 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
 
 <p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
+<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
+<p>当然，我们可以修改本地的master名称，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
 ]]></content>
       <tags>
         <tag>Github</tag>
         <tag>hexo</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/08/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>基于hexo搭建个人博客</title>
