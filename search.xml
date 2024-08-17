@@ -1,86 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/08/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>博客部署至Github</title>
-    <url>/2024/08/11/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E8%87%B3Github/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-11 星期日 晴</p>
-</blockquote>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
-<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
-</blockquote>
-<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
-<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
-<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
-<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
-<p>创建公钥前，需要配置git的用户名和邮箱</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>该命令执行完毕后，提示公钥文件保存的路径</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br><span class="line"></span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的**github个人图像 --&gt; Settings --&gt; SSH and GPG Keys --&gt; New SSH Key**，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</span><br><span class="line"></span><br><span class="line">```plaintext</span><br><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>现在可以部署到Github上了，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
-<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
-<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
-
-<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
-<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
-<p>当然，我们可以修改本地的master名称，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
-]]></content>
-      <tags>
-        <tag>Github</tag>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基于hexo搭建个人博客</title>
-    <url>/2024/08/10/%E5%9F%BA%E4%BA%8Ehexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <title>Create Blog with hexo</title>
+    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
     <content><![CDATA[<blockquote>
 <p>2024-08-10 星期六 晴</p>
 </blockquote>
@@ -147,10 +69,924 @@
 <p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
 ]]></content>
       <categories>
-        <category>心得</category>
+        <category>Blog</category>
       </categories>
       <tags>
-        <tag>分享</tag>
+        <tag>Blog</tag>
+        <tag>hexo</tag>
+        <tag>hexo-theme-next</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Blog deploy to Github Page.md</title>
+    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-11 星期日 晴</p>
+</blockquote>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
+<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
+</blockquote>
+<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
+<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
+<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
+<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
+<p>创建公钥前，需要配置git的用户名和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>该命令执行完毕后，提示公钥文件保存的路径</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br><span class="line"></span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的**github个人图像 --&gt; Settings --&gt; SSH and GPG Keys --&gt; New SSH Key**，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</span><br><span class="line"></span><br><span class="line">```plaintext</span><br><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在可以部署到Github上了，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
+<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
+<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
+<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
+<p>当然，我们可以修改本地的master名称，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Matter Standard</title>
+    <url>/2024/08/13/Matter%20Standard/</url>
+    <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
+<p><strong>用户：</strong></p>
+<p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
+<p><strong>厂商：</strong></p>
+<p>如果厂商生产了支持苹果生态的IoT设备，那么它的目标用户是持有苹果手机的用户。对于同一款产品（例如：色温灯），厂商为了获取更多的用户，就必须开发支持各种生态的产品（例如：色温灯）。对于厂商来说，产品还是那个，只是软件层面的不同，不得不生产支持不同生态的同一款产品，生产成本又是一个的问题。</p>
+<p><strong>Matter：</strong></p>
+<p>如果厂商生产的IoT产品支持Matter标准，那么对于用户来说，不管你使用的是苹果手机，还是谷歌手机，你都可以将IoT产品添加到你当前的生态中。对于用户，购买的IoT产品适配各种生态，完全不用担心换手机会导致IoT产品无法使用的问题。对于厂商，不用再投入很大的成本去生产支持各种生态的IoT设备，仅需要生产支持Matter标准的IoT产品。</p>
+<p>甚至，IoT产品添加到苹果生态后，你还可以将该产品分享给其他生态使用，完全隔绝了生态壁垒。</p>
+<p>Matter是由CSA发布的一个应用标准，它的传输是建立在支持IPv6的TCP和UDP协议上的，Matter不对传输层进行约定，Matter也不对网络进行约定，但是Matter约定了只能使用 <em>Thread&#x2F;Wi-Fi&#x2F;Ethernet</em> 三种连接协议，也就是说Matter可以让不同网络中的设备进行互联互通通信，这个主要是指Thread Board Router 可以实现 Wi-Fi 和 Thread 通信互转。不仅如此，Matter还允许接入其他网络设备，比如ZigBee设备，这主要通过一个 <em>Matter bridge</em> 设备来实现。在Matter拓扑结构中，还有一个节点非常重要：<em>Matter controller</em>，Matter controller用来完成配网和远程控制设备，比如苹果的 HomePod mini &amp; Home app 组合就是一个典型的Matter controller节点。</p>
+<p>Thread协议由Thread Group制定，所以Matter over Thread产品必须通过Thread Group的认证。Wi-Fi则由Wi-Fi联盟进行规范，所以Matter over Wi-Fi产品必须通过Wi-Fi Alliance认证。</p>
+<p><strong>文档：</strong></p>
+<p>Matter官方文档（主要有3份）：</p>
+<ul>
+<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
+<li>Matter 1.3 Core Specification：核心规范</li>
+<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
+</ul>
+<p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
+<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如色温灯。</p>
+<h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
+<p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
+<h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>
+<p>对于色温灯，其中Endpoint 1是可调光灯，它有两个cluster，分别是：On&#x2F;Off cluster 和 Level Control cluster 。</p>
+<p>Matter定义了两种类型的cluster：</p>
+<ul>
+<li>server：提供Attributes、Commands、Events，通常指 Matter 设备。</li>
+<li>client：对server发起交互（interaction）操作，通常指 Matter Controller。</li>
+</ul>
+<h4 id="attributes（属性）"><a href="#attributes（属性）" class="headerlink" title="attributes（属性）"></a>attributes（属性）</h4><p>属性表示可以读取或写入的内容。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 attributess 是 OnOff 。</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 attributess 是 CurrentLevel 。</p>
+<h4 id="Command（命令）"><a href="#Command（命令）" class="headerlink" title="Command（命令）"></a>Command（命令）</h4><p>命令提供在集群上调用特定行为的能力。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 Commands 有：On、Off、Toggle</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 Commands 有：MoveToLevel 。</p>
+<h4 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h4><p>Event其实是一种特殊的attributes，它用来更新设备的状态。</p>
+<h3 id="Interaction-Model（交互模型）"><a href="#Interaction-Model（交互模型）" class="headerlink" title="Interaction Model（交互模型）"></a>Interaction Model（交互模型）</h3><p>通俗地讲，Interaction model就是用来规定交互命令集的，我们把发起交互的节点叫initiator (一般都是client设备)，而接收者称为target (一般为server设备)。</p>
+<p>Matter定义了如下interaction类型：</p>
+<ul>
+<li><strong>Read</strong></li>
+</ul>
+<p>​	用来读取attributes或events的值</p>
+<ul>
+<li><strong>Write</strong></li>
+</ul>
+<p>​	用来修改attribute的值</p>
+<ul>
+<li><strong>Invoke</strong></li>
+</ul>
+<p>​	用来发送commands</p>
+<ul>
+<li><strong>Subscribe</strong></li>
+</ul>
+<p>​	用来订阅target的数据报告，从而不用定时去查询相关数据，我们可以订阅attribute，也可以订阅event。</p>
+<p>Interaction本身由transaction组成，而transaction又由action组成，每个action包含1条或者多条信息。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.espressif.com/what-does-matter-mean-to-you-fa3bb53a7793">What does Matter mean to you?</a></p>
+<p><a href="https://blog.espressif.com/matter-clusters-attributess-commands-82b8ec1640a0">Matter: Clusters, attributess, Commands</a></p>
+<p><a href="https://mp.weixin.qq.com/s/xU82G0LL-92zd86iXChwKQ">Matter开发，看这一篇就够了</a></p>
+]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>Matter Standard</tag>
+        <tag>CSA</tag>
+        <tag>IoT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>bluetoothctl client tool</title>
+    <url>/2024/08/16/bluetoothctl%20client%20tool/</url>
+    <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在使用某一家SoC的蓝牙库的时候，很多东西都无法修改。但是在测试的过程中，发现这家SoC的蓝牙库也是基于bluez的dbus实现的，那么我也可以封装一个蓝牙库。</p>
+<p>首先，我手里有树莓派4B一台，该设备具备了蓝牙和Wi-Fi功能。那么只需要通过研究bluez项目中的bluetoothctl工具的源码，然后进行自定义修改，最后封装成自己的蓝牙库。</p>
+<span id="more"></span>
+
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="硬件平台"><a href="#硬件平台" class="headerlink" title="硬件平台"></a>硬件平台</h3><p>树莓派环境介绍：</p>
+<blockquote>
+<p>系统：Ubuntu 24.04 LTS</p>
+<p>内核：6.8.0-1009-raspi</p>
+<p>架构：aarch64</p>
+<p>内存：8GB</p>
+</blockquote>
+<p>阅读蓝牙官方文档，通过基于bluez的dbus接口编程需要相关依赖库：glib-2.0 、gio-2.0、 dbus-1，如果树莓派环境没有以上依赖库，则通过apt安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install libglib2.0-dev libdbus-1-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过pkg-config可以查找对应的头文件目录</span></span><br><span class="line">pkg-config --cflags glib-2.0 gio-2.0 dbus-1</span><br><span class="line">pkg-config --cflags glib-2.0 gio-2.0 dbus-1</span><br></pre></td></tr></table></figure>
+
+<p>涉及的头文件目录有如下：</p>
+<ul>
+<li><p>-I&#x2F;usr&#x2F;include&#x2F;glib-2.0 </p>
+</li>
+<li><p>-I&#x2F;usr&#x2F;lib&#x2F;aarch64-linux-gnu&#x2F;glib-2.0&#x2F;include </p>
+</li>
+<li><p>-pthread -I&#x2F;usr&#x2F;include&#x2F;libmount</p>
+</li>
+<li><p>-I&#x2F;usr&#x2F;include&#x2F;blkid</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 或者通过dpkg查看相关依赖库是否已经安装</span></span><br><span class="line">dpkg -l | grep libglib2.0-dev</span><br><span class="line">dpkg -l | grep libdbus-1-dev</span><br></pre></td></tr></table></figure>
+
+<p>涉及的依赖包有如下：</p>
+<ul>
+<li><p>libglib2.0-dev-bin</p>
+</li>
+<li><p>libglib2.0-dev-bin</p>
+</li>
+<li><p>libdbus-1-dev:arm64</p>
+</li>
+</ul>
+<h3 id="协议文档"><a href="#协议文档" class="headerlink" title="协议文档"></a>协议文档</h3><p>dbus标准接口共有4个，分别是：</p>
+<ul>
+<li>org.freedesktop.DBus.Peer</li>
+<li>org.freedesktop.DBus.Introspectable</li>
+<li>org.freedesktop.DBus.Properties：用于获取和设置对象属性，并监听属性变化</li>
+<li>org.freedesktop.DBus.ObjectManager：用于管理和监控 D-Bus 对象，通常用于获取所有对象及其接口和属性。</li>
+</ul>
+<h4 id="org-freedesktop-DBus-Properties"><a href="#org-freedesktop-DBus-Properties" class="headerlink" title="org.freedesktop.DBus.Properties"></a>org.freedesktop.DBus.Properties</h4><p>常用的方法有：</p>
+<ul>
+<li>Get：获取对象的特定属性值</li>
+<li>Set：设置对象的特定属性值</li>
+<li>GetAll：获取对象的所有属性值</li>
+</ul>
+<p>常用的信号有：</p>
+<ul>
+<li>PropertiesChanged：当对象的属性发生变化时发出信号</li>
+</ul>
+<h4 id="org-freedesktop-DBus-ObjectManager"><a href="#org-freedesktop-DBus-ObjectManager" class="headerlink" title="org.freedesktop.DBus.ObjectManager"></a>org.freedesktop.DBus.ObjectManager</h4><p>常用的方法有：</p>
+<ul>
+<li>GetManagedObjects：获取所有受管理的对象及其接口和属性</li>
+</ul>
+<p>常用的信号有：</p>
+<ul>
+<li><p>InterfacesAdded：当新对象添加时发出信号</p>
+</li>
+<li><p>InterfacesRemoved：当对象接口移除时发出信号</p>
+</li>
+</ul>
+<hr>
+<p>bluez dbus api 文档涉及到各个不同接口，主要关注这几个接口：</p>
+<ul>
+<li>org.bluez.Adapter1</li>
+<li>org.bluez.Device1</li>
+<li>org.bluez.Agent1</li>
+</ul>
+<h4 id="org-bluez-Adapter1"><a href="#org-bluez-Adapter1" class="headerlink" title="org.bluez.Adapter1"></a>org.bluez.Adapter1</h4><p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service:	org.bluez</span><br><span class="line">:Interface:	org.bluez.Adapter1</span><br><span class="line">:Object path:	[variable prefix]/&#123;hci0,hci1,...&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>void StartDiscovery()</strong></td>
+<td>开始扫描设备</td>
+</tr>
+<tr>
+<td><strong>void StopDiscovery()</strong></td>
+<td>结束扫描设备</td>
+</tr>
+<tr>
+<td><strong>void RemoveDevice(object device)</strong></td>
+<td>移除蓝牙设备</td>
+</tr>
+<tr>
+<td>void SetDiscoveryFilter(dict filter)</td>
+<td>设置扫描条件</td>
+</tr>
+<tr>
+<td>array{string} GetDiscoveryFilters()</td>
+<td>获取扫描条件</td>
+</tr>
+<tr>
+<td>object ConnectDevice(dict properties) [experimental]</td>
+<td>连接蓝牙设备</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>string Address</strong></td>
+<td>[readonly]</td>
+<td>蓝牙设备MAC地址</td>
+</tr>
+<tr>
+<td>string AddressType</td>
+<td>[readonly]</td>
+<td>取值范围：public和random</td>
+</tr>
+<tr>
+<td><strong>string Name</strong></td>
+<td>[readonly]</td>
+<td>蓝牙设备名称</td>
+</tr>
+<tr>
+<td>string Alias</td>
+<td>[readwrite]</td>
+<td>蓝牙设备别名</td>
+</tr>
+<tr>
+<td>uint32 Class</td>
+<td>[readonly]</td>
+<td>蓝牙设备类型</td>
+</tr>
+<tr>
+<td><strong>boolean Powered</strong></td>
+<td>[readwrite]</td>
+<td>打开或关闭适配器电源</td>
+</tr>
+<tr>
+<td>string PowerState</td>
+<td>[readonly, experimental]</td>
+<td>适配器电源状态</td>
+</tr>
+<tr>
+<td>boolean Discoverable</td>
+<td>[readwrite] (Default: false)</td>
+<td>打开或关闭适配器可被发现状态</td>
+</tr>
+<tr>
+<td>boolean Pairable</td>
+<td>[readwrite] (Default: true)</td>
+<td>打开或关闭适配可被配对状态</td>
+</tr>
+<tr>
+<td>uint32 PairableTimeout</td>
+<td>[readwrite] (Default: 0)</td>
+<td>配对超时时间（单位：秒）</td>
+</tr>
+<tr>
+<td>uint32 DiscoverableTimeout</td>
+<td>[readwrite] (Default: 180)</td>
+<td>发现超时时间（单位：秒）</td>
+</tr>
+<tr>
+<td>boolean Discovering</td>
+<td>[readonly]</td>
+<td>扫描执行状态</td>
+</tr>
+<tr>
+<td>array{string} UUIDs</td>
+<td>[readonly]</td>
+<td>128-bit UIIDs</td>
+</tr>
+<tr>
+<td>string Modalias</td>
+<td>[readonly, optional]</td>
+<td>内核使用的本地设备ID</td>
+</tr>
+<tr>
+<td>array{string} Roles</td>
+<td>[readonly]</td>
+<td>支持角色列表</td>
+</tr>
+<tr>
+<td>array{string} ExperimentalFeatures</td>
+<td>[readonly, optional]</td>
+<td>实验性质的128-bit UIIDs</td>
+</tr>
+<tr>
+<td>uint16 Manufacturer</td>
+<td>[readonly]</td>
+<td>设备制造商</td>
+</tr>
+<tr>
+<td>byte Version</td>
+<td>[readonly]</td>
+<td>设备支持的蓝牙版本</td>
+</tr>
+</tbody></table>
+<h4 id="org-bluez-Device1"><a href="#org-bluez-Device1" class="headerlink" title="org.bluez.Device1"></a>org.bluez.Device1</h4><p><strong>接口介绍：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">:Service:	org.bluez</span><br><span class="line">:Interface:	org.bluez.Device1</span><br><span class="line">:Object path:	[variable prefix]/&#123;hci0,hci1,...&#125;/dev_XX_XX_XX_XX_XX_XX</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>void Connect()</strong></td>
+<td>连接蓝牙设备</td>
+</tr>
+<tr>
+<td><strong>void Disconnect()</strong></td>
+<td>断开蓝牙设备</td>
+</tr>
+<tr>
+<td>void ConnectProfile(string uuid)</td>
+<td>连接配置文件</td>
+</tr>
+<tr>
+<td>void DisconnectProfile(string uuid)</td>
+<td>断开配置文件</td>
+</tr>
+<tr>
+<td><strong>void Pair()</strong></td>
+<td>配对蓝牙设备</td>
+</tr>
+<tr>
+<td>void CancelPairing()</td>
+<td>取消配对请求</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>string Address</strong></td>
+<td>[readonly]</td>
+<td>蓝牙设备MAC地址</td>
+</tr>
+<tr>
+<td>string AddressType</td>
+<td>[readonly]</td>
+<td>取值范围：public和random</td>
+</tr>
+<tr>
+<td><strong>string Name</strong></td>
+<td>[readonly, optional]</td>
+<td>蓝牙设备名称</td>
+</tr>
+<tr>
+<td>string Icon</td>
+<td>[readonly, optional]</td>
+<td>蓝牙设备图标</td>
+</tr>
+<tr>
+<td>uint32 Class</td>
+<td>[readonly, optional]</td>
+<td>蓝牙设备类型</td>
+</tr>
+<tr>
+<td>uint16 Appearance</td>
+<td>[readonly, optional]</td>
+<td>蓝牙设备外观</td>
+</tr>
+<tr>
+<td>array{string} UUIDs</td>
+<td>[readonly, optional]</td>
+<td>128-bit UIIDs</td>
+</tr>
+<tr>
+<td><strong>boolean Paired</strong></td>
+<td>[readonly]</td>
+<td>蓝牙设备配对状态</td>
+</tr>
+<tr>
+<td>boolean Bonded</td>
+<td>[readonly]</td>
+<td>蓝牙设备绑定状态</td>
+</tr>
+<tr>
+<td><strong>boolean Connected</strong></td>
+<td>[readonly]</td>
+<td>蓝牙设备连接状态</td>
+</tr>
+<tr>
+<td>boolean Trusted</td>
+<td>[readwrite]</td>
+<td>蓝牙设备信任状态</td>
+</tr>
+<tr>
+<td>boolean Blocked</td>
+<td>[readwrite]</td>
+<td>蓝牙设备阻塞状态</td>
+</tr>
+<tr>
+<td>boolean WakeAllowed</td>
+<td>[readwrite]</td>
+<td>蓝牙设备唤醒功能</td>
+</tr>
+<tr>
+<td>string Alias</td>
+<td>[readwrite]</td>
+<td>蓝牙设备别名</td>
+</tr>
+<tr>
+<td>object Adapter</td>
+<td>[readonly]</td>
+<td>蓝牙设备所属适配器对象</td>
+</tr>
+<tr>
+<td>boolean LegacyPairing</td>
+<td>[readonly]</td>
+<td>传统配对功能</td>
+</tr>
+<tr>
+<td>string Modalias</td>
+<td>[readonly, optional]</td>
+<td>内核使用的设备ID</td>
+</tr>
+<tr>
+<td>int16 RSSI</td>
+<td>[readonly, optional]</td>
+<td>蓝牙设备信号强度</td>
+</tr>
+<tr>
+<td>int16 TxPower</td>
+<td>[readonly, optional]</td>
+<td>蓝牙广播发射功率电平</td>
+</tr>
+<tr>
+<td>dict ManufacturerData</td>
+<td>[readonly, optional]</td>
+<td>蓝牙制造商数据</td>
+</tr>
+<tr>
+<td>dict ServiceData</td>
+<td>[readonly, optional]</td>
+<td>蓝牙服务数据</td>
+</tr>
+<tr>
+<td>bool ServicesResolved</td>
+<td>[readonly]</td>
+<td>服务解析是否完成</td>
+</tr>
+<tr>
+<td>array{byte} AdvertisingFlags</td>
+<td>[readonly]</td>
+<td>蓝牙广播数据标志</td>
+</tr>
+<tr>
+<td>dict AdvertisingData</td>
+<td>[readonly]</td>
+<td>蓝牙广播数据</td>
+</tr>
+<tr>
+<td>array{object, dict} Sets</td>
+<td>[readonly, experimental]</td>
+<td>蓝牙设备所属对象集合</td>
+</tr>
+</tbody></table>
+<h4 id="org-bluez-Agent1"><a href="#org-bluez-Agent1" class="headerlink" title="org.bluez.Agent1"></a>org.bluez.Agent1</h4><p><strong>接口介绍：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">:Service:	unique name</span><br><span class="line">:Interface:	org.bluez.Agent1</span><br><span class="line">:Object path:	freely definable</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void Release()</td>
+<td>释放任务</td>
+</tr>
+<tr>
+<td>string RequestPinCode(object device)</td>
+<td>请求PIN码</td>
+</tr>
+<tr>
+<td>void DisplayPinCode(object device, string pincode)</td>
+<td>显示PIN码</td>
+</tr>
+<tr>
+<td>uint32 RequestPasskey(object device)</td>
+<td>请求秘钥</td>
+</tr>
+<tr>
+<td>void DisplayPasskey(object device, uint32 passkey, uint16 entered)</td>
+<td>显示秘钥</td>
+</tr>
+<tr>
+<td>void RequestConfirmation(object device, uint32 passkey)</td>
+<td>请求确认秘钥</td>
+</tr>
+<tr>
+<td>void RequestAuthorization(object device)</td>
+<td>请求授权</td>
+</tr>
+<tr>
+<td>void AuthorizeService(object device, string uuid)</td>
+<td>授权服务</td>
+</tr>
+<tr>
+<td>void Cancel()</td>
+<td>取消请求</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<p>无属性</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>在Ubuntu 24.04 LTS系统上可以下载 d-feet工具，可以UI形式显示协议文档中的那些接口，以便快速测试和实现蓝牙功能。</p>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><p>根据前文预定的需求，逐个编写并测试功能API接口，最后完成自定义库的封装。</p>
+<p>使用bluez进行蓝牙设备连接的流程：</p>
+<p>1、蓝牙适配器设置为：power on</p>
+<p>2、蓝牙适配器开始扫描</p>
+<p>​	订阅 <code>org.freedesktop.DBus.Properties.PropertiesChanged</code> 信号监听接口属性变化</p>
+<p>​	订阅 <code>org.freedesktop.DBus.ObjectManager.InterfacesAdded</code> 信号监听接口新增</p>
+<p>​	订阅 <code>org.freedesktop.DBus.ObjectManager.InterfacesRemoved</code> 信号监听接口移除</p>
+<p>​	调用 <code>org.bluez.Adapter1.StartDiscovery</code> 方法开始扫描附近蓝牙设备</p>
+<p>3、蓝牙适配器配对蓝牙设备</p>
+<p>​	在 <code>InterfacesAdded</code> 信号回调中，检查是否出现目标蓝牙设备</p>
+<p>​	发现目标蓝牙设备后，调用 <code>org.bluez.Adapter1.StopDiscovery</code>，蓝牙适配器停止扫描</p>
+<p>​	调用 <code>org.bluez.Device1.Pair</code> 方法进行配对蓝牙设备</p>
+<p>​	调用 <code>org.freedesktop.DBus.ObjectManager.GetManagedObjects</code> 方法获取适配器配对状态 </p>
+<p>4、连接设备</p>
+<p>​	配对成功后，调用 <code>org.bluez.Device1.Connect</code> 方法连接蓝牙设备</p>
+<p>​	调用 <code>org.freedesktop.DBus.ObjectManager.GetManagedObjects</code> 方法获取适配器连接状态 </p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/bluez/bluez">1、bluez on github</a></p>
+<p><a href="https://www.bluez.org/">2、bluez with Official Linux Bluetooth protocol stack</a></p>
+<p><a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/org.bluez.Adapter.rst">3、org.bluez.Adapter.rst</a></p>
+<p><a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/org.bluez.Device.rst">4、org.bluez.Device.rst</a></p>
+<p><a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/org.bluez.Agent.rst">5、org.bluez.Agent.rst</a></p>
+<p><a href="https://dbus.freedesktop.org/doc/dbus-specification.html">6、D-Bus Specification</a></p>
+]]></content>
+      <categories>
+        <category>bluetooth</category>
+      </categories>
+      <tags>
+        <tag>bluetooth</tag>
+        <tag>raspberry 4b</tag>
+        <tag>bluez</tag>
+        <tag>dbus</tag>
+        <tag>gdbus</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Matter：Lighting Device Types</title>
+    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
+    <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
+<ul>
+<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
+<li>饱和度（saturation）表示可见光的相对带宽</li>
+<li>亮度（brightness）表示可见光的能量强度</li>
+</ul>
+<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0100</td>
+<td>On&#x2F;Off Light</td>
+<td></td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Group</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2>]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>Light of Matter Device</tag>
+        <tag>matter-1-3-device-library-specification</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp-matter：light project</title>
+    <url>/2024/08/15/esp-matter%EF%BC%9Alight%20project/</url>
+    <content><![CDATA[<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设置目标"><a href="#设置目标" class="headerlink" title="设置目标"></a>设置目标</h3><p>开发板Soc是esp32-c3，故设置目标选择：esp32c3</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 激活esp-idf和esp-matter环境</span></span><br><span class="line">get_idf</span><br><span class="line">get_matter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标</span></span><br><span class="line">idf.py set-target esp32c3</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译固件"><a href="#编译固件" class="headerlink" title="编译固件"></a>编译固件</h3><p>直接开始编译固件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">idf.py build</span><br></pre></td></tr></table></figure>
+
+<h3 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h3><p>将开发板插入PC的USB接口，修改串口权限，开始烧录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配网"><a href="#配网" class="headerlink" title="配网"></a>配网</h2><p>通过BLE方式给设备配网</p>
+<p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。</p>
+<p><strong>单次执行：</strong></p>
+<p>单次执行配网命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+
+<p><em>单次执行容易导致超时，建议使用交互执行！！！</em></p>
+<p><strong>交互执行：</strong></p>
+<p><strong>Terminal A</strong>处于等待配网状态，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (1725) esp_matter_core: Dynamic endpoint 1 added</span><br><span class="line">I (1735) chip[DL]: WIFI_EVENT_STA_START</span><br><span class="line">W (1735) wifi:Haven<span class="string">&#x27;t to connect to a suitable AP now!</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Done driving station state, nothing else to do...</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Configuring CHIPoBLE advertising (interval 25 ms, connectable)</span></span><br><span class="line"><span class="string">I (1755) NimBLE: GAP procedure initiated: advertise; </span></span><br><span class="line"><span class="string">I (1765) NimBLE: disc_mode=2</span></span><br><span class="line"><span class="string">I (1765) NimBLE:  adv_channel_map=0 own_addr_type=1 adv_filter_policy=0 adv_itvl_min=40 adv_itvl_max=40</span></span><br><span class="line"><span class="string">I (1775) NimBLE: </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I (1775) chip[DL]: CHIPoBLE advertising started</span></span><br><span class="line"><span class="string">I (1785) app_main: Commissioning window opened</span></span><br><span class="line"><span class="string">I (1855) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">&gt; I (4725) esp_matter_core: Store the deferred attribute 0x0 of cluster 0x8 on endpoint 0x1</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code>，此时进入交互模式，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | Command sets:                                                                       |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | * any                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> sending IM messages based on cluster <span class="built_in">id</span>, not cluster name.         |</span><br><span class="line">  | * delay                                                                             |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> waiting <span class="keyword">for</span> something to happen.                                   |</span><br><span class="line">  | * discover                                                                          |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> device discovery.                                                  |</span><br><span class="line">  | * groupsettings                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> manipulating group keys and memberships <span class="keyword">for</span> chip-tool itself.      |</span><br><span class="line">  | * icd                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> client-side ICD management.                                        |</span><br><span class="line">  | * pairing                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> commissioning devices.                                             |</span><br><span class="line">  | * payload                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> parsing and generating setup payloads.                             |</span><br><span class="line">  | * sessionmanagement                                                                 |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing CASE and PASE session state.                              |</span><br><span class="line">  | * subscriptions                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> shutting down subscriptions.                                       |</span><br><span class="line">  | * interactive                                                                       |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> starting long-lived interactive modes.                             |</span><br><span class="line">  | * storage                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing persistent data stored by chip-tool.                      |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">&gt;&gt;&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在交互模式内执行命令为设备配网：<code>pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</code>。若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (323035) wifi:&lt;ba-add&gt;idx:1 (ifx:0, <span class="built_in">fc</span>:83:c6:00:8f:ae), tid:6, ssn:1, winSize:64</span><br><span class="line">I (323075) chip[DL]: Confirm received <span class="keyword">for</span> CHIPoBLE TX characteristic indication (con 1) status= 14 </span><br><span class="line">I (323845) esp_netif_handlers: sta ip: 192.168.5.201, mask: 255.255.255.0, gw: 192.168.5.1</span><br><span class="line">I (323845) chip[DL]: IP_EVENT_STA_GOT_IP</span><br><span class="line">I (323855) chip[DL]: IPv4 address changed on WiFi station interface: 192.168.5.201/255.255.255.0 gateway 192.168.5.1</span><br><span class="line">I (323865) chip[DL]: IPv4 Internet connectivity ESTABLISHED</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><p>设备配网成功后，接着可以在Terminal B通过chip-tool交互模式内控制设备，例如：打开LED、关闭LED、反转LED、调节亮度、调节颜色</p>
+<p><strong>单次执行：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">chip-tool onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">chip-tool onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">chip-tool onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">chip-tool levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">chip-tool levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>交互执行：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.espressif.com/projects/esp-matter/en/latest/esp32c3/developing.html">1、Developing with the SDK of ESP-MATTER</a></p>
+]]></content>
+      <categories>
+        <category>ESP</category>
+      </categories>
+      <tags>
+        <tag>esp-matter</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/08/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>ntp application</title>
+    <url>/2024/08/12/ntp%20application/</url>
+    <content><![CDATA[<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>ntp</tag>
+        <tag>time sync</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>wpa-supplicant application</title>
+    <url>/2024/08/12/wpa-supplicant%20application/</url>
+    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
+<p>无线热点的基本信息：</p>
+<ul>
+<li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
+</li>
+<li><p>安全模式<br>  安全模式能设置无线热点的加密类型：OPEN、WPA2(AES)-PSK、WPA-PSK&#x2F;WPA2-PSK</p>
+</li>
+<li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
+</li>
+</ul>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。</p>
+<p>1、wpa_supplicant.conf 可以设置哪些配置？<br>2、wpa_supplicant.conf 可以保存哪些信息？ </p>
+<h3 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="保存信息"><a href="#保存信息" class="headerlink" title="保存信息"></a>保存信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;CUBEC_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;cubec2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Wi-Fi</category>
+      </categories>
+      <tags>
+        <tag>Wi-Fi</tag>
+        <tag>wpa_supplicant</tag>
       </tags>
   </entry>
 </search>
