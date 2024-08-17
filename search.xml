@@ -1,6 +1,392 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Blog deploy to Github Page.md</title>
+    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-11 星期日 晴</p>
+</blockquote>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
+<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
+</blockquote>
+<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
+<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
+<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
+<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
+<p>创建公钥前，需要配置git的用户名和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>该命令执行完毕后，提示公钥文件保存的路径</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br><span class="line"></span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的**github个人图像 --&gt; Settings --&gt; SSH and GPG Keys --&gt; New SSH Key**，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</span><br><span class="line"></span><br><span class="line">```plaintext</span><br><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在可以部署到Github上了，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
+<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
+<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
+<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
+<p>当然，我们可以修改本地的master名称，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
+]]></content>
+      <tags>
+        <tag>Github</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Create Blog with hexo</title>
+    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-10 星期六 晴</p>
+</blockquote>
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
+<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
+<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
+<ul>
+<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
+<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
+<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
+<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
+</ul>
+<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
+<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
+</blockquote>
+<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
+<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
+
+<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面基本环境搭建起来后，发现有两个小问题：</p>
+<ul>
+<li>cj用户无法使用sudo</li>
+<li>git命令无法自动补全</li>
+</ul>
+<p><strong>解决第一个问题：</strong></p>
+<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
+<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
+
+<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
+<p><strong>解决第二个问题：</strong></p>
+<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
+<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
+<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再次运行博客，可以看下如下提示：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
+<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
+]]></content>
+      <categories>
+        <category>Blog</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>Blog</tag>
+        <tag>hexo-theme-next</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Matter Standard</title>
+    <url>/2024/08/13/Matter%20Standard/</url>
+    <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
+<p><strong>用户：</strong></p>
+<p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
+<p><strong>厂商：</strong></p>
+<p>如果厂商生产了支持苹果生态的IoT设备，那么它的目标用户是持有苹果手机的用户。对于同一款产品（例如：色温灯），厂商为了获取更多的用户，就必须开发支持各种生态的产品（例如：色温灯）。对于厂商来说，产品还是那个，只是软件层面的不同，不得不生产支持不同生态的同一款产品，生产成本又是一个的问题。</p>
+<p><strong>Matter：</strong></p>
+<p>如果厂商生产的IoT产品支持Matter标准，那么对于用户来说，不管你使用的是苹果手机，还是谷歌手机，你都可以将IoT产品添加到你当前的生态中。对于用户，购买的IoT产品适配各种生态，完全不用担心换手机会导致IoT产品无法使用的问题。对于厂商，不用再投入很大的成本去生产支持各种生态的IoT设备，仅需要生产支持Matter标准的IoT产品。</p>
+<p>甚至，IoT产品添加到苹果生态后，你还可以将该产品分享给其他生态使用，完全隔绝了生态壁垒。</p>
+<p>Matter是由CSA发布的一个应用标准，它的传输是建立在支持IPv6的TCP和UDP协议上的，Matter不对传输层进行约定，Matter也不对网络进行约定，但是Matter约定了只能使用 <em>Thread&#x2F;Wi-Fi&#x2F;Ethernet</em> 三种连接协议，也就是说Matter可以让不同网络中的设备进行互联互通通信，这个主要是指Thread Board Router 可以实现 Wi-Fi 和 Thread 通信互转。不仅如此，Matter还允许接入其他网络设备，比如ZigBee设备，这主要通过一个 <em>Matter bridge</em> 设备来实现。在Matter拓扑结构中，还有一个节点非常重要：<em>Matter controller</em>，Matter controller用来完成配网和远程控制设备，比如苹果的 HomePod mini &amp; Home app 组合就是一个典型的Matter controller节点。</p>
+<p>Thread协议由Thread Group制定，所以Matter over Thread产品必须通过Thread Group的认证。Wi-Fi则由Wi-Fi联盟进行规范，所以Matter over Wi-Fi产品必须通过Wi-Fi Alliance认证。</p>
+<p><strong>文档：</strong></p>
+<p>Matter官方文档（主要有3份）：</p>
+<ul>
+<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
+<li>Matter 1.3 Core Specification：核心规范</li>
+<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
+</ul>
+<p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
+<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如色温灯。</p>
+<h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
+<p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
+<h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>
+<p>对于色温灯，其中Endpoint 1是可调光灯，它有两个cluster，分别是：On&#x2F;Off cluster 和 Level Control cluster 。</p>
+<p>Matter定义了两种类型的cluster：</p>
+<ul>
+<li>server：提供Attributes、Commands、Events，通常指 Matter 设备。</li>
+<li>client：对server发起交互（interaction）操作，通常指 Matter Controller。</li>
+</ul>
+<h4 id="attributes（属性）"><a href="#attributes（属性）" class="headerlink" title="attributes（属性）"></a>attributes（属性）</h4><p>属性表示可以读取或写入的内容。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 attributess 是 OnOff 。</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 attributess 是 CurrentLevel 。</p>
+<h4 id="Command（命令）"><a href="#Command（命令）" class="headerlink" title="Command（命令）"></a>Command（命令）</h4><p>命令提供在集群上调用特定行为的能力。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 Commands 有：On、Off、Toggle</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 Commands 有：MoveToLevel 。</p>
+<h4 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h4><p>Event其实是一种特殊的attributes，它用来更新设备的状态。</p>
+<h3 id="Interaction-Model（交互模型）"><a href="#Interaction-Model（交互模型）" class="headerlink" title="Interaction Model（交互模型）"></a>Interaction Model（交互模型）</h3><p>通俗地讲，Interaction model就是用来规定交互命令集的，我们把发起交互的节点叫initiator (一般都是client设备)，而接收者称为target (一般为server设备)。</p>
+<p>Matter定义了如下interaction类型：</p>
+<ul>
+<li><strong>Read</strong></li>
+</ul>
+<p>​	用来读取attributes或events的值</p>
+<ul>
+<li><strong>Write</strong></li>
+</ul>
+<p>​	用来修改attribute的值</p>
+<ul>
+<li><strong>Invoke</strong></li>
+</ul>
+<p>​	用来发送commands</p>
+<ul>
+<li><strong>Subscribe</strong></li>
+</ul>
+<p>​	用来订阅target的数据报告，从而不用定时去查询相关数据，我们可以订阅attribute，也可以订阅event。</p>
+<p>Interaction本身由transaction组成，而transaction又由action组成，每个action包含1条或者多条信息。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.espressif.com/what-does-matter-mean-to-you-fa3bb53a7793">What does Matter mean to you?</a></p>
+<p><a href="https://blog.espressif.com/matter-clusters-attributess-commands-82b8ec1640a0">Matter: Clusters, attributess, Commands</a></p>
+<p><a href="https://mp.weixin.qq.com/s/xU82G0LL-92zd86iXChwKQ">Matter开发，看这一篇就够了</a></p>
+]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>Matter Standard</tag>
+        <tag>CSA</tag>
+        <tag>IoT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Matter：Lighting Device Types</title>
+    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
+    <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
+<ul>
+<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
+<li>饱和度（saturation）表示可见光的相对带宽</li>
+<li>亮度（brightness）表示可见光的能量强度</li>
+</ul>
+<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0100</td>
+<td>On&#x2F;Off Light</td>
+<td></td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Group</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2>]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>Light of Matter Device</tag>
+        <tag>matter-1-3-device-library-specification</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>bluetoothctl client tool</title>
     <url>/2024/08/16/bluetoothctl%20client%20tool/</url>
     <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在使用某一家SoC的蓝牙库的时候，很多东西都无法修改。但是在测试的过程中，发现这家SoC的蓝牙库也是基于bluez的dbus实现的，那么我也可以封装一个蓝牙库。</p>
@@ -529,255 +915,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Matter：Lighting Device Types</title>
-    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
-    <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
-<ul>
-<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
-<li>饱和度（saturation）表示可见光的相对带宽</li>
-<li>亮度（brightness）表示可见光的能量强度</li>
-</ul>
-<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0100</td>
-<td>On&#x2F;Off Light</td>
-<td></td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Group</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2>]]></content>
-      <categories>
-        <category>Matter</category>
-      </categories>
-      <tags>
-        <tag>Light of Matter Device</tag>
-        <tag>matter-1-3-device-library-specification</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Matter Standard</title>
-    <url>/2024/08/13/Matter%20Standard/</url>
-    <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
-<p><strong>用户：</strong></p>
-<p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
-<p><strong>厂商：</strong></p>
-<p>如果厂商生产了支持苹果生态的IoT设备，那么它的目标用户是持有苹果手机的用户。对于同一款产品（例如：色温灯），厂商为了获取更多的用户，就必须开发支持各种生态的产品（例如：色温灯）。对于厂商来说，产品还是那个，只是软件层面的不同，不得不生产支持不同生态的同一款产品，生产成本又是一个的问题。</p>
-<p><strong>Matter：</strong></p>
-<p>如果厂商生产的IoT产品支持Matter标准，那么对于用户来说，不管你使用的是苹果手机，还是谷歌手机，你都可以将IoT产品添加到你当前的生态中。对于用户，购买的IoT产品适配各种生态，完全不用担心换手机会导致IoT产品无法使用的问题。对于厂商，不用再投入很大的成本去生产支持各种生态的IoT设备，仅需要生产支持Matter标准的IoT产品。</p>
-<p>甚至，IoT产品添加到苹果生态后，你还可以将该产品分享给其他生态使用，完全隔绝了生态壁垒。</p>
-<p>Matter是由CSA发布的一个应用标准，它的传输是建立在支持IPv6的TCP和UDP协议上的，Matter不对传输层进行约定，Matter也不对网络进行约定，但是Matter约定了只能使用 <em>Thread&#x2F;Wi-Fi&#x2F;Ethernet</em> 三种连接协议，也就是说Matter可以让不同网络中的设备进行互联互通通信，这个主要是指Thread Board Router 可以实现 Wi-Fi 和 Thread 通信互转。不仅如此，Matter还允许接入其他网络设备，比如ZigBee设备，这主要通过一个 <em>Matter bridge</em> 设备来实现。在Matter拓扑结构中，还有一个节点非常重要：<em>Matter controller</em>，Matter controller用来完成配网和远程控制设备，比如苹果的 HomePod mini &amp; Home app 组合就是一个典型的Matter controller节点。</p>
-<p>Thread协议由Thread Group制定，所以Matter over Thread产品必须通过Thread Group的认证。Wi-Fi则由Wi-Fi联盟进行规范，所以Matter over Wi-Fi产品必须通过Wi-Fi Alliance认证。</p>
-<p><strong>文档：</strong></p>
-<p>Matter官方文档（主要有3份）：</p>
-<ul>
-<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
-<li>Matter 1.3 Core Specification：核心规范</li>
-<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
-</ul>
-<p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
-<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如色温灯。</p>
-<h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
-<p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
-<h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>
-<p>对于色温灯，其中Endpoint 1是可调光灯，它有两个cluster，分别是：On&#x2F;Off cluster 和 Level Control cluster 。</p>
-<p>Matter定义了两种类型的cluster：</p>
-<ul>
-<li>server：提供Attributes、Commands、Events，通常指 Matter 设备。</li>
-<li>client：对server发起交互（interaction）操作，通常指 Matter Controller。</li>
-</ul>
-<h4 id="attributes（属性）"><a href="#attributes（属性）" class="headerlink" title="attributes（属性）"></a>attributes（属性）</h4><p>属性表示可以读取或写入的内容。</p>
-<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 attributess 是 OnOff 。</p>
-<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 attributess 是 CurrentLevel 。</p>
-<h4 id="Command（命令）"><a href="#Command（命令）" class="headerlink" title="Command（命令）"></a>Command（命令）</h4><p>命令提供在集群上调用特定行为的能力。</p>
-<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 Commands 有：On、Off、Toggle</p>
-<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 Commands 有：MoveToLevel 。</p>
-<h4 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h4><p>Event其实是一种特殊的attributes，它用来更新设备的状态。</p>
-<h3 id="Interaction-Model（交互模型）"><a href="#Interaction-Model（交互模型）" class="headerlink" title="Interaction Model（交互模型）"></a>Interaction Model（交互模型）</h3><p>通俗地讲，Interaction model就是用来规定交互命令集的，我们把发起交互的节点叫initiator (一般都是client设备)，而接收者称为target (一般为server设备)。</p>
-<p>Matter定义了如下interaction类型：</p>
-<ul>
-<li><strong>Read</strong></li>
-</ul>
-<p>​	用来读取attributes或events的值</p>
-<ul>
-<li><strong>Write</strong></li>
-</ul>
-<p>​	用来修改attribute的值</p>
-<ul>
-<li><strong>Invoke</strong></li>
-</ul>
-<p>​	用来发送commands</p>
-<ul>
-<li><strong>Subscribe</strong></li>
-</ul>
-<p>​	用来订阅target的数据报告，从而不用定时去查询相关数据，我们可以订阅attribute，也可以订阅event。</p>
-<p>Interaction本身由transaction组成，而transaction又由action组成，每个action包含1条或者多条信息。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.espressif.com/what-does-matter-mean-to-you-fa3bb53a7793">What does Matter mean to you?</a></p>
-<p><a href="https://blog.espressif.com/matter-clusters-attributess-commands-82b8ec1640a0">Matter: Clusters, attributess, Commands</a></p>
-<p><a href="https://mp.weixin.qq.com/s/xU82G0LL-92zd86iXChwKQ">Matter开发，看这一篇就够了</a></p>
-]]></content>
-      <categories>
-        <category>Matter</category>
-      </categories>
-      <tags>
-        <tag>Matter Standard</tag>
-        <tag>CSA</tag>
-        <tag>IoT</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ntp application</title>
     <url>/2024/08/12/ntp%20application/</url>
     <content><![CDATA[<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>]]></content>
@@ -788,6 +925,24 @@
         <tag>ntp</tag>
         <tag>time sync</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/08/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>wpa-supplicant application</title>
@@ -833,160 +988,5 @@
         <tag>Wi-Fi</tag>
         <tag>wpa_supplicant</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Blog deploy to Github Page.md</title>
-    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-11 星期日 晴</p>
-</blockquote>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
-<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
-</blockquote>
-<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
-<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
-<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
-<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
-<p>创建公钥前，需要配置git的用户名和邮箱</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>该命令执行完毕后，提示公钥文件保存的路径</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br><span class="line"></span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的**github个人图像 --&gt; Settings --&gt; SSH and GPG Keys --&gt; New SSH Key**，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</span><br><span class="line"></span><br><span class="line">```plaintext</span><br><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>现在可以部署到Github上了，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
-<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
-<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
-
-<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
-<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
-<p>当然，我们可以修改本地的master名称，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
-]]></content>
-      <tags>
-        <tag>Github</tag>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Create Blog with hexo</title>
-    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-10 星期六 晴</p>
-</blockquote>
-<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
-<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
-<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
-<ul>
-<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
-<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
-<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
-<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
-</ul>
-<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
-<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
-<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
-</blockquote>
-<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
-<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
-
-<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上面基本环境搭建起来后，发现有两个小问题：</p>
-<ul>
-<li>cj用户无法使用sudo</li>
-<li>git命令无法自动补全</li>
-</ul>
-<p><strong>解决第一个问题：</strong></p>
-<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
-<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
-
-<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
-<p><strong>解决第二个问题：</strong></p>
-<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
-<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
-<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>再次运行博客，可以看下如下提示：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
-<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
-]]></content>
-      <categories>
-        <category>Blog</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>Blog</tag>
-        <tag>hexo-theme-next</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2024/08/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
   </entry>
 </search>
