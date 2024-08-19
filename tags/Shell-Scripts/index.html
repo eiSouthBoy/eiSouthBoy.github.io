@@ -19,29 +19,25 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为照明类设备的数据属性，以便后续回顾和查询。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Matter：Lighting Device Types">
-<meta property="og:url" content="https://eisouthboy.github.io/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/index.html">
+    <meta name="description" content="Talk is cheap. Show me your code.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eiSouthBoy&#39;s Blog">
+<meta property="og:url" content="https://eisouthboy.github.io/tags/Shell-Scripts/index.html">
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
-<meta property="og:description" content="在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为照明类设备的数据属性，以便后续回顾和查询。">
+<meta property="og:description" content="Talk is cheap. Show me your code.">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-08-13T16:53:00.000Z">
-<meta property="article:modified_time" content="2024-08-17T11:14:02.987Z">
 <meta property="article:author" content="eiSouthBoy">
-<meta property="article:tag" content="Light of Matter Device">
-<meta property="article:tag" content="matter-1-3-device-library-specification">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://eisouthboy.github.io/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/">
+<link rel="canonical" href="https://eisouthboy.github.io/tags/Shell-Scripts/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/","path":"2024/08/13/Matter：Lighting Device Types/","title":"Matter：Lighting Device Types"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":"","permalink":"","path":"tags/Shell-Scripts/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Matter：Lighting Device Types | eiSouthBoy's Blog</title>
+<title>Tag: Shell Scripts | eiSouthBoy's Blog</title>
   
 
 
@@ -127,7 +123,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -140,7 +136,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Light%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">Light基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#On-Off-Light"><span class="nav-number">2.</span> <span class="nav-text">On&#x2F;Off Light</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dimmable-Light"><span class="nav-number">3.</span> <span class="nav-text">Dimmable Light</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Color-Temperature-Light"><span class="nav-number">4.</span> <span class="nav-text">Color Temperature Light</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Color-Light"><span class="nav-number">5.</span> <span class="nav-text">Extended Color Light</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -206,285 +201,50 @@
 
     </div>
 
-    <div class="main-inner post posts-expand">
+    <div class="main-inner tag posts-collapse">
 
 
   
-
-
-<div class="post-block">
   
   
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="eiSouthBoy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eiSouthBoy's Blog">
-      <meta itemprop="description" content="Talk is cheap. Show me your code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Matter：Lighting Device Types | eiSouthBoy's Blog">
-      <meta itemprop="description" content="在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为照明类设备的数据属性，以便后续回顾和查询。">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Matter：Lighting Device Types
+  <div class="post-block">
+    <div class="post-content">
+      <div class="collection-title">
+        <h1 class="collection-header">Shell Scripts
+          <small>Tag</small>
         </h1>
+      </div>
 
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-13 16:53:00" itemprop="dateCreated datePublished" datetime="2024-08-13T16:53:00+00:00">2024-08-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-08-17 11:14:02" itemprop="dateModified" datetime="2024-08-17T11:14:02+00:00">2024-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">Views: </span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-            <div class="post-description">在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为照明类设备的数据属性，以便后续回顾和查询。</div>
- 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody"><h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
-<ul>
-<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
-<li>饱和度（saturation）表示可见光的相对带宽</li>
-<li>亮度（brightness）表示可见光的能量强度</li>
-</ul>
-<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0100</td>
-<td>On&#x2F;Off Light</td>
-<td></td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Group</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2>
+      
+    <div class="collection-year">
+      <span class="collection-header">2024</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <div class="post-meta-container">
+        <time itemprop="dateCreated"
+              datetime="2024-08-18T21:34:00+00:00"
+              content="2024-08-18">
+          08-18
+        </time>
+      </div>
 
-    <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Light-of-Matter-Device/" rel="tag"># Light of Matter Device</a>
-              <a href="/tags/matter-1-3-device-library-specification/" rel="tag"># matter-1-3-device-library-specification</a>
-          </div>
+      <div class="post-title">
+          <a class="post-title-link" href="/2024/08/18/Shell%20and%20Shell%20Scripts/" itemprop="url">
+            <span itemprop="name">Shell and Shell Scripts</span>
+          </a>
+      </div>
 
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2024/08/13/Matter%20Standard/" rel="prev" title="Matter Standard">
-                  <i class="fa fa-angle-left"></i> Matter Standard
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2024/08/15/esp-matter%EF%BC%9Alight%20project/" rel="next" title="esp-matter：light project">
-                  esp-matter：light project <i class="fa fa-angle-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
+      
+    </header>
   </article>
-</div>
 
-
-
-
-
+    </div>
+  </div>
+  
+  
+  
 
 </div>
   </main>

@@ -61,83 +61,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Create Blog with hexo</title>
-    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-10 星期六 晴</p>
-</blockquote>
-<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
-<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
-<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
-<ul>
-<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
-<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
-<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
-<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
-</ul>
-<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
-<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
-<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
-</blockquote>
-<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
-<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
-
-<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上面基本环境搭建起来后，发现有两个小问题：</p>
-<ul>
-<li>cj用户无法使用sudo</li>
-<li>git命令无法自动补全</li>
-</ul>
-<p><strong>解决第一个问题：</strong></p>
-<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
-<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
-
-<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
-<p><strong>解决第二个问题：</strong></p>
-<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
-<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
-<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>再次运行博客，可以看下如下提示：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
-<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
-]]></content>
-      <categories>
-        <category>Blog</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>Blog</tag>
-        <tag>hexo-theme-next</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Matter Standard</title>
     <url>/2024/08/13/Matter%20Standard/</url>
     <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
@@ -387,12 +310,136 @@
       </tags>
   </entry>
   <entry>
+    <title>Shell and Shell Scripts</title>
+    <url>/2024/08/18/Shell%20and%20Shell%20Scripts/</url>
+    <content><![CDATA[<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>在Linux中有很多Shell可以使用，常用的有如下：</p>
+<ul>
+<li>sh：即Bourne shell，由Steven Bourne开发，这是第一个流行的shell</li>
+<li>bash：即Bourne Again Shell，由GNU组织开发，属于Bourne shell的增强版本，这是Linux默认使用的shell</li>
+<li>csh：即C shell，由Bill Joy开发，这是流行于学术界Sun主机的shell</li>
+</ul>
+<p>虽然shell有很多种，但是学习和工作都是基于Linux，所以掌握bash即可。</p>
+<h3 id="bash的功能"><a href="#bash的功能" class="headerlink" title="bash的功能"></a>bash的功能</h3><ul>
+<li>历史命令记录（history）</li>
+<li>命令补全功能（bash-completion）</li>
+<li>命令别名设置（alias）</li>
+<li>shell脚本执行（shell scripts）</li>
+</ul>
+<h3 id="bash的命令分类"><a href="#bash的命令分类" class="headerlink" title="bash的命令分类"></a>bash的命令分类</h3><p>在bash中执行的命令分为两种类型：</p>
+<ul>
+<li><p>内置命令：内置命令是指集成在bash里面的可以执行的文件，例如：cd、pwd</p>
+</li>
+<li><p>外部命令：外部命令是文件系统里的可执行文件，例如用户下载的软件和编写的脚本文件</p>
+</li>
+</ul>
+<blockquote>
+<p>如何在bash中判断命令的类型？type target-command</p>
+</blockquote>
+<p>如果target-command是一个内置命令，则会打印如下信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">target-command is a shell <span class="built_in">builtin</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：使用时，将target-command替换具体的命令，例如：cd、ls</em></p>
+<h3 id="bash的技巧"><a href="#bash的技巧" class="headerlink" title="bash的技巧"></a>bash的技巧</h3><p>在使用bash中有很多常用的小技巧或者小功能，有必要学习和记录一下。</p>
+<ul>
+<li>命令换行：输入一行命令太长，阅读效果并不好，需要拆分成多行显示。在需要换行位置输入 <code>\</code> ，紧接着按下回车键（Enter），然后接着输入未完成的命令。</li>
+<li>光标跳转：输入一行命令后，发现行头附近有错误或者行尾处有错误，需要快速跳转到行头或行尾。通过组合键进行光标快速跳转，<code>Ctrl+A</code> 调到行头，<code>Ctrl+E</code> 跳到行尾</li>
+<li>环境变量：bash中有很多默认的环境变量，所以很多部命令不需要输入绝对路径就可以执行。通过 <code>env</code> 可以查询所有的默认环境变量。</li>
+</ul>
+<h2 id="Shell-Scripts"><a href="#Shell-Scripts" class="headerlink" title="Shell Scripts"></a>Shell Scripts</h2><blockquote>
+<p>shell scripts是什么？</p>
+</blockquote>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><h3 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h3><h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Shell</tag>
+        <tag>Shell Scripts</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Create Blog with hexo</title>
+    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-10 星期六 晴</p>
+</blockquote>
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
+<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
+<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
+<ul>
+<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
+<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
+<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
+<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
+</ul>
+<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
+<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
+</blockquote>
+<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
+<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
+
+<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面基本环境搭建起来后，发现有两个小问题：</p>
+<ul>
+<li>cj用户无法使用sudo</li>
+<li>git命令无法自动补全</li>
+</ul>
+<p><strong>解决第一个问题：</strong></p>
+<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
+<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
+
+<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
+<p><strong>解决第二个问题：</strong></p>
+<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
+<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
+<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再次运行博客，可以看下如下提示：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
+<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
+]]></content>
+      <categories>
+        <category>Blog</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>Blog</tag>
+        <tag>hexo-theme-next</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>bluetoothctl client tool</title>
     <url>/2024/08/16/bluetoothctl%20client%20tool/</url>
     <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在使用某一家SoC的蓝牙库的时候，很多东西都无法修改。但是在测试的过程中，发现这家SoC的蓝牙库也是基于bluez的dbus实现的，那么我也可以封装一个蓝牙库。</p>
 <p>首先，我手里有树莓派4B一台，该设备具备了蓝牙和Wi-Fi功能。那么只需要通过研究bluez项目中的bluetoothctl工具的源码，然后进行自定义修改，最后封装成自己的蓝牙库。</p>
-<span id="more"></span>
-
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="硬件平台"><a href="#硬件平台" class="headerlink" title="硬件平台"></a>硬件平台</h3><p>树莓派环境介绍：</p>
 <blockquote>
 <p>系统：Ubuntu 24.04 LTS</p>
@@ -403,9 +450,9 @@
 <p>阅读蓝牙官方文档，通过基于bluez的dbus接口编程需要相关依赖库：glib-2.0 、gio-2.0、 dbus-1，如果树莓派环境没有以上依赖库，则通过apt安装</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install libglib2.0-dev libdbus-1-dev</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过pkg-config可以查找对应的头文件目录</span></span><br><span class="line">pkg-config --cflags glib-2.0 gio-2.0 dbus-1</span><br><span class="line">pkg-config --cflags glib-2.0 gio-2.0 dbus-1</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过pkg-config可以查找对应的头文件目录和库文件</span></span><br><span class="line">pkg-config --cflags glib-2.0 gio-2.0 dbus-1</span><br><span class="line">pkg-config --libs glib-2.0 gio-2.0 dbus-1</span><br></pre></td></tr></table></figure>
 
-<p>涉及的头文件目录有如下：</p>
+<p>涉及的头文件目录和库文件有如下：</p>
 <ul>
 <li><p>-I&#x2F;usr&#x2F;include&#x2F;glib-2.0 </p>
 </li>
@@ -413,10 +460,18 @@
 </li>
 <li><p>-pthread -I&#x2F;usr&#x2F;include&#x2F;libmount</p>
 </li>
-<li><p>-I&#x2F;usr&#x2F;include&#x2F;blkid</p>
+<li><p>-I&#x2F;usr&#x2F;include&#x2F;blkid </p>
+</li>
+<li><p>-lgio-2.0 </p>
+</li>
+<li><p>-lgobject-2.0 </p>
+</li>
+<li><p>-lglib-2.0 </p>
+</li>
+<li><p>-ldbus-1</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 或者通过dpkg查看相关依赖库是否已经安装</span></span><br><span class="line">dpkg -l | grep libglib2.0-dev</span><br><span class="line">dpkg -l | grep libdbus-1-dev</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过dpkg查看相关依赖库是否已经安装</span></span><br><span class="line">dpkg -l | grep libglib2.0-dev</span><br><span class="line">dpkg -l | grep libdbus-1-dev</span><br></pre></td></tr></table></figure>
 
 <p>涉及的依赖包有如下：</p>
 <ul>
@@ -431,8 +486,8 @@
 <ul>
 <li>org.freedesktop.DBus.Peer</li>
 <li>org.freedesktop.DBus.Introspectable</li>
-<li>org.freedesktop.DBus.Properties：用于获取和设置对象属性，并监听属性变化</li>
-<li>org.freedesktop.DBus.ObjectManager：用于管理和监控 D-Bus 对象，通常用于获取所有对象及其接口和属性。</li>
+<li><strong>org.freedesktop.DBus.Properties</strong>：用于获取和设置对象属性，并监听属性变化</li>
+<li><strong>org.freedesktop.DBus.ObjectManager</strong>：用于管理和监控 D-Bus 对象，通常用于获取所有对象及其接口和属性。</li>
 </ul>
 <h4 id="org-freedesktop-DBus-Properties"><a href="#org-freedesktop-DBus-Properties" class="headerlink" title="org.freedesktop.DBus.Properties"></a>org.freedesktop.DBus.Properties</h4><p>常用的方法有：</p>
 <ul>
@@ -927,24 +982,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/08/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>wpa-supplicant application</title>
     <url>/2024/08/12/wpa-supplicant%20application/</url>
     <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
@@ -988,5 +1025,23 @@
         <tag>Wi-Fi</tag>
         <tag>wpa_supplicant</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/08/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
 </search>
