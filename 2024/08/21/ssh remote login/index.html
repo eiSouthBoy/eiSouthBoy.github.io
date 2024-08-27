@@ -19,29 +19,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="ntp在所有主机上都存在，用户本地时间与世界标准时间进行同步，那么它有哪些知识点需要熟悉呢？ 暂时先记录一笔，后续抽时间调研。">
+    <meta name="description" content="常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ntp application">
-<meta property="og:url" content="https://eisouthboy.github.io/2024/08/12/ntp%20application/index.html">
+<meta property="og:title" content="ssh remote login">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/08/21/ssh%20remote%20login/index.html">
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
-<meta property="og:description" content="ntp在所有主机上都存在，用户本地时间与世界标准时间进行同步，那么它有哪些知识点需要熟悉呢？ 暂时先记录一笔，后续抽时间调研。">
+<meta property="og:description" content="常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-08-12T15:35:33.000Z">
-<meta property="article:modified_time" content="2024-08-17T11:16:51.298Z">
+<meta property="article:published_time" content="2024-08-21T09:25:00.000Z">
+<meta property="article:modified_time" content="2024-08-22T07:06:41.560Z">
 <meta property="article:author" content="eiSouthBoy">
-<meta property="article:tag" content="ntp">
-<meta property="article:tag" content="time sync">
+<meta property="article:tag" content="ssh">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://eisouthboy.github.io/2024/08/12/ntp%20application/">
+<link rel="canonical" href="https://eisouthboy.github.io/2024/08/21/ssh%20remote%20login/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/12/ntp%20application/","path":"2024/08/12/ntp application/","title":"ntp application"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/21/ssh%20remote%20login/","path":"2024/08/21/ssh remote login/","title":"ssh remote login"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>ntp application | eiSouthBoy's Blog</title>
+<title>ssh remote login | eiSouthBoy's Blog</title>
   
 
 
@@ -140,7 +139,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="nav-number">1.</span> <span class="nav-text">时间同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">配置文件</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ssh"><span class="nav-number">1.</span> <span class="nav-text">安装ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95ssh"><span class="nav-number">2.</span> <span class="nav-text">登录ssh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%98%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.1.</span> <span class="nav-text">秘钥登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.2.</span> <span class="nav-text">公钥登录</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -217,7 +216,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/12/ntp%20application/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/21/ssh%20remote%20login/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -230,12 +229,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="ntp application | eiSouthBoy's Blog">
-      <meta itemprop="description" content="ntp在所有主机上都存在，用户本地时间与世界标准时间进行同步，那么它有哪些知识点需要熟悉呢？ 暂时先记录一笔，后续抽时间调研。">
+      <meta itemprop="name" content="ssh remote login | eiSouthBoy's Blog">
+      <meta itemprop="description" content="常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          ntp application
+          ssh remote login
         </h1>
 
         <div class="post-meta-container">
@@ -246,14 +245,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-08-12 15:35:33" itemprop="dateCreated datePublished" datetime="2024-08-12T15:35:33+00:00">2024-08-12</time>
+      <time title="Created: 2024-08-21 09:25:00" itemprop="dateCreated datePublished" datetime="2024-08-21T09:25:00+00:00">2024-08-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-08-17 11:16:51" itemprop="dateModified" datetime="2024-08-17T11:16:51+00:00">2024-08-17</time>
+      <time title="Modified: 2024-08-22 07:06:41" itemprop="dateModified" datetime="2024-08-22T07:06:41+00:00">2024-08-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -275,7 +274,7 @@
     </span>
 </div>
 
-            <div class="post-description">ntp在所有主机上都存在，用户本地时间与世界标准时间进行同步，那么它有哪些知识点需要熟悉呢？ 暂时先记录一笔，后续抽时间调研。</div>
+            <div class="post-description">常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。</div>
  
         </div>
       </header>
@@ -283,7 +282,69 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>
+    <div class="post-body" itemprop="articleBody"><h2 id="安装ssh"><a href="#安装ssh" class="headerlink" title="安装ssh"></a>安装ssh</h2><p>一般都是在本地PC通过ssh远程连接服务器，在本地PC基本都有ssh client程序，而服务器不一定会有ssh server程序。所以首先第一步要确认服务器是否已经安装了ssh server程序（即openssh-server），若已经安装，则跳过；若没有安装，则接下来安装步骤。</p>
+<ul>
+<li><p>服务器上检查是否安装 openssh-server</p>
+<p>可以通过如下命令查询：<code>dpkg -l | grep openssh-server</code></p>
+</li>
+<li><p>服务器上安装openssh-server</p>
+<p>可以通过如下命令安装：<code>sudo apt update &amp;&amp; sudo apt install openssh-server</code></p>
+</li>
+<li><p>服务器上检查sshd服务是否启动</p>
+<p>可以通过几种方式去查询，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式1</span></span><br><span class="line">ps -ef | grep sshd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式2</span></span><br><span class="line">systemctl status ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式3</span></span><br><span class="line">service ssh status</span><br></pre></td></tr></table></figure>
+
+<p>若服务没有启动，则可以通过几种方式去启动，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式1</span></span><br><span class="line">systtemctl start ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式2</span></span><br><span class="line">service ssh start</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>至此，在服务器上安装ssh（即openssh-server）完成。</p>
+<h2 id="登录ssh"><a href="#登录ssh" class="headerlink" title="登录ssh"></a>登录ssh</h2><p>在服务器上安装ssh后，可以在本地PC通过连接到服务器ssh，登录的方式有：秘钥登录 和 公钥登录。</p>
+<h3 id="秘钥登录"><a href="#秘钥登录" class="headerlink" title="秘钥登录"></a>秘钥登录</h3><p>秘钥登录就是通过用户名和密码进行登录，例如通过秘钥登录到树莓派（作为服务器角色）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># raspberry是树莓派的主机名，也可以替换为树莓派的IP地址。执行命令后，会要求输入pi用户的密码。</span></span><br><span class="line">ssh pi@raspberry</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="公钥登录"><a href="#公钥登录" class="headerlink" title="公钥登录"></a>公钥登录</h3><p>公钥登录是指将本地PC的公钥上传到服务器上，本地PC将登录信息用私钥签名给服务器，服务器用本地PC的公钥鉴别。</p>
+<ul>
+<li><p>本地PC创建公钥</p>
+<p>通过命令创建公钥：<code>ssh-keygen</code>，接下来一路回车即可创建完成。</p>
+<p>秘钥生成的文件：<code>~/.ssh/id_rsa.pub</code> 和 <code>~/.ssh/id_rsa</code></p>
+</li>
+<li><p>上传公钥到服务器</p>
+<p>通过命令将公钥上传到服务器，可以使用如下命令：<code>cd ~/.ssh &amp;&amp; scp id_rsa.pub pi@raspberry:/home/pi</code></p>
+</li>
+<li><p>服务器修改ssh配置</p>
+<p>先在服务器创建 <code>~/.ssh/authorized_keys</code>，然后将本地PC的公钥写进入。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件</span></span><br><span class="line"><span class="built_in">mkdir</span> /home/pi/.ssh </span><br><span class="line"><span class="built_in">touch</span> /home/pi/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥写入</span></span><br><span class="line"><span class="built_in">cd</span> /home/pi/.ssh</span><br><span class="line"><span class="built_in">cat</span> /home/pi/id_rsa.pub &gt;&gt; authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改文件权限</span></span><br><span class="line"><span class="built_in">chmod</span> 600 authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>最后修改ssh的配置文件：<code>/etc/ssh/sshd_config</code>，涉及到的选项有：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 公钥登录许可</span></span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>公钥登录</p>
+<p>修改完ssh服务的配置文件后，重启ssh服务，接着本地PC通过公钥登录服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启ssh服务 方式1</span></span><br><span class="line">systemctl restart ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># # 重启ssh服务 方式2</span></span><br><span class="line">service ssh restart</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>本地PC通过ssh公钥认证登录：<code>ssh pi@raspberry</code>，此时会直接登录，无需密码。</p>
+<p>登录成功提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">eiSouthBoy@eiSouthBoy-NMH-WCX9:~$ ssh  pi@raspberry</span><br><span class="line">Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-1009-raspi aarch64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/pro</span><br><span class="line"></span><br><span class="line">Expanded Security Maintenance <span class="keyword">for</span> Applications is not enabled.</span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line">Enable ESM Apps to receive additional future security updates.</span><br><span class="line">See https://ubuntu.com/esm or run: <span class="built_in">sudo</span> pro status</span><br><span class="line"></span><br><span class="line">*** System restart required ***</span><br><span class="line">Last login: Thu Aug 22 11:10:19 2024 from fdfc:869c:9ebb:0:2803:5d58:2f66:5d78</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 
     
@@ -292,22 +353,18 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ntp/" rel="tag"># ntp</a>
-              <a href="/tags/time-sync/" rel="tag"># time sync</a>
+              <a href="/tags/ssh/" rel="tag"># ssh</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/08/12/wpa-supplicant%20application/" rel="prev" title="wpa-supplicant application">
-                  <i class="fa fa-angle-left"></i> wpa-supplicant application
+                <a href="/2024/08/18/Shell%20and%20Shell%20Scripts/" rel="prev" title="Shell and Shell Scripts">
+                  <i class="fa fa-angle-left"></i> Shell and Shell Scripts
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/08/13/Matter%20Standard/" rel="next" title="Matter Standard">
-                  Matter Standard <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
