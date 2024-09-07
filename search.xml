@@ -1,10 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Blog deploy to Github Page.md</title>
+    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-11 星期日 晴</p>
+</blockquote>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
+<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
+</blockquote>
+<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
+<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
+<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
+<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
+<p>创建公钥前，需要配置git的用户名和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>该命令执行完毕后，提示公钥文件保存的路径</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的<strong>github个人图像 –&gt; Settings –&gt; SSH and GPG Keys –&gt; New SSH Key</strong>，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br></pre></td></tr></table></figure>
+
+<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在可以部署到Github上了，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
+<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
+<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
+<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
+<p>当然，我们可以修改本地的master名称，过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
+]]></content>
+      <tags>
+        <tag>Github</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Create Blog with hexo</title>
+    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
+    <content><![CDATA[<blockquote>
+<p>2024-08-10 星期六 晴</p>
+</blockquote>
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
+<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
+<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
+<ul>
+<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
+<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
+<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
+<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
+</ul>
+<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
+<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
+</blockquote>
+<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
+<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
+
+<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面基本环境搭建起来后，发现有两个小问题：</p>
+<ul>
+<li>cj用户无法使用sudo</li>
+<li>git命令无法自动补全</li>
+</ul>
+<p><strong>解决第一个问题：</strong></p>
+<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
+<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
+
+<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
+<p><strong>解决第二个问题：</strong></p>
+<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
+<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
+<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再次运行博客，可以看下如下提示：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
+<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
+]]></content>
+      <categories>
+        <category>Blog</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>Blog</tag>
+        <tag>hexo-theme-next</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ESP32-C3-DevKitM-1 Schematic</title>
     <url>/2024/09/07/ESP32-C3-DevKitM-1-Schematic/</url>
     <content><![CDATA[<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>先看一下开发板的缩略图：</p>
-<p><img src="/.io//Snipaste_esp32c3_2024-09-07_11-47-30.png" alt="开发板的缩略图"></p>
+<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_11-47-30.png" alt="开发板的缩略图"></p>
 <p>缩略图只列举了功能模块部分，并没有体现电路部分。但是还是可以通过上图知道该开发板提供的功能：</p>
 <ul>
 <li>Micro MiNi-USB：支持供电（3.3V）和传输数据（通过USB-UART Bridge实现）</li>
@@ -16,7 +156,7 @@
 <li>BT：支持蓝牙功能</li>
 </ul>
 <h2 id="按键电路图"><a href="#按键电路图" class="headerlink" title="按键电路图"></a>按键电路图</h2><p>接下来看一下Boot和RST按键的电路图：</p>
-<p><img src="/.io//Snipaste_esp32c3_2024-09-07_12-01-02.png"></p>
+<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_12-01-02.png"></p>
 <p>SW1按键（即Boot按键），当SW1被按下时，电路被导通，GPIO9从高电平到低电平变化；反之，当SW1被松开时，电路被断开，GPIO9从低电平到高电平变化；</p>
 <p>SW2按键（即RST按键），当SW2被按下时，电路被导通，CHIP_PU被置为低电平，直接将开发板复位。</p>
 ]]></content>
@@ -28,17 +168,80 @@
       </tags>
   </entry>
   <entry>
-    <title>esp-matter: blink project</title>
-    <url>/2024/09/06/esp-matter-blink-project/</url>
-    <content><![CDATA[<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>blink示例的目录结构：</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">--blink</span><br><span class="line">  |--main（必有的main目录）</span><br><span class="line">     |--blink_example.c</span><br><span class="line">     |--CMakeLists.txt（底层编译配置文件）</span><br><span class="line">     |--idf_componect.yml</span><br><span class="line">     |--Kconfig.projbuild（Kconfig配置文件）</span><br><span class="line">  |--CMakeLists.txt（顶层编译配置文件）</span><br><span class="line">  |--pytest_blink.py</span><br><span class="line">  |--README.md</span><br><span class="line">  |--sdkconfig.ci.led_strip_spi</span><br></pre></td></tr></table></figure>
-
+    <title>Matter Standard</title>
+    <url>/2024/08/13/Matter%20Standard/</url>
+    <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
+<p><strong>用户：</strong></p>
+<p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
+<p><strong>厂商：</strong></p>
+<p>如果厂商生产了支持苹果生态的IoT设备，那么它的目标用户是持有苹果手机的用户。对于同一款产品（例如：色温灯），厂商为了获取更多的用户，就必须开发支持各种生态的产品（例如：苹果生态色温灯、谷歌生态色温灯…）。对于厂商来说，产品还是一样的，只是软件层面的不同，不得不生产支持不同生态的同一款产品，生产成本又是一个的问题。</p>
+<p><strong>Matter：</strong></p>
+<p>如果厂商生产的IoT产品支持Matter标准，那么对于用户来说，不管你使用的是苹果手机，还是谷歌手机，你都可以将IoT产品添加到你当前的生态中。对于用户，购买的IoT产品适配各种生态，完全不用担心换手机会导致IoT产品无法使用的问题。对于厂商，不用再投入很大的成本去生产支持各种生态的IoT设备，仅需要生产支持Matter标准的IoT产品。</p>
+<p>甚至，IoT产品添加到苹果生态后，你还可以将该产品分享给其他生态（谷歌生态、亚马逊生态、三星生态…）使用，完全打破了生态壁垒。</p>
+<p>Matter是由CSA发布的一个应用层标准，它的传输是建立在支持IPv6的TCP和UDP协议上的，Matter不对传输层进行约定，Matter也不对网络进行约定，但是Matter约定了只能使用 <em>Thread&#x2F;Wi-Fi&#x2F;Ethernet</em> 三种连接协议，也就是说Matter可以让不同网络中的设备进行互联互通通信，这个主要是指Thread Board Router 可以实现 Wi-Fi 和 Thread 通信互转。不仅如此，Matter还允许接入其他网络设备，比如ZigBee设备，这主要通过一个 <em>Matter bridge</em> 设备来实现。</p>
+<p>在Matter拓扑结构中，还有一个节点非常重要：<em>Matter controller</em>，Matter controller用来完成配网和远程控制设备，比如苹果的 HomePod mini &amp; Home app 组合就是一个典型的Matter controller节点。</p>
+<p>Thread协议由Thread Group制定，所以Matter over Thread产品必须通过Thread Group的认证。Wi-Fi则由Wi-Fi联盟进行规范，所以Matter over Wi-Fi产品必须通过Wi-Fi Alliance认证。</p>
+<ul>
+<li><p><strong>Matter over WiFi</strong>：指使用WiFi网络来传输Matter协议的信息。</p>
+</li>
+<li><p><strong>Matter over Thread</strong>：指使用Thread网络来传输Matter协议的信息。</p>
+</li>
+</ul>
+<p><strong>文档：</strong></p>
+<p>Matter官方文档（主要有3份）：</p>
+<ul>
+<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
+<li>Matter 1.3 Core Specification：核心规范</li>
+<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
+</ul>
+<p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
+<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如一个有两盏灯的灯具（一盏可调光灯和一盏普通灯）。</p>
+<h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
+<p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
+<h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>
+<p>对于色温灯，其中Endpoint 1是可调光灯，它有两个cluster，分别是：On&#x2F;Off cluster 和 Level Control cluster 。</p>
+<p>Matter定义了两种类型的cluster：</p>
+<ul>
+<li>server：提供Attributes、Commands、Events，通常指 Matter 设备。</li>
+<li>client：对server发起交互（interaction）操作，通常指 Matter Controller。</li>
+</ul>
+<h4 id="attributes（属性）"><a href="#attributes（属性）" class="headerlink" title="attributes（属性）"></a>attributes（属性）</h4><p>属性表示可以读取或写入的内容。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 attributess 是 OnOff 。</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 attributess 是 CurrentLevel 。</p>
+<h4 id="Command（命令）"><a href="#Command（命令）" class="headerlink" title="Command（命令）"></a>Command（命令）</h4><p>命令提供在集群上调用特定行为的能力。</p>
+<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 Commands 有：On、Off、Toggle</p>
+<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 Commands 有：MoveToLevel 。</p>
+<h4 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h4><p>Event其实是一种特殊的attributes，它用来更新设备的状态。</p>
+<h3 id="Interaction-Model（交互模型）"><a href="#Interaction-Model（交互模型）" class="headerlink" title="Interaction Model（交互模型）"></a>Interaction Model（交互模型）</h3><p>通俗地讲，Interaction model就是用来规定交互命令集的，我们把发起交互的节点叫initiator (一般都是client设备)，而接收者称为target (一般为server设备)。</p>
+<p>Matter定义了如下interaction类型：</p>
+<ul>
+<li><strong>Read</strong></li>
+</ul>
+<p>​	用来读取attributes或events的值</p>
+<ul>
+<li><strong>Write</strong></li>
+</ul>
+<p>​	用来修改attribute的值</p>
+<ul>
+<li><strong>Invoke</strong></li>
+</ul>
+<p>​	用来发送commands</p>
+<ul>
+<li><strong>Subscribe</strong></li>
+</ul>
+<p>​	用来订阅target的数据报告，从而不用定时去查询相关数据，我们可以订阅attribute，也可以订阅event。</p>
+<p>Interaction本身由transaction组成，而transaction又由action组成，每个action包含1条或者多条信息。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.espressif.com/what-does-matter-mean-to-you-fa3bb53a7793">What does Matter mean to you?</a></p>
+<p><a href="https://blog.espressif.com/matter-clusters-attributess-commands-82b8ec1640a0">Matter: Clusters, attributess, Commands</a></p>
+<p><a href="https://mp.weixin.qq.com/s/xU82G0LL-92zd86iXChwKQ">Matter开发，看这一篇就够了</a></p>
 ]]></content>
       <categories>
-        <category>esp32c3</category>
+        <category>Matter</category>
       </categories>
       <tags>
-        <tag>点灯</tag>
+        <tag>Matter Standard</tag>
+        <tag>CSA</tag>
+        <tag>IoT</tag>
       </tags>
   </entry>
   <entry>
@@ -1569,64 +1772,6 @@
       </tags>
   </entry>
   <entry>
-    <title>core dump and gdb</title>
-    <url>/2024/09/03/core-dump-and-gdb/</url>
-    <content><![CDATA[<h2 id="core-dump功能"><a href="#core-dump功能" class="headerlink" title="core dump功能"></a>core dump功能</h2><p><code>core dump</code> 文件是在程序因严重错误（如段错误）而崩溃时由操作系统生成的一个内存映像文件（支持自定义设置设备文件名格式）。这个文件包含了程序崩溃时刻的内存状态，包括寄存器的状态、栈、全局变量等数据。这对于调试程序（gdb）非常有用，因为它可以帮助开发者理解程序在崩溃前的状态，从而定位和解决问题。</p>
-<p>linux系统默认关闭core dump文件的生成，原因是：需要占用一部分系统开销。</p>
-<ul>
-<li>查看core dump是否开启</li>
-</ul>
-<p>可以通过命令查看是否启动core dump功能：<code>ulimit -c</code>，若打印结果为：0，说明没有启动core dump功能。</p>
-<p><em>可以通过该命令查看详细信息：<code>ulimit -a</code></em></p>
-<ul>
-<li>开启core dump功能</li>
-</ul>
-<p>在当前的shell窗口启用core dump功能，执行：<code>ulimit -c unlimited</code> ，即生成的core文件大小不受限制。如果想限制core文件的大小，可以执行：<code>ulimit -c 1024</code>，即生成的core文件最大限制为1024KB。如果想关闭core dump功能，执行：<code>ulimit -c 0</code> 即可。</p>
-<p><em>注意：shell窗口关闭后，core dump功能失效</em></p>
-<ul>
-<li>core dump文件名格式</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看core dump文件名格式。%p表示程序ID，%e表示程序文件名</span></span><br><span class="line">$ <span class="built_in">cat</span> /proc/sys/kernel/core_pattern</span><br><span class="line">/data/core-%p-%e</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>core dump文件的生成</li>
-</ul>
-<p>在使用gcc编译目标程序时，添加参数 <code>-g</code> ，执行目标程序，复现Segment Fault错误，此时在生成了core dump文件 <code>core-2585-g_main_loop_run</code></p>
-<h2 id="gdb调试功能"><a href="#gdb调试功能" class="headerlink" title="gdb调试功能"></a>gdb调试功能</h2><p>将core dump文件拷贝至宿主机，用交叉编译链gdb去分析core dump文件。但是执行：<code>./arm-linux-gnueabihf-gdb --help</code> ，报错并提示缺少动态库文件。</p>
-<p>查看一下gdb依赖的动态库文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@5aee87bd72ed:/workspace/xxx/prebuilts/gcc/linux-x86/arm/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin$ ldd ./arm-linux-gnueabihf-gdb</span><br><span class="line">        linux-vdso.so.1 (0x00007ffea9745000)</span><br><span class="line">        libtinfo.so.5 =&gt; not found</span><br><span class="line">        libncursesw.so.5 =&gt; not found</span><br><span class="line">        libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x0000719329bca000)</span><br><span class="line">        libpython2.7.so.1.0 =&gt; not found</span><br><span class="line">        libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x0000719329837000)</span><br><span class="line">        libutil.so.1 =&gt; /lib/x86_64-linux-gnu/libutil.so.1 (0x0000719329832000)</span><br><span class="line">        libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007193296e1000)</span><br><span class="line">        libexpat.so.1 =&gt; /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007193296b3000)</span><br><span class="line">        libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007193294c1000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x0000719329c41000)</span><br><span class="line">        libtinfo.so.6 =&gt; /lib/x86_64-linux-gnu/libtinfo.so.6 (0x0000719329491000)</span><br><span class="line">        libz.so.1 =&gt; /lib/x86_64-linux-gnu/libz.so.1 (0x0000719329475000)</span><br></pre></td></tr></table></figure>
-
-<p>分别有三个动态库文件找不到：libtinfo.so.5、libncursesw.so.5、libpython2.7.so.1.0</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装libncurses5 可以解决libtinfo.so.5缺失的问题</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libncurses5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装libpython2.7 可以解决libpython2.7.so.1.0缺失问题</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libpython2.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装libncursesw5-dev后，并创建动态库的软链接</span></span><br><span class="line"><span class="comment"># 安装时，可以显示已经安装了，没有最新安装。而且安装的动态库是libncursesw.so.6.2</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libncursesw5-dev</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /usr/lib/x86_64-linux-gnu/libncursesw.so.6.2 /usr/lib/x86_64-linux-gnu/libncursesw.so.5</span><br></pre></td></tr></table></figure>
-
-<p>至此，gdb可以正常运行。</p>
-<p>调试目标程序和其对应的core dump文件，执行：&#96;.&#x2F;arm-linux-gnueabihf-gdb .&#x2F;target_program .&#x2F;core-2585-g_main_loop_run</p>
-<p><em>注意：这里将目标程序和对应的core dump文件拷贝到了和gdb同一文件夹</em></p>
-<p>以下是执行的结果：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Use the <span class="string">&quot;info sharedlibrary&quot;</span> <span class="built_in">command</span> to see the complete listing.</span><br><span class="line">Do you need <span class="string">&quot;set solib-search-path&quot;</span> or <span class="string">&quot;set sysroot&quot;</span>?</span><br><span class="line">Core was generated by `./bt-ctl/bt-ctl<span class="string">&#x27;.</span></span><br><span class="line"><span class="string">Program terminated with signal SIGSEGV, Segmentation fault.</span></span><br><span class="line"><span class="string">#0  0x00000000 in ?? ()</span></span><br><span class="line"><span class="string">[Current thread is 1 (LWP 2588)]</span></span><br><span class="line"><span class="string">(gdb) bt</span></span><br><span class="line"><span class="string">#0  0x00000000 in ?? ()</span></span><br><span class="line"><span class="string">#1  0xa6def8b0 in ?? ()</span></span><br><span class="line"><span class="string">Backtrace stopped: previous frame identical to this frame (corrupt stack?)</span></span><br><span class="line"><span class="string">(gdb) </span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到程序是由于SIGSEGV导致异常终止，通过 <code>bt</code> 打印堆栈，却看不到详细信息。由于我的目标程序无法移植到宿主机运行，故无法查看具体是由于哪一行代码导致的报错。</p>
-<p>但是可以修改代码，在程序中捕捉SIGSEGV信号，并打印出堆栈信息。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 需要的头文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;execinfo.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">printStackTrace</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">void</span> *callStack[<span class="number">1280</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> **messages = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">int</span> numFrames = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取调用栈信息</span></span><br><span class="line">    numFrames = backtrace(callStack, <span class="number">1280</span>);</span><br><span class="line">    messages = backtrace_symbols(callStack, numFrames);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Obtained %zd frames.\n&quot;</span>, numFrames);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numFrames; ++i) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;  %2d %s\n&quot;</span>, i, messages[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(messages); <span class="comment">// 释放内存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jardaliao.github.io/2024/08/07/%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%8C%E6%9D%BF%E5%AD%90%E9%87%8C%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%B4%A9%E4%BA%86/">1、怎么办，板子里的程序崩了</a></p>
-<p><a href="https://blog.csdn.net/lsqtzj/article/details/108553576#:~:text=%E8%BF%99%E4%B8%AA%E9%94%99%E8%AF%AF%E9%80%9A%E5%B8%B8%E6%98%AF%E7%94%B1">2、ubuntu 缺少 libtinfo.so.5 问题</a></p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>gdb</tag>
-        <tag>core dump</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Matter: Switches and Controls Device Types</title>
     <url>/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/</url>
     <content><![CDATA[<p>开关类设备的类别也为多种，包括：On&#x2F;Off Light Switch、Dimmer Switch、Color Dimmer Switch、Control Bridge、Pump Controller、Generic Switch</p>
@@ -2145,6 +2290,1084 @@
       </tags>
   </entry>
   <entry>
+    <title>Matter：Lighting Device Types</title>
+    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
+    <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
+<ul>
+<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
+<li>饱和度（saturation）表示可见光的相对带宽</li>
+<li>亮度（brightness）表示可见光的能量强度</li>
+</ul>
+<p>Lighting所有设备类型信息：</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0100</td>
+<td>On&#x2F;Off Light</td>
+</tr>
+<tr>
+<td>0x0101</td>
+<td>Dimmable Light</td>
+</tr>
+<tr>
+<td>0x010c</td>
+<td>Color Temperature Light</td>
+</tr>
+<tr>
+<td>0x010d</td>
+<td>Extended Color Light</td>
+</tr>
+</tbody></table>
+<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0100</td>
+<td>On&#x2F;Off Light</td>
+<td></td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Group</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><p>可调光灯是一种能够打开或关闭的照明设备，其光线强度可通过绑定控制器设备（例如调光开关或颜色调光开关）进行调节。此外，可调光灯设备还能够通过绑定占用传感器或其他设备进行切换。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0101</td>
+<td>Dimmable Light</td>
+<td>On&#x2F;Off Light</td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Groups</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identity</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><p>色温灯是一种照明设备，可以通过绑定的控制器设备（例如调光开关）打开或关闭、调节光线强度和调节色温。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x010c</td>
+<td>Color Temperature Light</td>
+<td>Dimmable Light</td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Groups</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identity</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>ColorTemperature</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Attribute</td>
+<td>RemainingTime</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+</tbody></table>
+<h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2><p>扩展色光灯是一种照明设备，可通过绑定控制器设备（如调光开关或控制桥）打开或关闭、调整光强度和调整颜色。该设备支持通过色调&#x2F;饱和度、增强色调、颜色循环、XY 坐标和色温调整颜色。此外，扩展色光灯还可通过绑定占用传感器进行切换。</p>
+<p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Device Name</th>
+<th>Superset</th>
+<th>Class</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x010d</td>
+<td>Extended Color Light</td>
+<td>Color Temperature Light</td>
+<td>Simple</td>
+<td>Endpoint</td>
+</tr>
+</tbody></table>
+<p><strong>集群：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Client&#x2F;Server</th>
+<th>Quality</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identify</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>Groups</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Server</td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Server</td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0406</td>
+<td>Occupancy Sensing</td>
+<td>Client</td>
+<td></td>
+<td>O</td>
+</tr>
+</tbody></table>
+<p>扩展色光等集群数据和色温灯的集群完成相同。</p>
+<p><strong>元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cluster</th>
+<th>Element</th>
+<th>Name</th>
+<th>Constraint</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0003</td>
+<td>Identity</td>
+<td>Command</td>
+<td>TriggerEffect</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0062</td>
+<td>Scenes Management</td>
+<td>Command</td>
+<td>CopyScene</td>
+<td></td>
+<td></td>
+<td>P,M</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>On&#x2F;Off</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>Lighting</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Feature</td>
+<td>OnOff</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>CurrentLevel</td>
+<td>1 to 254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MinLevel</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>Level Control</td>
+<td>Attribute</td>
+<td>MaxLevel</td>
+<td>254</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>ColorTemperature</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Attribute</td>
+<td>RemainingTime</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>HueSaturation</td>
+<td></td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>EnhancedHue</td>
+<td></td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>ColorLoop</td>
+<td></td>
+<td></td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0300</td>
+<td>Color Control</td>
+<td>Feature</td>
+<td>XY</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>matter-1-3-device-library-specification</tag>
+        <tag>Light of Matter Device</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Shell and Shell Scripts</title>
+    <url>/2024/08/18/Shell%20and%20Shell%20Scripts/</url>
+    <content><![CDATA[<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>在Linux中有很多Shell可以使用，常用的有如下：</p>
+<ul>
+<li>sh：即Bourne shell，由Steven Bourne开发，这是第一个流行的shell</li>
+<li>bash：即Bourne Again Shell，由GNU组织开发，属于Bourne shell的增强版本，这是Linux默认使用的shell</li>
+<li>csh：即C shell，由Bill Joy开发，这是流行于学术界Sun主机的shell</li>
+</ul>
+<p>虽然shell有很多种，但是学习和工作都是基于Linux，所以掌握bash即可。</p>
+<h3 id="bash的功能"><a href="#bash的功能" class="headerlink" title="bash的功能"></a>bash的功能</h3><ul>
+<li>历史命令记录（history）</li>
+<li>命令补全功能（bash-completion）</li>
+<li>命令别名设置（alias）</li>
+<li>shell脚本执行（shell scripts）</li>
+</ul>
+<h3 id="bash的命令分类"><a href="#bash的命令分类" class="headerlink" title="bash的命令分类"></a>bash的命令分类</h3><p>在bash中执行的命令分为两种类型：</p>
+<ul>
+<li><p>内置命令：内置命令是指集成在bash里面的可以执行的文件，例如：cd、pwd</p>
+</li>
+<li><p>外部命令：外部命令是文件系统里的可执行文件，例如用户下载的软件和编写的脚本文件</p>
+</li>
+</ul>
+<blockquote>
+<p>如何在bash中判断命令的类型？type target-command</p>
+</blockquote>
+<p>如果target-command是一个内置命令，则会打印如下信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">target-command is a shell <span class="built_in">builtin</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：使用时，将target-command替换具体的命令，例如：cd、ls</em></p>
+<h3 id="bash的技巧"><a href="#bash的技巧" class="headerlink" title="bash的技巧"></a>bash的技巧</h3><p>在使用bash中有很多常用的小技巧或者小功能，有必要学习和记录一下。</p>
+<ul>
+<li>命令换行：输入一行命令太长，阅读效果并不好，需要拆分成多行显示。在需要换行位置输入 <code>\</code> ，紧接着按下回车键（Enter），然后接着输入未完成的命令。</li>
+<li>光标跳转：输入一行命令后，发现行头附近有错误或者行尾处有错误，需要快速跳转到行头或行尾。通过组合键进行光标快速跳转，<code>Ctrl+A</code> 调到行头，<code>Ctrl+E</code> 跳到行尾</li>
+<li>环境变量：bash中有很多默认的环境变量，所以很多部命令不需要输入绝对路径就可以执行。通过 <code>env</code> 可以查询所有的默认环境变量。</li>
+</ul>
+<h2 id="Shell-Scripts"><a href="#Shell-Scripts" class="headerlink" title="Shell Scripts"></a>Shell Scripts</h2><blockquote>
+<p>shell scripts是什么？</p>
+</blockquote>
+<p>shell script是利用shell的功能所写的一个“程序（program）”，这个程序是使用纯文本文件，将一些shell的语法与指令（包含外部指令）写在里面，搭配正则表达式、管道命令与数据重定向等功能，以达到我们所想要的处理目的。</p>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>变量一般用于存放数据，而且可以支持修改，方便在不同环境执行时，仅仅修改变量即可使用。</p>
+<p>变量名的限制：</p>
+<ul>
+<li><p>变量名和等号之间不能有空格（语法规定）</p>
+</li>
+<li><p>变量名只能由字母（a<del>z， A</del>Z）、数字（0~9）、下划线（_）组成，且不能以数字开头</p>
+</li>
+<li><p>变量名不能使用shell中的关键字</p>
+</li>
+</ul>
+<p>简单示例1：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># a simple example, print string &quot;hello world&quot;</span></span><br><span class="line">str1=<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">str2=<span class="string">&quot;world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$str1</span> <span class="variable">$&#123;str2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：定义变量时，直接给变量赋值。使用变量时，必须通过<code>$</code>符号引用，而且建议用<code>&#123;&#125;</code>将变量包含起来。</em></p>
+<h3 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h3><p>判断语句一般用于检查条件符合什么条件，然后执行相应的内容。</p>
+<h3 id="if判断语句"><a href="#if判断语句" class="headerlink" title="if判断语句"></a>if判断语句</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># condition check, if [...];then</span></span><br><span class="line"></span><br><span class="line">target_file=condition.sh</span><br><span class="line">target_str=hello</span><br><span class="line"></span><br><span class="line"><span class="comment"># example 1</span></span><br><span class="line"><span class="keyword">if</span> [ -e <span class="variable">$&#123;target_file&#125;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$&#123;target_file&#125;</span> exist</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># example 2</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;target_str&#125;</span> == <span class="string">&quot;hello&quot;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span>  <span class="variable">$&#123;target_str&#125;</span> is exist</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$&#123;target_str&#125;</span> is not <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span>	</span><br><span class="line"></span><br><span class="line"><span class="comment"># example 3</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span>==<span class="string">&#x27;1&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;1&quot;</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span>==<span class="string">&#x27;2&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;2&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;other&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：</em></p>
+<p><em>1、第一行 <code>#!/bin/bash</code> 表示该shell文件使用bash语法</em></p>
+<p>2<em>、<code>$1</code> 表示传入第一个参数</em></p>
+<p>文件测试标志：</p>
+<ul>
+<li>-e：检查目标文件是否存在</li>
+<li>-f：检查目标文件是否存则且为普通文件</li>
+<li>-d：检查目标文件是否存在且文件目录</li>
+</ul>
+<p>整数之间的比较：</p>
+<ul>
+<li>-eq：相等</li>
+<li>-ne：不相等</li>
+<li>-gt：大于</li>
+<li>-lt：小于</li>
+<li>-ge：大于等于</li>
+<li>-le：小于等于</li>
+</ul>
+<p>字符串之间的比较：</p>
+<ul>
+<li>&#x3D;&#x3D;：字符串相同</li>
+<li>!&#x3D;：字符串不同</li>
+<li>-z：字符串长度是否为0</li>
+<li>-n：字符串长度是否为非0</li>
+</ul>
+<h3 id="case判断语句"><a href="#case判断语句" class="headerlink" title="case判断语句"></a>case判断语句</h3><p>通过传入的数字字符串来判断星期几</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># print weekday by a number</span></span><br><span class="line">option=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$&#123;option&#125;</span> <span class="keyword">in</span></span><br><span class="line">	1)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Mon&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	2)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Tue&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	3)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Wed&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	4)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Thu&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	5)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Fri&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	6)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Sat&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	7)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Sun&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	*)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;unkonwn&quot;</span></span><br><span class="line">		;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>执行循环体，打印从1到10</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 10)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Shell</tag>
+        <tag>Shell Scripts</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp-matter: blink project</title>
+    <url>/2024/09/06/esp-matter-blink-project/</url>
+    <content><![CDATA[<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>blink示例的目录结构：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">--blink</span><br><span class="line">  |--main（必有的main目录）</span><br><span class="line">     |--blink_example.c</span><br><span class="line">     |--CMakeLists.txt（底层编译配置文件）</span><br><span class="line">     |--idf_componect.yml</span><br><span class="line">     |--Kconfig.projbuild（Kconfig配置文件）</span><br><span class="line">  |--CMakeLists.txt（顶层编译配置文件）</span><br><span class="line">  |--pytest_blink.py</span><br><span class="line">  |--README.md</span><br><span class="line">  |--sdkconfig.ci.led_strip_spi</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>esp32c3</category>
+      </categories>
+      <tags>
+        <tag>点灯</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>core dump and gdb</title>
+    <url>/2024/09/03/core-dump-and-gdb/</url>
+    <content><![CDATA[<h2 id="core-dump功能"><a href="#core-dump功能" class="headerlink" title="core dump功能"></a>core dump功能</h2><p><code>core dump</code> 文件是在程序因严重错误（如段错误）而崩溃时由操作系统生成的一个内存映像文件（支持自定义设置设备文件名格式）。这个文件包含了程序崩溃时刻的内存状态，包括寄存器的状态、栈、全局变量等数据。这对于调试程序（gdb）非常有用，因为它可以帮助开发者理解程序在崩溃前的状态，从而定位和解决问题。</p>
+<p>linux系统默认关闭core dump文件的生成，原因是：需要占用一部分系统开销。</p>
+<ul>
+<li>查看core dump是否开启</li>
+</ul>
+<p>可以通过命令查看是否启动core dump功能：<code>ulimit -c</code>，若打印结果为：0，说明没有启动core dump功能。</p>
+<p><em>可以通过该命令查看详细信息：<code>ulimit -a</code></em></p>
+<ul>
+<li>开启core dump功能</li>
+</ul>
+<p>在当前的shell窗口启用core dump功能，执行：<code>ulimit -c unlimited</code> ，即生成的core文件大小不受限制。如果想限制core文件的大小，可以执行：<code>ulimit -c 1024</code>，即生成的core文件最大限制为1024KB。如果想关闭core dump功能，执行：<code>ulimit -c 0</code> 即可。</p>
+<p><em>注意：shell窗口关闭后，core dump功能失效</em></p>
+<ul>
+<li>core dump文件名格式</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看core dump文件名格式。%p表示程序ID，%e表示程序文件名</span></span><br><span class="line">$ <span class="built_in">cat</span> /proc/sys/kernel/core_pattern</span><br><span class="line">/data/core-%p-%e</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>core dump文件的生成</li>
+</ul>
+<p>在使用gcc编译目标程序时，添加参数 <code>-g</code> ，执行目标程序，复现Segment Fault错误，此时在生成了core dump文件 <code>core-2585-g_main_loop_run</code></p>
+<h2 id="gdb调试功能"><a href="#gdb调试功能" class="headerlink" title="gdb调试功能"></a>gdb调试功能</h2><p>将core dump文件拷贝至宿主机，用交叉编译链gdb去分析core dump文件。但是执行：<code>./arm-linux-gnueabihf-gdb --help</code> ，报错并提示缺少动态库文件。</p>
+<p>查看一下gdb依赖的动态库文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@5aee87bd72ed:/workspace/xxx/prebuilts/gcc/linux-x86/arm/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin$ ldd ./arm-linux-gnueabihf-gdb</span><br><span class="line">        linux-vdso.so.1 (0x00007ffea9745000)</span><br><span class="line">        libtinfo.so.5 =&gt; not found</span><br><span class="line">        libncursesw.so.5 =&gt; not found</span><br><span class="line">        libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x0000719329bca000)</span><br><span class="line">        libpython2.7.so.1.0 =&gt; not found</span><br><span class="line">        libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x0000719329837000)</span><br><span class="line">        libutil.so.1 =&gt; /lib/x86_64-linux-gnu/libutil.so.1 (0x0000719329832000)</span><br><span class="line">        libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007193296e1000)</span><br><span class="line">        libexpat.so.1 =&gt; /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007193296b3000)</span><br><span class="line">        libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007193294c1000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x0000719329c41000)</span><br><span class="line">        libtinfo.so.6 =&gt; /lib/x86_64-linux-gnu/libtinfo.so.6 (0x0000719329491000)</span><br><span class="line">        libz.so.1 =&gt; /lib/x86_64-linux-gnu/libz.so.1 (0x0000719329475000)</span><br></pre></td></tr></table></figure>
+
+<p>分别有三个动态库文件找不到：libtinfo.so.5、libncursesw.so.5、libpython2.7.so.1.0</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装libncurses5 可以解决libtinfo.so.5缺失的问题</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libncurses5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装libpython2.7 可以解决libpython2.7.so.1.0缺失问题</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libpython2.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装libncursesw5-dev后，并创建动态库的软链接</span></span><br><span class="line"><span class="comment"># 安装时，可以显示已经安装了，没有最新安装。而且安装的动态库是libncursesw.so.6.2</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libncursesw5-dev</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /usr/lib/x86_64-linux-gnu/libncursesw.so.6.2 /usr/lib/x86_64-linux-gnu/libncursesw.so.5</span><br></pre></td></tr></table></figure>
+
+<p>至此，gdb可以正常运行。</p>
+<p>调试目标程序和其对应的core dump文件，执行：&#96;.&#x2F;arm-linux-gnueabihf-gdb .&#x2F;target_program .&#x2F;core-2585-g_main_loop_run</p>
+<p><em>注意：这里将目标程序和对应的core dump文件拷贝到了和gdb同一文件夹</em></p>
+<p>以下是执行的结果：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Use the <span class="string">&quot;info sharedlibrary&quot;</span> <span class="built_in">command</span> to see the complete listing.</span><br><span class="line">Do you need <span class="string">&quot;set solib-search-path&quot;</span> or <span class="string">&quot;set sysroot&quot;</span>?</span><br><span class="line">Core was generated by `./bt-ctl/bt-ctl<span class="string">&#x27;.</span></span><br><span class="line"><span class="string">Program terminated with signal SIGSEGV, Segmentation fault.</span></span><br><span class="line"><span class="string">#0  0x00000000 in ?? ()</span></span><br><span class="line"><span class="string">[Current thread is 1 (LWP 2588)]</span></span><br><span class="line"><span class="string">(gdb) bt</span></span><br><span class="line"><span class="string">#0  0x00000000 in ?? ()</span></span><br><span class="line"><span class="string">#1  0xa6def8b0 in ?? ()</span></span><br><span class="line"><span class="string">Backtrace stopped: previous frame identical to this frame (corrupt stack?)</span></span><br><span class="line"><span class="string">(gdb) </span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到程序是由于SIGSEGV导致异常终止，通过 <code>bt</code> 打印堆栈，却看不到详细信息。由于我的目标程序无法移植到宿主机运行，故无法查看具体是由于哪一行代码导致的报错。</p>
+<p>但是可以修改代码，在程序中捕捉SIGSEGV信号，并打印出堆栈信息。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 需要的头文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;execinfo.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">printStackTrace</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">void</span> *callStack[<span class="number">1280</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> **messages = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">int</span> numFrames = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取调用栈信息</span></span><br><span class="line">    numFrames = backtrace(callStack, <span class="number">1280</span>);</span><br><span class="line">    messages = backtrace_symbols(callStack, numFrames);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Obtained %zd frames.\n&quot;</span>, numFrames);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numFrames; ++i) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;  %2d %s\n&quot;</span>, i, messages[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(messages); <span class="comment">// 释放内存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jardaliao.github.io/2024/08/07/%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%8C%E6%9D%BF%E5%AD%90%E9%87%8C%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%B4%A9%E4%BA%86/">1、怎么办，板子里的程序崩了</a></p>
+<p><a href="https://blog.csdn.net/lsqtzj/article/details/108553576#:~:text=%E8%BF%99%E4%B8%AA%E9%94%99%E8%AF%AF%E9%80%9A%E5%B8%B8%E6%98%AF%E7%94%B1">2、ubuntu 缺少 libtinfo.so.5 问题</a></p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>gdb</tag>
+        <tag>core dump</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp-matter：light project</title>
+    <url>/2024/08/15/esp-matter%EF%BC%9Alight%20project/</url>
+    <content><![CDATA[<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置目标"><a href="#设置目标" class="headerlink" title="设置目标"></a>设置目标</h3><p>开发板Soc是esp32-c3，故设置目标选择：esp32c3</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 激活esp-idf和esp-matter环境</span></span><br><span class="line">get_idf</span><br><span class="line">get_matter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标</span></span><br><span class="line">idf.py set-target esp32c3</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译固件"><a href="#编译固件" class="headerlink" title="编译固件"></a>编译固件</h3><p>直接开始编译固件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">idf.py build</span><br></pre></td></tr></table></figure>
+
+<h3 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h3><p>将开发板插入PC的USB接口，修改串口权限，开始烧录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：不同开发板的接入PC后，串口名称可能不同，目前已知的两种名称：<code>/dev/ttyUSB0</code> 和 <code>/dev/ttyACM0</code></em></p>
+<h2 id="配网"><a href="#配网" class="headerlink" title="配网"></a>配网</h2><p>通过BLE方式给设备配网：指通过低功耗蓝牙（即BLE）将SSID和密码发送给WiFi设备，然后WiFi连接到指定的WiFi网络。</p>
+<blockquote>
+<p>什么是配网？</p>
+</blockquote>
+<p>配网指的是外部向 WiFi 设备提供 SSID和密码，以便 WiFi 设备可以连接指定的AP并加入AP所建立的 WiFi 网络。配网的核心问题是通过各种方法（SoftAP配网、一键配网、蓝牙配网、其他方式配网），将WiFi的 SSID和密码发送到需要联网的WiFi设备，然后由WiFi设备去连接指定的WiFi网络，达到接入局域网或互联网的目的。</p>
+<p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。</p>
+<p><strong>单次执行：</strong></p>
+<p>单次执行配网命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>0x7283</code> 是自定义一个随机的node_id</p>
+</li>
+<li><p><code>20202021</code> 是setup_passcode</p>
+</li>
+<li><p><code>3840</code> 是discriminator</p>
+</li>
+</ul>
+<p><em>单次执行容易导致超时，建议使用交互执行！！！</em></p>
+<p><strong>交互执行（建议）：</strong></p>
+<p><strong>Terminal A</strong>处于等待配网状态，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (1725) esp_matter_core: Dynamic endpoint 1 added</span><br><span class="line">I (1735) chip[DL]: WIFI_EVENT_STA_START</span><br><span class="line">W (1735) wifi:Haven<span class="string">&#x27;t to connect to a suitable AP now!</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Done driving station state, nothing else to do...</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Configuring CHIPoBLE advertising (interval 25 ms, connectable)</span></span><br><span class="line"><span class="string">I (1755) NimBLE: GAP procedure initiated: advertise; </span></span><br><span class="line"><span class="string">I (1765) NimBLE: disc_mode=2</span></span><br><span class="line"><span class="string">I (1765) NimBLE:  adv_channel_map=0 own_addr_type=1 adv_filter_policy=0 adv_itvl_min=40 adv_itvl_max=40</span></span><br><span class="line"><span class="string">I (1775) NimBLE: </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I (1775) chip[DL]: CHIPoBLE advertising started</span></span><br><span class="line"><span class="string">I (1785) app_main: Commissioning window opened</span></span><br><span class="line"><span class="string">I (1855) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">&gt; I (4725) esp_matter_core: Store the deferred attribute 0x0 of cluster 0x8 on endpoint 0x1</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：若想将设备清除所有的配网信息，可以将设备恢复出厂状态，在 Terminal A 执行命令：<code>matter device factoryreset</code></em></p>
+<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code>，此时进入交互模式，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | Command sets:                                                                       |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | * any                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> sending IM messages based on cluster <span class="built_in">id</span>, not cluster name.         |</span><br><span class="line">  | * delay                                                                             |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> waiting <span class="keyword">for</span> something to happen.                                   |</span><br><span class="line">  | * discover                                                                          |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> device discovery.                                                  |</span><br><span class="line">  | * groupsettings                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> manipulating group keys and memberships <span class="keyword">for</span> chip-tool itself.      |</span><br><span class="line">  | * icd                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> client-side ICD management.                                        |</span><br><span class="line">  | * pairing                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> commissioning devices.                                             |</span><br><span class="line">  | * payload                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> parsing and generating setup payloads.                             |</span><br><span class="line">  | * sessionmanagement                                                                 |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing CASE and PASE session state.                              |</span><br><span class="line">  | * subscriptions                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> shutting down subscriptions.                                       |</span><br><span class="line">  | * interactive                                                                       |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> starting long-lived interactive modes.                             |</span><br><span class="line">  | * storage                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing persistent data stored by chip-tool.                      |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">&gt;&gt;&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在交互模式内执行命令为设备配网：<code>pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</code>。若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (323035) wifi:&lt;ba-add&gt;idx:1 (ifx:0, <span class="built_in">fc</span>:83:c6:00:8f:ae), tid:6, ssn:1, winSize:64</span><br><span class="line">I (323075) chip[DL]: Confirm received <span class="keyword">for</span> CHIPoBLE TX characteristic indication (con 1) status= 14 </span><br><span class="line">I (323845) esp_netif_handlers: sta ip: 192.168.5.201, mask: 255.255.255.0, gw: 192.168.5.1</span><br><span class="line">I (323845) chip[DL]: IP_EVENT_STA_GOT_IP</span><br><span class="line">I (323855) chip[DL]: IPv4 address changed on WiFi station interface: 192.168.5.201/255.255.255.0 gateway 192.168.5.1</span><br><span class="line">I (323865) chip[DL]: IPv4 Internet connectivity ESTABLISHED</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><blockquote>
+<p>chip-tool是什么？</p>
+</blockquote>
+<p>chip-tool是用于开发和调试Matter设备的命令行工具。</p>
+<p>设备配网成功后，接着可以在Terminal B通过chip-tool交互模式内控制设备，例如：打开LED、关闭LED、反转LED、调节亮度、调节颜色</p>
+<p><strong>单次执行：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">chip-tool onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">chip-tool onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">chip-tool onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">chip-tool levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">chip-tool levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br></pre></td></tr></table></figure>
+
+<p><strong>交互执行（建议）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>light project示例演示了Extended Color Light设备的开发。以下就是对代码的理解：</p>
+<ul>
+<li><p>创建一个Matter节点</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 创建一个Matter节点和增加endpoint 0</span></span><br><span class="line">node::<span class="type">config_t</span> node_config;</span><br><span class="line"></span><br><span class="line"><span class="type">node_t</span> *node = node::<span class="built_in">create</span>(&amp;node_config, app_attribute_update_cb, app_identification_cb);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建Endpoint</p>
+<p>在本实例中创建 extended_color_light 设备类型的Endpoint。所有的Endpoint定义都在这个文件中：<code>esp/esp-matter/components/esp_matter/esp_matter_endpoint.h</code></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在Matter节点下增加Endpoint，默认从1开始</span></span><br><span class="line">extended_color_light::<span class="type">config_t</span> light_config;</span><br><span class="line">light_config.on_off.on_off = DEFAULT_POWER;</span><br><span class="line">light_config.on_off.lighting.start_up_on_off = <span class="literal">nullptr</span>;</span><br><span class="line">light_config.level_control.current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.on_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.lighting.start_up_current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.color_control.color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.enhanced_color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.color_temperature.startup_color_temperature_mireds = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">endpoint_t</span> *endpoint = extended_color_light::<span class="built_in">create</span>(node, &amp;light_config, ENDPOINT_FLAG_NONE, light_handle);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>快速变化的属性标记延迟持久性</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 通过Endpoint 1获取其Level Control集群，然后通过对应的集群获取Attribute值，最后标记属性的延迟持久性</span></span><br><span class="line"><span class="type">cluster_t</span> *level_control_cluster = cluster::<span class="built_in">get</span>(endpoint, LevelControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_level_attribute = attribute::<span class="built_in">get</span>(level_control_cluster, LevelControl::Attributes::CurrentLevel::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_level_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">cluster_t</span> *color_control_cluster = cluster::<span class="built_in">get</span>(endpoint, ColorControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_x_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentX::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_x_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *current_y_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentY::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_y_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *color_temp_attribute = attribute::<span class="built_in">get</span>(color_control_cluster,ColorControl::Attributes::ColorTemperatureMireds::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(color_temp_attribute);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>属性回调</p>
+<p>每当用户通过Matter客户端对Matter设备（作为Matter Server）进行控制时，其控制值最终都会更新设备数据模型中的属性值。</p>
+<p>当属性更新时，回调函数 <code>app_attribute_update_cb()</code> 用户通知应用程序（Matter设备）属性有更改。若回调函数类型为 <code>PRE_UPDATE</code> ，则更新Matter设备驱动程序。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">esp_err_t</span> <span class="title">app_attribute_update_cb</span><span class="params">(attribute::<span class="type">callback_type_t</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint16_t</span> endpoint_id, </span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">esp_matter_attr_val_t</span> *val,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">void</span> *priv_data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (type == PRE_UPDATE) &#123;</span><br><span class="line">        <span class="comment">/* Driver update */</span></span><br><span class="line">        <span class="type">app_driver_handle_t</span> driver_handle = (<span class="type">app_driver_handle_t</span>)priv_data;</span><br><span class="line">        err = <span class="built_in">app_driver_attribute_update</span>(driver_handle, endpoint_id, cluster_id, attribute_id, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设备驱动</p>
+<p>首先判断改变的是否为目标设备：light_endpoint_id，然后根据集群下的属性更新状态。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Attribute(属性) Update</span></span><br><span class="line"><span class="function"><span class="type">esp_err_t</span> <span class="title">app_driver_attribute_update</span><span class="params">(<span class="type">app_driver_handle_t</span> driver_handle,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint16_t</span> endpoint_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">esp_matter_attr_val_t</span> *val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line">    <span class="comment">// Endpoint匹配</span></span><br><span class="line">    <span class="keyword">if</span> (endpoint_id == light_endpoint_id)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">led_indicator_handle_t</span> handle = (<span class="type">led_indicator_handle_t</span>)driver_handle;</span><br><span class="line">        <span class="comment">// Cluster匹配</span></span><br><span class="line">        <span class="keyword">if</span> (cluster_id == OnOff::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Attribute匹配</span></span><br><span class="line">            <span class="keyword">if</span> (attribute_id == OnOff::Attributes::OnOff::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_power</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == LevelControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == LevelControl::Attributes::CurrentLevel::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_brightness</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == ColorControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentHue::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_hue</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentSaturation::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_saturation</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_temperature</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.espressif.com/projects/esp-matter/en/latest/esp32c3/developing.html">1、Developing with the SDK of ESP-MATTER</a></p>
+]]></content>
+      <categories>
+        <category>ESP</category>
+      </categories>
+      <tags>
+        <tag>esp-matter</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/08/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>ntp application</title>
+    <url>/2024/08/12/ntp%20application/</url>
+    <content><![CDATA[<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>ntp</tag>
+        <tag>time sync</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>raspberry4b play audio</title>
     <url>/2024/08/28/raspberry4b-play-audio/</url>
     <content><![CDATA[<p>环境介绍：</p>
@@ -2274,94 +3497,24 @@
       </tags>
   </entry>
   <entry>
-    <title>Shell and Shell Scripts</title>
-    <url>/2024/08/18/Shell%20and%20Shell%20Scripts/</url>
-    <content><![CDATA[<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>在Linux中有很多Shell可以使用，常用的有如下：</p>
+    <title>wpa-supplicant application</title>
+    <url>/2024/08/12/wpa-supplicant%20application/</url>
+    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
+<p>无线热点的基本信息：</p>
 <ul>
-<li>sh：即Bourne shell，由Steven Bourne开发，这是第一个流行的shell</li>
-<li>bash：即Bourne Again Shell，由GNU组织开发，属于Bourne shell的增强版本，这是Linux默认使用的shell</li>
-<li>csh：即C shell，由Bill Joy开发，这是流行于学术界Sun主机的shell</li>
-</ul>
-<p>虽然shell有很多种，但是学习和工作都是基于Linux，所以掌握bash即可。</p>
-<h3 id="bash的功能"><a href="#bash的功能" class="headerlink" title="bash的功能"></a>bash的功能</h3><ul>
-<li>历史命令记录（history）</li>
-<li>命令补全功能（bash-completion）</li>
-<li>命令别名设置（alias）</li>
-<li>shell脚本执行（shell scripts）</li>
-</ul>
-<h3 id="bash的命令分类"><a href="#bash的命令分类" class="headerlink" title="bash的命令分类"></a>bash的命令分类</h3><p>在bash中执行的命令分为两种类型：</p>
-<ul>
-<li><p>内置命令：内置命令是指集成在bash里面的可以执行的文件，例如：cd、pwd</p>
+<li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
 </li>
-<li><p>外部命令：外部命令是文件系统里的可执行文件，例如用户下载的软件和编写的脚本文件</p>
+<li><p>安全模式<br>  安全模式能设置无线热点的加密类型：OPEN、WPA2(AES)-PSK、WPA-PSK&#x2F;WPA2-PSK</p>
+</li>
+<li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
 </li>
 </ul>
-<blockquote>
-<p>如何在bash中判断命令的类型？type target-command</p>
-</blockquote>
-<p>如果target-command是一个内置命令，则会打印如下信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">target-command is a shell <span class="built_in">builtin</span></span><br></pre></td></tr></table></figure>
-
-<p><em>注意：使用时，将target-command替换具体的命令，例如：cd、ls</em></p>
-<h3 id="bash的技巧"><a href="#bash的技巧" class="headerlink" title="bash的技巧"></a>bash的技巧</h3><p>在使用bash中有很多常用的小技巧或者小功能，有必要学习和记录一下。</p>
-<ul>
-<li>命令换行：输入一行命令太长，阅读效果并不好，需要拆分成多行显示。在需要换行位置输入 <code>\</code> ，紧接着按下回车键（Enter），然后接着输入未完成的命令。</li>
-<li>光标跳转：输入一行命令后，发现行头附近有错误或者行尾处有错误，需要快速跳转到行头或行尾。通过组合键进行光标快速跳转，<code>Ctrl+A</code> 调到行头，<code>Ctrl+E</code> 跳到行尾</li>
-<li>环境变量：bash中有很多默认的环境变量，所以很多部命令不需要输入绝对路径就可以执行。通过 <code>env</code> 可以查询所有的默认环境变量。</li>
-</ul>
-<h2 id="Shell-Scripts"><a href="#Shell-Scripts" class="headerlink" title="Shell Scripts"></a>Shell Scripts</h2><blockquote>
-<p>shell scripts是什么？</p>
-</blockquote>
-<p>shell script是利用shell的功能所写的一个“程序（program）”，这个程序是使用纯文本文件，将一些shell的语法与指令（包含外部指令）写在里面，搭配正则表达式、管道命令与数据重定向等功能，以达到我们所想要的处理目的。</p>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>变量一般用于存放数据，而且可以支持修改，方便在不同环境执行时，仅仅修改变量即可使用。</p>
-<p>变量名的限制：</p>
-<ul>
-<li><p>变量名和等号之间不能有空格（语法规定）</p>
-</li>
-<li><p>变量名只能由字母（a<del>z， A</del>Z）、数字（0~9）、下划线（_）组成，且不能以数字开头</p>
-</li>
-<li><p>变量名不能使用shell中的关键字</p>
-</li>
-</ul>
-<p>简单示例1：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># a simple example, print string &quot;hello world&quot;</span></span><br><span class="line">str1=<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">str2=<span class="string">&quot;world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$str1</span> <span class="variable">$&#123;str2&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p><em>注意：定义变量时，直接给变量赋值。使用变量时，必须通过<code>$</code>符号引用，而且建议用<code>&#123;&#125;</code>将变量包含起来。</em></p>
-<h3 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h3><p>判断语句一般用于检查条件符合什么条件，然后执行相应的内容。</p>
-<h3 id="if判断语句"><a href="#if判断语句" class="headerlink" title="if判断语句"></a>if判断语句</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># condition check, if [...];then</span></span><br><span class="line"></span><br><span class="line">target_file=condition.sh</span><br><span class="line">target_str=hello</span><br><span class="line"></span><br><span class="line"><span class="comment"># example 1</span></span><br><span class="line"><span class="keyword">if</span> [ -e <span class="variable">$&#123;target_file&#125;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$&#123;target_file&#125;</span> exist</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># example 2</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;target_str&#125;</span> == <span class="string">&quot;hello&quot;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span>  <span class="variable">$&#123;target_str&#125;</span> is exist</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$&#123;target_str&#125;</span> is not <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span>	</span><br><span class="line"></span><br><span class="line"><span class="comment"># example 3</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span>==<span class="string">&#x27;1&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;1&quot;</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span>==<span class="string">&#x27;2&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;2&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;other&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<p><em>注意：</em></p>
-<p><em>1、第一行 <code>#!/bin/bash</code> 表示该shell文件使用bash语法</em></p>
-<p>2<em>、<code>$1</code> 表示传入第一个参数</em></p>
-<p>文件测试标志：</p>
-<ul>
-<li>-e：检查目标文件是否存在</li>
-<li>-f：检查目标文件是否存则且为普通文件</li>
-<li>-d：检查目标文件是否存在且文件目录</li>
-</ul>
-<p>整数之间的比较：</p>
-<ul>
-<li>-eq：相等</li>
-<li>-ne：不相等</li>
-<li>-gt：大于</li>
-<li>-lt：小于</li>
-<li>-ge：大于等于</li>
-<li>-le：小于等于</li>
-</ul>
-<p>字符串之间的比较：</p>
-<ul>
-<li>&#x3D;&#x3D;：字符串相同</li>
-<li>!&#x3D;：字符串不同</li>
-<li>-z：字符串长度是否为0</li>
-<li>-n：字符串长度是否为非0</li>
-</ul>
-<h3 id="case判断语句"><a href="#case判断语句" class="headerlink" title="case判断语句"></a>case判断语句</h3><p>通过传入的数字字符串来判断星期几</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># print weekday by a number</span></span><br><span class="line">option=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$&#123;option&#125;</span> <span class="keyword">in</span></span><br><span class="line">	1)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Mon&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	2)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Tue&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	3)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Wed&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	4)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Thu&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	5)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Fri&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	6)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Sat&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	7)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;Sun&quot;</span></span><br><span class="line">		;;</span><br><span class="line">	*)</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;unkonwn&quot;</span></span><br><span class="line">		;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。</p>
+<p>1、wpa_supplicant.conf 可以设置哪些配置？<br>2、wpa_supplicant.conf 可以保存哪些信息？ </p>
+<h3 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-
-<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>执行循环体，打印从1到10</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 10)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="保存信息"><a href="#保存信息" class="headerlink" title="保存信息"></a>保存信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
@@ -2381,12 +3534,11 @@
 
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>Wi-Fi</category>
       </categories>
       <tags>
-        <tag>Shell</tag>
-        <tag>Shell Scripts</tag>
-        <tag>Linux</tag>
+        <tag>Wi-Fi</tag>
+        <tag>wpa_supplicant</tag>
       </tags>
   </entry>
   <entry>
@@ -3169,1157 +4321,5 @@
         <tag>dbus</tag>
         <tag>gdbus</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>esp-matter：light project</title>
-    <url>/2024/08/15/esp-matter%EF%BC%9Alight%20project/</url>
-    <content><![CDATA[<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置目标"><a href="#设置目标" class="headerlink" title="设置目标"></a>设置目标</h3><p>开发板Soc是esp32-c3，故设置目标选择：esp32c3</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 激活esp-idf和esp-matter环境</span></span><br><span class="line">get_idf</span><br><span class="line">get_matter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标</span></span><br><span class="line">idf.py set-target esp32c3</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译固件"><a href="#编译固件" class="headerlink" title="编译固件"></a>编译固件</h3><p>直接开始编译固件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">idf.py build</span><br></pre></td></tr></table></figure>
-
-<h3 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h3><p>将开发板插入PC的USB接口，修改串口权限，开始烧录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br></pre></td></tr></table></figure>
-
-<p><em>注意：不同开发板的接入PC后，串口名称可能不同，目前已知的两种名称：<code>/dev/ttyUSB0</code> 和 <code>/dev/ttyACM0</code></em></p>
-<h2 id="配网"><a href="#配网" class="headerlink" title="配网"></a>配网</h2><p>通过BLE方式给设备配网：指通过低功耗蓝牙（即BLE）将SSID和密码发送给WiFi设备，然后WiFi连接到指定的WiFi网络。</p>
-<blockquote>
-<p>什么是配网？</p>
-</blockquote>
-<p>配网指的是外部向 WiFi 设备提供 SSID和密码，以便 WiFi 设备可以连接指定的AP并加入AP所建立的 WiFi 网络。配网的核心问题是通过各种方法（SoftAP配网、一键配网、蓝牙配网、其他方式配网），将WiFi的 SSID和密码发送到需要联网的WiFi设备，然后由WiFi设备去连接指定的WiFi网络，达到接入局域网或互联网的目的。</p>
-<p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。</p>
-<p><strong>单次执行：</strong></p>
-<p>单次执行配网命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>0x7283</code> 是自定义一个随机的node_id</p>
-</li>
-<li><p><code>20202021</code> 是setup_passcode</p>
-</li>
-<li><p><code>3840</code> 是discriminator</p>
-</li>
-</ul>
-<p><em>单次执行容易导致超时，建议使用交互执行！！！</em></p>
-<p><strong>交互执行（建议）：</strong></p>
-<p><strong>Terminal A</strong>处于等待配网状态，状态如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (1725) esp_matter_core: Dynamic endpoint 1 added</span><br><span class="line">I (1735) chip[DL]: WIFI_EVENT_STA_START</span><br><span class="line">W (1735) wifi:Haven<span class="string">&#x27;t to connect to a suitable AP now!</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Done driving station state, nothing else to do...</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Configuring CHIPoBLE advertising (interval 25 ms, connectable)</span></span><br><span class="line"><span class="string">I (1755) NimBLE: GAP procedure initiated: advertise; </span></span><br><span class="line"><span class="string">I (1765) NimBLE: disc_mode=2</span></span><br><span class="line"><span class="string">I (1765) NimBLE:  adv_channel_map=0 own_addr_type=1 adv_filter_policy=0 adv_itvl_min=40 adv_itvl_max=40</span></span><br><span class="line"><span class="string">I (1775) NimBLE: </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I (1775) chip[DL]: CHIPoBLE advertising started</span></span><br><span class="line"><span class="string">I (1785) app_main: Commissioning window opened</span></span><br><span class="line"><span class="string">I (1855) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">&gt; I (4725) esp_matter_core: Store the deferred attribute 0x0 of cluster 0x8 on endpoint 0x1</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p><em>注意：若想将设备清除所有的配网信息，可以将设备恢复出厂状态，在 Terminal A 执行命令：<code>matter device factoryreset</code></em></p>
-<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code>，此时进入交互模式，状态如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | Command sets:                                                                       |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | * any                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> sending IM messages based on cluster <span class="built_in">id</span>, not cluster name.         |</span><br><span class="line">  | * delay                                                                             |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> waiting <span class="keyword">for</span> something to happen.                                   |</span><br><span class="line">  | * discover                                                                          |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> device discovery.                                                  |</span><br><span class="line">  | * groupsettings                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> manipulating group keys and memberships <span class="keyword">for</span> chip-tool itself.      |</span><br><span class="line">  | * icd                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> client-side ICD management.                                        |</span><br><span class="line">  | * pairing                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> commissioning devices.                                             |</span><br><span class="line">  | * payload                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> parsing and generating setup payloads.                             |</span><br><span class="line">  | * sessionmanagement                                                                 |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing CASE and PASE session state.                              |</span><br><span class="line">  | * subscriptions                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> shutting down subscriptions.                                       |</span><br><span class="line">  | * interactive                                                                       |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> starting long-lived interactive modes.                             |</span><br><span class="line">  | * storage                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing persistent data stored by chip-tool.                      |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">&gt;&gt;&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在交互模式内执行命令为设备配网：<code>pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</code>。若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (323035) wifi:&lt;ba-add&gt;idx:1 (ifx:0, <span class="built_in">fc</span>:83:c6:00:8f:ae), tid:6, ssn:1, winSize:64</span><br><span class="line">I (323075) chip[DL]: Confirm received <span class="keyword">for</span> CHIPoBLE TX characteristic indication (con 1) status= 14 </span><br><span class="line">I (323845) esp_netif_handlers: sta ip: 192.168.5.201, mask: 255.255.255.0, gw: 192.168.5.1</span><br><span class="line">I (323845) chip[DL]: IP_EVENT_STA_GOT_IP</span><br><span class="line">I (323855) chip[DL]: IPv4 address changed on WiFi station interface: 192.168.5.201/255.255.255.0 gateway 192.168.5.1</span><br><span class="line">I (323865) chip[DL]: IPv4 Internet connectivity ESTABLISHED</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><blockquote>
-<p>chip-tool是什么？</p>
-</blockquote>
-<p>chip-tool是用于开发和调试Matter设备的命令行工具。</p>
-<p>设备配网成功后，接着可以在Terminal B通过chip-tool交互模式内控制设备，例如：打开LED、关闭LED、反转LED、调节亮度、调节颜色</p>
-<p><strong>单次执行：</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">chip-tool onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">chip-tool onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">chip-tool onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">chip-tool levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">chip-tool levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br></pre></td></tr></table></figure>
-
-<p><strong>交互执行（建议）：</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>light project示例演示了Extended Color Light设备的开发。以下就是对代码的理解：</p>
-<ul>
-<li><p>创建一个Matter节点</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 创建一个Matter节点和增加endpoint 0</span></span><br><span class="line">node::<span class="type">config_t</span> node_config;</span><br><span class="line"></span><br><span class="line"><span class="type">node_t</span> *node = node::<span class="built_in">create</span>(&amp;node_config, app_attribute_update_cb, app_identification_cb);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建Endpoint</p>
-<p>在本实例中创建 extended_color_light 设备类型的Endpoint。所有的Endpoint定义都在这个文件中：<code>esp/esp-matter/components/esp_matter/esp_matter_endpoint.h</code></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在Matter节点下增加Endpoint，默认从1开始</span></span><br><span class="line">extended_color_light::<span class="type">config_t</span> light_config;</span><br><span class="line">light_config.on_off.on_off = DEFAULT_POWER;</span><br><span class="line">light_config.on_off.lighting.start_up_on_off = <span class="literal">nullptr</span>;</span><br><span class="line">light_config.level_control.current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.on_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.lighting.start_up_current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.color_control.color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.enhanced_color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.color_temperature.startup_color_temperature_mireds = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">endpoint_t</span> *endpoint = extended_color_light::<span class="built_in">create</span>(node, &amp;light_config, ENDPOINT_FLAG_NONE, light_handle);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>快速变化的属性标记延迟持久性</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 通过Endpoint 1获取其Level Control集群，然后通过对应的集群获取Attribute值，最后标记属性的延迟持久性</span></span><br><span class="line"><span class="type">cluster_t</span> *level_control_cluster = cluster::<span class="built_in">get</span>(endpoint, LevelControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_level_attribute = attribute::<span class="built_in">get</span>(level_control_cluster, LevelControl::Attributes::CurrentLevel::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_level_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">cluster_t</span> *color_control_cluster = cluster::<span class="built_in">get</span>(endpoint, ColorControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_x_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentX::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_x_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *current_y_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentY::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_y_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *color_temp_attribute = attribute::<span class="built_in">get</span>(color_control_cluster,ColorControl::Attributes::ColorTemperatureMireds::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(color_temp_attribute);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>属性回调</p>
-<p>每当用户通过Matter客户端对Matter设备（作为Matter Server）进行控制时，其控制值最终都会更新设备数据模型中的属性值。</p>
-<p>当属性更新时，回调函数 <code>app_attribute_update_cb()</code> 用户通知应用程序（Matter设备）属性有更改。若回调函数类型为 <code>PRE_UPDATE</code> ，则更新Matter设备驱动程序。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">esp_err_t</span> <span class="title">app_attribute_update_cb</span><span class="params">(attribute::<span class="type">callback_type_t</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint16_t</span> endpoint_id, </span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">esp_matter_attr_val_t</span> *val,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">void</span> *priv_data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (type == PRE_UPDATE) &#123;</span><br><span class="line">        <span class="comment">/* Driver update */</span></span><br><span class="line">        <span class="type">app_driver_handle_t</span> driver_handle = (<span class="type">app_driver_handle_t</span>)priv_data;</span><br><span class="line">        err = <span class="built_in">app_driver_attribute_update</span>(driver_handle, endpoint_id, cluster_id, attribute_id, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设备驱动</p>
-<p>首先判断改变的是否为目标设备：light_endpoint_id，然后根据集群下的属性更新状态。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Attribute(属性) Update</span></span><br><span class="line"><span class="function"><span class="type">esp_err_t</span> <span class="title">app_driver_attribute_update</span><span class="params">(<span class="type">app_driver_handle_t</span> driver_handle,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint16_t</span> endpoint_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">esp_matter_attr_val_t</span> *val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line">    <span class="comment">// Endpoint匹配</span></span><br><span class="line">    <span class="keyword">if</span> (endpoint_id == light_endpoint_id)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">led_indicator_handle_t</span> handle = (<span class="type">led_indicator_handle_t</span>)driver_handle;</span><br><span class="line">        <span class="comment">// Cluster匹配</span></span><br><span class="line">        <span class="keyword">if</span> (cluster_id == OnOff::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Attribute匹配</span></span><br><span class="line">            <span class="keyword">if</span> (attribute_id == OnOff::Attributes::OnOff::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_power</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == LevelControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == LevelControl::Attributes::CurrentLevel::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_brightness</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == ColorControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentHue::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_hue</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentSaturation::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_saturation</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_temperature</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.espressif.com/projects/esp-matter/en/latest/esp32c3/developing.html">1、Developing with the SDK of ESP-MATTER</a></p>
-]]></content>
-      <categories>
-        <category>ESP</category>
-      </categories>
-      <tags>
-        <tag>esp-matter</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Matter：Lighting Device Types</title>
-    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
-    <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
-<ul>
-<li>色调（hue）是在可见光光谱中能量最强时的波长</li>
-<li>饱和度（saturation）表示可见光的相对带宽</li>
-<li>亮度（brightness）表示可见光的能量强度</li>
-</ul>
-<p>Lighting所有设备类型信息：</p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0100</td>
-<td>On&#x2F;Off Light</td>
-</tr>
-<tr>
-<td>0x0101</td>
-<td>Dimmable Light</td>
-</tr>
-<tr>
-<td>0x010c</td>
-<td>Color Temperature Light</td>
-</tr>
-<tr>
-<td>0x010d</td>
-<td>Extended Color Light</td>
-</tr>
-</tbody></table>
-<h2 id="On-Off-Light"><a href="#On-Off-Light" class="headerlink" title="On&#x2F;Off Light"></a>On&#x2F;Off Light</h2><p>On&#x2F;Off Light 是一种照明设备，可以通过绑定控制器设备（例如：普通开关或者调光开关）对其进行打开和关闭，而且，也可通过绑定人体存在传感器来切换。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0100</td>
-<td>On&#x2F;Off Light</td>
-<td></td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Group</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p>对于 On&#x2F;Off Light 设备的状态只有：on 和 off 两种状态，但标准还是加上了Level Control Cluster，仅仅是方便和其他 Dimmable Light形成组合时，能够接受 On&#x2F;Off 命令。</p>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="Dimmable-Light"><a href="#Dimmable-Light" class="headerlink" title="Dimmable Light"></a>Dimmable Light</h2><p>可调光灯是一种能够打开或关闭的照明设备，其光线强度可通过绑定控制器设备（例如调光开关或颜色调光开关）进行调节。此外，可调光灯设备还能够通过绑定占用传感器或其他设备进行切换。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0101</td>
-<td>Dimmable Light</td>
-<td>On&#x2F;Off Light</td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Groups</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identity</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="Color-Temperature-Light"><a href="#Color-Temperature-Light" class="headerlink" title="Color Temperature Light"></a>Color Temperature Light</h2><p>色温灯是一种照明设备，可以通过绑定的控制器设备（例如调光开关）打开或关闭、调节光线强度和调节色温。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x010c</td>
-<td>Color Temperature Light</td>
-<td>Dimmable Light</td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Groups</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identity</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>ColorTemperature</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Attribute</td>
-<td>RemainingTime</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-</tbody></table>
-<h2 id="Extended-Color-Light"><a href="#Extended-Color-Light" class="headerlink" title="Extended Color Light"></a>Extended Color Light</h2><p>扩展色光灯是一种照明设备，可通过绑定控制器设备（如调光开关或控制桥）打开或关闭、调整光强度和调整颜色。该设备支持通过色调&#x2F;饱和度、增强色调、颜色循环、XY 坐标和色温调整颜色。此外，扩展色光灯还可通过绑定占用传感器进行切换。</p>
-<p><strong>分类：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Device Name</th>
-<th>Superset</th>
-<th>Class</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x010d</td>
-<td>Extended Color Light</td>
-<td>Color Temperature Light</td>
-<td>Simple</td>
-<td>Endpoint</td>
-</tr>
-</tbody></table>
-<p><strong>集群：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Client&#x2F;Server</th>
-<th>Quality</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identify</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0004</td>
-<td>Groups</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Server</td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Server</td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0406</td>
-<td>Occupancy Sensing</td>
-<td>Client</td>
-<td></td>
-<td>O</td>
-</tr>
-</tbody></table>
-<p>扩展色光等集群数据和色温灯的集群完成相同。</p>
-<p><strong>元素：</strong></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Cluster</th>
-<th>Element</th>
-<th>Name</th>
-<th>Constraint</th>
-<th>Access</th>
-<th>Conformance</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x0003</td>
-<td>Identity</td>
-<td>Command</td>
-<td>TriggerEffect</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0062</td>
-<td>Scenes Management</td>
-<td>Command</td>
-<td>CopyScene</td>
-<td></td>
-<td></td>
-<td>P,M</td>
-</tr>
-<tr>
-<td>0x0006</td>
-<td>On&#x2F;Off</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>Lighting</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Feature</td>
-<td>OnOff</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>CurrentLevel</td>
-<td>1 to 254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MinLevel</td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0008</td>
-<td>Level Control</td>
-<td>Attribute</td>
-<td>MaxLevel</td>
-<td>254</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>ColorTemperature</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Attribute</td>
-<td>RemainingTime</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>HueSaturation</td>
-<td></td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>EnhancedHue</td>
-<td></td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>ColorLoop</td>
-<td></td>
-<td></td>
-<td>O</td>
-</tr>
-<tr>
-<td>0x0300</td>
-<td>Color Control</td>
-<td>Feature</td>
-<td>XY</td>
-<td></td>
-<td></td>
-<td>M</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Matter</category>
-      </categories>
-      <tags>
-        <tag>matter-1-3-device-library-specification</tag>
-        <tag>Light of Matter Device</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Matter Standard</title>
-    <url>/2024/08/13/Matter%20Standard/</url>
-    <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
-<p><strong>用户：</strong></p>
-<p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
-<p><strong>厂商：</strong></p>
-<p>如果厂商生产了支持苹果生态的IoT设备，那么它的目标用户是持有苹果手机的用户。对于同一款产品（例如：色温灯），厂商为了获取更多的用户，就必须开发支持各种生态的产品（例如：苹果生态色温灯、谷歌生态色温灯…）。对于厂商来说，产品还是一样的，只是软件层面的不同，不得不生产支持不同生态的同一款产品，生产成本又是一个的问题。</p>
-<p><strong>Matter：</strong></p>
-<p>如果厂商生产的IoT产品支持Matter标准，那么对于用户来说，不管你使用的是苹果手机，还是谷歌手机，你都可以将IoT产品添加到你当前的生态中。对于用户，购买的IoT产品适配各种生态，完全不用担心换手机会导致IoT产品无法使用的问题。对于厂商，不用再投入很大的成本去生产支持各种生态的IoT设备，仅需要生产支持Matter标准的IoT产品。</p>
-<p>甚至，IoT产品添加到苹果生态后，你还可以将该产品分享给其他生态（谷歌生态、亚马逊生态、三星生态…）使用，完全打破了生态壁垒。</p>
-<p>Matter是由CSA发布的一个应用层标准，它的传输是建立在支持IPv6的TCP和UDP协议上的，Matter不对传输层进行约定，Matter也不对网络进行约定，但是Matter约定了只能使用 <em>Thread&#x2F;Wi-Fi&#x2F;Ethernet</em> 三种连接协议，也就是说Matter可以让不同网络中的设备进行互联互通通信，这个主要是指Thread Board Router 可以实现 Wi-Fi 和 Thread 通信互转。不仅如此，Matter还允许接入其他网络设备，比如ZigBee设备，这主要通过一个 <em>Matter bridge</em> 设备来实现。</p>
-<p>在Matter拓扑结构中，还有一个节点非常重要：<em>Matter controller</em>，Matter controller用来完成配网和远程控制设备，比如苹果的 HomePod mini &amp; Home app 组合就是一个典型的Matter controller节点。</p>
-<p>Thread协议由Thread Group制定，所以Matter over Thread产品必须通过Thread Group的认证。Wi-Fi则由Wi-Fi联盟进行规范，所以Matter over Wi-Fi产品必须通过Wi-Fi Alliance认证。</p>
-<ul>
-<li><p><strong>Matter over WiFi</strong>：指使用WiFi网络来传输Matter协议的信息。</p>
-</li>
-<li><p><strong>Matter over Thread</strong>：指使用Thread网络来传输Matter协议的信息。</p>
-</li>
-</ul>
-<p><strong>文档：</strong></p>
-<p>Matter官方文档（主要有3份）：</p>
-<ul>
-<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
-<li>Matter 1.3 Core Specification：核心规范</li>
-<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
-</ul>
-<p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
-<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如一个有两盏灯的灯具（一盏可调光灯和一盏普通灯）。</p>
-<h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
-<p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
-<h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>
-<p>对于色温灯，其中Endpoint 1是可调光灯，它有两个cluster，分别是：On&#x2F;Off cluster 和 Level Control cluster 。</p>
-<p>Matter定义了两种类型的cluster：</p>
-<ul>
-<li>server：提供Attributes、Commands、Events，通常指 Matter 设备。</li>
-<li>client：对server发起交互（interaction）操作，通常指 Matter Controller。</li>
-</ul>
-<h4 id="attributes（属性）"><a href="#attributes（属性）" class="headerlink" title="attributes（属性）"></a>attributes（属性）</h4><p>属性表示可以读取或写入的内容。</p>
-<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 attributess 是 OnOff 。</p>
-<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 attributess 是 CurrentLevel 。</p>
-<h4 id="Command（命令）"><a href="#Command（命令）" class="headerlink" title="Command（命令）"></a>Command（命令）</h4><p>命令提供在集群上调用特定行为的能力。</p>
-<p>对于色温灯的Endpoint 1，其中On&#x2F;Off cluster 的 Commands 有：On、Off、Toggle</p>
-<p>对于色温灯的Endpoint 1，其中Level Control cluster 的 Commands 有：MoveToLevel 。</p>
-<h4 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h4><p>Event其实是一种特殊的attributes，它用来更新设备的状态。</p>
-<h3 id="Interaction-Model（交互模型）"><a href="#Interaction-Model（交互模型）" class="headerlink" title="Interaction Model（交互模型）"></a>Interaction Model（交互模型）</h3><p>通俗地讲，Interaction model就是用来规定交互命令集的，我们把发起交互的节点叫initiator (一般都是client设备)，而接收者称为target (一般为server设备)。</p>
-<p>Matter定义了如下interaction类型：</p>
-<ul>
-<li><strong>Read</strong></li>
-</ul>
-<p>​	用来读取attributes或events的值</p>
-<ul>
-<li><strong>Write</strong></li>
-</ul>
-<p>​	用来修改attribute的值</p>
-<ul>
-<li><strong>Invoke</strong></li>
-</ul>
-<p>​	用来发送commands</p>
-<ul>
-<li><strong>Subscribe</strong></li>
-</ul>
-<p>​	用来订阅target的数据报告，从而不用定时去查询相关数据，我们可以订阅attribute，也可以订阅event。</p>
-<p>Interaction本身由transaction组成，而transaction又由action组成，每个action包含1条或者多条信息。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.espressif.com/what-does-matter-mean-to-you-fa3bb53a7793">What does Matter mean to you?</a></p>
-<p><a href="https://blog.espressif.com/matter-clusters-attributess-commands-82b8ec1640a0">Matter: Clusters, attributess, Commands</a></p>
-<p><a href="https://mp.weixin.qq.com/s/xU82G0LL-92zd86iXChwKQ">Matter开发，看这一篇就够了</a></p>
-]]></content>
-      <categories>
-        <category>Matter</category>
-      </categories>
-      <tags>
-        <tag>Matter Standard</tag>
-        <tag>CSA</tag>
-        <tag>IoT</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ntp application</title>
-    <url>/2024/08/12/ntp%20application/</url>
-    <content><![CDATA[<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>ntp</tag>
-        <tag>time sync</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>wpa-supplicant application</title>
-    <url>/2024/08/12/wpa-supplicant%20application/</url>
-    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
-<p>无线热点的基本信息：</p>
-<ul>
-<li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
-</li>
-<li><p>安全模式<br>  安全模式能设置无线热点的加密类型：OPEN、WPA2(AES)-PSK、WPA-PSK&#x2F;WPA2-PSK</p>
-</li>
-<li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
-</li>
-</ul>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。</p>
-<p>1、wpa_supplicant.conf 可以设置哪些配置？<br>2、wpa_supplicant.conf 可以保存哪些信息？ </p>
-<h3 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="保存信息"><a href="#保存信息" class="headerlink" title="保存信息"></a>保存信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Wi-Fi</category>
-      </categories>
-      <tags>
-        <tag>Wi-Fi</tag>
-        <tag>wpa_supplicant</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Blog deploy to Github Page.md</title>
-    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-11 星期日 晴</p>
-</blockquote>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><blockquote>
-<p>前置条件：<br>1、本地可以正常运行hexo<br>2、已经安装git<br>3、已经注册了Github账号</p>
-</blockquote>
-<p>首先需要拿到Github的仓库域名，接着上传本地的公钥到Github</p>
-<h3 id="获取域名"><a href="#获取域名" class="headerlink" title="获取域名"></a>获取域名</h3><p>在Github上新建一个仓库，仓库命名：<code>eiSouthBoy.github.io</code>，eiSouthBoy 是用户名，根据自己实际用户名修改，仓库的属性选择：<code>Public</code>，最后点击创建。</p>
-<p>此时，在 eiSouthBoy.github.io 仓库页面，进入到仓库的Settings–&gt;Pages，可以看到Github提供的Github Pages，给出了网址：<code>Your site is live at https://eisouthboy.github.io/</code>，可以在浏览器输入网址直接访问的。</p>
-<h3 id="上传公钥"><a href="#上传公钥" class="headerlink" title="上传公钥"></a>上传公钥</h3><p>将本地的博客上传到Github上，需要使用Github的写入权限，所以需要将本地用户的公钥上传到Github。</p>
-<p>创建公钥前，需要配置git的用户名和邮箱</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u cj 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">git config --global user.name=eiSouthBoy</span><br><span class="line">git config --global user.email=caoj97141@gmail.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>git用户名和邮箱添加后，此时可以生成公钥了</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 该命令有交互，默认全部回车即可</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>该命令执行完毕后，提示公钥文件保存的路径</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ ll ~/.ssh/</span><br><span class="line">total 28</span><br><span class="line">drwx------ 2 cj cj 4096 Aug 11 03:53 ./</span><br><span class="line">drwxr-x--- 1 cj cj 4096 Aug 11 07:57 ../</span><br><span class="line">-rw------- 1 cj cj 2602 Aug 11 03:48 id_rsa</span><br><span class="line">-rw-r--r-- 1 cj cj  569 Aug 11 03:48 id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p>将公钥信息上传到Github，即将id_rsa.pub文件内容复制到Github的<strong>github个人图像 –&gt; Settings –&gt; SSH and GPG Keys –&gt; New SSH Key</strong>，点击创建，就会创建SSH Key信息。该信息形式如下所示（为了不保留个人信息，SHA256隐藏了关键信息）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac</span><br><span class="line">SHA256:*******************************************</span><br><span class="line">Added on Aug 11, 2024</span><br><span class="line">Last used within the last week — Read/write</span><br></pre></td></tr></table></figure>
-
-<p>测试 SSH 是否能连接到 GitHub 的 SSH 服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>出现如下提示，即说明本地能够通过SSH连接到Github的SSH服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi eiSouthBoy! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>通过git方式上传博客到Github，还需要下载一个插件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>在部署前，必须要修改 <code>/workspace/blog/_config.yml</code> 文件，修改的部分内容有：</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改第一处</span></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://eisouthboy.github.io</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改第二处</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:eiSouthBoy/eiSouthBoy.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>现在可以部署到Github上了，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">hexo clean &amp;&amp; hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>记录 <code>hexo d</code> 命令的返回结果信息 (非首次提交)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">Enumerating objects: 74, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (74/74), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (29/29), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), 21.26 KiB | 3.54 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 19), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (19/19), completed with 14 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   bbb8d53..60a542a  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>部署成功后，可以在宿主机的浏览器输入：<code>https://eisouthboy.github.io</code> 访问博客。</p>
-<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>在部署过程中，可能遇到一些报错或者疑点，希望记录下来。用于提醒自己，还可以提醒后来人。</p>
-<h3 id="疑点1"><a href="#疑点1" class="headerlink" title="疑点1"></a>疑点1</h3><p>在执行 <code>hexo d</code> 命令时，有一句提醒：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Branch <span class="string">&#x27;master&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br></pre></td></tr></table></figure>
-
-<p>本地分支 master 建立跟踪在远程分支main上。Github从2020年10月开始，创建仓库的默认分支名：main，至于原因可参考：<a href="https://pages.carm.cc/doc/branch-main.html">为什么Git分支开始从“master”变为“main”了？</a></p>
-<p>但是 <code>git init</code> 初始化一个本地仓库时，默认的分支是：<code>master</code>，这就是为什么本地master分支和远程main分支名称不一致的原因了。</p>
-<p>当然，我们可以修改本地的master名称，过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog/.deploy_git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改分支名</span></span><br><span class="line">git branch -m master main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分支信息</span></span><br><span class="line">git branch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这是本地分支名已经修改完成了，再次执行部署命令 ，验证一下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend <span class="built_in">dirs</span>...</span><br><span class="line">[main 6aa2596] Site updated: 2024-08-11 10:04:48</span><br><span class="line"> 4 files changed, 28 insertions(+), 10 deletions(-)</span><br><span class="line">Enumerating objects: 21, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (21/21), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (7/7), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (11/11), 3.32 KiB | 1.66 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 11 (delta 5), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (5/5), completed with 5 <span class="built_in">local</span> objects.</span><br><span class="line">To github.com:eiSouthBoy/eiSouthBoy.github.io.git</span><br><span class="line">   60a542a..6aa2596  HEAD -&gt; main</span><br><span class="line">Branch <span class="string">&#x27;main&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;main&#x27;</span> from <span class="string">&#x27;git@github.com:eiSouthBoy/eiSouthBoy.github.io.git&#x27;</span>.</span><br><span class="line">INFO  Deploy <span class="keyword">done</span>: git</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
-]]></content>
-      <tags>
-        <tag>Github</tag>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Create Blog with hexo</title>
-    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
-    <content><![CDATA[<blockquote>
-<p>2024-08-10 星期六 晴</p>
-</blockquote>
-<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在大学时（2015年~2019年），我觉得搭建一个博客很酷的事。虽然觉得很酷，但我仍然没有去实现这个很酷的事。直到三年后，我尝试了去搭建个人博客站点，但是对于我难度确实不小（知识储备不足），失败并搁浅了。</p>
-<p>为什么几年后的今天，我又尝试去搭建个人博客呢？ 一方面，我看到博客园近两年来危机不断，而我当初为了寻求方便，所以一直在博客园记录自己的东西。当然，我也希望博客园能尽快走出危机，准备去买一件博客园的周边T恤，权当赞助博客园。但个人能力有限，只能做到这点帮助，最终还是需要博客园找到自己的运营模式，毕竟单纯依靠粉丝支援和赞助只能解决一时困境。另一方面，随着这几年的技术经验的积累，完全有信心把博客搭建起来。<br>鸡蛋不能放在同一个篮子里，在博客园存放一份，Github也要存放一份，当然在本地主机上还是要存放一份。这样子就比较保险了，毕竟数据是无价的。</p>
-<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>搭建博客的方式有很多种，例如：WordPress、huogo、hexo等等。但是我必须寻求一种适合我的搭建方式，我的要求包括：</p>
-<ul>
-<li>支持markdown<br>  我习惯于了使用markdown写东西，用起来方便、快捷。</li>
-<li>简单且易用<br>  我希望能够通过简单的命令行就能够部署起来</li>
-<li>支持Github<br>  我有使用Github的习惯，一些学习的项目会上传到Github</li>
-<li>开源<br>  我习惯使用开源的东西，支持自定义很多东西</li>
-</ul>
-<p>经过一段时间的挑选，hexo基本符合我的需求，而且生态也比较好，出现问题也容易解决，我决定使用hexo搭建个人博客站点。	</p>
-<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><blockquote>
-<p>搭建环境：<br>1、ubuntu22.04容器<br>2、npm (v8.5.1)<br>3、node (v12.22.9)<br>4、git (v2.34.1)</p>
-</blockquote>
-<p>我的电脑系统是Ubuntu22.04，并且已经安装了Docker。我不希望hexo的环境影响到我的Ubuntu22.04系统，所以我决定通过Docker创建Ubuntu22.04容器来作为搭建博客的环境。同时，我学习Docker技术的时间也就一周左右，也能通过搭建博客的过程中，加强对Docker的使用和理解，一举两得。</p>
-<h3 id="拉取ubuntu22-04镜像"><a href="#拉取ubuntu22-04镜像" class="headerlink" title="拉取ubuntu22.04镜像"></a>拉取ubuntu22.04镜像</h3><p>首先，搜索一下镜像源是否存在ubuntu22.04镜像，可以执行命令： <code>docker search ubuntu:22.04</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker search ubuntu:22.04</span><br><span class="line">NAME                                              DESCRIPTION                                     STARS     OFFICIAL</span><br><span class="line">ubuntu                                            Ubuntu is a Debian-based Linux operating sys…   17202     [OK]</span><br><span class="line">ubuntu-debootstrap                                DEPRECATED; use <span class="string">&quot;ubuntu&quot;</span> instead                52        [OK]</span><br><span class="line">ubuntu-upstart                                    DEPRECATED, as is Upstart (find other proces…   115       [OK]</span><br><span class="line">apache/cassandra-testing-ubuntu2004-java11        https://github.com/apache/cassandra-builds/t…   2         </span><br><span class="line">antrea/antrea-ubuntu-arm64                                                                        2         </span><br><span class="line">osrf/ubuntu_i386                                  Ubuntu i386 Docker Base Images                  2         </span><br><span class="line">istio/app_sidecar_base_ubuntu_xenial              Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">istio/app_sidecar_ubuntu_jammy                    Image <span class="keyword">for</span> testing                               0         </span><br><span class="line">envoyproxy/envoy-build-ubuntu                                                                     7         </span><br><span class="line">eclipse/ubuntu_jdk8                               Ubuntu, JDK8, Maven 3, git, curl, nmap, mc, …   17        </span><br><span class="line">osrf/ubuntu_arm64                                 Ubuntu Arm64 Base Images                        1         </span><br><span class="line">dokken/ubuntu-20.04                               Ubuntu 20.04 image <span class="keyword">for</span> use with Test Kitchen…   3         </span><br><span class="line">opensciencegrid/osgvo-ubuntu-18.04                OSG VO<span class="string">&#x27;s base Ubuntu 18.04 image                0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-18.04                               Ubuntu 18.04 image for use with Test Kitchen…   5         </span></span><br><span class="line"><span class="string">fnndsc/ubuntu-python3                             A slim Ubuntu-based Python3 image               33        </span></span><br><span class="line"><span class="string">apache/cassandra-ubuntu2004_test                  Apache Cassandra                                0         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-20.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   1         </span></span><br><span class="line"><span class="string">antrea/ubuntu                                                                                     1         </span></span><br><span class="line"><span class="string">dokken/ubuntu-22.04                               Ubuntu 22.04 image for use with Test Kitchen…   3         </span></span><br><span class="line"><span class="string">antrea/base-ubuntu                                                                                1         </span></span><br><span class="line"><span class="string">ubuntu/cortex                                     Cortex provides storage for Prometheus. Long…   4         </span></span><br><span class="line"><span class="string">jenkinsciinfra/jenkins-agent-ubuntu-22.04         &quot;All-in-one&quot; agent image for the Jenkins Inf…   0         </span></span><br><span class="line"><span class="string">gmao/ubuntu20-geos-env                                                                            0         </span></span><br><span class="line"><span class="string">dokken/ubuntu-16.04                               Ubuntu 16.04 image for use with Test Kitchen…   2         </span></span><br><span class="line"><span class="string">pytorch/pytorch-binary-docker-image-ubuntu16.04                                                   6    </span></span><br></pre></td></tr></table></figure>
-
-<p>从上面的信息，可以看到镜像源包括了：ubuntu:18.04 、ubuntu:20.04 、ubuntu:22.04。直接拉取镜像到本地，执行命令： <code>docker pull ubuntu22.04</code><br>拉取成功后，可以在本地查看所有镜像，执行命令：<code>docker images</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">caojun@caojun-NMH-WCX9:~/07-docker$ docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">ubuntu        22.04     8a3cdc4d1ad3   6 weeks ago     77.9MB</span><br><span class="line">ubuntu        20.04     5f5250218d28   2 months ago    72.8MB</span><br><span class="line">hello-world   latest    d2c94e258dcb   15 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过上述的信息，可以看到拉取的ubuntu22.04镜像只有77.9MB。很多基础工具软件都没有，所以有必要安装并配置一下基础环境，但是先要宿主机上配置一些东西。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为了容器映射卷，创建一个文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/07-docker/blog-ubuntu22_04</span><br><span class="line"><span class="built_in">cd</span> ~/07-docker/blog-ubuntu22_04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 宿主机防火墙开放8110端口，先查一下8110端口是否被占用</span></span><br><span class="line"><span class="comment"># 若没有被占用，就用8110来做映射</span></span><br><span class="line">netstat -ap | grep 8110</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防火墙开放8110</span></span><br><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow 8110</span><br><span class="line">ufw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并运行容器，image_id=8a3cdc4d1ad3</span></span><br><span class="line">docker run -itd -p 127.0.0.1:8110:4000 -e LANG=C.utf8 -e LC_ALL=C.utf8 --restart=always -v <span class="variable">$PWD</span>:/workspace -u 1000 --security-opt seccomp=unconfined 8a3cdc4d1ad3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>完成宿主机上的一些基本配置后，可以进入ubuntu22.04容器配置环境了。首次进入ubuntu22.04容器还是要把基础环境搭起来，不然使用起来很不方便。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入ubuntu22.04容器，container_id=52e0bd6293ac</span></span><br><span class="line">docker <span class="built_in">exec</span> -it -u root 52e0bd6293ac /usr/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为root用户创建密码</span></span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建普通用户cj</span></span><br><span class="line">useradd -u 1000 -m -s /usr/bin/bash cj</span><br><span class="line">passwd cj</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到普通用户cj</span></span><br><span class="line">su cj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新apt源和升级本地软件包</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装基础工具软件</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git net-tools iputils-ping build-essential vim <span class="built_in">sudo</span> curl</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上面基本环境搭建起来后，发现有两个小问题：</p>
-<ul>
-<li>cj用户无法使用sudo</li>
-<li>git命令无法自动补全</li>
-</ul>
-<p><strong>解决第一个问题：</strong></p>
-<p>在 <code>/etc/sudoers</code> 文件中，把cj的权限添加进去，对于整个文件仅新增一行即可。<br>由于 <code>/etc/sudoers</code> 文件的权限是：440，所以先修改文件权限才能修改文件，执行命令：<code>sudo chmod 640 /etc/sudoers</code></p>
-<p>打开文件，执行：<code>vim /etc/sudoers</code>，新增一行：<code>cj	ALL=(ALL:ALL) ALL</code>，给出修改后的部分内容</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User privilege specification</span></span><br><span class="line">root	ALL=(ALL:ALL) ALL</span><br><span class="line">cj	ALL=(ALL:ALL) ALL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 省略...</span></span><br></pre></td></tr></table></figure>
-
-<p>修改并保存文件，需要将该文件的权限修改回来，执行命令：<code>sudo chmod 440 /etc/sudoers</code></p>
-<p><strong>解决第二个问题：</strong></p>
-<p>ubuntu22.04容器没有激活git的自动补全脚本，所以git相关的命令都无法自动补全。<br>激活git自动补全脚本，执行命令：<code>source /usr/share/bash-completion/completions/git</code></p>
-<p>至此，ubuntu22.04容器的基本环境准备完成了，可以进入到下一步。</p>
-<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>安装hexo</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更新apt源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo的依赖包</span></span><br><span class="line"><span class="built_in">sudo</span> apt intall node npm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载hexo</span></span><br><span class="line"><span class="built_in">sudo</span> npm install -g hexo-cli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>hexo安装完成后，可以查看版本，执行命令：<code>hexo -v</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo -v</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.5.0-45-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>通过hexo初始化一个博客站点，在本地运行博客站点</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 为博客创建根目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /workspace/blog</span><br><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客</span></span><br><span class="line">hexo init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行博客，可以通过参数-p指定端口，默认端口是4000</span></span><br><span class="line">hexo s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在执行：<code>hexo s</code> 时会失败，提示如下报错：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>经过在网上查找，发现hexo缺少了swig模块，现在将该模块下载到本地</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /workspace/blog</span><br><span class="line">npm i hexo-renderer-swig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>再次运行博客，可以看下如下提示：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN  ========================= ATTENTION! ==========================</span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   NexT repository is moving here: https://github.com/theme-next </span><br><span class="line">WARN  ===============================================================</span><br><span class="line">WARN   It<span class="string">&#x27;s rebase to v6.0.0 and future maintenance will resume there</span></span><br><span class="line"><span class="string">WARN  ===============================================================</span></span><br><span class="line"><span class="string">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p>此时已经成功了，可以在ubuntu22.04容器内访问：<code>http://localhost:4000/</code>，可以通过curl去访问博客，但是这没法渲染。ubuntu22.04容器又没有浏览器，所以只能通过宿主机的浏览器去访问博客，在创建ubuntu22.04容器时，就已经做了端口映射：<code>-p 127.0.0.1:8110:4000</code>，所以宿主机访问 <code>http://localhost:8110</code> 就是访问ubuntu22.04容器 <code>http://localhost:4000</code>。所以，直接在宿主机的浏览器地址栏输入：<code>http://localhost:8110</code> 即可看到博客内容。</p>
-<p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
-]]></content>
-      <categories>
-        <category>Blog</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>Blog</tag>
-        <tag>hexo-theme-next</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2024/08/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
   </entry>
 </search>
