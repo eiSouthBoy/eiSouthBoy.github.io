@@ -1,9 +1,462 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Matter: Level Control Cluster</title>
+    <url>/2024/09/10/Matter-Level-Control-Cluster/</url>
+    <content><![CDATA[<blockquote>
+<p>LevelControl Cluster的作用？</p>
+</blockquote>
+<p>该集群提供了一个接口，用于控制可设置为某个级别的设备特性，例如灯光的亮度、门的关闭程度或加热器的功率输出。</p>
+<h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><table>
+<thead>
+<tr>
+<th>Hierarchy</th>
+<th>Role</th>
+<th>Scope</th>
+<th>PICS Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base</td>
+<td>Application</td>
+<td>Endpoint</td>
+<td>LVL</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hierachy</th>
+<th>Name</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0008</td>
+<td>Base</td>
+<td>Level Control</td>
+<td></td>
+</tr>
+<tr>
+<td>0x001c</td>
+<td>Derived</td>
+<td>Pulse Width Modulation</td>
+<td>P</td>
+</tr>
+</tbody></table>
+<p><em>注意：Pulse Width Modulation cluster是临时性的</em></p>
+<h2 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Contraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0000</td>
+<td>CurrentLevel</td>
+<td>uint8</td>
+<td>MinLevel to MaxLevel</td>
+<td>SNX</td>
+<td>null</td>
+<td>R V</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0001</td>
+<td>RemainingTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x0002</td>
+<td>MinLevel</td>
+<td>uint8</td>
+<td>1 to MaxLevel</td>
+<td></td>
+<td>1</td>
+<td>R V</td>
+<td>[LT]</td>
+</tr>
+<tr>
+<td>0x0002</td>
+<td>MinLevel</td>
+<td>uint8</td>
+<td>0 to MaxLevel</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>[!LT]</td>
+</tr>
+<tr>
+<td>0x0003</td>
+<td>MaxLevel</td>
+<td>uint8</td>
+<td>MinLevel to 254</td>
+<td></td>
+<td>254</td>
+<td>R V</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>CurrentFrequency</td>
+<td>uint16</td>
+<td>MinFrequency to MaxFrequency</td>
+<td>PS</td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0005</td>
+<td>MinFrequency</td>
+<td>uint16</td>
+<td>0 to MaxFrequency</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>MaxFrequency</td>
+<td>uint16</td>
+<td>min Minfrequency</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0010</td>
+<td>OnOffTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0011</td>
+<td>OnLevel</td>
+<td>uint8</td>
+<td>MinLevel to MaxLevel</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0012</td>
+<td>OnTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0013</td>
+<td>OffTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0014</td>
+<td>DefaultMoveRate</td>
+<td>uint8</td>
+<td>all</td>
+<td>X</td>
+<td>MS</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x000f</td>
+<td>Options</td>
+<td>OptionsBitmap</td>
+<td>desc</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x4000</td>
+<td>StartUpCurrentLevel</td>
+<td>uint8</td>
+<td>desc</td>
+<td>XN</td>
+<td>MS</td>
+<td>RW VM</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>CurrentLevel Attribute</strong></p>
+<p>该属性暗示着设备当前级别。级别的含义取决于设备。</p>
+<p><strong>RemainingTime Attribute</strong></p>
+<p>该属性暗示着持续时间直到current命令执行完毕，它以十分之秒为单位。</p>
+<p><strong>MinLevel Attribute</strong></p>
+<p>该属性暗示着当前级别可以设置的最小值</p>
+<p><strong>MaxLevel Attribute</strong></p>
+<p>该属性暗示着当前级别可以设置的最大值</p>
+<p><strong>CurrentFrequency Attribute</strong></p>
+<p>该属性暗示着设备处于当前级别时的频率。当前频率的值为0，表示是未知的。</p>
+<p><strong>MinFrequency Attribute</strong></p>
+<p>该属性暗示着当前频率可以设置的最小值。最小频率属性的值应该小于或等于最大频率属性的值。</p>
+<p><strong>MaxFrequency Attribute</strong></p>
+<p>该属性暗示着当前频率可以设置的最小值。最大频率属性的值应该大于或等于最小属性的值。</p>
+<p><strong>Options Attribute</strong></p>
+<p>此属性应指示设备的选定选项。<br>选项属性是一个位图，它决定了某些集群命令的默认行为。每个依赖于选项属性的命令都应首先构造一个临时的选项位图，该位图在命令处理期间有效。临时选项位图具有与选项属性相同的格式和含义，但包括可能被命令字段覆盖的任何位。</p>
+<p><strong>OnOffTransitionTime Attribute</strong></p>
+<p>此属性应指示当同一个Endpoint上的 OnOff 集群收到On或 Off命令时，移动到目标级别或从目标级别移出所需的时间。以十分之一秒为单位。</p>
+<p><strong>OnLevel Attribute</strong></p>
+<p>此属性应指示当同一Endpoint上的 OnOff 集群的 OnOff 属性设置为 TRUE 时， CurrentLevel 属性被设置的值，这是处理 OnOff 集群命令的结果。如果未实现 OnLevel 属性，或将其设置为空值，则它不起作用。有关更多详细信息，请参阅开&#x2F;关命令对 CurrentLevel 属性的影响。</p>
+<p><strong>OnTrasitionTime Attribute</strong></p>
+<p>此属性应指示当同一 Endpoint 上的 OnOff 集群收到 On 命令时，将当前级别从最低级别移至最高级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
+<p><strong>OffTransitionTime Attribute</strong></p>
+<p>此属性应指示当同一 Endpoint上 的 OnOff 集群收到 Off 命令时，将当前级别从最高级别移至最低级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
+<p><strong>DefaultMoveRate Attribute</strong></p>
+<p>当收到带有空值速率参数的移动命令时，此属性应指示移动速率（以单位&#x2F;秒为单位）。</p>
+<p><strong>StartUpCurrentLevel Attribute</strong></p>
+<p>此属性应指示设备通电时所需的启动级别，并且此级别应反映在 CurrentLevel 属性中。StartUpCurrentLevel 属性的值如下所列：</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Action on power up</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>将 CurrentLevel 属性设置为设备允许的最小值</td>
+</tr>
+<tr>
+<td>null</td>
+<td>将 CurrentLevel 属性设置为它之前的值</td>
+</tr>
+<tr>
+<td>other values</td>
+<td>将CurrentLevel 属性设置为输入的值</td>
+</tr>
+</tbody></table>
+<p>此行为不适用于与 OTA 相关的重启。OTA 重启后，CurrentLevel 属性应返回到重启前的值。</p>
+<h2 id="Commands"><a href="#Commands" class="headerlink" title="Commands"></a>Commands</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Direction</th>
+<th>Respone</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x00</td>
+<td>MoveToLevel</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x01</td>
+<td>Move</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x02</td>
+<td>Step</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x03</td>
+<td>Stop</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x04</td>
+<td>MoveToLevelWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x05</td>
+<td>MoveWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x06</td>
+<td>StepWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x07</td>
+<td>StopWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x08</td>
+<td>MoveToClosestFrequecny</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+</tbody></table>
+<p><strong>MoveToLevel Command</strong></p>
+<p>收到此命令后，设备应从其当前级别移至级别字段中指定的值。“级别”的含义取决于设备 - 例如，对于灯来说，它可能表示亮度级别。</p>
+<p>移动应尽可能在技术上可行，即不是阶跃函数，并且移动到新级别所需的时间应等于 TransitionTime 字段的值（以十分之一秒为单位），或尽可能接近该值。</p>
+<p>如果 TransitionTime 字段的值为 null，则移动到新级别所需的时间应由 OnOffTransitionTime 属性决定。如果不存在 OnOffTransitionTime（可选属性），则设备应尽快移动到新级别。</p>
+<p><strong>Move Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，设备应从其当前级别开始以连续的方式向上或向下移动，如下所述：</p>
+<table>
+<thead>
+<tr>
+<th>MoveMode</th>
+<th>Action on Receipt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Up</td>
+<td>按照速率字段中给出的速率增加设备的级别。如果级别达到设备允许的最大值，则停止。</td>
+</tr>
+<tr>
+<td>Down</td>
+<td>按照“速率”字段中指定的速率降低设备的级别。如果级别达到设备允许的最低水平，则停止。</td>
+</tr>
+</tbody></table>
+<p><strong>Step Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，设备应从其当前级别向上或向下移动，如下所述：</p>
+<table>
+<thead>
+<tr>
+<th>StepMode</th>
+<th>Action on Receipt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Up</td>
+<td>按 StepSize 单位增加 CurrentLevel，或直到达到设备允许的最大级别（如果在此过程中已达到）。在后一种情况下，过渡时间应按比例减少。</td>
+</tr>
+<tr>
+<td>Down</td>
+<td>将 CurrentLevel 降低 StepSize 单位，或直到达到设备允许的最低级别（如果在此过程中已达到）。在后一种情况下，过渡时间应按比例减少。</td>
+</tr>
+</tbody></table>
+<p><strong>Stop Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，当前正在执行的任何 MoveToLevel、Move 或 Step 命令（及其“带开&#x2F;关”变体）都应终止。收到 Stop 命令后，CurrentLevel 的值应保留为原值，RemainingTime 应设置为零。</p>
+<p>此命令在命令列表中有两个条目，一个用于 MoveToLevel、Move 和 Step 命令，另一个用于它们的“带 On&#x2F;Off”对应项。这只是为了对称，以便轻松选择一组或另一组命令 - Stop 命令是相同的，因为 On&#x2F;Off 的依赖性由要停止的原始命令决定。</p>
+<p><strong>MoveToClosestFrequecny Command</strong></p>
+<p>收到此命令后，设备应将其当前频率更改为请求的频率，或更改为其可以生成的最接近的频率。如果设备无法接近该频率，则应返回默认响应，错误代码为 CONSTRAINT_ERROR。确定请求的频率是否可以近似为支持的频率是制造商特定的决定。</p>
+<p><strong>‘With On&#x2F;Off’ Commands</strong></p>
+<p>MoveToLevelWithOnOff、MoveWithOnOff 和 StepWithOnOff 命令分别与 MoveToLevel、Move 和 Step 命令具有相同的数据字段。</p>
+]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
+      <tags>
+        <tag>LevelControl Cluster</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo-asset-image problem</title>
+    <url>/2024/09/07/hexo-assert-image-problem/</url>
+    <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在之前使用hexo搭建博客后，认为在内容中插入图片还是不可缺少了。所以找到了一个博主发布的一遍文章：<a href="https://blog.csdn.net/m0_43401436/article/details/107191688">hexo博客中插入图片失败——解决思路及个人最终解决办法</a>，专门解决我这个需求的。</p>
+<p>先介绍一下我的hexo环境：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo --version</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.8.0-40-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>hexo-next-theme：8.20.0</em></p>
+<p>下面就是我按照分享的文章的操作过程：</p>
+<ul>
+<li><p>下载hexo-asset-image插件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ npm install hexo-asset-image --save</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改hexo的配置文件_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 仅修改一处：将false修改为true</span></span><br><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Typora修改图片偏好设置</p>
+<p><img src="/2024/09/07/hexo-assert-image-problem/image-20240907142349989.png" alt="image-20240907142349989"></p>
+</li>
+<li><p>在Typora编译md文件，并复制图片到内容中</p>
+</li>
+<li><p>hexo清理缓存并重新构建：hexo clean &amp;&amp; hexo g</p>
+</li>
+</ul>
+<p>以上就是按照分享文章的步骤，但是图片还是无法显示（go die）。</p>
+<p>但是我在hexo构建时，发现了一些奇怪的东西：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  ==================================</span><br><span class="line">  ███╗   ██╗███████╗██╗  ██╗████████╗</span><br><span class="line">  ████╗  ██║██╔════╝╚██╗██╔╝╚══██╔══╝</span><br><span class="line">  ██╔██╗ ██║█████╗   ╚███╔╝    ██║</span><br><span class="line">  ██║╚██╗██║██╔══╝   ██╔██╗    ██║</span><br><span class="line">  ██║ ╚████║███████╗██╔╝ ██╗   ██║</span><br><span class="line">  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝   ╚═╝</span><br><span class="line">========================================</span><br><span class="line">NexT version 8.20.0</span><br><span class="line">Documentation: https://theme-next.js.org</span><br><span class="line">========================================</span><br><span class="line">INFO  Start processing</span><br><span class="line">update <span class="built_in">link</span> as:--&gt;/.io//Snipaste_esp32c3_2024-09-07_11-47-30.png</span><br><span class="line">update <span class="built_in">link</span> as:--&gt;/.io//Snipaste_esp32c3_2024-09-07_12-01-02.png</span><br><span class="line">update <span class="built_in">link</span> as:--&gt;/.io//Snipaste_esp32c3_2024-09-07_11-47-30.png</span><br><span class="line">update <span class="built_in">link</span> as:--&gt;/.io//Snipaste_esp32c3_2024-09-07_12-01-02.png</span><br><span class="line">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里的图片路径很不正常，我猜测这是图片无法正常显示的原因。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>通过把文件的异常路径放在浏览器搜索，发现了一个博主发布了解决方法：<a href="https://blog.iz4.cc/tutorial/2022/08/%E8%A7%A3%E5%86%B3hexo-asset-image%E5%9B%BE%E7%89%87%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E6%9B%BF%E6%8D%A2%E9%97%AE%E9%A2%98/">解决hexo-asset-image图片相对路径替换问题</a> ，原来是hexo-assert-image插件转换图片路径出问题了。</p>
+<p>按照分享的文章修改步骤：</p>
+<ul>
+<li><p>编辑 blog&#x2F;node_modules&#x2F;hexo-asset-image&#x2F;index.js</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 仅新增 else if 代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// In hexo 3.1.1, the permalink of &quot;about&quot; page is like &quot;.../about/index.html&quot;.</span></span><br><span class="line"><span class="comment">// if not with index.html endpos = link.lastIndexOf(&#x27;.&#x27;) + 1 support hexo-abbrlink</span></span><br><span class="line"><span class="keyword">if</span>(<span class="regexp">/.*\/index\.html$/</span>.<span class="title function_">test</span>(link)) &#123;</span><br><span class="line">  <span class="comment">// when permalink is end with index.html, for example 2019/02/20/xxtitle/index.html</span></span><br><span class="line">  <span class="comment">// image in xxtitle/ will go to xxtitle/index/</span></span><br><span class="line">  appendLink = <span class="string">&#x27;index/&#x27;</span>;</span><br><span class="line">  <span class="keyword">var</span> endPos = link.<span class="title function_">lastIndexOf</span>(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/.*\/$/</span>.<span class="title function_">test</span>(link))&#123;</span><br><span class="line">  <span class="keyword">var</span> endPos = link.<span class="title function_">lastIndexOf</span>(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> endPos = link.<span class="title function_">lastIndexOf</span>(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hexo清理缓存并重新构建：hexo clean &amp;&amp; hexo g</p>
+<p>这里要注意一点：每次插入图片，都要重新构建，否则图片无法正常显示。</p>
+</li>
+</ul>
+<p>最终本地访问图片显示正常，部署到github.io也显示正常。</p>
+<p><strong>补充说明：</strong></p>
+<p>第一篇分享文章的博主表示：Typora引入图片时，不能加入图片的文件夹前缀，只能直接给出图片的文件名称，否则图片无法正常显示。并且该博主也通过hexo-asset-image插件的README.md说明用来论证。</p>
+<p>我也查看了该插件的README.md，确实如同该博主说的。但是我还是使用相对路径（即加上了图片所在的文件夹作为前缀），并没有出现图片无法显示的情况。</p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo-asset-image图片显示异常</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ESP32-C3-DevKitM-1 Schematic</title>
     <url>/2024/09/07/ESP32-C3-DevKitM-1-Schematic/</url>
-    <content><![CDATA[<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>先看一下开发板的缩略图：</p>
+    <content><![CDATA[<p><a href="https://docs.espressif.com/projects/esp-dev-kits/zh_CN/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html">ESP32-C3-DevKit-M1 官网文档介绍</a></p>
+<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>先看一下开发板的缩略图：</p>
 <p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_11-47-30.png" alt="开发板的缩略图"></p>
 <p>缩略图只列举了功能模块部分，并没有体现电路部分。但是还是可以通过上图知道该开发板提供的功能：</p>
 <ul>
@@ -18,7 +471,132 @@
 <h2 id="按键电路图"><a href="#按键电路图" class="headerlink" title="按键电路图"></a>按键电路图</h2><p>接下来看一下Boot和RST按键的电路图：</p>
 <p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_12-01-02.png"></p>
 <p>SW1按键（即Boot按键），当SW1被按下时，电路被导通，GPIO9从高电平到低电平变化；反之，当SW1被松开时，电路被断开，GPIO9从低电平到高电平变化；</p>
-<p>SW2按键（即RST按键），当SW2被按下时，电路被导通，CHIP_PU被置为低电平，直接将开发板复位。</p>
+<p>SW2按键（即RST按键），当SW2被按下时，电路被导通，CHIP_PU（即芯片的EN接口）从高电平到低电平变化，直接将开发板复位。接着查看一下CHIP_PU连接的复位电路：</p>
+<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/image-20240907140310317.png" alt="image-20240907140310317"></p>
+<h2 id="LED电路图"><a href="#LED电路图" class="headerlink" title="LED电路图"></a>LED电路图</h2><p>接下来看一下LED的电路图：</p>
+<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/image-20240907152038685.png" alt="image-20240907152038685"></p>
+<p>通过GPIO8来控制LED灯，开发板提供的LED支持的功能包括：开&#x2F;关、调节亮度、调节RGB</p>
+<h2 id="GPIO汇总"><a href="#GPIO汇总" class="headerlink" title="GPIO汇总"></a>GPIO汇总</h2><p>ESP32-C3 芯片具有 22 个物理 GPIO 管脚（GPIO0 ~ GPIO21）。每个管脚都可用作一个通用 IO，或连接一个内部的外设信号。通过 GPIO 交换矩阵和 IO MUX，可配置外设模块的输入信号来源于任何的 IO 管脚，并且外设模块的输出信号也可连接到任意 IO 管脚。这些模块共同组成了芯片的 IO 控制。</p>
+<p>参考来源：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v5.2.2/esp32c3/api-reference/peripherals/gpio.html">ESP32-C3 GPIO描述</a></p>
+<table>
+<thead>
+<tr>
+<th>GPIO</th>
+<th>模拟功能</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPIO0</td>
+<td>ADC1_CH0</td>
+<td>RTC</td>
+</tr>
+<tr>
+<td>GPIO1</td>
+<td>ADC1_CH1</td>
+<td>RTC</td>
+</tr>
+<tr>
+<td>GPIO2</td>
+<td>ADC1_CH2</td>
+<td>Strapping管教；RTC</td>
+</tr>
+<tr>
+<td>GPIO3</td>
+<td>ADC1_CH3</td>
+<td>RTC</td>
+</tr>
+<tr>
+<td>GPIO4</td>
+<td>ADC1_CH4</td>
+<td>RTC</td>
+</tr>
+<tr>
+<td>GPIO5</td>
+<td>ADC2_CH0</td>
+<td>RTC</td>
+</tr>
+<tr>
+<td>GPIO6</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPIO7</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPIO8</td>
+<td></td>
+<td>Strapping管脚</td>
+</tr>
+<tr>
+<td>GPIO9</td>
+<td></td>
+<td>Strapping管脚</td>
+</tr>
+<tr>
+<td>GPIO10</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPIO11</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPIO12</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO13</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO14</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO15</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO16</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO17</td>
+<td></td>
+<td>SPI0&#x2F;1</td>
+</tr>
+<tr>
+<td>GPIO18</td>
+<td></td>
+<td>USB-JTAG</td>
+</tr>
+<tr>
+<td>GPIO19</td>
+<td></td>
+<td>USB-JTAG</td>
+</tr>
+<tr>
+<td>GPIO20</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPIO21</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>esp32c3</category>
@@ -33,18 +611,74 @@
     <content><![CDATA[<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>blink示例的目录结构：</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">--blink</span><br><span class="line">  |--main（必有的main目录）</span><br><span class="line">     |--blink_example.c</span><br><span class="line">     |--CMakeLists.txt（底层编译配置文件）</span><br><span class="line">     |--idf_componect.yml</span><br><span class="line">     |--Kconfig.projbuild（Kconfig配置文件）</span><br><span class="line">  |--CMakeLists.txt（顶层编译配置文件）</span><br><span class="line">  |--pytest_blink.py</span><br><span class="line">  |--README.md</span><br><span class="line">  |--sdkconfig.ci.led_strip_spi</span><br></pre></td></tr></table></figure>
 
+<h2 id="源文件代码"><a href="#源文件代码" class="headerlink" title="源文件代码"></a>源文件代码</h2><p>该项目就只有一个源文件：blink_example_main.c</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;driver/gpio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;esp_log.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;led_strip.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;sdkconfig.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> <span class="type">char</span> *TAG = <span class="string">&quot;example&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Use project configuration menu (idf.py menuconfig) to choose the GPIO to blink,</span></span><br><span class="line"><span class="comment">   or you can edit the following line and set a number here.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">// CONFIG_BLINK_GPIO的默认值是8</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLINK_GPIO CONFIG_BLINK_GPIO</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">uint8_t</span> s_led_state = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_BLINK_LED_STRIP</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">led_strip_handle_t</span> led_strip;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">blink_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* If the addressable LED is enabled */</span></span><br><span class="line">    <span class="keyword">if</span> (s_led_state) &#123;</span><br><span class="line">        <span class="comment">/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */</span></span><br><span class="line">        led_strip_set_pixel(led_strip, <span class="number">0</span>, <span class="number">16</span>, <span class="number">16</span>, <span class="number">16</span>);</span><br><span class="line">        <span class="comment">/* Refresh the strip to send data */</span></span><br><span class="line">        led_strip_refresh(led_strip);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">/* Set all LED off to clear all pixels */</span></span><br><span class="line">        led_strip_clear(led_strip);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">configure_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    ESP_LOGI(TAG, <span class="string">&quot;Example configured to blink addressable LED!&quot;</span>);</span><br><span class="line">    <span class="comment">/* LED strip initialization with the GPIO and pixels number*/</span></span><br><span class="line">    <span class="type">led_strip_config_t</span> strip_config = &#123;</span><br><span class="line">        .strip_gpio_num = BLINK_GPIO,</span><br><span class="line">        .max_leds = <span class="number">1</span>, <span class="comment">// at least one LED on board</span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> CONFIG_BLINK_LED_STRIP_BACKEND_RMT</span></span><br><span class="line">    <span class="type">led_strip_rmt_config_t</span> rmt_config = &#123;</span><br><span class="line">        .resolution_hz = <span class="number">10</span> * <span class="number">1000</span> * <span class="number">1000</span>, <span class="comment">// 10MHz</span></span><br><span class="line">        .flags.with_dma = <span class="literal">false</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    ESP_ERROR_CHECK(led_strip_new_rmt_device(&amp;strip_config, &amp;rmt_config, &amp;led_strip));</span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> CONFIG_BLINK_LED_STRIP_BACKEND_SPI</span></span><br><span class="line">    <span class="type">led_strip_spi_config_t</span> spi_config = &#123;</span><br><span class="line">        .spi_bus = SPI2_HOST,</span><br><span class="line">        .flags.with_dma = <span class="literal">true</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    ESP_ERROR_CHECK(led_strip_new_spi_device(&amp;strip_config, &amp;spi_config, &amp;led_strip));</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">error</span> <span class="string">&quot;unsupported LED strip backend&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="comment">/* Set all LED off to clear all pixels */</span></span><br><span class="line">    led_strip_clear(led_strip);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> CONFIG_BLINK_LED_GPIO</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">blink_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Set the GPIO level according to the state (LOW or HIGH)*/</span></span><br><span class="line">    gpio_set_level(BLINK_GPIO, s_led_state);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">configure_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    ESP_LOGI(TAG, <span class="string">&quot;Example configured to blink GPIO LED!&quot;</span>);</span><br><span class="line">    gpio_reset_pin(BLINK_GPIO);</span><br><span class="line">    <span class="comment">/* Set the GPIO as a push/pull output */</span></span><br><span class="line">    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">error</span> <span class="string">&quot;unsupported LED type&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">app_main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Configure the peripheral according to the LED type */</span></span><br><span class="line">    configure_led();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        ESP_LOGI(TAG, <span class="string">&quot;Turning the LED %s!&quot;</span>, s_led_state == <span class="literal">true</span> ? <span class="string">&quot;ON&quot;</span> : <span class="string">&quot;OFF&quot;</span>);</span><br><span class="line">        blink_led();</span><br><span class="line">        <span class="comment">/* Toggle the LED state */</span></span><br><span class="line">        s_led_state = !s_led_state;</span><br><span class="line">        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从源文件中需要主要的几个点：</p>
+<ul>
+<li><code>CONFIG_BLINK_GPIO</code>：这个宏是在哪里定义的，定义的值是什么？</li>
+<li><code>CONFIG_BLINK_LED_STRIP</code>、<code>CONFIG_BLINK_LED_GPIO</code>：这两个宏在哪里定义的，作用又是什么？</li>
+<li><code>CONFIG_BLINK_LED_STRIP_BACKEND_RMT</code>、<code>CONFIG_BLINK_LED_STRIP_BACKEND_SPI</code>：这两个宏是在哪里定义的，作用是什么？</li>
+<li><code>CONFIG_BLINK_PERIOD</code>：这个宏在哪里定义，作用是什么？</li>
+<li><code>portTICK_PERIOD_MS</code>：这个宏在哪里定义？</li>
+</ul>
+<p>blink工程目录下有这么一个文件：Kconfig.projbuild</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">menu &quot;Example Configuration&quot;</span><br><span class="line"></span><br><span class="line">    orsource &quot;$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps&quot;</span><br><span class="line"></span><br><span class="line">    choice BLINK_LED</span><br><span class="line">        prompt &quot;Blink LED type&quot;</span><br><span class="line">        default BLINK_LED_GPIO if IDF_TARGET_ESP32 || IDF_TARGET_ESP32C2</span><br><span class="line">        default BLINK_LED_STRIP</span><br><span class="line">        help</span><br><span class="line">            Select the LED type. A normal level controlled LED or an addressable LED strip.</span><br><span class="line">            The default selection is based on the Espressif DevKit boards.</span><br><span class="line">            You can change the default selection according to your board.</span><br><span class="line"></span><br><span class="line">        config BLINK_LED_GPIO</span><br><span class="line">            bool &quot;GPIO&quot;</span><br><span class="line">        config BLINK_LED_STRIP</span><br><span class="line">            bool &quot;LED strip&quot;</span><br><span class="line">    endchoice</span><br><span class="line"></span><br><span class="line">    choice BLINK_LED_STRIP_BACKEND</span><br><span class="line">        depends on BLINK_LED_STRIP</span><br><span class="line">        prompt &quot;LED strip backend peripheral&quot;</span><br><span class="line">        default BLINK_LED_STRIP_BACKEND_RMT if SOC_RMT_SUPPORTED</span><br><span class="line">        default BLINK_LED_STRIP_BACKEND_SPI</span><br><span class="line">        help</span><br><span class="line">            Select the backend peripheral to drive the LED strip.</span><br><span class="line"></span><br><span class="line">        config BLINK_LED_STRIP_BACKEND_RMT</span><br><span class="line">            depends on SOC_RMT_SUPPORTED</span><br><span class="line">            bool &quot;RMT&quot;</span><br><span class="line">        config BLINK_LED_STRIP_BACKEND_SPI</span><br><span class="line">            bool &quot;SPI&quot;</span><br><span class="line">    endchoice</span><br><span class="line"></span><br><span class="line">    config BLINK_GPIO</span><br><span class="line">        int &quot;Blink GPIO number&quot;</span><br><span class="line">        range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX</span><br><span class="line">        default 5 if IDF_TARGET_ESP32</span><br><span class="line">        default 18 if IDF_TARGET_ESP32S2</span><br><span class="line">        default 48 if IDF_TARGET_ESP32S3</span><br><span class="line">        default 8</span><br><span class="line">        help</span><br><span class="line">            GPIO number (IOxx) to blink on and off the LED.</span><br><span class="line">            Some GPIOs are used for other purposes (flash connections, etc.) and cannot be used to blink.</span><br><span class="line"></span><br><span class="line">    config BLINK_PERIOD</span><br><span class="line">        int &quot;Blink period in ms&quot;</span><br><span class="line">        range 10 3600000</span><br><span class="line">        default 1000</span><br><span class="line">        help</span><br><span class="line">            Define the blinking period in milliseconds.</span><br><span class="line"></span><br><span class="line">endmenu</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个文件定义了<code>CONFIG_BLINK_GPIO</code> ，在配置菜单中提供一个范围供用户选择，不同的目标芯片给定了一个默认值。由于测试的开发板的芯片的ESP32-C3，所以给了默认值8。</p>
+<p>这个文件定义了<code>CONFIG_BLINK_LED_STRIP</code>、<code>CONFIG_BLINK_LED_GPIO</code>，在配置菜单中提供支持的LED类型让用户选择，可选项：LED GPIO（普通的LED） or LED STRIP（可寻址的LED）。由于测试的开发板的芯片的ESP32-C3，所以给了默认值：<code>CONFIG_BLINK_LED_STRIP</code>。</p>
+<p>若选择LED类型是LED STRIP，还要为其选择驱动类型，可选项：SPI 和 RMT，即<code>CONFIG_BLINK_LED_STRIP_BACKEND_RMT</code>、<code>CONFIG_BLINK_LED_STRIP_BACKEND_SPI</code>，由于测试的开发板的芯片的ESP32-C3，所以给了默认值：SPI。</p>
+<p>这个文件还定义了<code>CONFIG_BLINK_PERIOD</code> ，提供一个范围给用户选择，此处的默认值是1000ms，用于闪烁周期。</p>
+<p>最后一个宏<code>portTICK_PERIOD_MS</code> ，这个是真的难找，还不能按图索骥。还是通过浏览器搜索找到了一遍文章才找到：<a href="https://blog.csdn.net/sunnysunice/article/details/129817691">细说基于IDF-IDE的ESP32 入门例程blink工程</a>。按照分享的文章，如何找到这个字段的定义：</p>
+<ul>
+<li><p>搜索这个文件：<code>portmacro.h</code>，在这个文件中找到了定义</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> portTICK_PERIOD_MS          ( ( TickType_t ) 1000 / configTICK_RATE_HZ )</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接下来找这个：configTICK_RATE_HZ，可以在这个文件中找到：<code>FreeRTOSConfig.h</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> configTICK_RATE_HZ                           CONFIG_FREERTOS_HZ</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后查找：<code>CONFIG_FREERTOS_HZ</code> 就容易了，直接在<code>sdkconfig</code>文件中找就好了</p>
+</li>
+</ul>
+<p>就这种搞法，想让初学者入门真的难度太大了，都不用去看代码逻辑，光找这些宏和变量的定义就可以劝退很多人了。</p>
+<h2 id="简化代码"><a href="#简化代码" class="headerlink" title="简化代码"></a>简化代码</h2><p>ESP32-C3-DevKit-M-1开发板GPIO8外接LED_STRIP类型ws2812设备，所以代码可以这样简化：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;driver/gpio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;esp_log.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;led_strip.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;sdkconfig.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> <span class="type">char</span> *TAG = <span class="string">&quot;example&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLINK_GPIO 8</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLINK_PERIOD 1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 支持定义两种STRIP模式：SPI 和 RMT</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLINK_LED_STRIP_BACKEND_TYPE <span class="string">&quot;SPI&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">uint8_t</span> s_led_state = <span class="number">0</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">led_strip_handle_t</span> led_strip;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">blink_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* If the addressable LED is enabled */</span></span><br><span class="line">    <span class="keyword">if</span> (s_led_state) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */</span></span><br><span class="line">        led_strip_set_pixel(led_strip, <span class="number">0</span>, <span class="number">16</span>, <span class="number">16</span>, <span class="number">16</span>);</span><br><span class="line">        <span class="comment">/* Refresh the strip to send data */</span></span><br><span class="line">        led_strip_refresh(led_strip);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Set all LED off to clear all pixels */</span></span><br><span class="line">        led_strip_clear(led_strip);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">configure_led</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    ESP_LOGI(TAG, <span class="string">&quot;Example configured to blink addressable LED!&quot;</span>);</span><br><span class="line">    <span class="comment">/* LED strip initialization with the GPIO and pixels number*/</span></span><br><span class="line">    <span class="type">led_strip_config_t</span> strip_config = &#123;</span><br><span class="line">        .strip_gpio_num = BLINK_GPIO,</span><br><span class="line">        .max_leds = <span class="number">1</span>, <span class="comment">// at least one LED on board</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(BLINK_LED_STRIP_BACKEND_TYPE, <span class="string">&quot;RMT&quot;</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">led_strip_rmt_config_t</span> rmt_config = &#123;</span><br><span class="line">            .resolution_hz = <span class="number">10</span> * <span class="number">1000</span> * <span class="number">1000</span>, <span class="comment">// 10MHz</span></span><br><span class="line">            .flags.with_dma = <span class="literal">false</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">        ESP_ERROR_CHECK(led_strip_new_rmt_device(&amp;strip_config, &amp;rmt_config, &amp;led_strip));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(BLINK_LED_STRIP_BACKEND_TYPE, <span class="string">&quot;SPI&quot;</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">led_strip_spi_config_t</span> spi_config = &#123;</span><br><span class="line">            .spi_bus = SPI2_HOST,</span><br><span class="line">            .flags.with_dma = <span class="literal">true</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">        ESP_ERROR_CHECK(led_strip_new_spi_device(&amp;strip_config, &amp;spi_config, &amp;led_strip));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Set all LED off to clear all pixels */</span></span><br><span class="line">    led_strip_clear(led_strip);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">app_main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Configure the peripheral according to the LED type */</span></span><br><span class="line">    configure_led();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        ESP_LOGI(TAG, <span class="string">&quot;Turning the LED %s!&quot;</span>, s_led_state == <span class="literal">true</span> ? <span class="string">&quot;ON&quot;</span> : <span class="string">&quot;OFF&quot;</span>);</span><br><span class="line">        blink_led();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Toggle the LED state */</span></span><br><span class="line">        s_led_state = !s_led_state;</span><br><span class="line">        vTaskDelay(BLINK_PERIOD / <span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用户通过<code>BLINK_LED_STRIP_BACKEND_TYPE</code> 宏来定义控制类型。</p>
 ]]></content>
       <categories>
         <category>esp32c3</category>
       </categories>
       <tags>
         <tag>点灯</tag>
+        <tag>ESP32-C3-DevKit-M-1</tag>
       </tags>
   </entry>
   <entry>
     <title>Matter: On/Off Cluster</title>
     <url>/2024/09/06/Matter-On-Off-Cluster/</url>
-    <content><![CDATA[<h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><table>
+    <content><![CDATA[<blockquote>
+<p>On&#x2F;Off Cluster的作用？</p>
+</blockquote>
+<p>用于打开和关闭设备的属性和命令。</p>
+<h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hierarchy</th>
+<th>Role</th>
+<th>Scope</th>
+<th>PICS Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base</td>
+<td>Application</td>
+<td>Endpoint</td>
+<td>OO</td>
+</tr>
+</tbody></table>
+<table>
 <thead>
 <tr>
 <th>ID</th>
@@ -54,6 +688,200 @@
 <tbody><tr>
 <td>0x0006</td>
 <td>On&#x2F;Off</td>
+</tr>
+</tbody></table>
+<h2 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0000</td>
+<td>OnOff</td>
+<td>bool</td>
+<td>all</td>
+<td>SN</td>
+<td>FALSE</td>
+<td>R V</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x4000</td>
+<td>GlobalSceneControl</td>
+<td>bool</td>
+<td>all</td>
+<td></td>
+<td>TRUE</td>
+<td>R V</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4001</td>
+<td>OnTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4002</td>
+<td>OffWaitTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4003</td>
+<td>StartUpOnOff</td>
+<td>StartUpOnOffEnum</td>
+<td>desc</td>
+<td>XN</td>
+<td>MS</td>
+<td>RW VM</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>OnOff Attribute</strong></p>
+<p>这个属性暗示着在Endpoint上设备状态是关闭或打开，该属性的值也对应着FALSE或TRUE。</p>
+<p><strong>GlobalSceneControl Attribute</strong></p>
+<p>为了支持用户恢复一组设备的最后设置（例如灯光的级别设置）的用例，引入了一个全局场景，该场景在设备关闭时存储并在设备打开时调用。全局场景定义为使用组标识符 0 和场景标识符 0 存储的场景。</p>
+<p>定义此属性是为了防止第二个 Off 命令将所有设备关闭的情况存储为全局场景，并防止第二个 On 命令通过返回全局场景来破坏当前设置。</p>
+<p>在收到导致 OnOff 属性设置为 TRUE 的命令后，此属性应设置为 TRUE，例如标准On命令、MoveToLevel(WithOnOff) 命令、RecallScene 命令或 OnWithRecallGlobalScene 命令。</p>
+<p>在收到 OffWithEffect 命令后，此属性的值应该设置为FALSE。</p>
+<p><strong>OnTime Attribute</strong></p>
+<p>此属性指定使用 OnWithTimedOff 命令时，在自动转换为 Off 状态之前应保持 On 状态的时间长度（以 1&#x2F;10 秒为单位）。此属性可以随时写入，但写入值仅在 Timed On 状态下才有效。</p>
+<p><strong>OffWaitTime Attribute</strong></p>
+<p>此属性指定应保护关闭状态的时间长度（以 1&#x2F;10 秒为单位），以防止另一个 OnWithTimedOff 命令将服务器重新切换回开启状态（例如，离开房间时，灯会关闭，但占用传感器会检测到离开的人并尝试将灯重新打开）。此属性可以随时写入，但写入值仅在处于定时开启状态后转换到延迟关闭状态或处于延迟关闭状态时才有效。</p>
+<p><strong>StartUpOnOff Attribute</strong></p>
+<p>此属性定义设备通电时所需的启动行为并且此状态应反映在 OnOff 属性中。如果值为空，则将 OnOff 属性设置为其先前的值。否则，行为在定义 StartUpOnOffEnum 的表中定义。</p>
+<p>此属性不适用于与 OTA 相关的重启。OTA 重启后，OnOff 属性应恢复为重启前的值。</p>
+<h2 id="Commands"><a href="#Commands" class="headerlink" title="Commands"></a>Commands</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Direction</th>
+<th>Response</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x00</td>
+<td>Off</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x01</td>
+<td>On</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>!OFFONLY</td>
+</tr>
+<tr>
+<td>0x02</td>
+<td>Toggle</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>!OFFONLY</td>
+</tr>
+<tr>
+<td>0x40</td>
+<td>OffWithEffect</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x41</td>
+<td>OnWithRecallGlobalSence</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x42</td>
+<td>OnWithTimedOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>Off Command</strong></p>
+<p>收到Off命令后，服务器应该将OnOff属性的值设置为FALSE。此外，当支持OnTime属性时，服务器应该将OnTime属性的值设置为0。</p>
+<p><strong>On Command</strong></p>
+<p>如果支持OffOnly功能（或特征）时，收到On命令后，服务器应该发送UNSUPPORTED_COMMAND失败状态响应。否则，收到On命令后，服务器应该设置OnOff属性的值为TRUE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。</p>
+<p><strong>Toggle Command</strong></p>
+<p>如果支持OffOnly功能（或特征），收到Toggle命令后，服务器应该发送UNSUPPORTED_COMMAND失败状态响应。否则，收到Toggle命令后，如果OnOff属性的值等于FALSE，服务器应该将OnOff属性的值设置为TRUE；如果OnOff属性的值等于TRUE，服务器应该将OnOff属性的值设置为FALSE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnOff属性的值等于FALSE，且如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。如果OnOff属性的值等于TRUE，服务器应该将OnTime属性的值设置为0。</p>
+<p><strong>OffWithRecallGlobalSence Command</strong></p>
+<p>这个命令允许在设备关闭时调用设置。</p>
+<p>收到OffWithRecallGlobalSence命令后，如果GlobalSceneControl属性的值等于TRUE，服务器应该丢弃这个命令。</p>
+<p>如果GlobalSceneControl属性的值等于FALSE，那么同一个Endpoint上Scene Cluster服务器应该调用它的global scene，并更新OnOff属性的值。OnOff服务器应该将GlobalSceneControl属性的值设置为TRUE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。</p>
+<p><strong>OnWithTimedOff Command</strong></p>
+<p>此命令允许设备在特定持续时间内打开，并具有受保护的持续时间，因此如果设备随后关闭，在此期间再次收到 OnWithTimedOff 命令，无法重新打开设备。在服务器打开时，收到的更多 OnWithTimedOff 命令将更新设备打开的时间段。</p>
+<p><em>OnWithTimedOff 命令的数据域</em></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>OnOffControl</td>
+<td>OnOffControlBitamp</td>
+<td>0 to 1</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>1</td>
+<td>OnTime</td>
+<td>uint16</td>
+<td>max 0xfffe</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OffWaitTime</td>
+<td>uint16</td>
+<td>max 0xfffe</td>
+<td></td>
+<td></td>
+<td>M</td>
 </tr>
 </tbody></table>
 ]]></content>
@@ -2140,8 +2968,8 @@
         <category>Matter</category>
       </categories>
       <tags>
-        <tag>Switches and Controls of Matter Device</tag>
         <tag>matter-1-3-device-library-specification</tag>
+        <tag>Switches and Controls of Matter Device</tag>
       </tags>
   </entry>
   <entry>
@@ -2152,7 +2980,7 @@
 
 
 
-<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><a href="/2024/08/16/bluetoothctl%20client%20tool/" title="bluetoothctl client tool">bluetoothctl client tool</a> 介绍了为什么要写一个蓝牙应用库，既然选择了在树莓派上开发，那么就需要在树莓派上验证蓝牙应用库的可用性。通过树莓派运行蓝牙应用库连接蓝牙音响设备播放音频文件，我就可以证明蓝牙应用库的可用性。
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><a href="/2024/08/16/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a> 介绍了为什么要写一个蓝牙应用库，既然选择了在树莓派上开发，那么就需要在树莓派上验证蓝牙应用库的可用性。通过树莓派运行蓝牙应用库连接蓝牙音响设备播放音频文件，我就可以证明蓝牙应用库的可用性。
 
 <p>在购入树莓派之前，我有查询过树莓派可以实现多媒体应用：视频和音频。树莓派硬件自带了一个3.5mm的音频输出口，以及两个micro hdmi接口。</p>
 <h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>查看树莓派4B有哪些音频播放接口，可以通过一下两种方式：</p>
@@ -2202,7 +3030,7 @@
   </entry>
   <entry>
     <title>ssh remote login</title>
-    <url>/2024/08/21/ssh%20remote%20login/</url>
+    <url>/2024/08/21/ssh-remote-login/</url>
     <content><![CDATA[<h2 id="安装ssh"><a href="#安装ssh" class="headerlink" title="安装ssh"></a>安装ssh</h2><p>一般都是在本地PC通过ssh远程连接服务器，在本地PC基本都有ssh client程序，而服务器不一定会有ssh server程序。所以首先第一步要确认服务器是否已经安装了ssh server程序（即openssh-server），若已经安装，则跳过；若没有安装，则接下来安装步骤。</p>
 <ul>
 <li><p>服务器上检查是否安装 openssh-server</p>
@@ -2275,7 +3103,7 @@
   </entry>
   <entry>
     <title>Shell and Shell Scripts</title>
-    <url>/2024/08/18/Shell%20and%20Shell%20Scripts/</url>
+    <url>/2024/08/18/Shell-and-Shell-Scripts/</url>
     <content><![CDATA[<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>在Linux中有很多Shell可以使用，常用的有如下：</p>
 <ul>
 <li>sh：即Bourne shell，由Steven Bourne开发，这是第一个流行的shell</li>
@@ -2391,7 +3219,7 @@
   </entry>
   <entry>
     <title>bluetoothctl client tool</title>
-    <url>/2024/08/16/bluetoothctl%20client%20tool/</url>
+    <url>/2024/08/16/bluetoothctl-client-tool/</url>
     <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在使用某一家SoC的蓝牙库的时候，很多东西都无法修改。但是在测试的过程中，发现这家SoC的蓝牙库也是基于bluez的dbus实现的，那么我也可以封装一个蓝牙库。</p>
 <p>首先，我手里有树莓派4B一台，该设备具备了蓝牙和Wi-Fi功能。那么只需要通过研究bluez项目中的bluetoothctl工具的源码，然后进行自定义修改，最后封装成自己的蓝牙库。</p>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="硬件平台"><a href="#硬件平台" class="headerlink" title="硬件平台"></a>硬件平台</h3><p>树莓派环境介绍：</p>
@@ -3172,7 +4000,7 @@
   </entry>
   <entry>
     <title>esp-matter：light project</title>
-    <url>/2024/08/15/esp-matter%EF%BC%9Alight%20project/</url>
+    <url>/2024/08/15/esp-matter-light-project/</url>
     <content><![CDATA[<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
 
@@ -3229,6 +4057,11 @@
 <p><strong>交互执行（建议）：</strong></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<p><em>命令解释：</em></p>
+<p><em>1、onoff：表示OnOff Cluster</em></p>
+<p><em>2、on、off、toggle：分别表示On、Off、Toggle命令</em></p>
+<p><em>3、0x7283：表示Node ID，这是之前在配网时定义的值</em></p>
+<p><em>4、0x01：表示Endpoint 1，这是Light Project项目代码中新建的一个Endpoint。</em></p>
 <h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>light project示例演示了Extended Color Light设备的开发。以下就是对代码的理解：</p>
 <ul>
 <li><p>创建一个Matter节点</p>
@@ -3261,7 +4094,7 @@
   </entry>
   <entry>
     <title>Matter：Lighting Device Types</title>
-    <url>/2024/08/13/Matter%EF%BC%9ALighting%20Device%20Types/</url>
+    <url>/2024/08/13/Matter-Lighting-Device-Types/</url>
     <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
 <ul>
 <li>色调（hue）是在可见光光谱中能量最强时的波长</li>
@@ -4026,13 +4859,13 @@
         <category>Matter</category>
       </categories>
       <tags>
-        <tag>matter-1-3-device-library-specification</tag>
         <tag>Light of Matter Device</tag>
+        <tag>matter-1-3-device-library-specification</tag>
       </tags>
   </entry>
   <entry>
     <title>Matter Standard</title>
-    <url>/2024/08/13/Matter%20Standard/</url>
+    <url>/2024/08/13/Matter-Standard/</url>
     <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
 <p><strong>用户：</strong></p>
 <p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
@@ -4109,7 +4942,7 @@
   </entry>
   <entry>
     <title>ntp application</title>
-    <url>/2024/08/12/ntp%20application/</url>
+    <url>/2024/08/12/ntp-application/</url>
     <content><![CDATA[<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2>]]></content>
       <categories>
         <category>Linux</category>
@@ -4121,7 +4954,7 @@
   </entry>
   <entry>
     <title>wpa-supplicant application</title>
-    <url>/2024/08/12/wpa-supplicant%20application/</url>
+    <url>/2024/08/12/wpa-supplicant-application/</url>
     <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
 <p>无线热点的基本信息：</p>
 <ul>
@@ -4166,7 +4999,7 @@
   </entry>
   <entry>
     <title>Blog deploy to Github Page.md</title>
-    <url>/2024/08/11/Blog%20deploy%20to%20Github%20Page/</url>
+    <url>/2024/08/11/Blog-deploy-to-Github-Page/</url>
     <content><![CDATA[<blockquote>
 <p>2024-08-11 星期日 晴</p>
 </blockquote>
@@ -4229,7 +5062,7 @@
   </entry>
   <entry>
     <title>Create Blog with hexo</title>
-    <url>/2024/08/10/Create%20Blog%20with%20hexo/</url>
+    <url>/2024/08/10/Create-Blog-with-hexo/</url>
     <content><![CDATA[<blockquote>
 <p>2024-08-10 星期六 晴</p>
 </blockquote>

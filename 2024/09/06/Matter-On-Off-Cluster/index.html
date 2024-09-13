@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
@@ -27,7 +27,7 @@
 <meta property="og:description" content="在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。On&#x2F;Off Cluster是通用的Cluster。以下内容仅为On&#x2F;Off Cluster的内容介绍，以便后续回顾和查询。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-06T10:33:07.000Z">
-<meta property="article:modified_time" content="2024-09-06T11:56:14.733Z">
+<meta property="article:modified_time" content="2024-09-10T09:00:55.410Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta name="twitter:card" content="summary">
 
@@ -87,7 +87,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">32</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">19</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">35</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">21</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -138,7 +138,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-ID"><span class="nav-number">1.</span> <span class="nav-text">Cluster ID</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-ID"><span class="nav-number">1.</span> <span class="nav-text">Cluster ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attributes"><span class="nav-number">2.</span> <span class="nav-text">Attributes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commands"><span class="nav-number">3.</span> <span class="nav-text">Commands</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,18 +153,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -177,6 +177,270 @@
         <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
   </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
 
         </div>
       </div>
@@ -243,9 +507,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2024-09-06 10:33:07 / Modified: 11:56:14" itemprop="dateCreated datePublished" datetime="2024-09-06T10:33:07+00:00">2024-09-06</time>
+      <time title="Created: 2024-09-06 10:33:07" itemprop="dateCreated datePublished" datetime="2024-09-06T10:33:07+00:00">2024-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-10 09:00:55" itemprop="dateModified" datetime="2024-09-10T09:00:55+00:00">2024-09-10</time>
     </span>
 
   
@@ -266,7 +536,28 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><table>
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>On&#x2F;Off Cluster的作用？</p>
+</blockquote>
+<p>用于打开和关闭设备的属性和命令。</p>
+<h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><p><strong>分类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hierarchy</th>
+<th>Role</th>
+<th>Scope</th>
+<th>PICS Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base</td>
+<td>Application</td>
+<td>Endpoint</td>
+<td>OO</td>
+</tr>
+</tbody></table>
+<table>
 <thead>
 <tr>
 <th>ID</th>
@@ -276,6 +567,200 @@
 <tbody><tr>
 <td>0x0006</td>
 <td>On&#x2F;Off</td>
+</tr>
+</tbody></table>
+<h2 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0000</td>
+<td>OnOff</td>
+<td>bool</td>
+<td>all</td>
+<td>SN</td>
+<td>FALSE</td>
+<td>R V</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x4000</td>
+<td>GlobalSceneControl</td>
+<td>bool</td>
+<td>all</td>
+<td></td>
+<td>TRUE</td>
+<td>R V</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4001</td>
+<td>OnTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4002</td>
+<td>OffWaitTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x4003</td>
+<td>StartUpOnOff</td>
+<td>StartUpOnOffEnum</td>
+<td>desc</td>
+<td>XN</td>
+<td>MS</td>
+<td>RW VM</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>OnOff Attribute</strong></p>
+<p>这个属性暗示着在Endpoint上设备状态是关闭或打开，该属性的值也对应着FALSE或TRUE。</p>
+<p><strong>GlobalSceneControl Attribute</strong></p>
+<p>为了支持用户恢复一组设备的最后设置（例如灯光的级别设置）的用例，引入了一个全局场景，该场景在设备关闭时存储并在设备打开时调用。全局场景定义为使用组标识符 0 和场景标识符 0 存储的场景。</p>
+<p>定义此属性是为了防止第二个 Off 命令将所有设备关闭的情况存储为全局场景，并防止第二个 On 命令通过返回全局场景来破坏当前设置。</p>
+<p>在收到导致 OnOff 属性设置为 TRUE 的命令后，此属性应设置为 TRUE，例如标准On命令、MoveToLevel(WithOnOff) 命令、RecallScene 命令或 OnWithRecallGlobalScene 命令。</p>
+<p>在收到 OffWithEffect 命令后，此属性的值应该设置为FALSE。</p>
+<p><strong>OnTime Attribute</strong></p>
+<p>此属性指定使用 OnWithTimedOff 命令时，在自动转换为 Off 状态之前应保持 On 状态的时间长度（以 1&#x2F;10 秒为单位）。此属性可以随时写入，但写入值仅在 Timed On 状态下才有效。</p>
+<p><strong>OffWaitTime Attribute</strong></p>
+<p>此属性指定应保护关闭状态的时间长度（以 1&#x2F;10 秒为单位），以防止另一个 OnWithTimedOff 命令将服务器重新切换回开启状态（例如，离开房间时，灯会关闭，但占用传感器会检测到离开的人并尝试将灯重新打开）。此属性可以随时写入，但写入值仅在处于定时开启状态后转换到延迟关闭状态或处于延迟关闭状态时才有效。</p>
+<p><strong>StartUpOnOff Attribute</strong></p>
+<p>此属性定义设备通电时所需的启动行为并且此状态应反映在 OnOff 属性中。如果值为空，则将 OnOff 属性设置为其先前的值。否则，行为在定义 StartUpOnOffEnum 的表中定义。</p>
+<p>此属性不适用于与 OTA 相关的重启。OTA 重启后，OnOff 属性应恢复为重启前的值。</p>
+<h2 id="Commands"><a href="#Commands" class="headerlink" title="Commands"></a>Commands</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Direction</th>
+<th>Response</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x00</td>
+<td>Off</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x01</td>
+<td>On</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>!OFFONLY</td>
+</tr>
+<tr>
+<td>0x02</td>
+<td>Toggle</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>!OFFONLY</td>
+</tr>
+<tr>
+<td>0x40</td>
+<td>OffWithEffect</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x41</td>
+<td>OnWithRecallGlobalSence</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x42</td>
+<td>OnWithTimedOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>Off Command</strong></p>
+<p>收到Off命令后，服务器应该将OnOff属性的值设置为FALSE。此外，当支持OnTime属性时，服务器应该将OnTime属性的值设置为0。</p>
+<p><strong>On Command</strong></p>
+<p>如果支持OffOnly功能（或特征）时，收到On命令后，服务器应该发送UNSUPPORTED_COMMAND失败状态响应。否则，收到On命令后，服务器应该设置OnOff属性的值为TRUE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。</p>
+<p><strong>Toggle Command</strong></p>
+<p>如果支持OffOnly功能（或特征），收到Toggle命令后，服务器应该发送UNSUPPORTED_COMMAND失败状态响应。否则，收到Toggle命令后，如果OnOff属性的值等于FALSE，服务器应该将OnOff属性的值设置为TRUE；如果OnOff属性的值等于TRUE，服务器应该将OnOff属性的值设置为FALSE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnOff属性的值等于FALSE，且如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。如果OnOff属性的值等于TRUE，服务器应该将OnTime属性的值设置为0。</p>
+<p><strong>OffWithRecallGlobalSence Command</strong></p>
+<p>这个命令允许在设备关闭时调用设置。</p>
+<p>收到OffWithRecallGlobalSence命令后，如果GlobalSceneControl属性的值等于TRUE，服务器应该丢弃这个命令。</p>
+<p>如果GlobalSceneControl属性的值等于FALSE，那么同一个Endpoint上Scene Cluster服务器应该调用它的global scene，并更新OnOff属性的值。OnOff服务器应该将GlobalSceneControl属性的值设置为TRUE。</p>
+<p>此外，当同时支持OnTime和OffWaitTime两个属性时，如果OnTime属性的值等于0，服务器应该将OffWaitTime属性的值设置为0。</p>
+<p><strong>OnWithTimedOff Command</strong></p>
+<p>此命令允许设备在特定持续时间内打开，并具有受保护的持续时间，因此如果设备随后关闭，在此期间再次收到 OnWithTimedOff 命令，无法重新打开设备。在服务器打开时，收到的更多 OnWithTimedOff 命令将更新设备打开的时间段。</p>
+<p><em>OnWithTimedOff 命令的数据域</em></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>OnOffControl</td>
+<td>OnOffControlBitamp</td>
+<td>0 to 1</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>1</td>
+<td>OnTime</td>
+<td>uint16</td>
+<td>max 0xfffe</td>
+<td></td>
+<td></td>
+<td>M</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OffWaitTime</td>
+<td>uint16</td>
+<td>max 0xfffe</td>
+<td></td>
+<td></td>
+<td>M</td>
 </tr>
 </tbody></table>
 
