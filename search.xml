@@ -391,7 +391,7 @@
 <p>此命令在命令列表中有两个条目，一个用于 MoveToLevel、Move 和 Step 命令，另一个用于它们的“带 On&#x2F;Off”对应项。这只是为了对称，以便轻松选择一组或另一组命令 - Stop 命令是相同的，因为 On&#x2F;Off 的依赖性由要停止的原始命令决定。</p>
 <p><strong>MoveToClosestFrequecny Command</strong></p>
 <p>收到此命令后，设备应将其当前频率更改为请求的频率，或更改为其可以生成的最接近的频率。如果设备无法接近该频率，则应返回默认响应，错误代码为 CONSTRAINT_ERROR。确定请求的频率是否可以近似为支持的频率是制造商特定的决定。</p>
-<p><strong>‘With On&#x2F;Off’ Commands</strong></p>
+<p><strong>With On&#x2F;Off Commands</strong></p>
 <p>MoveToLevelWithOnOff、MoveWithOnOff 和 StepWithOnOff 命令分别与 MoveToLevel、Move 和 Step 命令具有相同的数据字段。</p>
 ]]></content>
       <categories>
@@ -885,6 +885,9 @@
 </tr>
 </tbody></table>
 ]]></content>
+      <categories>
+        <category>Matter</category>
+      </categories>
   </entry>
   <entry>
     <title>Matter: Sensor</title>
@@ -3014,11 +3017,45 @@
 <p>通过互联网上的资料，我可以确认有两种解决方案：</p>
 <ul>
 <li><p>bluez+bluealsa</p>
-<p>BlueALSA（Bluetooth Audio ALSA）是一种将蓝牙音频设备连接到ALSA音频系统的桥接程序。</p>
+<p><code>bluealsa</code> 是一个用于将 ALSA（Advanced Linux Sound Architecture，高级Linux音频架构）与 Bluetooth 低功耗（即 BLE）音频协议相结合的解决方案。它使得 Linux 系统能够通过 BLE 连接蓝牙音频设备，并让蓝牙音频设备播放音频文件。</p>
+<p>bluealsa 的核心是<code>bluealsa</code>与 BlueZ 蓝牙守护进程<code>bluetoothd</code>和本地蓝牙适配器交互的守护进程。它处理 A2DP、HFP 和 HSP 的配置文件（即Profile）连接和配置逻辑，并通过 D-Bus 将生成的音频流呈现给应用程序。</p>
 </li>
 <li><p>bluez+pulseaudio</p>
 </li>
 </ul>
+<h3 id="编译安装bluealsa"><a href="#编译安装bluealsa" class="headerlink" title="编译安装bluealsa"></a>编译安装bluealsa</h3><p><a href="https://github.com/Arkq/bluez-alsa">Github 开源项目：bluez-alsa</a></p>
+<p>该开源项目README.md文件给出了一个提示：</p>
+<blockquote>
+<p>警告：</p>
+<p>从tag 4.3.1版本最新的源文件为核心组件使用了新的名字：</p>
+<ul>
+<li><code>bluealsa</code> daemon现在改为了 <code>bluealsad</code> daemon</li>
+<li><code>bluealsa-cli</code> utility现在改为了 <code>bluealsactl</code> utility</li>
+</ul>
+</blockquote>
+<p>由于安装Ubuntu 24.04的树莓派目前不支持通过apt安装bluealsa，故这里通过编译安装，以下是详细过程。</p>
+<ul>
+<li><p>对于如何通过源码编译构建，该项目也很贴心的给出了指引文件<a href="https://github.com/arkq/bluez-alsa/blob/master/INSTALL.md">INSTALL.md</a>。更加详细的编译安装教程可以查看<a href="https://github.com/arkq/bluez-alsa/wiki/Installation-from-source">Installation from source</a>，甚至不同的操作系统也都给出了，例如：Debain&#x2F;Raspberry Pi OS&#x2F;Ubuntu、Fedora、Arch。这里选择Ubuntu的安装过程即可。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装编译环境</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git automake build-essential libtool pkg-config python3-docutils</span><br><span class="line"><span class="built_in">sudo</span> apt-get install libasound2-dev libbluetooth-dev libdbus-1-dev libglib2.0-dev libsbc-dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过git克隆blue-alsa仓库到本地</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 克隆仓库</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/arkq/bluez-alsa.git</span><br><span class="line"><span class="built_in">cd</span> blue-alsa</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>准备编译构建</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用自动配置工具适配当前开发环境，最后生成configure配置文件</span></span><br><span class="line">autoreconf --install --force</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建build目录，存放编译过程文件</span></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在build目录下，运行配置文件（这里没有增加额外的参数）</span></span><br><span class="line">../configure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和安装</span></span><br><span class="line">make</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="运行bluealsa"><a href="#运行bluealsa" class="headerlink" title="运行bluealsa"></a>运行bluealsa</h3><p>在连接蓝牙音频设备之前，确保 <code>hciconfig -a</code> 可以查询到hci接口，确保 <code>bluetoothd</code> 已经运行。然后运行 <code>bluealsa</code> ，执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以root权限运行，注意：这里有bluealsa后台打印信息输出 </span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以root权限运行，禁止bluealsa后台打印信息输出</span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 <code>bluetoothctl</code> 搜索、配对、连接蓝牙音频设备（此部分不做说明），最后使用 <code>aplay</code> 播放wav音频文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># aplay播放wav文件</span></span><br><span class="line">aplay /usr/share/sounds/alsa/Front_Center.wav</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cursorhu.github.io/2021/09/09/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%BD%BF%E7%94%A8ALSA-A2DP-PulseAudio%E8%87%AA%E5%88%B6%E8%93%9D%E7%89%99%E9%9F%B3%E7%AE%B1/">1、树莓派笔记：使用ALSA+A2DP+PulseAudio自制蓝牙音箱</a></p>
 ]]></content>
       <categories>
@@ -3165,7 +3202,7 @@
 <ul>
 <li>-e：检查目标文件是否存在</li>
 <li>-f：检查目标文件是否存则且为普通文件</li>
-<li>-d：检查目标文件是否存在且文件目录</li>
+<li>-d：检查目标文件是否存在且文件类型是目录</li>
 </ul>
 <p>整数之间的比较：</p>
 <ul>
@@ -3963,7 +4000,8 @@
 <li><p>alsamixer：一个基于文本的图形界面混音器工具，提供更直观的方式来调整音量、切换输入输出设备等。</p>
 </li>
 </ul>
-<h3 id="bluealsa"><a href="#bluealsa" class="headerlink" title="bluealsa"></a>bluealsa</h3><h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><p>根据前文预定的需求，逐个编写并测试功能API接口，最后完成自定义库的封装。</p>
+<h3 id="bluealsa"><a href="#bluealsa" class="headerlink" title="bluealsa"></a>bluealsa</h3><p><code>bluealsa</code> 是一个用于将 ALSA（Advanced Linux Sound Architecture，高级Linux音频架构）与 Bluetooth 低功耗（即 BLE）音频协议相结合的解决方案。它使得 Linux 系统能够通过 BLE 连接蓝牙音频设备，并让蓝牙音频设备播放音频文件。</p>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><p>根据前文预定的需求，逐个编写并测试功能API接口，最后完成自定义库的封装。</p>
 <p>使用bluez进行蓝牙设备连接的流程：</p>
 <p>1、蓝牙适配器设置为：power on</p>
 <p>2、蓝牙适配器开始扫描</p>
@@ -3979,6 +4017,42 @@
 <p>4、连接设备</p>
 <p>​	配对成功后，调用 <code>org.bluez.Device1.Connect</code> 方法连接蓝牙设备</p>
 <p>​	调用 <code>org.freedesktop.DBus.ObjectManager.GetManagedObjects</code> 方法获取适配器连接状态 </p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>测试目标平台：</p>
+<ul>
+<li>x86_64</li>
+<li>aarch64</li>
+<li>armv7l</li>
+</ul>
+<p>开发完成后，需要测试接口稳定性，包括：打开&#x2F;关闭、连接&#x2F;断开。</p>
+<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919110533887.png" alt="image-20240919110533887"></p>
+<h3 id="x86-64平台"><a href="#x86-64平台" class="headerlink" title="x86_64平台"></a>x86_64平台</h3><blockquote>
+<p>bluez版本：5.64</p>
+</blockquote>
+<p>在x86_64平台测试连接蓝牙接口的稳定性，发现连接蓝牙设备后，使用 <code>RemoveDevice</code> 接口无法移除蓝牙设备，仅仅只是断开蓝牙设备连接。</p>
+<h3 id="aarch64平台"><a href="#aarch64平台" class="headerlink" title="aarch64平台"></a>aarch64平台</h3><blockquote>
+<p>bluez版本：5.72</p>
+</blockquote>
+<p>在aarch64平台测试连接蓝牙设备接口的稳定性，出现一个奇怪的现象：</p>
+<p>当扫描到目标蓝牙设备后，立即执行连接操作，但是目标蓝牙设备立马就被删除了，导致连接操作超时。</p>
+<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919111450094.png" alt="image-20240919111450094"></p>
+<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919111528213.png" alt="image-20240919111528213"></p>
+<p>很明显，目标蓝牙设备被bluetoothd过早移除了。查阅<a href="https://www.bluez.org/bluez-5-api-introduction-and-porting-guide/">bluez官网文档</a>，有这么一句话：</p>
+<blockquote>
+<p>Once the discovery stops, devices neither connected to or paired will be automatically removed by bluetoothd within three minutes.</p>
+<p>翻译：一旦扫描停止，没有连接或配对的设备将在3分钟内被bluetoothd自动移除。</p>
+</blockquote>
+<h3 id="armv7l平台"><a href="#armv7l平台" class="headerlink" title="armv7l平台"></a>armv7l平台</h3><blockquote>
+<p>bluez版本：5.77</p>
+</blockquote>
+<p>在armv7l平台测试连接蓝牙设备接口的稳定性：</p>
+<ul>
+<li><p>目标蓝牙设备：JBL ROCK，测试次数100次，成功99次，失败1次。失败原因：连接蓝牙设备时，蓝牙设备被过早移除。</p>
+</li>
+<li><p>目标蓝牙设备：小爱触屏音箱，测试次数100次，成功93次，失败7次。失败原因：连接蓝牙设备时，蓝牙设备被过早移除，之后尽管被发现，还是会导致连接超时。</p>
+</li>
+<li><p>目标蓝牙设备：Mi Speaker，测试册数100次，成功93次，失败7次。失败原因：连接蓝牙设备时，蓝牙设备被过早移除。</p>
+</li>
+</ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/bluez/bluez">1、bluez on github</a></p>
 <p><a href="https://www.bluez.org/">2、bluez with Official Linux Bluetooth protocol stack</a></p>
 <p><a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/org.bluez.Adapter.rst">3、org.bluez.Adapter.rst</a></p>
@@ -3986,6 +4060,8 @@
 <p><a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/org.bluez.Agent.rst">5、org.bluez.Agent.rst</a></p>
 <p><a href="https://dbus.freedesktop.org/doc/dbus-specification.html">6、D-Bus Specification</a></p>
 <p><a href="https://github.com/nkim-bitzap/bluetooth/blob/master/connector/connector.c">7、github.com&#x2F;nkim-bitzap&#x2F;bluetooth</a></p>
+<p><a href="https://blog.linumiz.com/archives/229">8、linumiz蓝牙系列博客</a></p>
+<p><a href="https://www.bluetooth.com/specifications/assigned-numbers/">9、Bluetooth Office Document: Assigned Numbers Document (PDF)</a></p>
 ]]></content>
       <categories>
         <category>bluetooth</category>
@@ -4011,25 +4087,30 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">idf.py build</span><br></pre></td></tr></table></figure>
 
 <h3 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h3><p>将开发板插入PC的USB接口，修改串口权限，开始烧录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若想完全重新编译，需要先删除build目录下所有文件</span></span><br><span class="line">idf.py fullclean</span><br></pre></td></tr></table></figure>
 
 <p><em>注意：不同开发板的接入PC后，串口名称可能不同，目前已知的两种名称：<code>/dev/ttyUSB0</code> 和 <code>/dev/ttyACM0</code></em></p>
+<p><em>乐鑫esp32c3开发板串口名称：&#x2F;dev&#x2F;ttyUSB0</em></p>
+<p><em>合宙esp32c3开发板串口名称：&#x2F;dev&#x2F;ttyACM0</em></p>
 <h2 id="配网"><a href="#配网" class="headerlink" title="配网"></a>配网</h2><p>通过BLE方式给设备配网：指通过低功耗蓝牙（即BLE）将SSID和密码发送给WiFi设备，然后WiFi连接到指定的WiFi网络。</p>
 <blockquote>
 <p>什么是配网？</p>
 </blockquote>
 <p>配网指的是外部向 WiFi 设备提供 SSID和密码，以便 WiFi 设备可以连接指定的AP并加入AP所建立的 WiFi 网络。配网的核心问题是通过各种方法（SoftAP配网、一键配网、蓝牙配网、其他方式配网），将WiFi的 SSID和密码发送到需要联网的WiFi设备，然后由WiFi设备去连接指定的WiFi网络，达到接入局域网或互联网的目的。</p>
-<p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。</p>
+<h3 id="chip-tool命令配网"><a href="#chip-tool命令配网" class="headerlink" title="chip-tool命令配网"></a>chip-tool命令配网</h3><p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。单次执行某条指令需要再一定时间周期内完成，否则chip-tool将会报错：Timeout。</p>
 <p><strong>单次执行：</strong></p>
 <p>单次执行配网命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 模版</span></span><br><span class="line">chip-tool pairing ble-wifi &lt;node_id&gt; &lt;ssid&gt; &lt;password&gt; &lt;pin_code&gt; &lt;discriminator&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
 
+<p><em>命令解释：</em></p>
 <ul>
-<li><p><code>0x7283</code> 是自定义一个随机的node_id</p>
+<li><p><code>0x7283</code> 是自定义一个随机的 <code>node_id</code></p>
 </li>
-<li><p><code>20202021</code> 是setup_passcode</p>
+<li><p><code>CUBEC_AP_2.4G</code> 、<code>cubec2015</code>：分别是wifi的 <code>ssid</code> 和 <code>password</code></p>
 </li>
-<li><p><code>3840</code> 是discriminator</p>
+<li><p><code>20202021</code> 是 <code>pin_code</code></p>
+</li>
+<li><p><code>3840</code> 是 <code>discriminator</code></p>
 </li>
 </ul>
 <p><em>单次执行容易导致超时，建议使用交互执行！！！</em></p>
@@ -4038,15 +4119,21 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (1725) esp_matter_core: Dynamic endpoint 1 added</span><br><span class="line">I (1735) chip[DL]: WIFI_EVENT_STA_START</span><br><span class="line">W (1735) wifi:Haven<span class="string">&#x27;t to connect to a suitable AP now!</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Done driving station state, nothing else to do...</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Configuring CHIPoBLE advertising (interval 25 ms, connectable)</span></span><br><span class="line"><span class="string">I (1755) NimBLE: GAP procedure initiated: advertise; </span></span><br><span class="line"><span class="string">I (1765) NimBLE: disc_mode=2</span></span><br><span class="line"><span class="string">I (1765) NimBLE:  adv_channel_map=0 own_addr_type=1 adv_filter_policy=0 adv_itvl_min=40 adv_itvl_max=40</span></span><br><span class="line"><span class="string">I (1775) NimBLE: </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I (1775) chip[DL]: CHIPoBLE advertising started</span></span><br><span class="line"><span class="string">I (1785) app_main: Commissioning window opened</span></span><br><span class="line"><span class="string">I (1855) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">&gt; I (4725) esp_matter_core: Store the deferred attribute 0x0 of cluster 0x8 on endpoint 0x1</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
 
 <p><em>注意：若想将设备清除所有的配网信息，可以将设备恢复出厂状态，在 Terminal A 执行命令：<code>matter device factoryreset</code></em></p>
-<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code>，此时进入交互模式，状态如下：</p>
+<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code></p>
+<p>此时进入交互模式，状态如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | Command sets:                                                                       |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | * any                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> sending IM messages based on cluster <span class="built_in">id</span>, not cluster name.         |</span><br><span class="line">  | * delay                                                                             |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> waiting <span class="keyword">for</span> something to happen.                                   |</span><br><span class="line">  | * discover                                                                          |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> device discovery.                                                  |</span><br><span class="line">  | * groupsettings                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> manipulating group keys and memberships <span class="keyword">for</span> chip-tool itself.      |</span><br><span class="line">  | * icd                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> client-side ICD management.                                        |</span><br><span class="line">  | * pairing                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> commissioning devices.                                             |</span><br><span class="line">  | * payload                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> parsing and generating setup payloads.                             |</span><br><span class="line">  | * sessionmanagement                                                                 |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing CASE and PASE session state.                              |</span><br><span class="line">  | * subscriptions                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> shutting down subscriptions.                                       |</span><br><span class="line">  | * interactive                                                                       |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> starting long-lived interactive modes.                             |</span><br><span class="line">  | * storage                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing persistent data stored by chip-tool.                      |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">&gt;&gt;&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>在交互模式内执行命令为设备配网：<code>pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</code>。若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
+<p>在交互模式内执行命令为设备配网：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+
+
+
+<p>若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (323035) wifi:&lt;ba-add&gt;idx:1 (ifx:0, <span class="built_in">fc</span>:83:c6:00:8f:ae), tid:6, ssn:1, winSize:64</span><br><span class="line">I (323075) chip[DL]: Confirm received <span class="keyword">for</span> CHIPoBLE TX characteristic indication (con 1) status= 14 </span><br><span class="line">I (323845) esp_netif_handlers: sta ip: 192.168.5.201, mask: 255.255.255.0, gw: 192.168.5.1</span><br><span class="line">I (323845) chip[DL]: IP_EVENT_STA_GOT_IP</span><br><span class="line">I (323855) chip[DL]: IPv4 address changed on WiFi station interface: 192.168.5.201/255.255.255.0 gateway 192.168.5.1</span><br><span class="line">I (323865) chip[DL]: IPv4 Internet connectivity ESTABLISHED</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><blockquote>
+<h2 id="扫码配网"><a href="#扫码配网" class="headerlink" title="扫码配网"></a>扫码配网</h2><h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><blockquote>
 <p>chip-tool是什么？</p>
 </blockquote>
 <p>chip-tool是用于开发和调试Matter设备的命令行工具。</p>
@@ -4062,6 +4149,19 @@
 <p><em>2、on、off、toggle：分别表示On、Off、Toggle命令</em></p>
 <p><em>3、0x7283：表示Node ID，这是之前在配网时定义的值</em></p>
 <p><em>4、0x01：表示Endpoint 1，这是Light Project项目代码中新建的一个Endpoint。</em></p>
+<p><em>5、levelcontrol、colorcontorl：分别表示 LevelControl Cluster 和 ColorControl Cluster</em></p>
+<p><em>6、move-to-level 、move-to-color-temperature：分别表示对应Cluster下的命令</em></p>
+<p><strong>chip-tool命令扩展：</strong></p>
+<p>从Matter设备读取（read）信息，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; onoff <span class="built_in">read</span> on-off 0x7283 0x01</span><br><span class="line">[1726799530.981378][352215:352215] CHIP:TOO: Command: onoff <span class="built_in">read</span> on-off 0x7283 0x01 </span><br><span class="line">[1726799530.981581][352215:352217] CHIP:TOO: Sending <span class="built_in">command</span> to node 0x7283</span><br><span class="line">[1726799530.981826][352215:352217] CHIP:CSM: FindOrEstablishSession: PeerId = [1:0000000000007283]</span><br><span class="line">[1726799530.981836][352215:352217] CHIP:CSM: FindOrEstablishSession: No existing OperationalSessionSetup instance found</span><br><span class="line">[1726799530.981852][352215:352217] CHIP:DIS: Found an existing secure session to [1:0000000000007283]!</span><br><span class="line">[1726799530.981860][352215:352217] CHIP:DIS: OperationalSessionSetup[1:0000000000007283]: State change 1 --&gt; 5</span><br><span class="line">[1726799530.981875][352215:352217] CHIP:TOO: Sending ReadAttribute to:</span><br><span class="line">[1726799530.982385][352215:352217] CHIP:TOO: 	cluster 0x0000_0006, attribute: 0x0000_0000, endpoint 1</span><br><span class="line">[1726799530.982404][352215:352217] CHIP:DMG: SendReadRequest ReadClient[0x72cc4000a6c0]: Sending Read Request</span><br><span class="line">[1726799530.982496][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18684i S:41998 M:177312788] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:02 (IM:ReadRequest)</span><br><span class="line">[1726799530.982607][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingIn]</span><br><span class="line">[1726799531.173092][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18684i S:41998 M:189153990 (Ack:177312788)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799531.173129][352215:352217] CHIP:EM: Found matching exchange: 18684i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799531.173146][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312788 from Retrans Table on exchange 18684i</span><br><span class="line">[1726799531.173182][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799531.173193][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799531.173206][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799531.173221][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799531.173232][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799531.173250][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799531.173261][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799531.173278][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799531.173291][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f82,</span><br><span class="line">[1726799531.173307][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799531.173321][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799531.173334][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799531.173348][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799531.173363][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799531.173376][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799531.173395][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799531.173409][352215:352217] CHIP:DMG: 				Data = <span class="literal">false</span>, </span><br><span class="line">[1726799531.173422][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799531.173436][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799531.173446][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799531.173461][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799531.173470][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799531.173484][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799531.173495][352215:352217] CHIP:DMG: 	SuppressResponse = <span class="literal">true</span>, </span><br><span class="line">[1726799531.173506][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799531.173515][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799531.175422][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642882</span><br><span class="line">[1726799531.175440][352215:352217] CHIP:TOO:   OnOff: FALSE</span><br><span class="line">[1726799531.175518][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18684i S:41998 M:177312789 (Ack:189153990)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799531.175575][352215:352217] CHIP:EM: Flushed pending ack <span class="keyword">for</span> MessageCounter:189153990 on exchange 18684i</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从Matter设备订阅（subscribe）信息，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; onoff subscribe on-off 5 30  0x7283 0x1</span><br><span class="line">[1726799808.099530][352215:352215] CHIP:TOO: Command: onoff subscribe on-off 5 30 0x7283 0x1 </span><br><span class="line">[1726799808.099753][352215:352217] CHIP:TOO: Sending <span class="built_in">command</span> to node 0x7283</span><br><span class="line">[1726799808.100002][352215:352217] CHIP:CSM: FindOrEstablishSession: PeerId = [1:0000000000007283]</span><br><span class="line">[1726799808.100011][352215:352217] CHIP:CSM: FindOrEstablishSession: No existing OperationalSessionSetup instance found</span><br><span class="line">[1726799808.100026][352215:352217] CHIP:DIS: Found an existing secure session to [1:0000000000007283]!</span><br><span class="line">[1726799808.100035][352215:352217] CHIP:DIS: OperationalSessionSetup[1:0000000000007283]: State change 1 --&gt; 5</span><br><span class="line">[1726799808.100051][352215:352217] CHIP:TOO: Sending SubscribeAttribute to:</span><br><span class="line">[1726799808.100063][352215:352217] CHIP:TOO: 	cluster 0x0000_0006, attribute: 0x0000_0000, endpoint 1</span><br><span class="line">[1726799808.100169][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312790] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:03 (IM:SubscribeRequest)</span><br><span class="line">[1726799808.100270][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingIn]</span><br><span class="line">[1726799808.273067][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153991 (Ack:177312790)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799808.273108][352215:352217] CHIP:EM: Found matching exchange: 18685i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799808.273135][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312790 from Retrans Table on exchange 18685i</span><br><span class="line">[1726799808.273179][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799808.273192][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799808.273204][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799808.273218][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799808.273237][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799808.273248][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799808.273267][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799808.273279][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799808.273295][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799808.273313][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f82,</span><br><span class="line">[1726799808.273332][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799808.273351][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799808.273369][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799808.273389][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799808.273409][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799808.273424][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799808.273440][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799808.273469][352215:352217] CHIP:DMG: 				Data = <span class="literal">false</span>, </span><br><span class="line">[1726799808.273481][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799808.273497][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799808.273508][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799808.273523][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799808.273533][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799808.273549][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799808.273559][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799808.273569][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799808.273644][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642882</span><br><span class="line">[1726799808.273682][352215:352217] CHIP:TOO:   OnOff: FALSE</span><br><span class="line">[1726799808.273711][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingSu]</span><br><span class="line">[1726799808.273944][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312791 (Ack:189153991)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:01 (IM:StatusResponse)</span><br><span class="line">[1726799808.624854][352215:352217] CHIP:EM: Retransmitting MessageCounter:177312791 on exchange 18685i Send Cnt 1</span><br><span class="line">[1726799808.654348][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153992 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:04 (IM:SubscribeResponse)</span><br><span class="line">[1726799808.654383][352215:352217] CHIP:EM: Found matching exchange: 18685i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799808.654408][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312791 from Retrans Table on exchange 18685i</span><br><span class="line">[1726799808.654433][352215:352217] CHIP:DMG: SubscribeResponse is received</span><br><span class="line">[1726799808.654462][352215:352217] CHIP:DMG: SubscribeResponseMessage =</span><br><span class="line">[1726799808.654475][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799808.654487][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799808.654501][352215:352217] CHIP:DMG: 	MaxInterval = 0x1e,</span><br><span class="line">[1726799808.654514][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799808.654526][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799808.654544][352215:352217] CHIP:DMG: Subscription established with SubscriptionID = 0xef8890e9 MinInterval = 5s MaxInterval = 30s Peer = 01:0000000000007283</span><br><span class="line">[1726799808.654562][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [Subscripti]</span><br><span class="line">[1726799808.654597][352215:352217] CHIP:DMG: Refresh LivenessCheckTime <span class="keyword">for</span> 34224 milliseconds with SubscriptionId = 0xef8890e9 Peer = 01:0000000000007283</span><br><span class="line">[1726799808.654708][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312792 (Ack:189153992)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799808.654836][352215:352217] CHIP:EM: Flushed pending ack <span class="keyword">for</span> MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093742][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153993 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799809.093839][352215:352217] CHIP:IN: Received a duplicate message with MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093855][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153992 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:04 (IM:SubscribeResponse)</span><br><span class="line">[1726799809.093875][352215:352217] CHIP:EM: Generating StandaloneAck via exchange: 18685i</span><br><span class="line">[1726799809.093885][352215:352217] CHIP:EM: Forcing tx of solitary ack <span class="keyword">for</span> duplicate MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093964][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312793 (Ack:189153992)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799814.284411][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:64465r S:41998 M:189153994] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799814.284442][352215:352217] CHIP:EM: Handling via exchange: 64465r, Delegate: 0x59c53aff2ea8</span><br><span class="line">[1726799814.284474][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799814.284491][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799814.284498][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799814.284502][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799814.284509][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799814.284513][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799814.284519][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799814.284523][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799814.284528][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799814.284533][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f83,</span><br><span class="line">[1726799814.284538][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799814.284544][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799814.284549][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799814.284555][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799814.284561][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799814.284567][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799814.284573][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799814.284583][352215:352217] CHIP:DMG: 				Data = <span class="literal">true</span>, </span><br><span class="line">[1726799814.284589][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799814.284595][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799814.284598][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799814.284603][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799814.284607][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799814.284612][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799814.284616][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799814.284620][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799814.284686][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642883</span><br><span class="line">[1726799814.284712][352215:352217] CHIP:TOO:   OnOff: TRUE</span><br><span class="line">[1726799814.284738][352215:352217] CHIP:DMG: Refresh LivenessCheckTime <span class="keyword">for</span> 34224 milliseconds with SubscriptionId = 0xef8890e9 Peer = 01:0000000000007283</span><br><span class="line">[1726799814.284998][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:64465r S:41998 M:177312794 (Ack:189153994)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:01 (IM:StatusResponse)</span><br><span class="line">[1726799814.371141][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:64465r S:41998 M:189153995 (Ack:177312794)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799814.371163][352215:352217] CHIP:EM: Found matching exchange: 64465r, Delegate: (nil)</span><br><span class="line">[1726799814.371177][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312794 from Retrans Table on exchange 64465r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>light project示例演示了Extended Color Light设备的开发。以下就是对代码的理解：</p>
 <ul>
 <li><p>创建一个Matter节点</p>
@@ -4086,7 +4186,7 @@
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.espressif.com/projects/esp-matter/en/latest/esp32c3/developing.html">1、Developing with the SDK of ESP-MATTER</a></p>
 ]]></content>
       <categories>
-        <category>ESP</category>
+        <category>Matter</category>
       </categories>
       <tags>
         <tag>esp-matter</tag>
@@ -4886,12 +4986,15 @@
 <p><strong>文档：</strong></p>
 <p>Matter官方文档（主要有3份）：</p>
 <ul>
-<li>Matter 1.3 Device Library Specification：对设备层面的一些约束和规定</li>
-<li>Matter 1.3 Core Specification：核心规范</li>
-<li>Matter 1.3 Application Cluster Specification：对Matter组件Cluster进行了详细规定</li>
+<li><strong>Matter 1.3 Device Library Specification</strong>：对设备层面的一些约束和规定</li>
+<li><strong>Matter 1.3 Core Specification</strong>：核心规范</li>
+<li><strong>Matter 1.3 Application Cluster Specification</strong>：对Matter组件Cluster进行了详细规定</li>
 </ul>
 <p>2024年，Matter最新版本是V1.3，随着Matter的版本更新，文档也会随着更新。</p>
-<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如一个有两盏灯的灯具（一盏可调光灯和一盏普通灯）。</p>
+<h2 id="Matter-协议栈"><a href="#Matter-协议栈" class="headerlink" title="Matter 协议栈"></a>Matter 协议栈</h2><p>Matter 规范定义了基本要求，以便通过互联网协议为智能家居设备提供可互操作的应用层解决方案。</p>
+<p><strong>Fabric：</strong></p>
+<p>一个Matter网络就是一个Fabric，也可以说一个生态就是一个Fabric。</p>
+<h3 id="Data-Model（数据模型）"><a href="#Data-Model（数据模型）" class="headerlink" title="Data Model（数据模型）"></a>Data Model（数据模型）</h3><h4 id="Node（节点）"><a href="#Node（节点）" class="headerlink" title="Node（节点）"></a>Node（节点）</h4><p>节点(Node)是一个逻辑上独立的设备，有自己唯一的网络地址。每个Matter设备由一个或多个Node组成。通常是用户可以识别为整个设备的物理设备，例如一个有两盏灯的灯具（一盏可调光灯和一盏普通灯）。</p>
 <h4 id="Endpoint（端点）"><a href="#Endpoint（端点）" class="headerlink" title="Endpoint（端点）"></a>Endpoint（端点）</h4><p>一个Node包含多个Endpoint，每个endpoint是一个逻辑上独立的功能模块。端点可以看作是提供逻辑分组在一起的虚拟设备。例如色温灯，具备两个Endpoint，其中Endpoint 1是可调光灯，EndPoint 2是开&#x2F;关灯。</p>
 <p><em>注意：Endpoint 0 预留给 Matter 的 utility cluster，而且每个 Matter 设备都必须强制包含 Endpoint 0</em></p>
 <h4 id="Cluster（集群）"><a href="#Cluster（集群）" class="headerlink" title="Cluster（集群）"></a>Cluster（集群）</h4><p>一个Endpoint由一个或多个cluster组成，cluster可以认为是一个基本功能集，它包含 <em>attributess</em>， <em>commands</em>和 <em>events</em>三个组件。</p>

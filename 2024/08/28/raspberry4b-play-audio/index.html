@@ -27,7 +27,7 @@
 <meta property="og:description" content="此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-08-28T06:12:36.000Z">
-<meta property="article:modified_time" content="2024-08-29T12:04:20.225Z">
+<meta property="article:modified_time" content="2024-09-19T01:33:32.475Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="raspberry4b">
 <meta name="twitter:card" content="summary">
@@ -88,7 +88,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">35</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">21</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">35</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">21</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -139,7 +139,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%98%E8%B5%B7"><span class="nav-number">1.</span> <span class="nav-text">缘起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">2.</span> <span class="nav-text">验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%B3%E6%9C%BA%E5%8F%A3%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">2.1.</span> <span class="nav-text">耳机口播放音频</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%93%9D%E7%89%99%E9%9F%B3%E5%93%8D%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">3.</span> <span class="nav-text">蓝牙音响播放音频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%98%E8%B5%B7"><span class="nav-number">1.</span> <span class="nav-text">缘起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">2.</span> <span class="nav-text">验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%B3%E6%9C%BA%E5%8F%A3%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">2.1.</span> <span class="nav-text">耳机口播放音频</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%93%9D%E7%89%99%E9%9F%B3%E5%93%8D%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">3.</span> <span class="nav-text">蓝牙音响播放音频</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85bluealsa"><span class="nav-number">3.1.</span> <span class="nav-text">编译安装bluealsa</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cbluealsa"><span class="nav-number">3.2.</span> <span class="nav-text">运行bluealsa</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -516,7 +516,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-08-29 12:04:20" itemprop="dateModified" datetime="2024-08-29T12:04:20+00:00">2024-08-29</time>
+      <time title="Modified: 2024-09-19 01:33:32" itemprop="dateModified" datetime="2024-09-19T01:33:32+00:00">2024-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -585,11 +585,45 @@ if(canvas.getContext){
 <p>通过互联网上的资料，我可以确认有两种解决方案：</p>
 <ul>
 <li><p>bluez+bluealsa</p>
-<p>BlueALSA（Bluetooth Audio ALSA）是一种将蓝牙音频设备连接到ALSA音频系统的桥接程序。</p>
+<p><code>bluealsa</code> 是一个用于将 ALSA（Advanced Linux Sound Architecture，高级Linux音频架构）与 Bluetooth 低功耗（即 BLE）音频协议相结合的解决方案。它使得 Linux 系统能够通过 BLE 连接蓝牙音频设备，并让蓝牙音频设备播放音频文件。</p>
+<p>bluealsa 的核心是<code>bluealsa</code>与 BlueZ 蓝牙守护进程<code>bluetoothd</code>和本地蓝牙适配器交互的守护进程。它处理 A2DP、HFP 和 HSP 的配置文件（即Profile）连接和配置逻辑，并通过 D-Bus 将生成的音频流呈现给应用程序。</p>
 </li>
 <li><p>bluez+pulseaudio</p>
 </li>
 </ul>
+<h3 id="编译安装bluealsa"><a href="#编译安装bluealsa" class="headerlink" title="编译安装bluealsa"></a>编译安装bluealsa</h3><p><a target="_blank" rel="noopener" href="https://github.com/Arkq/bluez-alsa">Github 开源项目：bluez-alsa</a></p>
+<p>该开源项目README.md文件给出了一个提示：</p>
+<blockquote>
+<p>警告：</p>
+<p>从tag 4.3.1版本最新的源文件为核心组件使用了新的名字：</p>
+<ul>
+<li><code>bluealsa</code> daemon现在改为了 <code>bluealsad</code> daemon</li>
+<li><code>bluealsa-cli</code> utility现在改为了 <code>bluealsactl</code> utility</li>
+</ul>
+</blockquote>
+<p>由于安装Ubuntu 24.04的树莓派目前不支持通过apt安装bluealsa，故这里通过编译安装，以下是详细过程。</p>
+<ul>
+<li><p>对于如何通过源码编译构建，该项目也很贴心的给出了指引文件<a target="_blank" rel="noopener" href="https://github.com/arkq/bluez-alsa/blob/master/INSTALL.md">INSTALL.md</a>。更加详细的编译安装教程可以查看<a target="_blank" rel="noopener" href="https://github.com/arkq/bluez-alsa/wiki/Installation-from-source">Installation from source</a>，甚至不同的操作系统也都给出了，例如：Debain&#x2F;Raspberry Pi OS&#x2F;Ubuntu、Fedora、Arch。这里选择Ubuntu的安装过程即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装编译环境</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git automake build-essential libtool pkg-config python3-docutils</span><br><span class="line"><span class="built_in">sudo</span> apt-get install libasound2-dev libbluetooth-dev libdbus-1-dev libglib2.0-dev libsbc-dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过git克隆blue-alsa仓库到本地</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 克隆仓库</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/arkq/bluez-alsa.git</span><br><span class="line"><span class="built_in">cd</span> blue-alsa</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>准备编译构建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用自动配置工具适配当前开发环境，最后生成configure配置文件</span></span><br><span class="line">autoreconf --install --force</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建build目录，存放编译过程文件</span></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在build目录下，运行配置文件（这里没有增加额外的参数）</span></span><br><span class="line">../configure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和安装</span></span><br><span class="line">make</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="运行bluealsa"><a href="#运行bluealsa" class="headerlink" title="运行bluealsa"></a>运行bluealsa</h3><p>在连接蓝牙音频设备之前，确保 <code>hciconfig -a</code> 可以查询到hci接口，确保 <code>bluetoothd</code> 已经运行。然后运行 <code>bluealsa</code> ，执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以root权限运行，注意：这里有bluealsa后台打印信息输出 </span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以root权限运行，禁止bluealsa后台打印信息输出</span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 <code>bluetoothctl</code> 搜索、配对、连接蓝牙音频设备（此部分不做说明），最后使用 <code>aplay</code> 播放wav音频文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># aplay播放wav文件</span></span><br><span class="line">aplay /usr/share/sounds/alsa/Front_Center.wav</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://cursorhu.github.io/2021/09/09/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%BD%BF%E7%94%A8ALSA-A2DP-PulseAudio%E8%87%AA%E5%88%B6%E8%93%9D%E7%89%99%E9%9F%B3%E7%AE%B1/">1、树莓派笔记：使用ALSA+A2DP+PulseAudio自制蓝牙音箱</a></p>
 
     </div>
