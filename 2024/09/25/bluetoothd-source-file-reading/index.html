@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bluetoothd: source file reading">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png">
+<meta property="article:published_time" content="2024-09-25T07:04:17.000Z">
+<meta property="article:modified_time" content="2024-10-09T03:10:18.536Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="bluez">
+<meta property="article:tag" content="bluetoothd">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/","path":"2024/09/25/bluetoothd-source-file-reading/","title":"bluetoothd: source file reading"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>bluetoothd: source file reading | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">39</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">24</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3"><span class="nav-number">1.</span> <span class="nav-text">程序入口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MGMT"><span class="nav-number">2.</span> <span class="nav-text">MGMT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%8F%91%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">设备发现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="bluetoothd: source file reading | eiSouthBoy's Blog">
+      <meta itemprop="description" content="在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bluetoothd: source file reading
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-25 07:04:17" itemprop="dateCreated datePublished" datetime="2024-09-25T07:04:17+00:00">2024-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-09 03:10:18" itemprop="dateModified" datetime="2024-10-09T03:10:18+00:00">2024-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/bluetooth/" itemprop="url" rel="index"><span itemprop="name">bluetooth</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h2><p>首先从 <code>/src/main.c</code> 的 main() 函数开始，对于本地定义的函数功能作出解读。</p>
+<ul>
+<li><p>第一部分</p>
+<p><strong>init_defaults()</strong> 默认值的初始化操作，主要是给全局变量 <code>btd_opts</code> 设置默认值。其中有我们所关心的一些信息：BlueZ版本、临时设备（Temporary）被清理的定时时长、适配器配对属性（Pairable）和可发现属性（Discoverable）默认有效时长 等等。</p>
+</li>
+<li><p>第二部分</p>
+<p>解析bluetoothd支持的输入参数，<code>options</code> 结构体变量预定义了一些参数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个上下文结构体指针变量context</span></span><br><span class="line">context = g_option_context_new(<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// 将options的条目增加到context</span></span><br><span class="line">g_option_context_add_main_entries(context, options, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过用户输入的参数argv与预定义的命令行参数对比解析</span></span><br><span class="line"><span class="keyword">if</span> (g_option_context_parse(context, &amp;argc, &amp;argv, &amp;err) == FALSE) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        g_printerr(<span class="string">&quot;%s\n&quot;</span>, err-&gt;message);</span><br><span class="line">        g_error_free(err);</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">        g_printerr(<span class="string">&quot;An unknown error occurred\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">g_option_context_free(context);</span><br><span class="line"><span class="comment">// 省略...</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：上述几个函数都是 <a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/struct.OptionContext.html">Glib库中的函数</a></em></p>
+<p>1、g_option_context_new</p>
+<p>2、g_option_context_add_main_entries</p>
+<p>3、g_option_context_parse</p>
+<p>4、g_option_context_free</p>
+</li>
+<li><p>第三部分</p>
+<p>debug和log部分的初始化处理</p>
+</li>
+<li><p>第四部分</p>
+<p>用户配置文件导入和解析，前提条件：用户运行bluetoothd时通过参数-f指定了配置文件，若用户没有指定配置文件，那么将使用main.conf。</p>
+</li>
+<li><p>第五部分</p>
+<p>连接dbus daemon，然后向dbus上注册 <code>org.bluez</code> 服务。</p>
+</li>
+<li><p>第六部分</p>
+<p>adapter_init() 函数用于适配器初始化操作，查找本地蓝牙适配器数量，在适配器上注册所有的事件（event）通知回调函数，这里需要重点关注几个：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">device_found_callback()</span><br><span class="line">discovering_callback()</span><br></pre></td></tr></table></figure>
+
+<p>当底层的蓝牙适配器controller发现蓝牙设备通过 device_found_callback() 回调函数通知bluetoothd应用</p>
+<p>当底层的蓝牙适配器controller启动&#x2F;停止扫描通过 discovering_callback() 回调函数通知bluetoothd应用</p>
+<p>Host和Controller之间通过HCI通信，Host创建socket接口，接着注册 can_read_data() 回调函数，可以读取Controller的Event，当然也可以通过send_request() 发送Command给Controller。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socket(PF_BLUETOOTH, SOCK_RAW | SOCK_CLOEXEC | SOCK_NONBLOCK, BTPROTO_HCI);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第七部分</p>
+<p>device、agent、profile、plugin的初始化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btd_device_init();</span><br><span class="line">btd_agent_init();</span><br><span class="line">btd_profile_init();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第八部分</p>
+<p>注册信号，然后进入glib事件循环</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mainloop_run_with_signal(signal_callback, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>bluetoothd就启动完毕了。</p>
+<p>对于bluetoothd源码的解读还有非常的多的疑问，互联网上对于bluez中bluetoothd资料更是凤毛麟角，只能是暂时自己对于bluetoothd源码的一个简单的认识。</p>
+<h2 id="MGMT"><a href="#MGMT" class="headerlink" title="MGMT"></a>MGMT</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MGMT_OP_START_DISCOVERY		0x0023</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mgmt_cp_start_discovery</span> &#123;</span></span><br><span class="line">	<span class="type">uint8_t</span> type;</span><br><span class="line">&#125; __packed;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MGMT_OP_STOP_DISCOVERY		0x0024</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mgmt_cp_stop_discovery</span> &#123;</span></span><br><span class="line">	<span class="type">uint8_t</span> type;</span><br><span class="line">&#125; __packed;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MGMT_EV_DEVICE_FOUND		0x0012</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mgmt_ev_device_found</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mgmt_addr_info</span> <span class="title">addr</span>;</span></span><br><span class="line">	<span class="type">int8_t</span> rssi;</span><br><span class="line">	<span class="type">uint32_t</span> flags;</span><br><span class="line">	<span class="type">uint16_t</span> eir_len;</span><br><span class="line">	<span class="type">uint8_t</span> eir[<span class="number">0</span>];</span><br><span class="line">&#125; __packed;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MGMT_EV_DISCOVERING		0x0013</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mgmt_ev_discovering</span> &#123;</span></span><br><span class="line">	<span class="type">uint8_t</span> type;</span><br><span class="line">	<span class="type">uint8_t</span> discovering;</span><br><span class="line">&#125; __packed;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="设备发现"><a href="#设备发现" class="headerlink" title="设备发现"></a>设备发现</h2><blockquote>
+<p>当适配器开始扫描时，发现了附近的蓝牙设备，蓝牙设备被添加到适配器的过程是怎么样的？</p>
+</blockquote>
+<p>当适配器执行扫描时，发现的蓝牙设备通过回调函数传递（bluetoothd在main函数中执行adapter_init函数就注册所有的事件回调函数），以下就是关于设备发现的回调函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">device_found_callback</span><span class="params">(<span class="type">uint16_t</span> index, <span class="type">uint16_t</span> length,</span></span><br><span class="line"><span class="params">					<span class="type">const</span> <span class="type">void</span> *param, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">mgmt_ev_device_found</span> *<span class="title">ev</span> =</span> param;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="type">const</span> <span class="type">uint8_t</span> *eir;</span><br><span class="line">	<span class="type">uint16_t</span> eir_len;</span><br><span class="line">	<span class="type">uint32_t</span> flags;</span><br><span class="line">	<span class="type">char</span> addr[<span class="number">18</span>];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (length &lt; <span class="keyword">sizeof</span>(*ev)) &#123;</span><br><span class="line">		btd_error(adapter-&gt;dev_id,</span><br><span class="line">			<span class="string">&quot;Too short device found event (%u bytes)&quot;</span>, length);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	eir_len = btohs(ev-&gt;eir_len);</span><br><span class="line">	<span class="keyword">if</span> (length != <span class="keyword">sizeof</span>(*ev) + eir_len) &#123;</span><br><span class="line">		btd_error(adapter-&gt;dev_id,</span><br><span class="line">				<span class="string">&quot;Device found event size mismatch (%u != %zu)&quot;</span>,</span><br><span class="line">					length, <span class="keyword">sizeof</span>(*ev) + eir_len);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (eir_len == <span class="number">0</span>)</span><br><span class="line">		eir = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		eir = ev-&gt;eir;</span><br><span class="line"></span><br><span class="line">	flags = le32_to_cpu(ev-&gt;flags);</span><br><span class="line"></span><br><span class="line">	ba2str(&amp;ev-&gt;addr.bdaddr, addr);</span><br><span class="line">	DBG(<span class="string">&quot;hci%u addr %s, rssi %d flags 0x%04x eir_len %u&quot;</span>,</span><br><span class="line">			index, addr, ev-&gt;rssi, flags, eir_len);</span><br><span class="line"></span><br><span class="line">	btd_adapter_device_found(adapter, &amp;ev-&gt;addr.bdaddr,</span><br><span class="line">					ev-&gt;addr.type, ev-&gt;rssi, flags,</span><br><span class="line">					eir, eir_len, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着关注这个函数 btd_adapter_device_found，由于这个函数太长，仅放出部分代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">btd_adapter_device_found</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">					<span class="type">const</span> <span class="type">bdaddr_t</span> *bdaddr,</span></span><br><span class="line"><span class="params">					<span class="type">uint8_t</span> bdaddr_type, <span class="type">int8_t</span> rssi,</span></span><br><span class="line"><span class="params">					<span class="type">uint32_t</span> flags,</span></span><br><span class="line"><span class="params">					<span class="type">const</span> <span class="type">uint8_t</span> *data, <span class="type">uint8_t</span> data_len,</span></span><br><span class="line"><span class="params">					<span class="type">bool</span> monitoring)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 省略...</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 从适配器下面查找目标设备，若没有该设备，则执行花括号的内容</span></span><br><span class="line">	dev = btd_adapter_find_device(adapter, bdaddr, bdaddr_type);</span><br><span class="line">	<span class="keyword">if</span> (!dev) &#123;</span><br><span class="line">		<span class="comment">/* In case of being just a scan response don&#x27;t attempt to create</span></span><br><span class="line"><span class="comment">		 * the device.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">if</span> (scan_rsp) &#123;</span><br><span class="line">			eir_data_free(&amp;eir_data);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/* Monitor Devices advertising Broadcast Announcements if the</span></span><br><span class="line"><span class="comment">		 * adapter is capable of synchronizing to it.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">if</span> (eir_get_service_data(&amp;eir_data, BCAA_SERVICE_UUID) &amp;&amp;</span><br><span class="line">				btd_adapter_has_settings(adapter,</span><br><span class="line">				MGMT_SETTING_ISO_SYNC_RECEIVER))</span><br><span class="line">			monitoring = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!discoverable &amp;&amp; !monitoring &amp;&amp; not_connectable) &#123;</span><br><span class="line">			eir_data_free(&amp;eir_data);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		dev = adapter_create_device(adapter, bdaddr, bdaddr_type);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 更新定时器</span></span><br><span class="line">	device_update_last_seen(dev, bdaddr_type, !not_connectable);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (bdaddr_type != BDADDR_BREDR &amp;&amp; eir_data.flags &amp;&amp;</span><br><span class="line">					!(eir_data.flags &amp; EIR_BREDR_UNSUP)) &#123;</span><br><span class="line">		device_set_bredr_support(dev);</span><br><span class="line">		<span class="comment">/* Update last seen for BR/EDR in case its flag is set */</span></span><br><span class="line">		device_update_last_seen(dev, BDADDR_BREDR, !not_connectable);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (eir_data.name != <span class="literal">NULL</span> &amp;&amp; eir_data.name_complete)</span><br><span class="line">		device_store_cached_name(dev, eir_data.name);</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>device_store_cached_name函数用于在cache目录下创建设备的持久化存储，接下来关注这个函数 adapter_create_device</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> btd_device *<span class="title function_">adapter_create_device</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">						<span class="type">const</span> <span class="type">bdaddr_t</span> *bdaddr,</span></span><br><span class="line"><span class="params">						<span class="type">uint8_t</span> bdaddr_type)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line"></span><br><span class="line">	device = device_create(adapter, bdaddr, bdaddr_type);</span><br><span class="line">	<span class="keyword">if</span> (!device)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	adapter_add_device(adapter, device);</span><br><span class="line">	<span class="keyword">return</span> device;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重点来了，此时看到了函数 <code>device_create</code> 用于创建设备，具体看它的实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> btd_device *<span class="title function_">device_create</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">				<span class="type">const</span> <span class="type">bdaddr_t</span> *bdaddr, <span class="type">uint8_t</span> bdaddr_type)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line">	<span class="type">char</span> dst[<span class="number">18</span>];</span><br><span class="line">	<span class="type">char</span> *str;</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *storage_dir;</span><br><span class="line"></span><br><span class="line">	ba2str(bdaddr, dst);</span><br><span class="line">	DBG(<span class="string">&quot;dst %s&quot;</span>, dst);</span><br><span class="line"></span><br><span class="line">	device = device_new(adapter, dst);</span><br><span class="line">	<span class="keyword">if</span> (device == <span class="literal">NULL</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	device-&gt;bdaddr_type = bdaddr_type;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (bdaddr_type == BDADDR_BREDR)</span><br><span class="line">		device-&gt;bredr = <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		device-&gt;le = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">	storage_dir = btd_adapter_get_storage_dir(adapter);</span><br><span class="line">	str = load_cached_name(device, storage_dir, dst);</span><br><span class="line">	<span class="keyword">if</span> (str) &#123;</span><br><span class="line">		<span class="built_in">strcpy</span>(device-&gt;name, str);</span><br><span class="line">		g_free(str);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	load_cached_name_resolve(device, storage_dir, dst);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> device;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们知道蓝牙设备被适配器添加后，会注册类似这种对象路径 <code>/org/bluez/hci0/dev_50_64_2B_BF_46_36</code>，这部分内容就在这个函数 device_new()</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">const</span> GDBusMethodTable device_methods[] = &#123;</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Disconnect&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, dev_disconnect) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Connect&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, dev_connect) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;ConnectProfile&quot;</span>, GDBUS_ARGS(&#123; <span class="string">&quot;UUID&quot;</span>, <span class="string">&quot;s&quot;</span> &#125;),</span><br><span class="line">						<span class="literal">NULL</span>, connect_profile) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;DisconnectProfile&quot;</span>, GDBUS_ARGS(&#123; <span class="string">&quot;UUID&quot;</span>, <span class="string">&quot;s&quot;</span> &#125;),</span><br><span class="line">						<span class="literal">NULL</span>, disconnect_profile) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Pair&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, pair_device) &#125;,</span><br><span class="line">	&#123; GDBUS_METHOD(<span class="string">&quot;CancelPairing&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, cancel_pairing) &#125;,</span><br><span class="line">	&#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> GDBusPropertyTable device_properties[] = &#123;</span><br><span class="line">	&#123; <span class="string">&quot;Address&quot;</span>, <span class="string">&quot;s&quot;</span>, dev_property_get_address &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;AddressType&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_address_type &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Name&quot;</span>, <span class="string">&quot;s&quot;</span>, dev_property_get_name, <span class="literal">NULL</span>, dev_property_exists_name &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Alias&quot;</span>, <span class="string">&quot;s&quot;</span>, dev_property_get_alias, dev_property_set_alias &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Class&quot;</span>, <span class="string">&quot;u&quot;</span>, dev_property_get_class, <span class="literal">NULL</span>,</span><br><span class="line">					dev_property_exists_class &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Appearance&quot;</span>, <span class="string">&quot;q&quot;</span>, dev_property_get_appearance, <span class="literal">NULL</span>,</span><br><span class="line">					dev_property_exists_appearance &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Icon&quot;</span>, <span class="string">&quot;s&quot;</span>, dev_property_get_icon, <span class="literal">NULL</span>,</span><br><span class="line">					dev_property_exists_icon &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Paired&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_paired &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Bonded&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_bonded &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Trusted&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_trusted, dev_property_set_trusted &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Blocked&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_blocked, dev_property_set_blocked &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;LegacyPairing&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_legacy &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;RSSI&quot;</span>, <span class="string">&quot;n&quot;</span>, dev_property_get_rssi, <span class="literal">NULL</span>, dev_property_exists_rssi &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Connected&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_connected &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;UUIDs&quot;</span>, <span class="string">&quot;as&quot;</span>, dev_property_get_uuids &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Modalias&quot;</span>, <span class="string">&quot;s&quot;</span>, dev_property_get_modalias, <span class="literal">NULL</span>,</span><br><span class="line">						dev_property_exists_modalias &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Adapter&quot;</span>, <span class="string">&quot;o&quot;</span>, dev_property_get_adapter &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;ManufacturerData&quot;</span>, <span class="string">&quot;a&#123;qv&#125;&quot;</span>, dev_property_get_manufacturer_data,</span><br><span class="line">				<span class="literal">NULL</span>, dev_property_manufacturer_data_exist &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;ServiceData&quot;</span>, <span class="string">&quot;a&#123;sv&#125;&quot;</span>, dev_property_get_service_data,</span><br><span class="line">				<span class="literal">NULL</span>, dev_property_service_data_exist &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;TxPower&quot;</span>, <span class="string">&quot;n&quot;</span>, dev_property_get_tx_power, <span class="literal">NULL</span>,</span><br><span class="line">					dev_property_exists_tx_power &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;ServicesResolved&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_svc_resolved, <span class="literal">NULL</span>, <span class="literal">NULL</span> &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;AdvertisingFlags&quot;</span>, <span class="string">&quot;ay&quot;</span>, dev_property_get_flags, <span class="literal">NULL</span>,</span><br><span class="line">					dev_property_flags_exist &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;AdvertisingData&quot;</span>, <span class="string">&quot;a&#123;yv&#125;&quot;</span>, dev_property_get_advertising_data,</span><br><span class="line">				<span class="literal">NULL</span>, dev_property_advertising_data_exist &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;WakeAllowed&quot;</span>, <span class="string">&quot;b&quot;</span>, dev_property_get_wake_allowed,</span><br><span class="line">				dev_property_set_wake_allowed,</span><br><span class="line">				dev_property_wake_allowed_exist &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Sets&quot;</span>, <span class="string">&quot;a&#123;oa&#123;sv&#125;&#125;&quot;</span>, dev_property_get_set, <span class="literal">NULL</span>,</span><br><span class="line">				dev_property_set_exists &#125;,</span><br><span class="line">	&#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="keyword">struct</span> btd_device *<span class="title function_">device_new</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">				<span class="type">const</span> <span class="type">char</span> *address)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> *address_up;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *adapter_path = adapter_get_path(adapter);</span><br><span class="line"></span><br><span class="line">	DBG(<span class="string">&quot;address %s&quot;</span>, address);</span><br><span class="line"></span><br><span class="line">	device = g_try_malloc0(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> btd_device));</span><br><span class="line">	<span class="keyword">if</span> (device == <span class="literal">NULL</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	device-&gt;tx_power = <span class="number">127</span>;</span><br><span class="line">	device-&gt;volume = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	device-&gt;db = gatt_db_new();</span><br><span class="line">	<span class="keyword">if</span> (!device-&gt;db) &#123;</span><br><span class="line">		g_free(device);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memset</span>(device-&gt;ad_flags, INVALID_FLAGS, <span class="keyword">sizeof</span>(device-&gt;ad_flags));</span><br><span class="line"></span><br><span class="line">	device-&gt;ad = bt_ad_new();</span><br><span class="line">	<span class="keyword">if</span> (!device-&gt;ad) &#123;</span><br><span class="line">		device_free(device);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	address_up = g_ascii_strup(address, <span class="number">-1</span>);</span><br><span class="line">	device-&gt;path = g_strdup_printf(<span class="string">&quot;%s/dev_%s&quot;</span>, adapter_path, address_up);</span><br><span class="line">	g_strdelimit(device-&gt;path, <span class="string">&quot;:&quot;</span>, <span class="string">&#x27;_&#x27;</span>);</span><br><span class="line">	g_free(address_up);</span><br><span class="line"></span><br><span class="line">	str2ba(address, &amp;device-&gt;bdaddr);</span><br><span class="line"></span><br><span class="line">	device-&gt;client_dbus = btd_gatt_client_new(device);</span><br><span class="line">	<span class="keyword">if</span> (!device-&gt;client_dbus) &#123;</span><br><span class="line">		error(<span class="string">&quot;Failed to create btd_gatt_client&quot;</span>);</span><br><span class="line">		device_free(device);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	DBG(<span class="string">&quot;Creating device %s&quot;</span>, device-&gt;path);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (g_dbus_register_interface(dbus_conn,</span><br><span class="line">					device-&gt;path, DEVICE_INTERFACE,</span><br><span class="line">					device_methods, <span class="literal">NULL</span>,</span><br><span class="line">					device_properties, device,</span><br><span class="line">					device_free) == FALSE) &#123;</span><br><span class="line">		error(<span class="string">&quot;Unable to register device interface for %s&quot;</span>, address);</span><br><span class="line">		device_free(device);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	device-&gt;adapter = adapter;</span><br><span class="line">	device-&gt;sirks = queue_new();</span><br><span class="line">	device-&gt;temporary = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">	device-&gt;db_id = gatt_db_register(device-&gt;db, gatt_service_added,</span><br><span class="line">					gatt_service_removed, device, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	device-&gt;refresh_discovery = btd_opts.refresh_discovery;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> btd_device_ref(device);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数 <code>g_dbus_register_interface</code> 为蓝牙设备注册了 <code>org.bluez.Device1</code> 服务</p>
+<p><strong>扫描注意事项：</strong></p>
+<p>参考来源：<a target="_blank" rel="noopener" href="https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/">Core_amended_2024_06_11_v5.4.pdf</a></p>
+<ul>
+<li><p>扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png" alt="image-20241008212348333"></p>
+<p><em>注意：一个扫描窗口并不会扫描所有的40个射频通道，完全取决于硬件底层实现。</em></p>
+</li>
+<li><p>扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png" alt="image-20241008212407775"></p>
+</li>
+</ul>
+<p>扫描窗口和扫描间隔的关系：</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png"></p>
+<p>其他学习参考<a target="_blank" rel="noopener" href="https://www.ebyte.com/news/1369.html#:~:text=%E6%89%AB%E6%8F%8F%E5%8F%82%E6%95%B0%E6%98%AF%E8%93%9D%E7%89%99%E4%B8%BB%E6%9C%BA%E8%AE%BE">BLE设备功耗太高？弄懂这几个参数，功耗想不降都难</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/bluez/" rel="tag"># bluez</a>
+              <a href="/tags/bluetoothd/" rel="tag"># bluetoothd</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/23/bluetoothd-device-cache/" rel="prev" title="bluetoothd: device cache">
+                  <i class="fa fa-angle-left"></i> bluetoothd: device cache
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/29/bluetooth-le-advertise-scan/" rel="next" title="bluetooth: le advertise scan">
+                  bluetooth: le advertise scan <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
