@@ -42,12 +42,12 @@ https://eisouthboy.github.io/tags/Matter-Standard/
 https://eisouthboy.github.io/tags/CSA/
 https://eisouthboy.github.io/tags/IoT/
 https://eisouthboy.github.io/tags/Switches-and-Controls-of-Matter-Device/
-https://eisouthboy.github.io/tags/Shell/
-https://eisouthboy.github.io/tags/Shell-Scripts/
-https://eisouthboy.github.io/tags/Linux/
 https://eisouthboy.github.io/tags/le-advertise-scan/
 https://eisouthboy.github.io/tags/hci/
 https://eisouthboy.github.io/tags/le/
+https://eisouthboy.github.io/tags/Shell/
+https://eisouthboy.github.io/tags/Shell-Scripts/
+https://eisouthboy.github.io/tags/Linux/
 https://eisouthboy.github.io/tags/bluez/
 https://eisouthboy.github.io/tags/bluetoothd/
 https://eisouthboy.github.io/tags/gdb/
@@ -68,8 +68,8 @@ https://eisouthboy.github.io/tags/gdbus/
 https://eisouthboy.github.io/categories/Blog/
 https://eisouthboy.github.io/categories/esp32c3/
 https://eisouthboy.github.io/categories/Matter/
-https://eisouthboy.github.io/categories/Linux/
 https://eisouthboy.github.io/categories/bluetooth/
+https://eisouthboy.github.io/categories/Linux/
 https://eisouthboy.github.io/categories/linux/
 https://eisouthboy.github.io/categories/hexo/
 https://eisouthboy.github.io/categories/bootlin/
