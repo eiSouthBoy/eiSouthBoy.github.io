@@ -1,6 +1,620 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>embedded linux application development</title>
+    <url>/2024/10/19/embedded-linux-application-development/</url>
+    <content><![CDATA[<h2 id="Developing-applications-on-embeded-Linux"><a href="#Developing-applications-on-embeded-Linux" class="headerlink" title="Developing applications on embeded Linux"></a>Developing applications on embeded Linux</h2><ul>
+<li>嵌入式 Linux 系统只是一个普通的 Linux 系统，通常组件选择较少</li>
+<li>在应用程序开发方面，在嵌入式 Linux 上进行开发与在桌面 Linux 系统上进行开发完全相同</li>
+<li>所有现有技能均可重复使用，无需进行任何特殊调整</li>
+<li>所有现有的库（无论是第三方的还是内部的）都可以集成到嵌入式 Linux 系统中<ul>
+<li>当然，考虑到嵌入式系统在性能、存储和内存方面的限制</li>
+</ul>
+</li>
+<li>甚至在硬件可用之前，应用程序开发就可以在 x86 上开始</li>
+</ul>
+<h2 id="Leverage-existing-libraries-and-languages"><a href="#Leverage-existing-libraries-and-languages" class="headerlink" title="Leverage existing libraries and languages"></a>Leverage existing libraries and languages</h2><ul>
+<li>许多刚开始使用嵌入式 Linux 的开发人员仅限于使用 C、有时是 C++ 和 C&#x2F;C++ 标准库</li>
+<li>然而，有很多库和语言可以帮助你加速和简化你的应用程序开发<ul>
+<li>Rust 和 Go 等编译语言越来越受欢迎</li>
+<li>解释型语言，尤其是 Python</li>
+<li>更高级别的库：Qt、Glib、Boost 等等</li>
+</ul>
+</li>
+<li>确保评估什么是适合您项目的正确选择，但要注意如下事项：<ul>
+<li>低端平台上的占用空间和性能</li>
+<li>使用维护良好且知名的技术</li>
+</ul>
+</li>
+</ul>
+<h2 id="Building-your-applications-libraries"><a href="#Building-your-applications-libraries" class="headerlink" title="Building your applications&#x2F;libraries"></a>Building your applications&#x2F;libraries</h2><ul>
+<li>即使对于简单的应用程序或库，也要使用构建系统<ul>
+<li>CMake</li>
+<li>Meson</li>
+</ul>
+</li>
+<li>简化事项有如下：<ul>
+<li>应用程序的构建过程</li>
+<li>加入项目的开发人员的开发周期</li>
+<li>将您的应用程序打包到嵌入式 Linux 构建系统中</li>
+</ul>
+</li>
+</ul>
+<p><strong>CMake</strong></p>
+<p><strong>Meson</strong></p>
+<h2 id="GDB-GNU-Project-Dubugger"><a href="#GDB-GNU-Project-Dubugger" class="headerlink" title="GDB: GNU Project Dubugger"></a>GDB: GNU Project Dubugger</h2><ul>
+<li><p>GNU&#x2F;Linux 上的调试器，适用于大多数嵌入式架构。</p>
+</li>
+<li><p>支持的语言：C、C++、Pascal、Objective-C、Fortran、Ada…</p>
+</li>
+<li><p>命令行界面</p>
+</li>
+<li><p>许多图形集成开发环境都集成了gdb</p>
+</li>
+<li><p>也可用作：</p>
+<ul>
+<li>控制正在运行的程序的执行、设置断点或更改内部变量</li>
+<li>查看程序崩溃时正在做什么：事后分析</li>
+</ul>
+</li>
+<li><p>新的替代方案：LLVM 项目的 lldb</p>
+</li>
+</ul>
+<p><strong>gdb</strong></p>
+<h2 id="Remote-debugging"><a href="#Remote-debugging" class="headerlink" title="Remote debugging"></a>Remote debugging</h2><ul>
+<li>在非嵌入式环境中，使用 gdb 或其前端之一进行调试。</li>
+<li>gdb 可以直接访问使用调试符号编译的二进制文件和库</li>
+<li>然而，在嵌入式环境中，目标平台环境通常太有限，无法使用 gdb 直接调试（x86 上为 2.4 MB）。</li>
+<li>远程调试优势：<ul>
+<li>ARCH-linux-gdb 用于开发工作站，提供其所有功能。</li>
+<li>目标系统上使用 gdbserver（arm 上仅 400 KB）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Remote-debugging-architeture"><a href="#Remote-debugging-architeture" class="headerlink" title="Remote debugging: architeture"></a>Remote debugging: architeture</h2><p><img src="/2024/10/19/embedded-linux-application-development/image-20241020183318748.png" alt="image-20241020183318748"></p>
+<h2 id="Remote-debugging-target-setup"><a href="#Remote-debugging-target-setup" class="headerlink" title="Remote debugging: target setup"></a>Remote debugging: target setup</h2><ul>
+<li><p>在目标上，通过 gdbserver 运行程序。</p>
+<p>程序不会立即执行</p>
+<p><code>gdbserver : &lt;port&gt; &lt;executable&gt; &lt;args&gt;</code></p>
+<p><code>gdbserver /dev/ttyS0 &lt;executable&gt; &lt;args&gt;</code></p>
+</li>
+<li><p>否则，将 gdbserver 附加到已在运行的程序</p>
+</li>
+</ul>
+<p>​	<code>gdbserver --attach :&lt;port&gt; &lt;pid&gt;</code></p>
+<ul>
+<li><p>您还可以启动 gdbserver，而无需传递任何要启动或附加的程序（并稍后在客户端设置目标程序）：</p>
+<p><code>gdbserver --multi :&lt;port&gt;</code></p>
+</li>
+</ul>
+<h2 id="Remote-debugging-host-setup"><a href="#Remote-debugging-host-setup" class="headerlink" title="Remote debugging: host setup"></a>Remote debugging: host setup</h2><ul>
+<li>然后，在主机上启动 <code>ARCH-linux-gdb &lt;executable&gt;</code>，并使用下面的gdb命令<ul>
+<li>告诉gdb共享库的位置：<code>gdb&gt; set sysroot &lt;library-path&gt;</code> ，（通常是没有 lib&#x2F; 的构建空间的路径）</li>
+<li>连接目标，<code>gbd&gt; target remote &lt;ip-addr&gt;:&lt;port&gt;</code> ，<code>gdb&gt; target remote /dev/ttyUSB0</code> （如果存在多个远程目标，注意替换参数）</li>
+<li>如果您没有在 gdbserver 命令行上将程序设置为调试，<code>gdb&gt; set remote exec-file &lt;path_to_program_on_target&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Coredumps-for-post-mortem-analysis"><a href="#Coredumps-for-post-mortem-analysis" class="headerlink" title="Coredumps for post mortem analysis"></a>Coredumps for post mortem analysis</h2><ul>
+<li>当应用程序因分段错误而崩溃，且应用程序不在调试器的控制之下时，我们无法获得有关崩溃的信息</li>
+<li>幸运的是，Linux 可以生成一个核心文件，其中包含崩溃时应用程序内存的 ELF 格式映像。gdb 可以使用这个核心文件让我们分析崩溃应用程序的状态</li>
+<li>在目标上：<ul>
+<li>在shell中执行：<code>ulimit -c unlimited</code> ，当程序崩溃发生时，创建core 文件</li>
+<li>coredump文件的名字可以在该路径下修改：<code>/proc/sys/kernel/core_pattern</code></li>
+<li>在使用systemd的系统上，core dump作为默认安全功能被取消，为了重新存储coredump缓存，运行：<code>echo core &gt; /proc/sys/kernel/core_pattern</code></li>
+</ul>
+</li>
+<li>在主机上：<ul>
+<li>程序崩溃发生后，将coredump文件从目标传输到主机上，然后运行：<code>ARCH-linux-gdb -c core-file application-binary</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="minicoredumper"><a href="#minicoredumper" class="headerlink" title="minicoredumper"></a>minicoredumper</h2><ul>
+<li>对于复杂的应用程序来说，core dump可能非常大</li>
+<li>minicoredumper 是一个基于标准core dump功能的用户空间工具，基于通过管道将核心转储输出重定向到用户空间程序的可能性</li>
+<li>基于JSON配置文件，它能做如下：<ul>
+<li>仅保存相关部分（堆栈、堆、选定的 ELF 部分）</li>
+<li>压缩输出文件</li>
+<li>从 &#x2F;proc 保存附加信息</li>
+</ul>
+</li>
+<li>“高效、实用的嵌入式系统碰撞数据采集“</li>
+</ul>
+]]></content>
+      <categories>
+        <category>bootlin</category>
+      </categories>
+      <tags>
+        <tag>embeded linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DBUS: data type or container type</title>
+    <url>/2024/10/18/DBUS-data-type-or-container-type/</url>
+    <content><![CDATA[<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>其实DBUS的数据类型在 <a href="/2024/08/16/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a>  中的dbus数据模型就有记录和说明过。通过基本类型数据进行嵌套可以组合成复杂数据类型，一般可以用简称表示，例如 <code>a&#123;sv&#125;</code> 。如何将数据进行构造和解析才是难点和重点。</p>
+<h3 id="Numeric"><a href="#Numeric" class="headerlink" title="Numeric"></a>Numeric</h3><p>数字的数据类型涉及: <code>b</code>, <code>y</code>, <code>n</code>, <code>q</code>, <code>i</code>, <code>u</code>, <code>x</code>, <code>t</code>, <code>h</code>, <code>d</code></p>
+<table>
+<thead>
+<tr>
+<th align="left">Character</th>
+<th align="left">Equivalent C type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>b</code></td>
+<td align="left"><code>gboolean</code></td>
+</tr>
+<tr>
+<td align="left"><code>y</code></td>
+<td align="left"><code>guchar</code></td>
+</tr>
+<tr>
+<td align="left"><code>n</code></td>
+<td align="left"><code>gint16</code></td>
+</tr>
+<tr>
+<td align="left"><code>q</code></td>
+<td align="left"><code>guint16</code></td>
+</tr>
+<tr>
+<td align="left"><code>i</code></td>
+<td align="left"><code>gint32</code></td>
+</tr>
+<tr>
+<td align="left"><code>u</code></td>
+<td align="left"><code>guint32</code></td>
+</tr>
+<tr>
+<td align="left"><code>x</code></td>
+<td align="left"><code>gint64</code></td>
+</tr>
+<tr>
+<td align="left"><code>t</code></td>
+<td align="left"><code>guint64</code></td>
+</tr>
+<tr>
+<td align="left"><code>h</code></td>
+<td align="left"><code>gint32</code> (handle)</td>
+</tr>
+<tr>
+<td align="left"><code>d</code></td>
+<td align="left"><code>gdouble</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariant *value1, *value2, *value3, *value4;</span><br><span class="line">    value1 = g_variant_new (<span class="string">&quot;y&quot;</span>, <span class="number">200</span>);</span><br><span class="line">    value2 = g_variant_new (<span class="string">&quot;b&quot;</span>, TRUE);</span><br><span class="line">    value3 = g_variant_new (<span class="string">&quot;d&quot;</span>, <span class="number">37.5</span>);</span><br><span class="line">    value4 = g_variant_new (<span class="string">&quot;x&quot;</span>, G_GINT64_CONSTANT (<span class="number">998877665544332211</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    guchar byte;</span><br><span class="line">    gdouble floating;</span><br><span class="line">    gboolean truth;</span><br><span class="line">    gint64 bignum;</span><br><span class="line">    g_variant_get (value1, <span class="string">&quot;y&quot;</span>, &amp;byte);      <span class="comment">/* ignore the value. */</span></span><br><span class="line">    g_variant_get (value2, <span class="string">&quot;b&quot;</span>, &amp;truth);</span><br><span class="line">    g_variant_get (value3, <span class="string">&quot;d&quot;</span>, &amp;floating);</span><br><span class="line">    g_variant_get (value4, <span class="string">&quot;x&quot;</span>, &amp;bignum);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打印</span></span><br><span class="line">    g_printf(<span class="string">&quot;value1(y): %u\n&quot;</span>, byte);</span><br><span class="line">    g_printf(<span class="string">&quot;value2(b): %s\n&quot;</span>, truth ? <span class="string">&quot;ture&quot;</span>:<span class="string">&quot;false&quot;</span>);</span><br><span class="line">    g_printf(<span class="string">&quot;value3(d): %.1f\n&quot;</span>, floating);</span><br><span class="line">    g_printf(<span class="string">&quot;value4(x): %ld\n&quot;</span>, bignum);</span><br><span class="line">    </span><br><span class="line">    g_variant_unref(value1);</span><br><span class="line">    g_variant_unref(value2);</span><br><span class="line">    g_variant_unref(value3);</span><br><span class="line">    g_variant_unref(value4);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><p>字符串涉及：<code>s</code>, <code>o</code>, <code>g</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    GVariant *value1, *value2, *value3;</span><br><span class="line"></span><br><span class="line">    value1 = g_variant_new (<span class="string">&quot;s&quot;</span>, <span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    value2 = g_variant_new (<span class="string">&quot;o&quot;</span>, <span class="string">&quot;/must/be/a/valid/path&quot;</span>);</span><br><span class="line">    value3 = g_variant_new (<span class="string">&quot;g&quot;</span>, <span class="string">&quot;iias&quot;</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    gchar *str, *object_path, *signature;</span><br><span class="line"></span><br><span class="line">    g_variant_get (value1, <span class="string">&quot;s&quot;</span>, &amp;str);</span><br><span class="line">    g_variant_get (value2, <span class="string">&quot;o&quot;</span>, &amp;object_path);</span><br><span class="line">    g_variant_get (value3, <span class="string">&quot;g&quot;</span>, &amp;signature);</span><br><span class="line"></span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, str);</span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, object_path);</span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, signature);</span><br><span class="line">    g_free (str);</span><br><span class="line">    g_free (object_path);</span><br><span class="line">    g_free (signature);</span><br><span class="line">    </span><br><span class="line">    g_variant_unref(value1);</span><br><span class="line">    g_variant_unref(value2);</span><br><span class="line">    g_variant_unref(value3);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h3><p>数组：<code>a</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *builder;</span><br><span class="line">    GVariant *value;</span><br><span class="line"></span><br><span class="line">    builder = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;as&quot;</span>));</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;when&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;in&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;the&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;course&quot;</span>);</span><br><span class="line">    value = g_variant_new(<span class="string">&quot;as&quot;</span>, builder);</span><br><span class="line">    g_variant_builder_unref(builder);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter *iter;</span><br><span class="line">    gchar *str;</span><br><span class="line"></span><br><span class="line">    g_variant_get(value, <span class="string">&quot;as&quot;</span>, &amp;iter);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_loop(iter, <span class="string">&quot;s&quot;</span>, &amp;str))</span><br><span class="line">        g_print(<span class="string">&quot;%s\n&quot;</span>, str);</span><br><span class="line">    g_variant_iter_free(iter);</span><br><span class="line"></span><br><span class="line">    g_variant_unref(value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h3><p>元组：<code>()</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    GVariant *value1, *value2;</span><br><span class="line"></span><br><span class="line">    value1 = g_variant_new(<span class="string">&quot;(s(ii))&quot;</span>, <span class="string">&quot;Hello&quot;</span>, <span class="number">55</span>, <span class="number">77</span>);</span><br><span class="line"></span><br><span class="line">    gchar *<span class="built_in">string</span>;</span><br><span class="line">    gint x, y;</span><br><span class="line"></span><br><span class="line">    g_variant_get(value1, <span class="string">&quot;(s(ii))&quot;</span>, &amp;<span class="built_in">string</span>, &amp;x, &amp;y);</span><br><span class="line">    g_printf(<span class="string">&quot;%s, %d, %d\n&quot;</span>, <span class="built_in">string</span>, x, y);</span><br><span class="line">    g_free(<span class="built_in">string</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Dictionary"><a href="#Dictionary" class="headerlink" title="Dictionary"></a>Dictionary</h2><p>字典：<code>&#123;&#125;</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *b;</span><br><span class="line">    GVariant *dict;</span><br><span class="line"></span><br><span class="line">    b = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;a&#123;sv&#125;&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;name&quot;</span>, g_variant_new_string(<span class="string">&quot;foo&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;timeout&quot;</span>, g_variant_new_int32(<span class="number">10</span>));</span><br><span class="line">    dict = g_variant_builder_end(b);</span><br><span class="line">    g_variant_builder_unref(b);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter iter;</span><br><span class="line">    GVariant *value;</span><br><span class="line">    gchar *key;</span><br><span class="line">    g_variant_iter_init(&amp;iter, dict);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_next (&amp;iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">const</span> gchar *type = g_variant_get_type_string(value);</span><br><span class="line">        <span class="keyword">switch</span> (*type)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %s\n&quot;</span>, key, type, g_variant_get_string(value, <span class="literal">NULL</span>));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;i&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %d\n&quot;</span>, key, type, g_variant_get_int32(value));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// must free data for ourselves</span></span><br><span class="line">        g_variant_unref(value);</span><br><span class="line">        g_free(key);</span><br><span class="line">    &#125;</span><br><span class="line">    g_variant_unref(dict);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Multiple"><a href="#Multiple" class="headerlink" title="Multiple"></a>Multiple</h3><p>复合类型，即不同类型的嵌套，例如：<code>(a&#123;sv&#125;)</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *b;</span><br><span class="line">    GVariant *dict, *tuple;</span><br><span class="line"></span><br><span class="line">    b = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;a&#123;sv&#125;&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;name&quot;</span>, g_variant_new_string(<span class="string">&quot;foo&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;timeout&quot;</span>, g_variant_new_int32(<span class="number">10</span>));</span><br><span class="line">    dict = g_variant_builder_end(b);</span><br><span class="line">    g_variant_builder_unref(b);</span><br><span class="line">    tuple = g_variant_new_tuple(&amp;dict, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter *iter;</span><br><span class="line">    GVariant *value;</span><br><span class="line">    gchar *key;</span><br><span class="line">    </span><br><span class="line">    g_variant_get(tuple, <span class="string">&quot;(a&#123;sv&#125;)&quot;</span>, &amp;iter);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_next (iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">const</span> gchar *type = g_variant_get_type_string(value);</span><br><span class="line">        <span class="keyword">switch</span> (*type)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %s\n&quot;</span>, key, type, g_variant_get_string(value, <span class="literal">NULL</span>));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;i&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %d\n&quot;</span>, key, type, g_variant_get_int32(value));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// must free data for ourselves</span></span><br><span class="line">        g_variant_unref(value);</span><br><span class="line">        g_free(key);</span><br><span class="line">    &#125;</span><br><span class="line">    g_variant_unref(tuple);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><p><a href="https://blog.linumiz.com/archives/16468">1、BlueZ Part 3: Understanding DBUS – Container type system – (2)</a></p>
+<p><a href="https://blog.linumiz.com/archives/16427">2、BlueZ Part 2: Understanding DBUS – Basic type system – (1)</a></p>
+<p><a href="https://docs.gtk.org/glib/gvariant-format-strings.html">3、GVariant 格式字符串</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>IPC</tag>
+        <tag>DBUS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>callback and notify</title>
+    <url>/2024/10/14/callback-and-notify/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">回调函数</a>是什么？</p>
+</blockquote>
+<p><strong>回调函数</strong>或简称<strong>回调</strong>（callback），是计算机编程中对某一段可执行代码的引用，它被作为参数传递给另一段代码；预期这段代码将回调（执行）这个回调函数作为自己工作的一部分。这种执行可以是即时的，如在同步回调之中；也可以在后来的时间点上发生，如在异步回调之中。</p>
+<p>在C语言中通过函数指针实现回调函数，其中回调函数的典型例子就是信号处理 :</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> (*signal(<span class="type">int</span> sig, <span class="type">void</span> (*func)(<span class="type">int</span>)))(<span class="type">int</span>);</span><br></pre></td></tr></table></figure>
+
+<p>示例1：基于回调函数的信号捕捉实现</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> g_main_loop = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">signal_handler</span><span class="params">(<span class="type">int</span> signum)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (signum)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">case</span> SIGINT: <span class="comment">// 接收到该信号后，退出程序</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGINT: %d\n&quot;</span>, signum);</span><br><span class="line">        g_main_loop = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR1:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER1: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR2:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER2: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGTERM:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGTERM: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">   signal(SIGINT, signal_handler);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">while</span>(g_main_loop)</span><br><span class="line">   &#123;</span><br><span class="line">      sleep(<span class="number">1</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例2：当A发布了任务给B，B执行任务，若任务有进度变化B立即告知A。当然A并不会一直顶着A的任务进度变化，A发布任务后，就去干其他活了</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义回调函数类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*CallbackFunction)</span><span class="params">(<span class="type">int</span> new_value)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器结构体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    CallbackFunction callback;</span><br><span class="line">&#125; DataHandler;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> g_main_loop = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器改变x值的方法</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">change_value</span><span class="params">(DataHandler *handler, <span class="type">int</span> new_value)</span> </span><br><span class="line">&#123;</span><br><span class="line">    handler-&gt;x = new_value;</span><br><span class="line">    <span class="comment">// 如果存在回调函数，则调用它</span></span><br><span class="line">    <span class="keyword">if</span> (handler-&gt;callback != <span class="literal">NULL</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        handler-&gt;callback(new_value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回调函数定义</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">notify_callback</span><span class="params">(<span class="type">int</span> new_value)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Callback triggered: new value of x is %d\n&quot;</span>, new_value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程A的工作函数</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">thread_function</span><span class="params">(<span class="type">void</span> *arg)</span> </span><br><span class="line">&#123;</span><br><span class="line">    DataHandler *handler = (DataHandler *) arg;</span><br><span class="line">    <span class="type">int</span> value = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        change_value(handler, value++);  <span class="comment">// 改变x的值并触发回调</span></span><br><span class="line">        sleep(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器的初始化函数</span></span><br><span class="line">DataHandler handler;</span><br><span class="line"><span class="type">int</span> <span class="title function_">data_handler_register</span><span class="params">(CallbackFunction cb)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    handler.x = <span class="number">0</span>;</span><br><span class="line">    handler.callback = cb;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pthread_create(&amp;tid, <span class="literal">NULL</span>, thread_function, &amp;handler) != <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Failed to create thread.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_detach(tid);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">signal_handler</span><span class="params">(<span class="type">int</span> signum)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (signum)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">case</span> SIGINT: <span class="comment">// 接收到该信号后，退出程序</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGINT: %d\n&quot;</span>, signum);</span><br><span class="line">        g_main_loop = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR1:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER1: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR2:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER2: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGTERM:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGTERM: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    signal(SIGINT, signal_handler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化数据处理器并设置回调函数</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> != data_handler_register(notify_callback))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (g_main_loop)</span><br><span class="line">    &#123;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;exit\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中main线程称之为A，设置和定义了回调函数notify_callback()，回调函数赋值给了handler的cb成员。在mian线程中创建了thread_function线程，称之为B，handler作为参数给到了B（即A发布了任务到B），B每隔2秒调用回调函数（即通知A任务进度变化）。</p>
+]]></content>
+      <categories>
+        <category>C/C++</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>bluetooth: proper terms and concepts</title>
+    <url>/2024/10/11/bluetooth-proper-terms-and-concepts/</url>
+    <content><![CDATA[<p>来源：<a href="https://www.bluetooth.org/DocMan/handlers/DownloadDoc.ashx?doc_id=587177">Core Specification (amended) 5.4</a></p>
+<table>
+<thead>
+<tr>
+<th>专有名词</th>
+<th>注解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Active Peripheral Broadcast（主动外设广播）</td>
+<td>用于通过 BR&#x2F;EDR 控制器将 L2CAP用户流量和某些类型的 LMP 流量传输到微微网（piconet）中的所有活动设备的逻辑传输。</td>
+</tr>
+<tr>
+<td>Ad Hoc Network（自组织网络）</td>
+<td>通常以自发方式创建的网络。临时网络不需要正式的基础设施并且时间和空间范围有限。</td>
+</tr>
+<tr>
+<td><strong>Advertiser（广播者）</strong></td>
+<td>在广播活动期间通过发布广播数据包的低功耗蓝牙设备</td>
+</tr>
+<tr>
+<td><strong>Advertising event（广播事件）</strong></td>
+<td>广播者在不同的广播物理信道上发送的一系列一到三个广播数据包。</td>
+</tr>
+<tr>
+<td><strong>Advertising Packet（广播包）</strong></td>
+<td>包含广播PDU的数据包</td>
+</tr>
+<tr>
+<td>Angle of Arrival（到达角）</td>
+<td>到达角是单个天线发射的射频波入射到天线阵列的相对方向</td>
+</tr>
+<tr>
+<td>Angle of Departure（出发角）</td>
+<td>出发角是使用天线阵列发射的射频波入射到另一根天线的相对方向</td>
+</tr>
+<tr>
+<td>BD_ADDR</td>
+<td>蓝牙设备的地址，被用来识别一个蓝牙设备</td>
+</tr>
+<tr>
+<td><strong>Bluetooth（蓝牙）</strong></td>
+<td>蓝牙是一种无线通信链路，使用跳频收发器在 2.4 GHz 的未授权 ISM 频段运行。它允许蓝牙主机之间进行实时 AV 和数据通信。链路协议基于时隙。</td>
+</tr>
+<tr>
+<td><strong>Bluetooth Baseband（蓝牙基带）</strong></td>
+<td>蓝牙系统的一部分，指定或实现介质访问和物理层程序，以支持蓝牙设备之间实时语音、数据信息流和临时网络的交换</td>
+</tr>
+<tr>
+<td><strong>Bluetooth Clock（蓝牙时钟）</strong></td>
+<td>BR&#x2F;EDR 控制器子系统内部的 28 位时钟，每 312.5 µs 滴答一次。此时钟的值定义了各个物理通道中的时隙编号和时序。</td>
+</tr>
+<tr>
+<td>Bluetooth Controller（蓝牙控制器）</td>
+<td>指控制器的通用术语</td>
+</tr>
+<tr>
+<td>Bluetooth Device（蓝牙设备）</td>
+<td>能够使用蓝牙系统进行短距离无线通信的设备。</td>
+</tr>
+<tr>
+<td><strong>Bluetooth Device Address（蓝牙设备地址）</strong></td>
+<td>用于识别每个蓝牙设备的 48 位地址</td>
+</tr>
+<tr>
+<td><strong>BR&#x2F;EDR</strong></td>
+<td>蓝牙基本速率 (BR) 和增强数据速率(EDR)。</td>
+</tr>
+<tr>
+<td><strong>BR&#x2F;EDR Controller（BR&#x2F;EDR控制器）</strong></td>
+<td>指蓝牙无线电、基带、链路管理器和 HCI 层的术语。</td>
+</tr>
+<tr>
+<td>BR&#x2F;EDR Piconet Physical Channel（BR&#x2F;EDR 微微网物理通道）</td>
+<td>信道被划分为多个时隙，每个时隙与一个 RF 跳频相关。连续的跳频通常对应于不同的 RF 跳频，标准跳频速率为每秒 1600 次。这些连续的跳频遵循伪随机跳频序列，通过 79 个 RF 信道集进行跳频，或者在使用自适应跳频 (AFH) 时，可选择通过更少的信道进行跳频。</td>
+</tr>
+<tr>
+<td>BR&#x2F;EDR&#x2F;LE</td>
+<td>蓝牙基本速率 (BR) ，增强数据速率(EDR)，低功耗。</td>
+</tr>
+<tr>
+<td>C-plane</td>
+<td>控制平面</td>
+</tr>
+<tr>
+<td>Channel（通道）</td>
+<td>物理通道或 L2CAP 通道，具体取决于上下文。</td>
+</tr>
+<tr>
+<td>Connect（连接）</td>
+<td>建立与服务的连接。如果尚未完成，这还包括建立物理链路、逻辑传输、逻辑链路和 L2CAP 通道。</td>
+</tr>
+<tr>
+<td>Connectable device</td>
+<td>范围内的 BR&#x2F;EDR 设备会定期侦听其寻呼扫描物理通道，并响应该通道上的寻呼。使用可连接广播事件进行广播的 LE 设备。</td>
+</tr>
+<tr>
+<td>Connected devices</td>
+<td>两个 BR&#x2F;EDR 设备，并且它们之间有物理链路</td>
+</tr>
+<tr>
+<td>Connecting</td>
+<td>设备之间通信的一个阶段，即建立设备之间的连接。（链接建立阶段完成后，进入连接阶段。）</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>映射到 L2CAP 通道上的两个对等应用程序或更高层协议之间的连接。</td>
+</tr>
+<tr>
+<td>Connection establishment</td>
+<td>创建映射到通道的连接的过程。</td>
+</tr>
+<tr>
+<td>Connection event</td>
+<td>在同一物理通道上，中央设备和外围设备之间发送的一系列一对或多对交错数据包。</td>
+</tr>
+<tr>
+<td>Connectionless Peripheral Broadcast</td>
+<td>允许中央设备向无限数量的外围设备广播信息的功能</td>
+</tr>
+<tr>
+<td>Connectionless Peripheral Broadcast Receiver</td>
+<td>从无连接外围广播发射器接收广播信息的蓝牙设备。该设备是微微网的外围设备。</td>
+</tr>
+<tr>
+<td>Connectionless Peripheral Broadcast Transmitter</td>
+<td>发送无连接外设广播消息以供一个或多个无连接外设广播接收器接收的蓝牙设备。该设备是微微网的中心。</td>
+</tr>
+<tr>
+<td><strong>Controller</strong></td>
+<td>指 HCI 以下所有层的统称。</td>
+</tr>
+<tr>
+<td>Coverage area（覆盖范围）</td>
+<td>两个蓝牙设备可以以可接受的质量和性能交换信息的区域</td>
+</tr>
+<tr>
+<td>Creation of a secure connection</td>
+<td>建立连接的过程，包括身份验证和加密</td>
+</tr>
+<tr>
+<td>Creation of a trusted relationship</td>
+<td>将远程设备标记为受信任设备的过程。这包括存储通用链接密钥，以便在链接密钥不可用时进行将来的身份验证或配对。</td>
+</tr>
+<tr>
+<td><strong>Device discovery</strong></td>
+<td>从可发现的设备中检索蓝牙设备地址、时钟和设备类别的过程</td>
+</tr>
+<tr>
+<td>Discoverable device</td>
+<td>范围内的 BR&#x2F;EDR 设备会定期侦听查询扫描物理通道，并响应该通道上的查询。范围内的 LE 设备正在通过可连接或可扫描的广告事件进行广告，并在广告数据中设置了可发现标志。此设备处于可发现模式</td>
+</tr>
+<tr>
+<td><strong>Discoverable Mode</strong></td>
+<td>在 BR&#x2F;EDR 中执行查询扫描或在 LE 中设置可发现标志并利用可发现或可连接广告事件进行广告的蓝牙设备</td>
+</tr>
+<tr>
+<td>Discovery procedure</td>
+<td>正在 BR&#x2F;EDR 中执行查询程序或使用可发现或可连接广告事件（在 LE 中设置了可发现标志）扫描广告商的蓝牙设备。</td>
+</tr>
+<tr>
+<td><strong>HCI</strong></td>
+<td>主机控制器接口 (HCI) 为基带控制器和链路管理器提供命令接口，并可访问硬件状态和控制寄存器。此接口提供访问蓝牙基带功能的<strong>统一方法</strong>。</td>
+</tr>
+<tr>
+<td><strong>Host</strong></td>
+<td>逻辑实体，定义为非核心配置文件以下和主机控制器接口 (HCI) 以上的所有层；即第 3 卷中指定的层。连接到蓝牙控制器的蓝牙主机也可以与连接到其控制器的其他蓝牙主机进行通信</td>
+</tr>
+<tr>
+<td>Initiator（发起者）</td>
+<td>一种低功耗蓝牙设备，用于监听广告物理信道上的可连接广告事件以建立连接</td>
+</tr>
+<tr>
+<td><strong>Inquiring device</strong></td>
+<td>正在执行查询过程的 BR&#x2F;EDR 设备。此设备正在执行发现过程。</td>
+</tr>
+<tr>
+<td><strong>Inquiry（查询）</strong></td>
+<td>蓝牙设备发送查询消息并监听响应以发现覆盖范围内的其他蓝牙设备的过程</td>
+</tr>
+<tr>
+<td><strong>Inquiry scan</strong></td>
+<td>蓝牙设备侦听在其查询扫描物理信道上收到的查询消息的过程。</td>
+</tr>
+<tr>
+<td>Interoperability（互操作性）</td>
+<td>两个或多个设备交换信息并使用已交换信息的能力</td>
+</tr>
+<tr>
+<td>Isochronous data（等时数据）</td>
+<td>流中的信息，其中流中的每个信息实体都与前一个和后续实体存在时间关系</td>
+</tr>
+<tr>
+<td>Known device</td>
+<td>至少存储了 BD_ADDR 的蓝牙设备</td>
+</tr>
+<tr>
+<td><strong>L2CAP</strong></td>
+<td>逻辑链路控制和适配协议</td>
+</tr>
+<tr>
+<td>L2CAP Channel</td>
+<td>使用单个应用程序或更高层协议的两个设备之间的L2CAP级别的逻辑连接。</td>
+</tr>
+<tr>
+<td>L2CAP Channel establishment</td>
+<td>在 L2CAP 层建立逻辑连接的过程。</td>
+</tr>
+<tr>
+<td><strong>LE</strong></td>
+<td>蓝牙低功耗</td>
+</tr>
+<tr>
+<td>Link</td>
+<td>逻辑链接的简写。</td>
+</tr>
+<tr>
+<td>Link establishment</td>
+<td>建立设备间默认 ACL 链接和链接及通道层次结构的程序</td>
+</tr>
+<tr>
+<td>Link key</td>
+<td>两个设备都知道的密钥，用于验证链接。</td>
+</tr>
+<tr>
+<td>LMP authentication</td>
+<td>用于验证远程设备身份的 LMP 级别程序。</td>
+</tr>
+<tr>
+<td>LMP pairing</td>
+<td>对两个设备进行身份验证并创建通用链接密钥的过程，该密钥可用作信任关系或（单一）安全连接的基础</td>
+</tr>
+<tr>
+<td>Logical link</td>
+<td>用于向蓝牙系统客户端提供独立数据传输服务的最低架构层</td>
+</tr>
+<tr>
+<td>Logical transport</td>
+<td>不同逻辑链路之间共享确认协议和链路标识符</td>
+</tr>
+<tr>
+<td>Name discovery</td>
+<td>检索可连接设备的用户友好名称（蓝牙设备名称）的过程。</td>
+</tr>
+<tr>
+<td>Packet</td>
+<td>在物理通道上传输的聚合位的格式。</td>
+</tr>
+<tr>
+<td><strong>Page</strong></td>
+<td>连接过程的初始阶段，设备传输一系列寻呼消息，直到收到目标设备的响应或发生超时。</td>
+</tr>
+<tr>
+<td><strong>Page scan</strong></td>
+<td>设备侦听在其寻呼扫描物理信道上收到的寻呼消息的过程。</td>
+</tr>
+<tr>
+<td>Paging device</td>
+<td>正在执行寻呼过程的蓝牙设备。</td>
+</tr>
+<tr>
+<td>Paired device</td>
+<td>已创建链接密钥的蓝牙设备（在请求建立连接之前或在连接阶段）。</td>
+</tr>
+<tr>
+<td>Passkey</td>
+<td>使用安全简单配对时用于验证连接的 6 位数字。</td>
+</tr>
+<tr>
+<td>Periodic advertising synchronization information（定期广播同时信息）</td>
+<td>描述定期广告的控制信息，低功耗蓝牙设备使用该控制信息同步其描述的广告</td>
+</tr>
+<tr>
+<td>Physical Channel（物理通道）</td>
+<td>其特点是一个或多个设备同步占用一系列射频载波。存在许多物理信道类型，其特征针对不同的用途进行了定义</td>
+</tr>
+<tr>
+<td>Physical link（物理链路）</td>
+<td>两个设备之间的基带或链路层连接。</td>
+</tr>
+<tr>
+<td>Physical Transport（物理传输）</td>
+<td>使用一种或多种调制方案在 RF 信道上进行 PHY 数据包传输和&#x2F;或接收。</td>
+</tr>
+<tr>
+<td><strong>Piconet（微微网）</strong></td>
+<td>一组设备（BR&#x2F;EDR 中最多 8 个设备，LE 中恰好 2 个设备）占用一个共享物理通道，其中一个设备是 Piconet Central，其余设备都与其相连。</td>
+</tr>
+<tr>
+<td>Piconet Central</td>
+<td>微微网中的 BR&#x2F;EDR 设备，其蓝牙时钟和蓝牙设备地址用于定义微微网物理信道特性。微微网中的 LE 设备启动微微网的创建，选择标识微微网的访问地址，并在每个连接事件中首先进行传输。</td>
+</tr>
+<tr>
+<td>PIN</td>
+<td>这是一个用户友好的号码，可用于在配对之前验证与设备的连接。</td>
+</tr>
+<tr>
+<td>Profile Broadcast Data</td>
+<td>将数据从无连接外围广播发送器传输到一个或多个无连接外围广播接收器的逻辑链路。</td>
+</tr>
+<tr>
+<td>Resolving List</td>
+<td>用于生成和解析可解析私有地址的记录列表。每条记录包含一个本地身份解析密钥、一个对等身份解析密钥和一个对等身份地址。</td>
+</tr>
+<tr>
+<td><strong>Scanner</strong></td>
+<td>监听广告物理信道上的广告事件的低功耗蓝牙设备。</td>
+</tr>
+<tr>
+<td>Scatternet</td>
+<td>两个或多个微微网，其中有一个或多个共同的设备</td>
+</tr>
+<tr>
+<td>Service discovery</td>
+<td>查询和浏览由其他蓝牙设备提供或通过其他蓝牙设备提供的服务的程序</td>
+</tr>
+<tr>
+<td>Service Layer Protocol</td>
+<td>使用 L2CAP 通道传输 PDU 的协议。</td>
+</tr>
+<tr>
+<td>Silent device</td>
+<td>如果蓝牙设备不响应远程设备的询问，则对于远程设备而言，它就是静默的。</td>
+</tr>
+<tr>
+<td>Synchronization Scan Physical Channel（同步扫描物理通道）</td>
+<td>使外围设备能够从中央设备接收同步系列数据包的物理通道</td>
+</tr>
+<tr>
+<td>Synchronization Train</td>
+<td>在一组固定频率上传输的一系列数据包，它们为接收设备提供足够的信息，使接收设备开始接收相应的无连接外围广播数据包，或在丢失粗略时钟调整后恢复当前微微网时钟。</td>
+</tr>
+<tr>
+<td>Tick</td>
+<td>（BR&#x2F;EDR）蓝牙时钟值变化之间的时间：312.5 µs。</td>
+</tr>
+<tr>
+<td>U-plane</td>
+<td>用户平面</td>
+</tr>
+<tr>
+<td>Unknown device</td>
+<td>未存储任何信息（蓝牙设备地址、链接密钥或其他）的蓝牙设备</td>
+</tr>
+</tbody></table>
+<p><em>注意：表格中的广告和广播是同一个意思 Advertising</em></p>
+<h2 id="BR-EDR"><a href="#BR-EDR" class="headerlink" title="BR&#x2F;EDR"></a>BR&#x2F;EDR</h2><blockquote>
+<p>BR&#x2F;EDR是什么？</p>
+</blockquote>
+<p>基本速率&#x2F;增强数据速率 (The Basic Rate &#x2F; Enhanced Data Rate，BR&#x2F;EDR) 无线电（物理层或 PHY）在 2.4 GHz 的未授权 ISM 频段运行。</p>
+<p>物理无线电信道由一组与公共时钟和跳频模式同步的设备共享。一个设备提供同步参考，称为中央设备。与中央设备的时钟和跳频模式同步的所有其他设备称为外围设备。以这种方式同步的一组设备形成微微网。这是蓝牙 BR&#x2F;EDR 无线技术中的基本通信形式。微微网中的设备使用特定的跳频模式，该模式由中央设备的蓝牙地址和时钟中的某些字段通过算法确定。基本跳频模式是 ISM 频段中 79 个频率的伪随机排序，间隔 1 MHz。</p>
+<p>物理通道上方是链路和通道以及相关控制协议的分层。从物理通道向上的通道和链路层次是物理通道、物理链路、逻辑传输、逻辑链路和 L2CAP 通道。</p>
+<h2 id="LE"><a href="#LE" class="headerlink" title="LE"></a>LE</h2><blockquote>
+<p>LE是什么？</p>
+</blockquote>
+<p>与 BR&#x2F;EDR 无线电一样，LE 无线电在未经许可的 2.4 GHz ISM 频段运行。</p>
+<p>LE 采用两种多址方案：频分多址 (FDMA) 和时分多址 (TDMA)。FDMA 方案中使用 40 个 个物理信道，间隔 2 MHz。其中3 个用作主要广告信道，37 个用作通用信道（包括辅助广告信道）。使用基于 TDMA 的轮询方案，其中一个设备在预定时间传输数据包，而相应的设备在预定间隔后用数据包响应。</p>
+<p>在广告 PHY 通道上传输广播数据包的设备称为广播者。在广告物理通道上接收广播数据包而无意连接到广播设备的设备称为扫描者。</p>
+<h2 id="Device-Mode"><a href="#Device-Mode" class="headerlink" title="Device Mode"></a>Device Mode</h2><p>在蓝牙技术中，单模和双模是代表设备支持核心能力。</p>
+<p>若设备仅支持BR&#x2F;EDR 或 LE 中的一种能力，称之为单模蓝牙设备。若同时支持以上两种能力，称之为双模设备。</p>
+<h2 id="Role"><a href="#Role" class="headerlink" title="Role"></a>Role</h2><p>Central</p>
+<p>Peripheral</p>
+]]></content>
+      <categories>
+        <category>bluetooth</category>
+      </categories>
+      <tags>
+        <tag>Core Specification v5.4 with Amendment Notices</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>overview of major emabedded linux software stacks</title>
     <url>/2024/10/08/overview-of-major-emabedded-linux-software-stacks/</url>
     <content><![CDATA[<p><a href="https://bootlin.com/doc/training/embedded-linux/embedded-linux-slides.pdf">overview of major emabedded linux software stacks</a></p>
@@ -347,7 +961,7 @@
         <category>bootlin</category>
       </categories>
       <tags>
-        <tag>enbeded linux</tag>
+        <tag>embeded linux</tag>
       </tags>
   </entry>
   <entry>
@@ -366,7 +980,8 @@
   <entry>
     <title>bluetoothd: source file reading</title>
     <url>/2024/09/25/bluetoothd-source-file-reading/</url>
-    <content><![CDATA[<h2 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h2><p>首先从 <code>/src/main.c</code> 的 main() 函数开始，对于本地定义的函数功能作出解读。</p>
+    <content><![CDATA[<p><a href="https://github.com/bluez/bluez">bluez</a></p>
+<h2 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h2><p>首先从 <code>/src/main.c</code> 的 main() 函数开始，对于本地定义的函数功能作出解读。</p>
 <ul>
 <li><p>第一部分</p>
 <p><strong>init_defaults()</strong> 默认值的初始化操作，主要是给全局变量 <code>btd_opts</code> 设置默认值。其中有我们所关心的一些信息：BlueZ版本、临时设备（Temporary）被清理的定时时长、适配器配对属性（Pairable）和可发现属性（Discoverable）默认有效时长 等等。</p>
@@ -3030,7 +3645,7 @@
 <p><a href="https://blog.csdn.net/lsqtzj/article/details/108553576#:~:text=%E8%BF%99%E4%B8%AA%E9%94%99%E8%AF%AF%E9%80%9A%E5%B8%B8%E6%98%AF%E7%94%B1">2、ubuntu 缺少 libtinfo.so.5 问题</a></p>
 ]]></content>
       <categories>
-        <category>linux</category>
+        <category>Linux</category>
       </categories>
       <tags>
         <tag>gdb</tag>
@@ -3895,92 +4510,110 @@
 <tr>
 <th>常规名字</th>
 <th>ASCII符号</th>
+<th>数据定义</th>
 <th>编码存储</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>BYTE</td>
 <td>y</td>
+<td>guchar</td>
 <td>unsigned 8-bit integer</td>
 </tr>
 <tr>
 <td>BOOlEAN</td>
 <td>b</td>
+<td>gboolean</td>
 <td>boolean value: 0 is false, 1 is true</td>
 </tr>
 <tr>
 <td>INT16</td>
 <td>n</td>
+<td>gint16</td>
 <td>signed 16-bit integer</td>
 </tr>
 <tr>
 <td>UINT16</td>
 <td>q</td>
+<td>guint16</td>
 <td>unsigned 16-bit integer</td>
 </tr>
 <tr>
 <td>INT32</td>
 <td>i</td>
+<td>gint32</td>
 <td>signed 32-bit integer</td>
 </tr>
 <tr>
 <td>UINT32</td>
 <td>u</td>
+<td>guint32</td>
 <td>unsigned 32-bit integer</td>
 </tr>
 <tr>
 <td>INT64</td>
 <td>x</td>
+<td>gint64</td>
 <td>signed 64-bit integer</td>
 </tr>
 <tr>
 <td>UINT64</td>
 <td>t</td>
+<td>guint64</td>
 <td>unsigned 64-bit integer</td>
 </tr>
 <tr>
 <td>DOUBLE</td>
 <td>d</td>
+<td>gdouble</td>
 <td>double-precision floating point</td>
 </tr>
 <tr>
 <td>UNIX_FD</td>
 <td>h</td>
+<td></td>
 <td>unsigned 32-bit representing an index into an out-of-band array of file descriptors</td>
 </tr>
 <tr>
 <td>STRING</td>
 <td>s</td>
+<td></td>
 <td>string, 必须是有效的UTF-8字符串</td>
 </tr>
 <tr>
 <td>OBJECT_PATH</td>
 <td>o</td>
+<td></td>
 <td>object_path，例如：&#x2F;org&#x2F;bluez&#x2F;hci0&#x2F;dev_50_64_2B_BF_46_36</td>
 </tr>
 <tr>
 <td>SIGNATURE</td>
 <td>g</td>
+<td></td>
 <td>signature类型，即签名类型</td>
 </tr>
 <tr>
 <td>ARRAY</td>
 <td>a</td>
+<td></td>
 <td>array, like []</td>
 </tr>
 <tr>
 <td>VARIANT</td>
 <td>v</td>
+<td></td>
 <td>variant，变体类型</td>
 </tr>
 <tr>
 <td>STRUCT</td>
 <td>r 、(  、 )</td>
+<td></td>
 <td>结构类型</td>
 </tr>
 <tr>
 <td>DICT_ENTRY</td>
 <td>e 、{ 、 }</td>
+<td></td>
 <td>字典或映射（键值对数组）的条目</td>
 </tr>
 </tbody></table>
@@ -4441,12 +5074,12 @@
 
 
 <p><a href="https://docs.gtk.org/gio/method.DBusConnection.call_sync.html">g_dbus_connection_call_sync()</a></p>
-<p>描述：同步调用bus_name 拥有的object_path 远程对象上interface_name D-Bus 接口上的method_name 方法。当返回值为NULL，则有错误发生。若返回值不为NULL，调用有责任通过 g_variant_unref() 去释放它。该函数被调用时，线程被阻塞，直到收到回复。</p>
+<p>描述：<strong>同步</strong>调用bus_name 拥有的object_path 远程对象上interface_name D-Bus 接口上的method_name 方法。当返回值为NULL，则有错误发生。若返回值不为NULL，调用有责任通过 g_variant_unref() 去释放它。该函数被调用时，线程被阻塞，直到收到回复。</p>
 <p>若 <code>error != NULL</code> 说明错误发生，调用者有责任去释放error。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_dbus_connection_call_sync</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GDBusConnection* connection,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* bus_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* interface_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* method_name,</span></span><br><span class="line"><span class="params">  GVariant* parameters,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> GVariantType* reply_type,</span></span><br><span class="line"><span class="params">  GDBusCallFlags flags,</span></span><br><span class="line"><span class="params">  gint timeout_msec,</span></span><br><span class="line"><span class="params">  GCancellable* cancellable,</span></span><br><span class="line"><span class="params">  GError** error</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
 <p><a href="https://docs.gtk.org/gio/method.DBusConnection.call.html">g_dbus_connection_call()</a></p>
-<p>描述：异步调用bus_name 拥有的object_path 远程对象上interface_name D-Bus 接口上的method_name 方法。</p>
+<p>描述：<strong>异步</strong>调用bus_name 拥有的object_path 远程对象上interface_name D-Bus 接口上的method_name 方法。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">g_dbus_connection_call</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GDBusConnection* connection,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* bus_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* interface_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* method_name,</span></span><br><span class="line"><span class="params">  GVariant* parameters,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> GVariantType* reply_type,</span></span><br><span class="line"><span class="params">  GDBusCallFlags flags,</span></span><br><span class="line"><span class="params">  gint timeout_msec,</span></span><br><span class="line"><span class="params">  GCancellable* cancellable,</span></span><br><span class="line"><span class="params">  GAsyncReadyCallback callback,</span></span><br><span class="line"><span class="params">  gpointer user_data</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
 <p><a href="https://docs.gtk.org/gio/method.DBusConnection.call_finish.html">g_dbus_connection_call_finish()</a></p>
@@ -5635,7 +6268,7 @@
   <entry>
     <title>wpa-supplicant application</title>
     <url>/2024/08/12/wpa-supplicant-application/</url>
-    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点，供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.5GHz 和 5GHz。</p>
+    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点（即AP模式），供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.4GHz 和 5GHz。</p>
 <p>无线热点的基本信息：</p>
 <ul>
 <li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
@@ -5645,29 +6278,319 @@
 <li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
 </li>
 </ul>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。</p>
-<p>1、wpa_supplicant.conf 可以设置哪些配置？<br>2、wpa_supplicant.conf 可以保存哪些信息？ </p>
-<h3 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="WPA-SUPPLICANT"><a href="#WPA-SUPPLICANT" class="headerlink" title="WPA_SUPPLICANT"></a>WPA_SUPPLICANT</h2><blockquote>
+<p>wap_supplicant是什么？</p>
+</blockquote>
+<p>wpa_supplicant 是适用于 Linux、BSD、Mac OS X 和 Windows 的 WPA Supplicant，支持 WPA、WPA2（IEEE 802.11i &#x2F; RSN）和 WPA3。它适用于台式机&#x2F;笔记本电脑和嵌入式系统。Supplicant 是客户端站中使用的 IEEE 802.1X&#x2F;WPA 组件。它与 WPA Authenticator 实现密钥协商，并控制 wlan 驱动程序的漫游和 IEEE 802.11 身份验证&#x2F;关联。</p>
+<p>获取wpa_supplicant仓库代码：<code>git clone git://w1.fi/hostap.git</code></p>
+<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于文本的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
+<p>wpa_supplicant应用主要包括程序：</p>
+<ul>
+<li>wpa_supplicant守护程序</li>
+<li>wpa_cli客户端程序</li>
+<li>wpa_passphrase密码工具程序</li>
+</ul>
+<p>wpa_supplicant的运行方式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant_wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#		   nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>wpa_supplicant结构图：</p>
+<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。而配置文件的默认保存路径是：<code>/etc/wpa_supplicant/wpa_supplicant.conf</code></p>
+<p>wpa_supplicant.conf 可以设置哪些配置？</p>
+<ul>
+<li>指定wpa_supplicant控制接口</li>
+<li>是否允许配置文件更新</li>
+<li>默认网络配置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 必须为wpa_supplicant指定一个控制接口，并且必须赋予它更新配置的权限</span><br><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>从通信层次上划分：</p>
+<ul>
+<li><p><strong>上行接口</strong>：wpa_supplicant提供向上的控制接口 control interface，用于与其他模块（如UI）进行通信，其他模块可以通过control interface 来获取信息或下发命令。</p>
+</li>
+<li><p><strong>下行接口</strong>：wpa_supplicant通过socket通信机制实现下行接口，与内核（驱动程序）进行通信，获取信息或下发命令。</p>
+</li>
+</ul>
+<p>其中wpa_supplicant的上行接口的实现方式：</p>
+<ul>
+<li>基于传统dbus机制实现与其他进程间的IPC通信</li>
+<li>通过Unix domain socket机制实现进程间的IPC通信</li>
+</ul>
+<p>wpa_supplicant提供的<a href="https://w1.fi/wpa_supplicant/devel/dbus.html">D-Bus API接口</a>，通过执行命令：<code>wpa_supplicant -h</code>，其结果中有 <code>-u</code> 选项就是使能D-Bus控制接口。</p>
+<p>另外我通过 <code>dbus-send</code> 工具执行查询dbus服务（命令如下所示），其结果中发现有这么一个服务：<code>fi.w1.wpa_supplicant1</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListNames</span><br></pre></td></tr></table></figure>
+
+<p>借助D-Bus图形工具 <strong>D-Feet</strong> 可以查看到更具体的信息：</p>
+<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016211846477.png" alt="image-20241016211846477"></p>
+<h3 id="dbus-for-wpa-supplicant接口"><a href="#dbus-for-wpa-supplicant接口" class="headerlink" title="dbus for wpa_supplicant接口"></a>dbus for wpa_supplicant接口</h3><p>wpa_supplicant dbus api 文档涉及到各个不同接口：</p>
+<ul>
+<li><strong>fi.w1.wpa_supplicant1</strong></li>
+<li><strong>fi.w1.wpa_supplicant1.Interface</strong></li>
+<li>fi.w1.wpa_supplicant1.Interface.WPS</li>
+<li>fi.w1.wpa_supplicant1.Interface.P2PDevice</li>
+<li><strong>fi.w1.wpa_supplicant1.BSS</strong></li>
+<li>fi.w1.wpa_supplicant1.Network</li>
+<li>fi.w1.wpa_supplicant1.Peer</li>
+<li>fi.w1.wpa_supplicant1.Group</li>
+<li>fi.w1.wpa_supplicant1.PersistentGroup</li>
+</ul>
+<h3 id="fi-w1-wpa-supplicant1"><a href="#fi-w1-wpa-supplicant1" class="headerlink" title="fi.w1.wpa_supplicant1"></a>fi.w1.wpa_supplicant1</h3><p>由在总线中注册名为 fi.w1.wpa_supplicant1 的主 wpa_supplicant D-Bus 对象实现的接口。</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface:	fi.w1.wpa_supplicant</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CreateInterface ( a{sv} : args ) –&gt; o : interface</td>
+<td>在 wpa_supplicant 中注册一个无线接口。</td>
+</tr>
+<tr>
+<td>RemoveInterface ( o : interface ) –&gt; nothing</td>
+<td>从 wpa_supplicant 取消注册无线接口。</td>
+</tr>
+<tr>
+<td>GetInterface ( s : ifname ) –&gt; o : interface</td>
+<td>返回与 wpa_supplicant 已控制的接口相关的对象的 D-Bus 路径。</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string DebugLevel</td>
+<td>[readwrite]</td>
+<td>全局 wpa_supplicant 调试级别。</td>
+</tr>
+<tr>
+<td>bool DebugTimestamp</td>
+<td>[readwrite]</td>
+<td>确定时间戳是否显示在调试日志中（全局参数）。</td>
+</tr>
+<tr>
+<td>bool DebugShowKeys</td>
+<td>[readwrite]</td>
+<td>确定键名是否显示在调试日志中。</td>
+</tr>
+<tr>
+<td>array{object} Interfaces</td>
+<td>[read]</td>
+<td>一个包含指向 D-Bus 对象路径的数组，每个对象代表受控的接口。</td>
+</tr>
+<tr>
+<td>array{string} EapMethods</td>
+<td>[read]</td>
+<td>包含受支持的 EAP 方法名称的数组。</td>
+</tr>
+<tr>
+<td>array{string} Capabilities</td>
+<td>[read]</td>
+<td>具有支持功能的阵列</td>
+</tr>
+<tr>
+<td>array{byte} WFDIEs</td>
+<td>[readwrite]</td>
+<td>Wi-Fi 显示子元素。</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InterfaceAdded ( o : interface, a{sv} : properties )</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>InterfaceRemoved ( o : interface )</td>
+<td>移除接口</td>
+</tr>
+<tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>属性变化</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-Interface"><a href="#fi-w1-wpa-supplicant1-Interface" class="headerlink" title="fi.w1.wpa_supplicant1.Interface"></a>fi.w1.wpa_supplicant1.Interface</h3><p>由添加到 wpa_supplicant 的网络接口相关对象实现的接口，即由 fi.w1.wpa_supplicant1.CreateInterface 返回的接口。</p>
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scan ( a{sv} : args ) –&gt; nothing</td>
+<td>触发扫描</td>
+</tr>
+<tr>
+<td>Disconnect ( ) –&gt; nothing</td>
+<td>断开网络</td>
+</tr>
+<tr>
+<td>AddNetwork ( a{sv} : args ) –&gt; o : network</td>
+<td>新增网络到接口</td>
+</tr>
+<tr>
+<td>RemoveNetwork ( o : network ) –&gt; nothing</td>
+<td>移除网络接口</td>
+</tr>
+<tr>
+<td>RemoveAllNetworks ( ) –&gt; nothing</td>
+<td>移除所有网络接口</td>
+</tr>
+<tr>
+<td>SelectNetwork ( o : network ) –&gt; nothing</td>
+<td>尝试与已配置的网络关联</td>
+</tr>
+<tr>
+<td>Reassociate ( ) –&gt; nothing</td>
+<td>尝试重新关联</td>
+</tr>
+<tr>
+<td>Reattach ( ) –&gt; nothing</td>
+<td>尝试重新关联至当前 BSS</td>
+</tr>
+<tr>
+<td>Reconnect ( ) –&gt; nothing</td>
+<td>如果处于断开连接状态，则尝试重新连接并连接。</td>
+</tr>
+<tr>
+<td>AddBlob ( s : name, ay : data ) –&gt; nothing</td>
+<td>向接口添加一个 blob</td>
+</tr>
+<tr>
+<td>RemoveBlob ( s : name ) –&gt; nothing</td>
+<td>从接口移除一个 blob</td>
+</tr>
+<tr>
+<td>GetBlob ( s : name ) –&gt; ay : data</td>
+<td>返回先前添加的 Blob 的 Blob 数据</td>
+</tr>
+<tr>
+<td>AutoScan ( s : arg ) –&gt; nothing</td>
+<td>设置接口的自动扫描参数</td>
+</tr>
+<tr>
+<td>TDLSDiscover ( s : peer_address ) –&gt; nothing</td>
+<td>启动对等方的 TDLS 发现</td>
+</tr>
+<tr>
+<td>TDLSSetup ( s : peer_address ) –&gt; nothing</td>
+<td>为对等方设置 TDLS 会话</td>
+</tr>
+<tr>
+<td>TDLSStatus ( s : peer_address ) –&gt; s</td>
+<td>返回相对于对等方的 TDLS 状态</td>
+</tr>
+<tr>
+<td>TDLSTeardown ( s : peer_address ) –&gt; nothing</td>
+<td>拆除与对等方的 TDLS 会话</td>
+</tr>
+<tr>
+<td>EAPLogoff ( ) –&gt; nothing</td>
+<td>IEEE 802.1X EAPOL 状态机注销</td>
+</tr>
+<tr>
+<td>EAPLogon ( ) –&gt; nothing</td>
+<td>IEEE 802.1X EAPOL 状态机登录</td>
+</tr>
+<tr>
+<td>NetworkReply ( o : network, s : field, s : value ) –&gt; nothing</td>
+<td>提供NetworkRequest()请求的参数</td>
+</tr>
+<tr>
+<td>SetPKCS11EngineAndModulePath ( s : pkcs11_engine_path, s : pkcs11_module_path ) –&gt; nothing</td>
+<td>设置 PKCS #11 引擎和模块路径</td>
+</tr>
+<tr>
+<td>SignalPoll ( ) –&gt; a{sv} : properties</td>
+<td>获取当前连接的信号属性</td>
+</tr>
+<tr>
+<td>FlushBSS ( u : age ) –&gt; nothing</td>
+<td>从缓存中刷新 BSS 条目</td>
+</tr>
+<tr>
+<td>SubscribeProbeReq ( ) –&gt; nothing</td>
+<td>订阅以接收探测请求事件</td>
+</tr>
+<tr>
+<td>UnsubscribeProbeReq ( ) –&gt; nothing</td>
+<td>取消接收探测请求事件</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>主要涉及各种信号：ScanDone、BSSAdded、BssRemoved、PropertiesChanged</p>
+<h3 id="ScanDone"><a href="#ScanDone" class="headerlink" title="ScanDone"></a>ScanDone</h3><p>data type: <code>(b)</code></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(<span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span>)</span><br></pre></td></tr></table></figure>
 
 
-<h3 id="保存信息"><a href="#保存信息" class="headerlink" title="保存信息"></a>保存信息</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="BSSAdded"><a href="#BSSAdded" class="headerlink" title="BSSAdded"></a>BSSAdded</h3><p>data type: <code>(oa&#123;sv&#125;)</code> </p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(</span><br><span class="line">    objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">257</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;SSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;BSSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xdb</span><span class="punctuation">,</span> <span class="number">0x15</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0x8b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Privacy&#x27;<span class="punctuation">:</span> &lt;<span class="literal"><span class="keyword">true</span></span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Mode&#x27;<span class="punctuation">:</span> &lt;&#x27;infrastructure&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Signal&#x27;<span class="punctuation">:</span> &lt;int16 <span class="number">-70</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Frequency&#x27;<span class="punctuation">:</span> &lt;uint16 <span class="number">5805</span>&gt;<span class="punctuation">,</span></span><br><span class="line">        &#x27;Rates&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>uint32 <span class="number">54000000</span><span class="punctuation">,</span> <span class="number">48000000</span><span class="punctuation">,</span> <span class="number">36000000</span><span class="punctuation">,</span> <span class="number">24000000</span><span class="punctuation">,</span> <span class="number">18000000</span><span class="punctuation">,</span> <span class="number">12000000</span><span class="punctuation">,</span> <span class="number">9000000</span><span class="punctuation">,</span> <span class="number">6000000</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPA&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;</span><br><span class="line">         <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;RSN&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;MgmtGroup&#x27;<span class="punctuation">:</span> &lt;&#x27;aes128cmac&#x27;&gt;</span><br><span class="line">        <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPS&#x27;<span class="punctuation">:</span> &lt;@a<span class="punctuation">&#123;</span>sv<span class="punctuation">&#125;</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;IEs&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x8c</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x98</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xb0</span><span class="punctuation">,</span> <span class="number">0x48</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x30</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2d</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0xef</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x17</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x87</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x3d</span><span class="punctuation">,</span> <span class="number">0x16</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x06</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x7f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x80</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0x0b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xca</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x7a</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x42</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x5e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x62</span><span class="punctuation">,</span> <span class="number">0x32</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x4e</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x95</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x79</span><span class="punctuation">,</span> <span class="number">0xc9</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x9b</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x44</span><span class="punctuation">,</span> <span class="number">0x10</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x8f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x39</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0xc7</span><span class="punctuation">,</span> <span class="number">0x71</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xf4</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x21</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xe7</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0xf0</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Age&#x27;<span class="punctuation">:</span> &lt;uint32 <span class="number">0</span>&gt;</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="BSSRemoved"><a href="#BSSRemoved" class="headerlink" title="BSSRemoved"></a>BSSRemoved</h3><p>data type: <code>(O)</code></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">519</span>&#x27;<span class="punctuation">,</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PropertiesChanged"><a href="#PropertiesChanged" class="headerlink" title="PropertiesChanged"></a>PropertiesChanged</h3><p>data type: <code>(a&#123;sv&#125;)</code></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">PropertiesChanged data type<span class="punctuation">:</span> (a<span class="punctuation">&#123;</span>sv<span class="punctuation">&#125;</span>)</span><br><span class="line">(</span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;Scanning&#x27;<span class="punctuation">:</span> &lt;<span class="literal"><span class="keyword">false</span></span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;BSSs&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>objectpath </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">2</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">423</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">424</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">425</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">426</span>&#x27;<span class="punctuation">]</span>&gt;</span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(</span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;BSSs&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>objectpath </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">2</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1363</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1364</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1365</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1366</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1367</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1369</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1372</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1374</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1375</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1376</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1377</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">1378</span>&#x27;<span class="punctuation">]</span>&gt;</span><br><span class="line">	<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+<h2 id="参考信息"><a href="#参考信息" class="headerlink" title="参考信息"></a>参考信息</h2><p><a href="https://wiki.archlinux.org/title/Wpa_supplicant">1、wpa_supplicant</a></p>
+<p><a href="https://w1.fi/wpa_supplicant/devel/">2、wpa_supplicant &#x2F; hostapd</a></p>
+<p><a href>3、wpa_supplicant</a></p>
+<p><a href="https://www.cnblogs.com/chenbin7/p/3266164.html">4、wpa_supplicant提供的接口</a></p>
+<p><a href="https://android.googlesource.com/platform/external/wpa_supplicant_8/+/master/wpa_supplicant/examples/wpas-dbus-new.py">5、wpa_supplicant dbus api example using python</a></p>
 ]]></content>
       <categories>
         <category>Wi-Fi</category>
