@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/image-20241016170128847.png">
 <meta property="og:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/image-20241016211846477.png">
 <meta property="article:published_time" content="2024-08-12T01:27:33.000Z">
-<meta property="article:modified_time" content="2024-10-18T10:23:38.868Z">
+<meta property="article:modified_time" content="2024-10-25T03:20:44.535Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="Wi-Fi">
 <meta property="article:tag" content="wpa_supplicant">
@@ -94,7 +94,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">43</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">45</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">31</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E7%83%AD%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">无线热点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WPA-SUPPLICANT"><span class="nav-number">2.</span> <span class="nav-text">WPA_SUPPLICANT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dbus-for-wpa-supplicant%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.1.</span> <span class="nav-text">dbus for wpa_supplicant接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1"><span class="nav-number">3.2.</span> <span class="nav-text">fi.w1.wpa_supplicant1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-Interface"><span class="nav-number">3.3.</span> <span class="nav-text">fi.w1.wpa_supplicant1.Interface</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="nav-number">4.</span> <span class="nav-text">测试数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ScanDone"><span class="nav-number">4.1.</span> <span class="nav-text">ScanDone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSSAdded"><span class="nav-number">4.2.</span> <span class="nav-text">BSSAdded</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSSRemoved"><span class="nav-number">4.3.</span> <span class="nav-text">BSSRemoved</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PropertiesChanged"><span class="nav-number">4.4.</span> <span class="nav-text">PropertiesChanged</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E4%BF%A1%E6%81%AF"><span class="nav-number">5.</span> <span class="nav-text">参考信息</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E7%83%AD%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">无线热点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WPA-SUPPLICANT"><span class="nav-number">2.</span> <span class="nav-text">WPA_SUPPLICANT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dbus-for-wpa-supplicant%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.1.</span> <span class="nav-text">dbus for wpa_supplicant接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1"><span class="nav-number">3.2.</span> <span class="nav-text">fi.w1.wpa_supplicant1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-Interface"><span class="nav-number">3.3.</span> <span class="nav-text">fi.w1.wpa_supplicant1.Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-BSS"><span class="nav-number">3.4.</span> <span class="nav-text">fi.w1.wpa_supplicant1.BSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-Network"><span class="nav-number">3.5.</span> <span class="nav-text">fi.w1.wpa_supplicant1.Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="nav-number">4.</span> <span class="nav-text">测试数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ScanDone"><span class="nav-number">4.1.</span> <span class="nav-text">ScanDone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSSAdded"><span class="nav-number">4.2.</span> <span class="nav-text">BSSAdded</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSSRemoved"><span class="nav-number">4.3.</span> <span class="nav-text">BSSRemoved</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PropertiesChanged"><span class="nav-number">4.4.</span> <span class="nav-text">PropertiesChanged</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E4%BF%A1%E6%81%AF"><span class="nav-number">5.</span> <span class="nav-text">参考信息</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -160,18 +160,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -522,7 +522,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-18 10:23:38" itemprop="dateModified" datetime="2024-10-18T10:23:38+00:00">2024-10-18</time>
+      <time title="Modified: 2024-10-25 03:20:44" itemprop="dateModified" datetime="2024-10-25T03:20:44+00:00">2024-10-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -567,7 +567,7 @@ if(canvas.getContext){
 </blockquote>
 <p>wpa_supplicant 是适用于 Linux、BSD、Mac OS X 和 Windows 的 WPA Supplicant，支持 WPA、WPA2（IEEE 802.11i &#x2F; RSN）和 WPA3。它适用于台式机&#x2F;笔记本电脑和嵌入式系统。Supplicant 是客户端站中使用的 IEEE 802.1X&#x2F;WPA 组件。它与 WPA Authenticator 实现密钥协商，并控制 wlan 驱动程序的漫游和 IEEE 802.11 身份验证&#x2F;关联。</p>
 <p>获取wpa_supplicant仓库代码：<code>git clone git://w1.fi/hostap.git</code></p>
-<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于文本的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
+<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于命令行的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
 <p>wpa_supplicant应用主要包括程序：</p>
 <ul>
 <li>wpa_supplicant守护程序</li>
@@ -575,7 +575,14 @@ if(canvas.getContext){
 <li>wpa_passphrase密码工具程序</li>
 </ul>
 <p>wpa_supplicant的运行方式：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant_wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#		   nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant_wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#          nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>注意事项：</em></p>
+<p><em>dbus-daemon需要知道如何转发消息，&#x2F;etc&#x2F;dbus-1&#x2F;system.d存放各个app的dbus服务接口配置，dbus-daemon启动时会遍历加载目录中的所有配置，加载分发情况。若没有配置服务，某个app注册自身服务名时，会报错：Connection “:1.6” is not allowed to own the service “org.bluez” due to security policies in the configuration file。</em></p>
+<p><em>默认配置文件路径：<code>/etc/dbus-1/system.d/wpa_supplicant.conf</code>，该文件的详细信息如下所示：</em></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">busconfig</span> <span class="keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">busconfig</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">user</span>=<span class="string">&quot;root&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_interface</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">context</span>=<span class="string">&quot;default&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">busconfig</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
 
 <p>wpa_supplicant结构图：</p>
 <p><img src="/2024/08/12/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
@@ -587,6 +594,8 @@ if(canvas.getContext){
 <li>默认网络配置</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 必须为wpa_supplicant指定一个控制接口，并且必须赋予它更新配置的权限</span><br><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>从通信层次上划分：</p>
 <ul>
@@ -613,14 +622,14 @@ if(canvas.getContext){
 <li>fi.w1.wpa_supplicant1.Interface.WPS</li>
 <li>fi.w1.wpa_supplicant1.Interface.P2PDevice</li>
 <li><strong>fi.w1.wpa_supplicant1.BSS</strong></li>
-<li>fi.w1.wpa_supplicant1.Network</li>
+<li><strong>fi.w1.wpa_supplicant1.Network</strong></li>
 <li>fi.w1.wpa_supplicant1.Peer</li>
 <li>fi.w1.wpa_supplicant1.Group</li>
 <li>fi.w1.wpa_supplicant1.PersistentGroup</li>
 </ul>
 <h3 id="fi-w1-wpa-supplicant1"><a href="#fi-w1-wpa-supplicant1" class="headerlink" title="fi.w1.wpa_supplicant1"></a>fi.w1.wpa_supplicant1</h3><p>由在总线中注册名为 fi.w1.wpa_supplicant1 的主 wpa_supplicant D-Bus 对象实现的接口。</p>
 <p><strong>接口介绍：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface:	fi.w1.wpa_supplicant</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
 
 <p><strong>方法介绍：</strong></p>
 <table>
@@ -710,6 +719,11 @@ if(canvas.getContext){
 </tr>
 </tbody></table>
 <h3 id="fi-w1-wpa-supplicant1-Interface"><a href="#fi-w1-wpa-supplicant1-Interface" class="headerlink" title="fi.w1.wpa_supplicant1.Interface"></a>fi.w1.wpa_supplicant1.Interface</h3><p>由添加到 wpa_supplicant 的网络接口相关对象实现的接口，即由 fi.w1.wpa_supplicant1.CreateInterface 返回的接口。</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.Interface</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index  (index is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
 <p><strong>方法介绍：</strong></p>
 <table>
 <thead>
@@ -829,9 +843,109 @@ if(canvas.getContext){
 </tr>
 </thead>
 <tbody><tr>
-<td></td>
-<td></td>
-<td></td>
+<td>array{string, variant} Capabilities</td>
+<td>read</td>
+<td>接口功能</td>
+</tr>
+<tr>
+<td>string State</td>
+<td>read</td>
+<td>接口状态</td>
+</tr>
+<tr>
+<td>bool Scanning</td>
+<td>read</td>
+<td>确定接口是否已在扫描</td>
+</tr>
+<tr>
+<td>uint32 ApScan</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 ap_scan 条目相同。可能的值为 0、1 或 2</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireAge</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_age 条目相同</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireCount</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_scan_count 条目相同</td>
+</tr>
+<tr>
+<td>string Country</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的国家&#x2F;地区条目相同</td>
+</tr>
+<tr>
+<td>string Ifname</td>
+<td>read</td>
+<td>接口控制的网络接口名称，例如 wlan0</td>
+</tr>
+<tr>
+<td>string BridgeIfname</td>
+<td>read</td>
+<td>该接口控制的桥接网络接口名称，例如 br0</td>
+</tr>
+<tr>
+<td>string Driver</td>
+<td>read</td>
+<td>接口使用的驱动程序的名称，例如 nl80211</td>
+</tr>
+<tr>
+<td>object CurrentBSS</td>
+<td>read</td>
+<td>表示与 wpa_supplicant 关联的 BSS 的 D-Bus 对象的路径，如果根本没有关联，则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>object CurrentNetwork</td>
+<td>read</td>
+<td>表示 wpa_supplicant 当前使用的配置网络的 D-Bus 对象的路径，如果没有使用则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>string CurrentAuthMode</td>
+<td>read</td>
+<td>当前身份验证类型</td>
+</tr>
+<tr>
+<td>array{string} Blobs</td>
+<td>read</td>
+<td>添加到界面的 blob 名称列表</td>
+</tr>
+<tr>
+<td>array{object} BSSs</td>
+<td>read</td>
+<td>代表接口已知的 BSS 的 D-Bus 对象路径列表，例如扫描结果</td>
+</tr>
+<tr>
+<td>array{object} Networks</td>
+<td>read</td>
+<td>代表已配置网络的 D-Bus 对象路径列表</td>
+</tr>
+<tr>
+<td>bool FastReauth</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 fast_reauth 条目相同</td>
+</tr>
+<tr>
+<td>int32 ScanInterval</td>
+<td>readwrite</td>
+<td>扫描合适 AP 的间隔时间（以秒为单位）。必须 &gt;&#x3D; 0</td>
+</tr>
+<tr>
+<td>string PKCS11EnginePath</td>
+<td>read</td>
+<td>PKCS #11 引擎路径</td>
+</tr>
+<tr>
+<td>string PKCS11ModulePath</td>
+<td>read</td>
+<td>PKCS #11 模块路径</td>
+</tr>
+<tr>
+<td>int32 DisconnectReason</td>
+<td>read</td>
+<td>最近的 IEEE 802.11 断开连接原因代码。负值表示本地生成的断开连接</td>
 </tr>
 </tbody></table>
 <p><strong>信号介绍：</strong></p>
@@ -843,8 +957,191 @@ if(canvas.getContext){
 </tr>
 </thead>
 <tbody><tr>
-<td></td>
-<td></td>
+<td>ScanDone ( b : success )</td>
+<td>扫描完成</td>
+</tr>
+<tr>
+<td>BSSAdded ( o : BSS, a{sv} : properties )</td>
+<td>BSS新增</td>
+</tr>
+<tr>
+<td>BSSRemoved ( o : BSS )</td>
+<td>BSS移除</td>
+</tr>
+<tr>
+<td>BlobAdded ( s : blobName )</td>
+<td>blob新增</td>
+</tr>
+<tr>
+<td>BlobRemoved ( s : blobName )</td>
+<td>blob移除</td>
+</tr>
+<tr>
+<td>NetworkAdded ( o : network, a{sv} : properties )</td>
+<td>network新增</td>
+</tr>
+<tr>
+<td>NetworkRemoved ( o : network )</td>
+<td>network移除</td>
+</tr>
+<tr>
+<td>NetworkSelected ( o : network )</td>
+<td>network选择</td>
+</tr>
+<tr>
+<td>StaAuthorized ( s : mac )</td>
+<td>已授权新站使用接口</td>
+</tr>
+<tr>
+<td>StaDeauthorized ( s : mac )</td>
+<td>已取消对某个站的接口授权</td>
+</tr>
+<tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性有改变</td>
+</tr>
+<tr>
+<td>Certification ( a{sv} : parameters )</td>
+<td>有关服务器 TLS 证书的信息</td>
+</tr>
+<tr>
+<td>EAP ( s : status, s : parameter )</td>
+<td>有关 EAP 对等状态的信息</td>
+</tr>
+<tr>
+<td>NetworkRequest ( o : network, s : field, s : txt )</td>
+<td>请求网络参数。NetworkResponse() 用于提供所请求的参数</td>
+</tr>
+<tr>
+<td>ProbeRequest ( a{sv} : args )</td>
+<td>有关已接收探测请求帧的信息。此信号仅发送给已使用 SubscribeProbeReq() 订阅接收事件的单个应用程序</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-BSS"><a href="#fi-w1-wpa-supplicant1-BSS" class="headerlink" title="fi.w1.wpa_supplicant1.BSS"></a>fi.w1.wpa_supplicant1.BSS</h3><p>表示已扫描 BSS（即扫描结果）的对象实现的接口</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.BSS</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index/BSSs/serial  (serial is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍:</strong></p>
+<p>无</p>
+<p><strong>属性介绍:</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>array{byte} BSSID</td>
+<td>read</td>
+<td>BSS的BSSID</td>
+</tr>
+<tr>
+<td>array{byte} SSID</td>
+<td>read</td>
+<td>BSS的SSID</td>
+</tr>
+<tr>
+<td>array{string, variant} WPA</td>
+<td>read</td>
+<td>BSS的WPA信息</td>
+</tr>
+<tr>
+<td>array{string, variant} RSN</td>
+<td>read</td>
+<td>BSS的RSN信息</td>
+</tr>
+<tr>
+<td>array{string, variant} WPS</td>
+<td>read</td>
+<td>BSS的WPS信息</td>
+</tr>
+<tr>
+<td>array{byte} IEs</td>
+<td>read</td>
+<td>BSS 的所有 IE 作为 TLV 链</td>
+</tr>
+<tr>
+<td>bool Privacy</td>
+<td>read</td>
+<td>指示 BSS 是否支持隐私</td>
+</tr>
+<tr>
+<td>string Mode</td>
+<td>read</td>
+<td>描述 BSS 的模式</td>
+</tr>
+<tr>
+<td>uint16 Frequency</td>
+<td>read</td>
+<td>BSS 的频率（MHz）</td>
+</tr>
+<tr>
+<td>array{uint32} Rates</td>
+<td>read</td>
+<td>按降序排列的 BSS 支持的速率（单位为比特&#x2F;秒）</td>
+</tr>
+<tr>
+<td>int16 Signal</td>
+<td>read</td>
+<td>BSS 信号强度</td>
+</tr>
+<tr>
+<td>uint32 Age</td>
+<td>read</td>
+<td>自上次看到 BSS 以来的秒数</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-Network"><a href="#fi-w1-wpa-supplicant1-Network" class="headerlink" title="fi.w1.wpa_supplicant1.Network"></a>fi.w1.wpa_supplicant1.Network</h3><p>由代表配置网络的对象实现的接口，即由 fi.w1.wpa_supplicant1.Interface.AddNetwork 返回。</p>
+<p><strong>方法介绍：</strong></p>
+<p>无</p>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bool Enabled</td>
+<td>readwrite</td>
+<td>确定配置的网络是否启用</td>
+</tr>
+<tr>
+<td>array{string,variant}</td>
+<td>readwrite</td>
+<td>wpa_supplicant 配置文件的“网络”块的条目</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
 </tr>
 </tbody></table>
 <h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>主要涉及各种信号：ScanDone、BSSAdded、BssRemoved、PropertiesChanged</p>
@@ -856,7 +1153,7 @@ if(canvas.getContext){
 <h3 id="BSSAdded"><a href="#BSSAdded" class="headerlink" title="BSSAdded"></a>BSSAdded</h3><p>data type: <code>(oa&#123;sv&#125;)</code> </p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">(</span><br><span class="line">    objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">257</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;SSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;BSSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xdb</span><span class="punctuation">,</span> <span class="number">0x15</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0x8b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Privacy&#x27;<span class="punctuation">:</span> &lt;<span class="literal"><span class="keyword">true</span></span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Mode&#x27;<span class="punctuation">:</span> &lt;&#x27;infrastructure&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Signal&#x27;<span class="punctuation">:</span> &lt;int16 <span class="number">-70</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Frequency&#x27;<span class="punctuation">:</span> &lt;uint16 <span class="number">5805</span>&gt;<span class="punctuation">,</span></span><br><span class="line">        &#x27;Rates&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>uint32 <span class="number">54000000</span><span class="punctuation">,</span> <span class="number">48000000</span><span class="punctuation">,</span> <span class="number">36000000</span><span class="punctuation">,</span> <span class="number">24000000</span><span class="punctuation">,</span> <span class="number">18000000</span><span class="punctuation">,</span> <span class="number">12000000</span><span class="punctuation">,</span> <span class="number">9000000</span><span class="punctuation">,</span> <span class="number">6000000</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPA&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;</span><br><span class="line">         <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;RSN&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;MgmtGroup&#x27;<span class="punctuation">:</span> &lt;&#x27;aes128cmac&#x27;&gt;</span><br><span class="line">        <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPS&#x27;<span class="punctuation">:</span> &lt;@a<span class="punctuation">&#123;</span>sv<span class="punctuation">&#125;</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;IEs&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x8c</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x98</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xb0</span><span class="punctuation">,</span> <span class="number">0x48</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x30</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2d</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0xef</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x17</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x87</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x3d</span><span class="punctuation">,</span> <span class="number">0x16</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x06</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x7f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x80</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0x0b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xca</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x7a</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x42</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x5e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x62</span><span class="punctuation">,</span> <span class="number">0x32</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x4e</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x95</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x79</span><span class="punctuation">,</span> <span class="number">0xc9</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x9b</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x44</span><span class="punctuation">,</span> <span class="number">0x10</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x8f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x39</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0xc7</span><span class="punctuation">,</span> <span class="number">0x71</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xf4</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x21</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xe7</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0xf0</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Age&#x27;<span class="punctuation">:</span> &lt;uint32 <span class="number">0</span>&gt;</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<h3 id="BSSRemoved"><a href="#BSSRemoved" class="headerlink" title="BSSRemoved"></a>BSSRemoved</h3><p>data type: <code>(O)</code></p>
+<h3 id="BSSRemoved"><a href="#BSSRemoved" class="headerlink" title="BSSRemoved"></a>BSSRemoved</h3><p>data type: <code>(o)</code></p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">519</span>&#x27;<span class="punctuation">,</span>)</span><br></pre></td></tr></table></figure>
 
 
@@ -875,6 +1172,7 @@ if(canvas.getContext){
 <p><a href>3、wpa_supplicant</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenbin7/p/3266164.html">4、wpa_supplicant提供的接口</a></p>
 <p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/external/wpa_supplicant_8/+/master/wpa_supplicant/examples/wpas-dbus-new.py">5、wpa_supplicant dbus api example using python</a></p>
+<p><a target="_blank" rel="noopener" href="https://kingtuo123.com/posts/wpa_supplicant/">6、使用 wpa_supplicant 连接无线网络</a></p>
 
     </div>
 
@@ -919,7 +1217,7 @@ if(canvas.getContext){
     <div class="footer-inner">
 
   <div class="copyright">
-    &copy; 
+    &copy; 2021 – 
     <span itemprop="copyrightYear">2024</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>

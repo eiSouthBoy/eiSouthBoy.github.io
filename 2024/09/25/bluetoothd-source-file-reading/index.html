@@ -28,16 +28,19 @@
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
 <meta property="og:description" content="在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241023191822349.png">
 <meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png">
 <meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241023193938906.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241023194040460.png">
 <meta property="og:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png">
 <meta property="article:published_time" content="2024-09-25T07:04:17.000Z">
-<meta property="article:modified_time" content="2024-10-11T11:55:42.044Z">
+<meta property="article:modified_time" content="2024-10-24T07:10:23.412Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="bluez">
 <meta property="article:tag" content="bluetoothd">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/image-20241023191822349.png">
 
 
 <link rel="canonical" href="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/">
@@ -95,7 +98,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">43</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">45</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">31</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -161,18 +164,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -523,7 +526,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-11 11:55:42" itemprop="dateModified" datetime="2024-10-11T11:55:42+00:00">2024-10-11</time>
+      <time title="Modified: 2024-10-24 07:10:23" itemprop="dateModified" datetime="2024-10-24T07:10:23+00:00">2024-10-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -625,17 +628,48 @@ if(canvas.getContext){
 <p><strong>扫描注意事项：</strong></p>
 <p>参考来源：<a target="_blank" rel="noopener" href="https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/">Core_amended_2024_06_11_v5.4.pdf</a></p>
 <ul>
-<li><p>扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
+<li><p>查询扫描类型（inquiry scan type）</p>
+<p>Inquiry_Scan_Type 配置参数指示查询扫描是否使用非隔行扫描或隔行扫描进行。目前，定义了一种强制查询扫描类型和一种可选查询扫描类型。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023191822349.png" alt="image-20241023191822349"></p>
+</li>
+<li><p>查询扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png" alt="image-20241008212348333"></p>
 <p><em>注意：一个扫描窗口并不会扫描所有的40个射频通道，完全取决于硬件底层实现。</em></p>
 </li>
-<li><p>扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
+<li><p>查询扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
+<p>Inquiry_Scan_Interval 配置参数定义连续查询扫描之间的时间量。这定义为从 BR&#x2F;EDR 控制器开始其上一次查询扫描到开始下一次查询扫描的时间间隔</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png" alt="image-20241008212407775"></p>
+</li>
+<li><p>页扫描间隔（page scan interval）：Page_Scan_Interval 配置参数定义连续页面扫描之间的时间量。此时间间隔定义为从控制器开始其上一次页面扫描到开始下一次页面扫描的时间。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023193938906.png" alt="image-20241023193938906"></p>
+</li>
+<li><p>页扫描窗口（page scan window）：Page_Scan_Window 配置参数定义页面扫描的持续时间。Page_Scan_Window 只能小于或等于 Page_Scan_Interval。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023194040460.png" alt="image-20241023194040460"></p>
 </li>
 </ul>
 <p>扫描窗口和扫描间隔的关系：</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png"></p>
 <p>其他学习参考<a target="_blank" rel="noopener" href="https://www.ebyte.com/news/1369.html#:~:text=%E6%89%AB%E6%8F%8F%E5%8F%82%E6%95%B0%E6%98%AF%E8%93%9D%E7%89%99%E4%B8%BB%E6%9C%BA%E8%AE%BE">BLE设备功耗太高？弄懂这几个参数，功耗想不降都难</a></p>
+<p><strong>扫描参数</strong></p>
+<p>在 main.conf 配置文件中涉及到bredr 和 le 的扫描参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[BT]</span><br><span class="line"># BR/EDR Inquiry scan activity configuration</span><br><span class="line">#InquiryScanType=</span><br><span class="line">#InquiryScanInterval=</span><br><span class="line">#InquiryScanWindow=</span><br><span class="line"></span><br><span class="line">[LE]</span><br><span class="line"># LE scanning parameters used for active scanning supporting discovery</span><br><span class="line"># proceedure</span><br><span class="line">#ScanIntervalDiscovery=</span><br><span class="line">#ScanWindowDiscovery=</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在src&#x2F;main.c 中若用户没有指定配置文件（例如main.conf），那么就会给定一个默认值。</p>
+<p>通过读取配置文件，覆盖默认扫描参数：</p>
+<ul>
+<li>LE扫描参数范围</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="string">&quot;ScanIntervalDiscovery&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.le.scan_interval_discovery,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.le.scan_interval_discovery),</span><br><span class="line">		  <span class="number">0x0004</span>,</span><br><span class="line">		  <span class="number">0x4000</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;ScanWindowDiscovery&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.le.scan_win_discovery,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.le.scan_win_discovery),</span><br><span class="line">		  <span class="number">0x0004</span>,</span><br><span class="line">		  <span class="number">0x4000</span>&#125;,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>BREDR扫描参数范围</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="string">&quot;InquiryScanType&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_type,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_type),</span><br><span class="line">		  <span class="number">0</span>,</span><br><span class="line">		  <span class="number">1</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;InquiryScanInterval&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_interval,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_interval),</span><br><span class="line">		  <span class="number">0x0012</span>,</span><br><span class="line">		  <span class="number">0x1000</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;InquiryScanWindow&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_win,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_win),</span><br><span class="line">		  <span class="number">0x0011</span>,</span><br><span class="line">		  <span class="number">0x1000</span>&#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 
     </div>
 
@@ -680,7 +714,7 @@ if(canvas.getContext){
     <div class="footer-inner">
 
   <div class="copyright">
-    &copy; 
+    &copy; 2021 – 
     <span itemprop="copyrightYear">2024</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>

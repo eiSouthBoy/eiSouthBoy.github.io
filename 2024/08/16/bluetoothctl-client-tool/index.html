@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://eisouthboy.github.io/2024/08/16/bluetoothctl-client-tool/image-20240919111450094.png">
 <meta property="og:image" content="https://eisouthboy.github.io/2024/08/16/bluetoothctl-client-tool/image-20240919111528213.png">
 <meta property="article:published_time" content="2024-08-16T14:49:00.000Z">
-<meta property="article:modified_time" content="2024-10-19T10:24:36.034Z">
+<meta property="article:modified_time" content="2024-10-22T10:03:20.301Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="bluez">
 <meta property="article:tag" content="bluetooth">
@@ -98,7 +98,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">43</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">45</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">31</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -164,18 +164,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -526,7 +526,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-19 10:24:36" itemprop="dateModified" datetime="2024-10-19T10:24:36+00:00">2024-10-19</time>
+      <time title="Modified: 2024-10-22 10:03:20" itemprop="dateModified" datetime="2024-10-22T10:03:20+00:00">2024-10-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1187,7 +1187,7 @@ if(canvas.getContext){
 <p>描述：在connection上订阅信号，当信号被接收时调用回调函数。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">guint</span><br><span class="line"><span class="title function_">g_dbus_connection_signal_subscribe</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GDBusConnection* connection,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* sender,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* interface_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* member,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* arg0,</span></span><br><span class="line"><span class="params">  GDBusSignalFlags flags,</span></span><br><span class="line"><span class="params">  GDBusSignalCallback callback,</span></span><br><span class="line"><span class="params">  gpointer user_data,</span></span><br><span class="line"><span class="params">  GDestroyNotify user_data_free_func</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.Variant.get.html">g_variant_get()</a></p>
+<p><strong><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.Variant.get.html">g_variant_get()</a></strong></p>
 <p>描述：解构一个<code>GVariant</code>实例，其功能类似 <code>scanf()</code></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">g_variant_get</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariant* value,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
@@ -1197,24 +1197,37 @@ if(canvas.getContext){
 <p>描述：从容器 GVariant 实例中读取子项。这包括variants、maybes、arrays、tuples和dictionary entries。在任何其他类型的 GVariant 上调用此函数都是错误的。调用者有责任使用 g_variant_unref() 去释放它（返回值）。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_get_child_value</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariant* value,</span></span><br><span class="line"><span class="params">  gsize index_</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.VariantIter.init.html">g_variant_iter_init()</a></p>
-<p>描述：初始化 GVariantIter 变量</p>
+<p><strong><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.VariantIter.init.html">g_variant_iter_init()</a></strong></p>
+<p>描述：初始化（不申请内存） GVariantIter 变量。返回值表示项目数量。</p>
+<p> <code>iter</code>在此调用之前可能完全未初始化；其旧值将被忽略。只要迭代器<code>value</code>存在，它就会一直有效，并且不需要以任何方式释放。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gsize</span><br><span class="line"><span class="title function_">g_variant_iter_init</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  GVariant* value</span></span><br><span class="line"><span class="params">)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.VariantIter.next.html">g_variant_iter_next()</a></p>
-<p>描述：获取容器的下一项。若返回值为false，则该项没有值。调用者有责任释放该函数返回的值。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/method.VariantIter.next.html">g_variant_iter_next()</a></strong></p>
+<p>描述：获取容器的下一项，并根据将其解包到变量参数列表中<code>format_string</code>，返回TRUE。若返回值为FALSE，则该项没有值。</p>
+<p>此函数的变量参数列表中给出的所有指针均假定指向未初始化的内存。调用者有责任释放解包过程返回的所有值。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gboolean</span><br><span class="line"><span class="title function_">g_variant_iter_next</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/ctor.Variant.new.html#:~:text=GVariant%2A%20g_variant_new%20%28const%20gchar%2A%20format_string%2C...%20%5B%20%E2%88%92%5D%20Description,expected%20by%20this%20function%20are%20determined%20by%20format_string.">g_variant_new()</a></p>
+<p>内存释放的案例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// Iterates a dictionary of type &#x27;a&#123;sv&#125;&#x27;</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">iterate_dictionary</span> <span class="params">(GVariant *dictionary)</span></span><br><span class="line">&#123;</span><br><span class="line">	GVariantIter iter;</span><br><span class="line">	GVariant *value;</span><br><span class="line">	gchar *key;</span><br><span class="line"></span><br><span class="line">	g_variant_iter_init (&amp;iter, dictionary);</span><br><span class="line">	<span class="keyword">while</span> (g_variant_iter_next (&amp;iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">	&#123;</span><br><span class="line">		g_print (<span class="string">&quot;Item &#x27;%s&#x27; has type &#x27;%s&#x27;\n&quot;</span>, key, </span><br><span class="line">                 g_variant_get_type_string (value));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// must free data for ourselves</span></span><br><span class="line">		g_variant_unref (value);</span><br><span class="line">		g_free (key);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/ctor.Variant.new.html#:~:text=GVariant%2A%20g_variant_new%20%28const%20gchar%2A%20format_string%2C...%20%5B%20%E2%88%92%5D%20Description,expected%20by%20this%20function%20are%20determined%20by%20format_string.">g_variant_new()</a></strong></p>
 <p>描述：创建一个新的GVariant变量实例，若返回值不为NULL，调用者有责任去通过 <code>g_variant_unref</code> 释放它。这个函数一般配合while循环一起使用，且只能在迭代数组时使用，仅使用格式字符串的字符串常量调用此函数才有效，每次都必须使用相同的字符串常量。</p>
+<p>格式字符串的第一个字符不能是“*”、“?”、“@”或“r”；本质上，<code>GVariant</code>此函数必须始终构造一个新的（而不是不加修改地传递它）。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_new</span> <span class="params">(</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a href>g_variant_iter_loop()</a></p>
+<p><strong><a href>g_variant_iter_loop()</a></strong></p>
 <p>描述：获取容器中的下一项，并根据将其解包到变量参数列表中<code>format_string</code>，返回 TRUE，若容器没有下一项，则返回 FALSE。</p>
+<p>第一次调用此函数时，变量参数列表中出现的指针假定指向未初始化的内存。第二次及以后的调用时，假定将给出相同的指针，并且它们将指向上次调用此函数时设置的内存。这样可以酌情释放先前的值。</p>
+<p>此函数旨在与 while 循环一起使用，此函数只能在迭代数组时使用。仅使用格式字符串的字符串常量调用此函数才有效，并且每次都必须使用相同的字符串常量。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gboolean</span><br><span class="line"><span class="title function_">g_variant_iter_loop</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
+<p>内存释放的案例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Iterates a dictionary of type &#x27;a&#123;sv&#125;&#x27;</span><br><span class="line">void iterate_dictionary (GVariant *dictionary)</span><br><span class="line">&#123;</span><br><span class="line">	GVariantIter iter;</span><br><span class="line">	GVariant *value;</span><br><span class="line">	gchar *key;</span><br><span class="line"></span><br><span class="line">	g_variant_iter_init (&amp;iter, dictionary);</span><br><span class="line">	while (g_variant_iter_loop (&amp;iter, &quot;&#123;sv&#125;&quot;, &amp;key, &amp;value))</span><br><span class="line">	&#123;</span><br><span class="line">		g_print (&quot;Item &#x27;%s&#x27; has type &#x27;%s&#x27;\n&quot;, key, g_variant_get_type_string (value));</span><br><span class="line"></span><br><span class="line">		// no need to free &#x27;key&#x27; and &#x27;value&#x27; here</span><br><span class="line">		// unless breaking out of this loop</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
+<p>大多数情况下您应该使用 g_variant_iter_next()。如果您只循环简单的整数和字符串类型，<code>g_variant_iter_next()</code>则绝对是首选。对于字符串类型，使用“&amp;”前缀可以完全避免分配任何内存（从而也避免释放任何内容）。</p>
+<p>此函数实际上仅在解包到<code>GVariant</code>或 时有用，<code>GVariantIter</code>以便允许您跳过对 <code>g_variant_unref()</code>或 g_variant_iter_free() 的调用。</p>
 <p><a target="_blank" rel="noopener" href="https://docs.gtk.org/glib/ctor.Variant.new_object_path.html">g_variant_new_object_path()</a></p>
 <p>描述：创建一个D-Bus对象路径的GVariant变量</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_new_object_path</span> <span class="params">(</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
@@ -1428,7 +1441,7 @@ if(canvas.getContext){
     <div class="footer-inner">
 
   <div class="copyright">
-    &copy; 
+    &copy; 2021 – 
     <span itemprop="copyrightYear">2024</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>

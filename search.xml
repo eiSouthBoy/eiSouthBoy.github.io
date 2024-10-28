@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux C: Program Name and Program ID</title>
+    <url>/2024/10/28/Linux-C-Program-Name-and-Program-ID/</url>
+    <content><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>在Linux上查询程序的pid，可以通过如下方式：</p>
+<ul>
+<li><p>ps命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@localhost:~/study$ ps -ef | grep bluealsa</span><br><span class="line">root        1017       1  0 19:01 ?        00:00:00 bluealsa --profile=a2dp-source</span><br><span class="line">pi          2852    2393 50 19:35 pts/0    00:00:00 grep --color=auto bluealsa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pidof命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@localhost:~/study$ pidof bluealsa</span><br><span class="line">1017</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>那么如何可以通过C代码封装成接口，方便直接在代码中调用呢？可以</p>
+<p>首先，Linux所有进程状态信息都存储在这个目录下：<code>/proc</code> ，每一次数字文件夹代表一个进程。</p>
+<p><img src="/2024/10/28/Linux-C-Program-Name-and-Program-ID/image-20241028195503492.png" alt="image-20241028195503492"></p>
+<p>进程文件夹下有status文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@localhost:~/study$ <span class="built_in">cat</span> /proc/1017/status </span><br><span class="line">Name:	bluealsa</span><br><span class="line">Umask:	0022</span><br><span class="line">State:	S (sleeping)</span><br><span class="line">Tgid:	1017</span><br><span class="line">Ngid:	0</span><br><span class="line">Pid:	1017</span><br><span class="line">PPid:	1</span><br><span class="line">TracerPid:	0</span><br><span class="line">Uid:	0	0	0	0</span><br><span class="line">Gid:	0	0	0	0</span><br><span class="line">FDSize:	128</span><br><span class="line">Groups:	 </span><br><span class="line">NStgid:	1017</span><br><span class="line">NSpid:	1017</span><br><span class="line">NSpgid:	1017</span><br><span class="line">NSsid:	1017</span><br><span class="line">Kthread:	0</span><br><span class="line">VmPeak:	  231224 kB</span><br><span class="line">VmSize:	  231224 kB</span><br><span class="line">VmLck:	       0 kB</span><br><span class="line">VmPin:	       0 kB</span><br><span class="line">VmHWM:	    5504 kB</span><br><span class="line">VmRSS:	    5504 kB</span><br><span class="line">RssAnon:	     384 kB</span><br><span class="line">RssFile:	    5120 kB</span><br><span class="line">RssShmem:	       0 kB</span><br><span class="line">VmData:	   25416 kB</span><br><span class="line">VmStk:	     132 kB</span><br><span class="line">VmExe:	     160 kB</span><br><span class="line">VmLib:	    7720 kB</span><br><span class="line">VmPTE:	      84 kB</span><br><span class="line">VmSwap:	       0 kB</span><br><span class="line">HugetlbPages:	       0 kB</span><br><span class="line">CoreDumping:	0</span><br><span class="line">THP_enabled:	1</span><br><span class="line">untag_mask:	0xffffffffffffff</span><br><span class="line">Threads:	4</span><br><span class="line">SigQ:	1/28918</span><br><span class="line">SigPnd:	0000000000000000</span><br><span class="line">ShdPnd:	0000000000000000</span><br><span class="line">SigBlk:	0000000000000000</span><br><span class="line">SigIgn:	0000000000001000</span><br><span class="line">SigCgt:	0000000100004002</span><br><span class="line">CapInh:	0000000000000000</span><br><span class="line">CapPrm:	000001ffffffffff</span><br><span class="line">CapEff:	000001ffffffffff</span><br><span class="line">CapBnd:	000001ffffffffff</span><br><span class="line">CapAmb:	0000000000000000</span><br><span class="line">NoNewPrivs:	0</span><br><span class="line">Seccomp:	0</span><br><span class="line">Seccomp_filters:	0</span><br><span class="line">Speculation_Store_Bypass:	vulnerable</span><br><span class="line">SpeculationIndirectBranch:	unknown</span><br><span class="line">Cpus_allowed:	f</span><br><span class="line">Cpus_allowed_list:	0-3</span><br><span class="line">Mems_allowed:	1</span><br><span class="line">Mems_allowed_list:	0</span><br><span class="line">voluntary_ctxt_switches:	26</span><br><span class="line">nonvoluntary_ctxt_switches:	8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>通过 <code>/proc/&lt;pid_dir&gt;/status</code> 文件内的Name字段可以获取程序名，Pid字段可以获取程序ID。逐步遍历所有这样的目标文件，将输入的程序名和Name字段的值进行比较，最后就可以得出程序的pid。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* gcc pid_get.c -Wall -o pid_get */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">get_pid_by_name</span><span class="params">(<span class="type">char</span> *task_name)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> pid = <span class="number">0</span>;</span><br><span class="line">    DIR *dir = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> *<span class="title">ptr</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    FILE *fp = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">char</span> filepath[<span class="number">512</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> cur_task_name[<span class="number">50</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == task_name)</span><br><span class="line">        <span class="keyword">return</span> pid;</span><br><span class="line">    dir = opendir(<span class="string">&quot;/proc&quot;</span>); </span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> != dir)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> ((ptr = readdir(dir)) != <span class="literal">NULL</span>) <span class="comment">//循环读取/proc下的每一个文件/文件夹</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//如果读取到的是&quot;.&quot;或者&quot;..&quot;则跳过，读取到的不是文件夹名字也跳过</span></span><br><span class="line">            <span class="keyword">if</span> ((<span class="built_in">strcmp</span>(ptr-&gt;d_name, <span class="string">&quot;.&quot;</span>) == <span class="number">0</span>) || (<span class="built_in">strcmp</span>(ptr-&gt;d_name, <span class="string">&quot;..&quot;</span>) == <span class="number">0</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// 如果目标不是目录，则跳过</span></span><br><span class="line">            <span class="keyword">if</span> (DT_DIR != ptr-&gt;d_type)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="built_in">sprintf</span>(filepath, <span class="string">&quot;/proc/%s/status&quot;</span>, ptr-&gt;d_name);<span class="comment">//生成要读取的文件的路径</span></span><br><span class="line">            fp = fopen(filepath, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">            <span class="comment">// 逐行读取，并进行比较</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">NULL</span> != fp)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">NULL</span> == fgets(buf, <span class="keyword">sizeof</span>(buf) - <span class="number">1</span>, fp))</span><br><span class="line">                &#123;</span><br><span class="line">                    fclose(fp);</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="built_in">sscanf</span>(buf, <span class="string">&quot;%*s %s&quot;</span>, cur_task_name);</span><br><span class="line">                <span class="comment">//如果文件内容满足要求则打印路径的名字（即进程的PID）</span></span><br><span class="line">                <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(task_name, cur_task_name))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sscanf</span>(ptr-&gt;d_name, <span class="string">&quot;%d&quot;</span>, &amp;pid);</span><br><span class="line">                    fclose(fp);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                fclose(fp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        closedir(dir);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pid;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> != argc)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;too small params\n&quot;</span></span><br><span class="line">               <span class="string">&quot;%s &lt;program_name&gt;\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">char</span> task_name[<span class="number">256</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">pid_t</span> pid = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">sprintf</span>(task_name, <span class="string">&quot;%s&quot;</span>, argv[<span class="number">1</span>]);</span><br><span class="line">    pid = get_pid_by_name(task_name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Name: %s\n&quot;</span></span><br><span class="line">           <span class="string">&quot;Pid: %d\n&quot;</span>, task_name, pid);</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译并运行程序：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@localhost:~/study$ gcc pid_get.c -Wall -o pid_get</span><br><span class="line">pi@localhost:~/study$ ./pid_get bluealsa</span><br><span class="line">Name: bluealsa</span><br><span class="line">Pid: 1017</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux: Read-only file system</title>
+    <url>/2024/10/25/Linux-Read-only-file-system/</url>
+    <content><![CDATA[<p>无论是通过touch创建文件，还是通过vi编辑文件都失败，出现报错提示：Read-only file system</p>
+<p>可以通过lsblk命令查询可用块设备信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># touch aaa</span></span><br><span class="line"><span class="built_in">touch</span>: aaa: Read-only file system</span><br><span class="line"><span class="comment"># ls</span></span><br><span class="line">mosquitto.acl       mosquitto.conf      mosquitto.password</span><br><span class="line"><span class="comment"># lsblk </span></span><br><span class="line">NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">mmcblk0     179:0    0 29.2G  0 disk </span><br><span class="line">|-mmcblk0p1 179:1    0  256M  0 part /bootloader</span><br><span class="line">|-mmcblk0p2 179:2    0  256M  0 part </span><br><span class="line">|-mmcblk0p3 179:3    0    1G  0 part /</span><br><span class="line">|-mmcblk0p4 179:4    0    1G  0 part </span><br><span class="line">|-mmcblk0p5 179:5    0  128M  0 part /var/lib/bluetooth</span><br><span class="line">|                                    /overlay</span><br><span class="line">`-mmcblk0p6 179:6    0 26.5G  0 part /data</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后通过blkid命令查询块设备详细信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># blkid </span></span><br><span class="line">/dev/mmcblk0p5: LABEL=<span class="string">&quot;overlay&quot;</span> UUID=<span class="string">&quot;539c8a51-988a-486c-a8b2-784fb3c01c68&quot;</span> BLOCK_SIZE=<span class="string">&quot;1024&quot;</span> TYPE=<span class="string">&quot;ext4&quot;</span> PARTLABEL=<span class="string">&quot;overlay&quot;</span> PARTUUID=<span class="string">&quot;87e24609-8c57-4272-bf30-a4d2f4ccf9a9&quot;</span></span><br><span class="line">/dev/mmcblk0p3: BLOCK_SIZE=<span class="string">&quot;131072&quot;</span> TYPE=<span class="string">&quot;squashfs&quot;</span> PARTLABEL=<span class="string">&quot;rootfs0&quot;</span> PARTUUID=<span class="string">&quot;a674b333-bab4-4478-b465-7e5d11caedc4&quot;</span></span><br><span class="line">/dev/mmcblk0p1: SEC_TYPE=<span class="string">&quot;msdos&quot;</span> LABEL_FATBOOT=<span class="string">&quot;bootloader&quot;</span> LABEL=<span class="string">&quot;bootloader&quot;</span> UUID=<span class="string">&quot;97B1-A458&quot;</span> BLOCK_SIZE=<span class="string">&quot;512&quot;</span> TYPE=<span class="string">&quot;vfat&quot;</span> PARTLABEL=<span class="string">&quot;boot0&quot;</span> PARTUUID=<span class="string">&quot;5d814d14-f6ed-435b-a41c-da4dd10befd8&quot;</span></span><br><span class="line">/dev/mmcblk0p6: LABEL=<span class="string">&quot;data&quot;</span> UUID=<span class="string">&quot;78f990db-9a78-4f44-95ea-9d04d36071d1&quot;</span> BLOCK_SIZE=<span class="string">&quot;1024&quot;</span> TYPE=<span class="string">&quot;ext4&quot;</span> PARTLABEL=<span class="string">&quot;data&quot;</span> PARTUUID=<span class="string">&quot;5e6f234c-fd9b-4a90-b75b-37fb26a39b27&quot;</span></span><br><span class="line">/dev/mmcblk0p4: BLOCK_SIZE=<span class="string">&quot;131072&quot;</span> TYPE=<span class="string">&quot;squashfs&quot;</span> PARTLABEL=<span class="string">&quot;rootfs1&quot;</span> PARTUUID=<span class="string">&quot;c538f7af-32d1-4ec0-9300-8df1da9fcabf&quot;</span></span><br><span class="line">/dev/mmcblk0p2: BLOCK_SIZE=<span class="string">&quot;131072&quot;</span> TYPE=<span class="string">&quot;squashfs&quot;</span> PARTLABEL=<span class="string">&quot;rescue&quot;</span> PARTUUID=<span class="string">&quot;3fe85d82-227d-454b-a3d6-bd589772098a&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>对比两者，发现 <code>/</code> 目录对应的 mmcblk0p3 的类型是 squashfs（即只读）。</p>
+<p><strong>一般解决方法：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将 / 目录重新挂载，且类型为可读写</span></span><br><span class="line">mount -o remount,rw /</span><br><span class="line"><span class="comment"># 重新加载，使上面配置生效</span></span><br><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git: branch and tag</title>
+    <url>/2024/10/24/Git-branch-and-tag/</url>
+    <content><![CDATA[<p>branch 和 tag 在Github的体现：</p>
+<p><img src="/2024/10/24/Git-branch-and-tag/image-20241024113806476.png" alt="image-20241024113806476"></p>
+<p>标签（tag）代表特定分支在某一时刻的commit提交的记录，即通过tag可以快速定位到某一个commit提交的记录。Git 可以给仓库历史中的某一个提交（commit）打上标签，以示重要。 比较有代表性的是人们会使用这个功能来标记发布结点（ <code>v1.0</code> 、 <code>v2.0</code> 等等）。</p>
+<p>分支（branch）代表一条单独的时间线，一个仓库可以有多个分支，即存在多条时间线，可以同时进行。初始化一个仓库时，第一次commit提交后，就会默认创建master分支（或main分支），之后可以针对不同的开发任务从master分支衍生（git checkout -b new_branch）新分支，当新分支任务完成后，切回master分支（git checkout master），然后可以将新分支合并（git merge new_branch）到master分支中。</p>
+<p>参考来源：</p>
+<p><a href="https://www.cnblogs.com/chentiao/p/17082654.html">1、git的分支个标签的大白话解释（branch and tag）</a></p>
+<p><a href="https://blog.csdn.net/qq_39505245/article/details/124705850">2、Git基础 - git tag 一文真正的搞懂git标签的使用</a></p>
+<p><a href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B">3、Git 分支 - 分支简介</a></p>
+<p><a href="https://git-scm.com/book/zh/v2/Git-%e5%9f%ba%e7%a1%80-%e6%89%93%e6%a0%87%e7%ad%be">4、Git 基础 - 打标签</a></p>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>version control</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>embedded linux application development</title>
     <url>/2024/10/19/embedded-linux-application-development/</url>
     <content><![CDATA[<h2 id="Developing-applications-on-embeded-Linux"><a href="#Developing-applications-on-embeded-Linux" class="headerlink" title="Developing applications on embeded Linux"></a>Developing applications on embeded Linux</h2><ul>
@@ -186,6 +259,7 @@
 <h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><p>字符串涉及：<code>s</code>, <code>o</code>, <code>g</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    GVariant *value1, *value2, *value3;</span><br><span class="line"></span><br><span class="line">    value1 = g_variant_new (<span class="string">&quot;s&quot;</span>, <span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    value2 = g_variant_new (<span class="string">&quot;o&quot;</span>, <span class="string">&quot;/must/be/a/valid/path&quot;</span>);</span><br><span class="line">    value3 = g_variant_new (<span class="string">&quot;g&quot;</span>, <span class="string">&quot;iias&quot;</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    gchar *str, *object_path, *signature;</span><br><span class="line"></span><br><span class="line">    g_variant_get (value1, <span class="string">&quot;s&quot;</span>, &amp;str);</span><br><span class="line">    g_variant_get (value2, <span class="string">&quot;o&quot;</span>, &amp;object_path);</span><br><span class="line">    g_variant_get (value3, <span class="string">&quot;g&quot;</span>, &amp;signature);</span><br><span class="line"></span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, str);</span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, object_path);</span><br><span class="line">    g_printf(<span class="string">&quot;value1(s): %s&#x27;\n&quot;</span>, signature);</span><br><span class="line">    g_free (str);</span><br><span class="line">    g_free (object_path);</span><br><span class="line">    g_free (signature);</span><br><span class="line">    </span><br><span class="line">    g_variant_unref(value1);</span><br><span class="line">    g_variant_unref(value2);</span><br><span class="line">    g_variant_unref(value3);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><em>注意：当g_variant_get() 遇到 ‘s’ ,’o’, ‘g’ 时，会创建一块新的内容，然后把要返回的字符串拷贝到这个内容中，这块内存返回给给一个指向<code>gchar *</code> 的指针，所以传入函数参数类型是 <code>gchar **</code> ，最后使用完后，需要用户使用g_free() 进行释放。</em> </p>
 <h3 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h3><p>数组：<code>a</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *builder;</span><br><span class="line">    GVariant *value;</span><br><span class="line"></span><br><span class="line">    builder = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;as&quot;</span>));</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;when&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;in&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;the&quot;</span>);</span><br><span class="line">    g_variant_builder_add(builder, <span class="string">&quot;s&quot;</span>, <span class="string">&quot;course&quot;</span>);</span><br><span class="line">    value = g_variant_new(<span class="string">&quot;as&quot;</span>, builder);</span><br><span class="line">    g_variant_builder_unref(builder);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter *iter;</span><br><span class="line">    gchar *str;</span><br><span class="line"></span><br><span class="line">    g_variant_get(value, <span class="string">&quot;as&quot;</span>, &amp;iter);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_loop(iter, <span class="string">&quot;s&quot;</span>, &amp;str))</span><br><span class="line">        g_print(<span class="string">&quot;%s\n&quot;</span>, str);</span><br><span class="line">    g_variant_iter_free(iter);</span><br><span class="line"></span><br><span class="line">    g_variant_unref(value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -195,8 +269,13 @@
 <h2 id="Dictionary"><a href="#Dictionary" class="headerlink" title="Dictionary"></a>Dictionary</h2><p>字典：<code>&#123;&#125;</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *b;</span><br><span class="line">    GVariant *dict;</span><br><span class="line"></span><br><span class="line">    b = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;a&#123;sv&#125;&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;name&quot;</span>, g_variant_new_string(<span class="string">&quot;foo&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;timeout&quot;</span>, g_variant_new_int32(<span class="number">10</span>));</span><br><span class="line">    dict = g_variant_builder_end(b);</span><br><span class="line">    g_variant_builder_unref(b);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter iter;</span><br><span class="line">    GVariant *value;</span><br><span class="line">    gchar *key;</span><br><span class="line">    g_variant_iter_init(&amp;iter, dict);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_next (&amp;iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">const</span> gchar *type = g_variant_get_type_string(value);</span><br><span class="line">        <span class="keyword">switch</span> (*type)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %s\n&quot;</span>, key, type, g_variant_get_string(value, <span class="literal">NULL</span>));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;i&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %d\n&quot;</span>, key, type, g_variant_get_int32(value));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// must free data for ourselves</span></span><br><span class="line">        g_variant_unref(value);</span><br><span class="line">        g_free(key);</span><br><span class="line">    &#125;</span><br><span class="line">    g_variant_unref(dict);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><em>注意：通过g_variant_iter_next() 获取的key和value，在while循环内部使用完后，需要用户进行释放。通过g_variant_iter_init() 获取的dict，在使用完后，也需要用户进行释放。但是有特殊的地方，若第二个参数是{&amp;sv}，那么对应的key就无需用户释放。</em></p>
 <h3 id="Multiple"><a href="#Multiple" class="headerlink" title="Multiple"></a>Multiple</h3><p>复合类型，即不同类型的嵌套，例如：<code>(a&#123;sv&#125;)</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    gcc main.c -o main `pkg-config --libs --cflags dbus-1` `pkg-config --libs --cflags glib-2.0` `pkg-config --libs --cflags gio-2.0`</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gio/gio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glib/gprintf.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    GVariantBuilder *b;</span><br><span class="line">    GVariant *dict, *tuple;</span><br><span class="line"></span><br><span class="line">    b = g_variant_builder_new(G_VARIANT_TYPE(<span class="string">&quot;a&#123;sv&#125;&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;name&quot;</span>, g_variant_new_string(<span class="string">&quot;foo&quot;</span>));</span><br><span class="line">    g_variant_builder_add(b, <span class="string">&quot;&#123;sv&#125;&quot;</span>, <span class="string">&quot;timeout&quot;</span>, g_variant_new_int32(<span class="number">10</span>));</span><br><span class="line">    dict = g_variant_builder_end(b);</span><br><span class="line">    g_variant_builder_unref(b);</span><br><span class="line">    tuple = g_variant_new_tuple(&amp;dict, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析</span></span><br><span class="line">    GVariantIter *iter;</span><br><span class="line">    GVariant *value;</span><br><span class="line">    gchar *key;</span><br><span class="line">    </span><br><span class="line">    g_variant_get(tuple, <span class="string">&quot;(a&#123;sv&#125;)&quot;</span>, &amp;iter);</span><br><span class="line">    <span class="keyword">while</span> (g_variant_iter_next (iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">const</span> gchar *type = g_variant_get_type_string(value);</span><br><span class="line">        <span class="keyword">switch</span> (*type)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %s\n&quot;</span>, key, type, g_variant_get_string(value, <span class="literal">NULL</span>));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;i&#x27;</span>:</span><br><span class="line">            g_printf(<span class="string">&quot;%s(%s): %d\n&quot;</span>, key, type, g_variant_get_int32(value));</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// must free data for ourselves</span></span><br><span class="line">        g_variant_unref(value);</span><br><span class="line">        g_free(key);</span><br><span class="line">    &#125;</span><br><span class="line">    g_variant_unref(tuple);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h2><p><strong>g_variant_iter_free()</strong></p>
+<p><a href="https://docs.gtk.org/glib/method.VariantIter.free.html">g_variant_iter_free()</a> 可以释放由这两个函数返回的变量的内存：<code>g_variant_iter_new()</code> or <code>g_variant_iter_copy()</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">g_variant_iter_free</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
 
 
@@ -207,6 +286,8 @@
 <h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><p><a href="https://blog.linumiz.com/archives/16468">1、BlueZ Part 3: Understanding DBUS – Container type system – (2)</a></p>
 <p><a href="https://blog.linumiz.com/archives/16427">2、BlueZ Part 2: Understanding DBUS – Basic type system – (1)</a></p>
 <p><a href="https://docs.gtk.org/glib/gvariant-format-strings.html">3、GVariant 格式字符串</a></p>
+<p><a href="https://eightplus.github.io/2019/08/27/2019-08-27-dbus-glib/">4、Dbus-glib</a></p>
+<p><a href="https://www.cnblogs.com/cxt-janson/p/11428362.html">5、dbus介绍与例子</a></p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -233,6 +314,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义回调函数类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*CallbackFunction)</span><span class="params">(<span class="type">int</span> new_value)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器结构体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    CallbackFunction callback;</span><br><span class="line">&#125; DataHandler;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> g_main_loop = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器改变x值的方法</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">change_value</span><span class="params">(DataHandler *handler, <span class="type">int</span> new_value)</span> </span><br><span class="line">&#123;</span><br><span class="line">    handler-&gt;x = new_value;</span><br><span class="line">    <span class="comment">// 如果存在回调函数，则调用它</span></span><br><span class="line">    <span class="keyword">if</span> (handler-&gt;callback != <span class="literal">NULL</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        handler-&gt;callback(new_value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回调函数定义</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">notify_callback</span><span class="params">(<span class="type">int</span> new_value)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Callback triggered: new value of x is %d\n&quot;</span>, new_value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程A的工作函数</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">thread_function</span><span class="params">(<span class="type">void</span> *arg)</span> </span><br><span class="line">&#123;</span><br><span class="line">    DataHandler *handler = (DataHandler *) arg;</span><br><span class="line">    <span class="type">int</span> value = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        change_value(handler, value++);  <span class="comment">// 改变x的值并触发回调</span></span><br><span class="line">        sleep(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据处理器的初始化函数</span></span><br><span class="line">DataHandler handler;</span><br><span class="line"><span class="type">int</span> <span class="title function_">data_handler_register</span><span class="params">(CallbackFunction cb)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    handler.x = <span class="number">0</span>;</span><br><span class="line">    handler.callback = cb;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pthread_create(&amp;tid, <span class="literal">NULL</span>, thread_function, &amp;handler) != <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Failed to create thread.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_detach(tid);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">signal_handler</span><span class="params">(<span class="type">int</span> signum)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (signum)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">case</span> SIGINT: <span class="comment">// 接收到该信号后，退出程序</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGINT: %d\n&quot;</span>, signum);</span><br><span class="line">        g_main_loop = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR1:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER1: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGUSR2:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGUER2: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> SIGTERM:</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;SIGTERM: %d\n&quot;</span>, signum);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">    signal(SIGINT, signal_handler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化数据处理器并设置回调函数</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> != data_handler_register(notify_callback))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (g_main_loop)</span><br><span class="line">    &#123;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;exit\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>其中main线程称之为A，设置和定义了回调函数notify_callback()，回调函数赋值给了handler的cb成员。在mian线程中创建了thread_function线程，称之为B，handler作为参数给到了B（即A发布了任务到B），B每隔2秒调用回调函数（即通知A任务进度变化）。</p>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><p><a href="https://eightplus.github.io/2019/09/05/2019-09-05-callback/">1、回调函数</a></p>
 ]]></content>
       <categories>
         <category>C/C++</category>
@@ -1052,17 +1134,48 @@
 <p><strong>扫描注意事项：</strong></p>
 <p>参考来源：<a href="https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/">Core_amended_2024_06_11_v5.4.pdf</a></p>
 <ul>
-<li><p>扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
+<li><p>查询扫描类型（inquiry scan type）</p>
+<p>Inquiry_Scan_Type 配置参数指示查询扫描是否使用非隔行扫描或隔行扫描进行。目前，定义了一种强制查询扫描类型和一种可选查询扫描类型。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023191822349.png" alt="image-20241023191822349"></p>
+</li>
+<li><p>查询扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png" alt="image-20241008212348333"></p>
 <p><em>注意：一个扫描窗口并不会扫描所有的40个射频通道，完全取决于硬件底层实现。</em></p>
 </li>
-<li><p>扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
+<li><p>查询扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
+<p>Inquiry_Scan_Interval 配置参数定义连续查询扫描之间的时间量。这定义为从 BR&#x2F;EDR 控制器开始其上一次查询扫描到开始下一次查询扫描的时间间隔</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png" alt="image-20241008212407775"></p>
+</li>
+<li><p>页扫描间隔（page scan interval）：Page_Scan_Interval 配置参数定义连续页面扫描之间的时间量。此时间间隔定义为从控制器开始其上一次页面扫描到开始下一次页面扫描的时间。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023193938906.png" alt="image-20241023193938906"></p>
+</li>
+<li><p>页扫描窗口（page scan window）：Page_Scan_Window 配置参数定义页面扫描的持续时间。Page_Scan_Window 只能小于或等于 Page_Scan_Interval。</p>
+<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023194040460.png" alt="image-20241023194040460"></p>
 </li>
 </ul>
 <p>扫描窗口和扫描间隔的关系：</p>
 <p><img src="/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png"></p>
 <p>其他学习参考<a href="https://www.ebyte.com/news/1369.html#:~:text=%E6%89%AB%E6%8F%8F%E5%8F%82%E6%95%B0%E6%98%AF%E8%93%9D%E7%89%99%E4%B8%BB%E6%9C%BA%E8%AE%BE">BLE设备功耗太高？弄懂这几个参数，功耗想不降都难</a></p>
+<p><strong>扫描参数</strong></p>
+<p>在 main.conf 配置文件中涉及到bredr 和 le 的扫描参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[BT]</span><br><span class="line"># BR/EDR Inquiry scan activity configuration</span><br><span class="line">#InquiryScanType=</span><br><span class="line">#InquiryScanInterval=</span><br><span class="line">#InquiryScanWindow=</span><br><span class="line"></span><br><span class="line">[LE]</span><br><span class="line"># LE scanning parameters used for active scanning supporting discovery</span><br><span class="line"># proceedure</span><br><span class="line">#ScanIntervalDiscovery=</span><br><span class="line">#ScanWindowDiscovery=</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在src&#x2F;main.c 中若用户没有指定配置文件（例如main.conf），那么就会给定一个默认值。</p>
+<p>通过读取配置文件，覆盖默认扫描参数：</p>
+<ul>
+<li>LE扫描参数范围</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&#123; <span class="string">&quot;ScanIntervalDiscovery&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.le.scan_interval_discovery,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.le.scan_interval_discovery),</span><br><span class="line">		  <span class="number">0x0004</span>,</span><br><span class="line">		  <span class="number">0x4000</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;ScanWindowDiscovery&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.le.scan_win_discovery,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.le.scan_win_discovery),</span><br><span class="line">		  <span class="number">0x0004</span>,</span><br><span class="line">		  <span class="number">0x4000</span>&#125;,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>BREDR扫描参数范围</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&#123; <span class="string">&quot;InquiryScanType&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_type,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_type),</span><br><span class="line">		  <span class="number">0</span>,</span><br><span class="line">		  <span class="number">1</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;InquiryScanInterval&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_interval,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_interval),</span><br><span class="line">		  <span class="number">0x0012</span>,</span><br><span class="line">		  <span class="number">0x1000</span>&#125;,</span><br><span class="line">&#123; <span class="string">&quot;InquiryScanWindow&quot;</span>,</span><br><span class="line">		  &amp;btd_opts.defaults.br.scan_win,</span><br><span class="line">		  <span class="keyword">sizeof</span>(btd_opts.defaults.br.scan_win),</span><br><span class="line">		  <span class="number">0x0011</span>,</span><br><span class="line">		  <span class="number">0x1000</span>&#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 ]]></content>
       <categories>
         <category>bluetooth</category>
@@ -4240,18 +4353,25 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用自动配置工具适配当前开发环境，最后生成configure配置文件</span></span><br><span class="line">autoreconf --install --force</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建build目录，存放编译过程文件</span></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在build目录下，运行配置文件（这里没有增加额外的参数）</span></span><br><span class="line">../configure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和安装</span></span><br><span class="line">make</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="运行bluealsa"><a href="#运行bluealsa" class="headerlink" title="运行bluealsa"></a>运行bluealsa</h3><p>在连接蓝牙音频设备之前，确保 <code>hciconfig -a</code> 可以查询到hci接口，确保 <code>bluetoothd</code> 已经运行。然后运行 <code>bluealsa</code> ，执行命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以root权限运行，注意：这里有bluealsa后台打印信息输出 </span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以root权限运行，禁止bluealsa后台打印信息输出</span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 运行方式1，以root权限运行，注意：这里有bluealsa后台打印信息输出 </span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行方式2，以root权限运行，禁止bluealsa后台打印信息输出</span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行方式3，通过systemd运行bluealsa</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start bluealsa.service</span><br></pre></td></tr></table></figure>
 
 
 
-<p>使用 <code>bluetoothctl</code> 搜索、配对、连接蓝牙音频设备（此部分不做说明），最后使用 <code>aplay</code> 播放wav音频文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># aplay播放wav文件</span></span><br><span class="line">aplay /usr/share/sounds/alsa/Front_Center.wav</span><br></pre></td></tr></table></figure>
+<p>使用 <code>bluetoothctl</code> 搜索、配对、连接蓝牙音频设备（此部分不做说明），修改asoundrc.conf，最后使用 <code>aplay</code> 播放wav音频文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 修改asoundrc.conf</span></span><br><span class="line">pcm.!default <span class="string">&quot;bluealsa&quot;</span></span><br><span class="line">ctl.!default <span class="string">&quot;bluealsa&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># aplay播放wav文件</span></span><br><span class="line"><span class="built_in">sudo</span> aplay /usr/share/sounds/alsa/Front_Center.wav</span><br></pre></td></tr></table></figure>
 
 
+
+<p><strong>asoundrc.conf</strong></p>
+<p>ALSA 正常工作不需要用户端文件<code>.asoundrc</code> 或 <code>asound.conf</code>配置文件。<code>asoundrc.conf</code> 文件用于通过 alsa-lib 层实现额外的功能，例如路由和采样率转换。</p>
+<p>alsa-lib 软件包提供了 <code>/usr/share/alsa/alsa.conf</code> 文件作为<em>主入口点</em>。该文件负责包含系统上所有可能的 .asoundrc 格式文件。alsa.conf 会加载系统全局自定义设置文件 &#x2F;etc&#x2F;asound.conf 和每个用户的自定义设置文件 ~&#x2F;.asoundrc。</p>
+<p>用户自定义的 <code>~/.asoundrd.conf </code> 文件需要用户手动创建，并且文件该作用域大于全局自定义的 <code>/etc/asoundrc.conf</code> 。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cursorhu.github.io/2021/09/09/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%BD%BF%E7%94%A8ALSA-A2DP-PulseAudio%E8%87%AA%E5%88%B6%E8%93%9D%E7%89%99%E9%9F%B3%E7%AE%B1/">1、树莓派笔记：使用ALSA+A2DP+PulseAudio自制蓝牙音箱</a></p>
+<p><a href="https://www.alsa-project.org/main/index.php/Asoundrc">2、Asoundrc</a></p>
 ]]></content>
       <categories>
         <category>bluetooth</category>
@@ -4451,9 +4571,9 @@
         <category>Linux</category>
       </categories>
       <tags>
+        <tag>Linux</tag>
         <tag>Shell</tag>
         <tag>Shell Scripts</tag>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -5090,7 +5210,7 @@
 <p>描述：在connection上订阅信号，当信号被接收时调用回调函数。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">guint</span><br><span class="line"><span class="title function_">g_dbus_connection_signal_subscribe</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GDBusConnection* connection,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* sender,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* interface_name,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* member,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* arg0,</span></span><br><span class="line"><span class="params">  GDBusSignalFlags flags,</span></span><br><span class="line"><span class="params">  GDBusSignalCallback callback,</span></span><br><span class="line"><span class="params">  gpointer user_data,</span></span><br><span class="line"><span class="params">  GDestroyNotify user_data_free_func</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a href="https://docs.gtk.org/glib/method.Variant.get.html">g_variant_get()</a></p>
+<p><strong><a href="https://docs.gtk.org/glib/method.Variant.get.html">g_variant_get()</a></strong></p>
 <p>描述：解构一个<code>GVariant</code>实例，其功能类似 <code>scanf()</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">g_variant_get</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariant* value,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
@@ -5100,24 +5220,37 @@
 <p>描述：从容器 GVariant 实例中读取子项。这包括variants、maybes、arrays、tuples和dictionary entries。在任何其他类型的 GVariant 上调用此函数都是错误的。调用者有责任使用 g_variant_unref() 去释放它（返回值）。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_get_child_value</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariant* value,</span></span><br><span class="line"><span class="params">  gsize index_</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a href="https://docs.gtk.org/glib/method.VariantIter.init.html">g_variant_iter_init()</a></p>
-<p>描述：初始化 GVariantIter 变量</p>
+<p><strong><a href="https://docs.gtk.org/glib/method.VariantIter.init.html">g_variant_iter_init()</a></strong></p>
+<p>描述：初始化（不申请内存） GVariantIter 变量。返回值表示项目数量。</p>
+<p> <code>iter</code>在此调用之前可能完全未初始化；其旧值将被忽略。只要迭代器<code>value</code>存在，它就会一直有效，并且不需要以任何方式释放。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">gsize</span><br><span class="line"><span class="title function_">g_variant_iter_init</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  GVariant* value</span></span><br><span class="line"><span class="params">)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><a href="https://docs.gtk.org/glib/method.VariantIter.next.html">g_variant_iter_next()</a></p>
-<p>描述：获取容器的下一项。若返回值为false，则该项没有值。调用者有责任释放该函数返回的值。</p>
+<p><strong><a href="https://docs.gtk.org/glib/method.VariantIter.next.html">g_variant_iter_next()</a></strong></p>
+<p>描述：获取容器的下一项，并根据将其解包到变量参数列表中<code>format_string</code>，返回TRUE。若返回值为FALSE，则该项没有值。</p>
+<p>此函数的变量参数列表中给出的所有指针均假定指向未初始化的内存。调用者有责任释放解包过程返回的所有值。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">gboolean</span><br><span class="line"><span class="title function_">g_variant_iter_next</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a href="https://docs.gtk.org/glib/ctor.Variant.new.html#:~:text=GVariant%2A%20g_variant_new%20%28const%20gchar%2A%20format_string%2C...%20%5B%20%E2%88%92%5D%20Description,expected%20by%20this%20function%20are%20determined%20by%20format_string.">g_variant_new()</a></p>
+<p>内存释放的案例</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="comment">// Iterates a dictionary of type &#x27;a&#123;sv&#125;&#x27;</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">iterate_dictionary</span> <span class="params">(GVariant *dictionary)</span></span><br><span class="line">&#123;</span><br><span class="line">	GVariantIter iter;</span><br><span class="line">	GVariant *value;</span><br><span class="line">	gchar *key;</span><br><span class="line"></span><br><span class="line">	g_variant_iter_init (&amp;iter, dictionary);</span><br><span class="line">	<span class="keyword">while</span> (g_variant_iter_next (&amp;iter, <span class="string">&quot;&#123;sv&#125;&quot;</span>, &amp;key, &amp;value))</span><br><span class="line">	&#123;</span><br><span class="line">		g_print (<span class="string">&quot;Item &#x27;%s&#x27; has type &#x27;%s&#x27;\n&quot;</span>, key, </span><br><span class="line">                 g_variant_get_type_string (value));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// must free data for ourselves</span></span><br><span class="line">		g_variant_unref (value);</span><br><span class="line">		g_free (key);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong><a href="https://docs.gtk.org/glib/ctor.Variant.new.html#:~:text=GVariant%2A%20g_variant_new%20%28const%20gchar%2A%20format_string%2C...%20%5B%20%E2%88%92%5D%20Description,expected%20by%20this%20function%20are%20determined%20by%20format_string.">g_variant_new()</a></strong></p>
 <p>描述：创建一个新的GVariant变量实例，若返回值不为NULL，调用者有责任去通过 <code>g_variant_unref</code> 释放它。这个函数一般配合while循环一起使用，且只能在迭代数组时使用，仅使用格式字符串的字符串常量调用此函数才有效，每次都必须使用相同的字符串常量。</p>
+<p>格式字符串的第一个字符不能是“*”、“?”、“@”或“r”；本质上，<code>GVariant</code>此函数必须始终构造一个新的（而不是不加修改地传递它）。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_new</span> <span class="params">(</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
-<p><a href>g_variant_iter_loop()</a></p>
+<p><strong><a href>g_variant_iter_loop()</a></strong></p>
 <p>描述：获取容器中的下一项，并根据将其解包到变量参数列表中<code>format_string</code>，返回 TRUE，若容器没有下一项，则返回 FALSE。</p>
+<p>第一次调用此函数时，变量参数列表中出现的指针假定指向未初始化的内存。第二次及以后的调用时，假定将给出相同的指针，并且它们将指向上次调用此函数时设置的内存。这样可以酌情释放先前的值。</p>
+<p>此函数旨在与 while 循环一起使用，此函数只能在迭代数组时使用。仅使用格式字符串的字符串常量调用此函数才有效，并且每次都必须使用相同的字符串常量。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">gboolean</span><br><span class="line"><span class="title function_">g_variant_iter_loop</span> <span class="params">(</span></span><br><span class="line"><span class="params">  GVariantIter* iter,</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* format_string,</span></span><br><span class="line"><span class="params">  ...</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
 
+<p>内存释放的案例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Iterates a dictionary of type &#x27;a&#123;sv&#125;&#x27;</span><br><span class="line">void iterate_dictionary (GVariant *dictionary)</span><br><span class="line">&#123;</span><br><span class="line">	GVariantIter iter;</span><br><span class="line">	GVariant *value;</span><br><span class="line">	gchar *key;</span><br><span class="line"></span><br><span class="line">	g_variant_iter_init (&amp;iter, dictionary);</span><br><span class="line">	while (g_variant_iter_loop (&amp;iter, &quot;&#123;sv&#125;&quot;, &amp;key, &amp;value))</span><br><span class="line">	&#123;</span><br><span class="line">		g_print (&quot;Item &#x27;%s&#x27; has type &#x27;%s&#x27;\n&quot;, key, g_variant_get_type_string (value));</span><br><span class="line"></span><br><span class="line">		// no need to free &#x27;key&#x27; and &#x27;value&#x27; here</span><br><span class="line">		// unless breaking out of this loop</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
+<p>大多数情况下您应该使用 g_variant_iter_next()。如果您只循环简单的整数和字符串类型，<code>g_variant_iter_next()</code>则绝对是首选。对于字符串类型，使用“&amp;”前缀可以完全避免分配任何内存（从而也避免释放任何内容）。</p>
+<p>此函数实际上仅在解包到<code>GVariant</code>或 时有用，<code>GVariantIter</code>以便允许您跳过对 <code>g_variant_unref()</code>或 g_variant_iter_free() 的调用。</p>
 <p><a href="https://docs.gtk.org/glib/ctor.Variant.new_object_path.html">g_variant_new_object_path()</a></p>
 <p>描述：创建一个D-Bus对象路径的GVariant变量</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GVariant*</span><br><span class="line"><span class="title function_">g_variant_new_object_path</span> <span class="params">(</span></span><br><span class="line"><span class="params">  <span class="type">const</span> gchar* object_path</span></span><br><span class="line"><span class="params">)</span></span><br></pre></td></tr></table></figure>
@@ -6283,7 +6416,7 @@
 </blockquote>
 <p>wpa_supplicant 是适用于 Linux、BSD、Mac OS X 和 Windows 的 WPA Supplicant，支持 WPA、WPA2（IEEE 802.11i &#x2F; RSN）和 WPA3。它适用于台式机&#x2F;笔记本电脑和嵌入式系统。Supplicant 是客户端站中使用的 IEEE 802.1X&#x2F;WPA 组件。它与 WPA Authenticator 实现密钥协商，并控制 wlan 驱动程序的漫游和 IEEE 802.11 身份验证&#x2F;关联。</p>
 <p>获取wpa_supplicant仓库代码：<code>git clone git://w1.fi/hostap.git</code></p>
-<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于文本的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
+<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于命令行的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
 <p>wpa_supplicant应用主要包括程序：</p>
 <ul>
 <li>wpa_supplicant守护程序</li>
@@ -6291,7 +6424,14 @@
 <li>wpa_passphrase密码工具程序</li>
 </ul>
 <p>wpa_supplicant的运行方式：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant_wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#		   nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant_wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#          nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>注意事项：</em></p>
+<p><em>dbus-daemon需要知道如何转发消息，&#x2F;etc&#x2F;dbus-1&#x2F;system.d存放各个app的dbus服务接口配置，dbus-daemon启动时会遍历加载目录中的所有配置，加载分发情况。若没有配置服务，某个app注册自身服务名时，会报错：Connection “:1.6” is not allowed to own the service “org.bluez” due to security policies in the configuration file。</em></p>
+<p><em>默认配置文件路径：<code>/etc/dbus-1/system.d/wpa_supplicant.conf</code>，该文件的详细信息如下所示：</em></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">busconfig</span> <span class="keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">busconfig</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">user</span>=<span class="string">&quot;root&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_interface</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">context</span>=<span class="string">&quot;default&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">busconfig</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
 
 <p>wpa_supplicant结构图：</p>
 <p><img src="/2024/08/12/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
@@ -6303,6 +6443,8 @@
 <li>默认网络配置</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 必须为wpa_supplicant指定一个控制接口，并且必须赋予它更新配置的权限</span><br><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>从通信层次上划分：</p>
 <ul>
@@ -6329,14 +6471,14 @@
 <li>fi.w1.wpa_supplicant1.Interface.WPS</li>
 <li>fi.w1.wpa_supplicant1.Interface.P2PDevice</li>
 <li><strong>fi.w1.wpa_supplicant1.BSS</strong></li>
-<li>fi.w1.wpa_supplicant1.Network</li>
+<li><strong>fi.w1.wpa_supplicant1.Network</strong></li>
 <li>fi.w1.wpa_supplicant1.Peer</li>
 <li>fi.w1.wpa_supplicant1.Group</li>
 <li>fi.w1.wpa_supplicant1.PersistentGroup</li>
 </ul>
 <h3 id="fi-w1-wpa-supplicant1"><a href="#fi-w1-wpa-supplicant1" class="headerlink" title="fi.w1.wpa_supplicant1"></a>fi.w1.wpa_supplicant1</h3><p>由在总线中注册名为 fi.w1.wpa_supplicant1 的主 wpa_supplicant D-Bus 对象实现的接口。</p>
 <p><strong>接口介绍：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface:	fi.w1.wpa_supplicant</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
 
 <p><strong>方法介绍：</strong></p>
 <table>
@@ -6426,6 +6568,11 @@
 </tr>
 </tbody></table>
 <h3 id="fi-w1-wpa-supplicant1-Interface"><a href="#fi-w1-wpa-supplicant1-Interface" class="headerlink" title="fi.w1.wpa_supplicant1.Interface"></a>fi.w1.wpa_supplicant1.Interface</h3><p>由添加到 wpa_supplicant 的网络接口相关对象实现的接口，即由 fi.w1.wpa_supplicant1.CreateInterface 返回的接口。</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.Interface</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index  (index is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
 <p><strong>方法介绍：</strong></p>
 <table>
 <thead>
@@ -6545,9 +6692,109 @@
 </tr>
 </thead>
 <tbody><tr>
-<td></td>
-<td></td>
-<td></td>
+<td>array{string, variant} Capabilities</td>
+<td>read</td>
+<td>接口功能</td>
+</tr>
+<tr>
+<td>string State</td>
+<td>read</td>
+<td>接口状态</td>
+</tr>
+<tr>
+<td>bool Scanning</td>
+<td>read</td>
+<td>确定接口是否已在扫描</td>
+</tr>
+<tr>
+<td>uint32 ApScan</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 ap_scan 条目相同。可能的值为 0、1 或 2</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireAge</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_age 条目相同</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireCount</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_scan_count 条目相同</td>
+</tr>
+<tr>
+<td>string Country</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的国家&#x2F;地区条目相同</td>
+</tr>
+<tr>
+<td>string Ifname</td>
+<td>read</td>
+<td>接口控制的网络接口名称，例如 wlan0</td>
+</tr>
+<tr>
+<td>string BridgeIfname</td>
+<td>read</td>
+<td>该接口控制的桥接网络接口名称，例如 br0</td>
+</tr>
+<tr>
+<td>string Driver</td>
+<td>read</td>
+<td>接口使用的驱动程序的名称，例如 nl80211</td>
+</tr>
+<tr>
+<td>object CurrentBSS</td>
+<td>read</td>
+<td>表示与 wpa_supplicant 关联的 BSS 的 D-Bus 对象的路径，如果根本没有关联，则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>object CurrentNetwork</td>
+<td>read</td>
+<td>表示 wpa_supplicant 当前使用的配置网络的 D-Bus 对象的路径，如果没有使用则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>string CurrentAuthMode</td>
+<td>read</td>
+<td>当前身份验证类型</td>
+</tr>
+<tr>
+<td>array{string} Blobs</td>
+<td>read</td>
+<td>添加到界面的 blob 名称列表</td>
+</tr>
+<tr>
+<td>array{object} BSSs</td>
+<td>read</td>
+<td>代表接口已知的 BSS 的 D-Bus 对象路径列表，例如扫描结果</td>
+</tr>
+<tr>
+<td>array{object} Networks</td>
+<td>read</td>
+<td>代表已配置网络的 D-Bus 对象路径列表</td>
+</tr>
+<tr>
+<td>bool FastReauth</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 fast_reauth 条目相同</td>
+</tr>
+<tr>
+<td>int32 ScanInterval</td>
+<td>readwrite</td>
+<td>扫描合适 AP 的间隔时间（以秒为单位）。必须 &gt;&#x3D; 0</td>
+</tr>
+<tr>
+<td>string PKCS11EnginePath</td>
+<td>read</td>
+<td>PKCS #11 引擎路径</td>
+</tr>
+<tr>
+<td>string PKCS11ModulePath</td>
+<td>read</td>
+<td>PKCS #11 模块路径</td>
+</tr>
+<tr>
+<td>int32 DisconnectReason</td>
+<td>read</td>
+<td>最近的 IEEE 802.11 断开连接原因代码。负值表示本地生成的断开连接</td>
 </tr>
 </tbody></table>
 <p><strong>信号介绍：</strong></p>
@@ -6559,8 +6806,191 @@
 </tr>
 </thead>
 <tbody><tr>
-<td></td>
-<td></td>
+<td>ScanDone ( b : success )</td>
+<td>扫描完成</td>
+</tr>
+<tr>
+<td>BSSAdded ( o : BSS, a{sv} : properties )</td>
+<td>BSS新增</td>
+</tr>
+<tr>
+<td>BSSRemoved ( o : BSS )</td>
+<td>BSS移除</td>
+</tr>
+<tr>
+<td>BlobAdded ( s : blobName )</td>
+<td>blob新增</td>
+</tr>
+<tr>
+<td>BlobRemoved ( s : blobName )</td>
+<td>blob移除</td>
+</tr>
+<tr>
+<td>NetworkAdded ( o : network, a{sv} : properties )</td>
+<td>network新增</td>
+</tr>
+<tr>
+<td>NetworkRemoved ( o : network )</td>
+<td>network移除</td>
+</tr>
+<tr>
+<td>NetworkSelected ( o : network )</td>
+<td>network选择</td>
+</tr>
+<tr>
+<td>StaAuthorized ( s : mac )</td>
+<td>已授权新站使用接口</td>
+</tr>
+<tr>
+<td>StaDeauthorized ( s : mac )</td>
+<td>已取消对某个站的接口授权</td>
+</tr>
+<tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性有改变</td>
+</tr>
+<tr>
+<td>Certification ( a{sv} : parameters )</td>
+<td>有关服务器 TLS 证书的信息</td>
+</tr>
+<tr>
+<td>EAP ( s : status, s : parameter )</td>
+<td>有关 EAP 对等状态的信息</td>
+</tr>
+<tr>
+<td>NetworkRequest ( o : network, s : field, s : txt )</td>
+<td>请求网络参数。NetworkResponse() 用于提供所请求的参数</td>
+</tr>
+<tr>
+<td>ProbeRequest ( a{sv} : args )</td>
+<td>有关已接收探测请求帧的信息。此信号仅发送给已使用 SubscribeProbeReq() 订阅接收事件的单个应用程序</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-BSS"><a href="#fi-w1-wpa-supplicant1-BSS" class="headerlink" title="fi.w1.wpa_supplicant1.BSS"></a>fi.w1.wpa_supplicant1.BSS</h3><p>表示已扫描 BSS（即扫描结果）的对象实现的接口</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.BSS</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index/BSSs/serial  (serial is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍:</strong></p>
+<p>无</p>
+<p><strong>属性介绍:</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>array{byte} BSSID</td>
+<td>read</td>
+<td>BSS的BSSID</td>
+</tr>
+<tr>
+<td>array{byte} SSID</td>
+<td>read</td>
+<td>BSS的SSID</td>
+</tr>
+<tr>
+<td>array{string, variant} WPA</td>
+<td>read</td>
+<td>BSS的WPA信息</td>
+</tr>
+<tr>
+<td>array{string, variant} RSN</td>
+<td>read</td>
+<td>BSS的RSN信息</td>
+</tr>
+<tr>
+<td>array{string, variant} WPS</td>
+<td>read</td>
+<td>BSS的WPS信息</td>
+</tr>
+<tr>
+<td>array{byte} IEs</td>
+<td>read</td>
+<td>BSS 的所有 IE 作为 TLV 链</td>
+</tr>
+<tr>
+<td>bool Privacy</td>
+<td>read</td>
+<td>指示 BSS 是否支持隐私</td>
+</tr>
+<tr>
+<td>string Mode</td>
+<td>read</td>
+<td>描述 BSS 的模式</td>
+</tr>
+<tr>
+<td>uint16 Frequency</td>
+<td>read</td>
+<td>BSS 的频率（MHz）</td>
+</tr>
+<tr>
+<td>array{uint32} Rates</td>
+<td>read</td>
+<td>按降序排列的 BSS 支持的速率（单位为比特&#x2F;秒）</td>
+</tr>
+<tr>
+<td>int16 Signal</td>
+<td>read</td>
+<td>BSS 信号强度</td>
+</tr>
+<tr>
+<td>uint32 Age</td>
+<td>read</td>
+<td>自上次看到 BSS 以来的秒数</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-Network"><a href="#fi-w1-wpa-supplicant1-Network" class="headerlink" title="fi.w1.wpa_supplicant1.Network"></a>fi.w1.wpa_supplicant1.Network</h3><p>由代表配置网络的对象实现的接口，即由 fi.w1.wpa_supplicant1.Interface.AddNetwork 返回。</p>
+<p><strong>方法介绍：</strong></p>
+<p>无</p>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bool Enabled</td>
+<td>readwrite</td>
+<td>确定配置的网络是否启用</td>
+</tr>
+<tr>
+<td>array{string,variant}</td>
+<td>readwrite</td>
+<td>wpa_supplicant 配置文件的“网络”块的条目</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
 </tr>
 </tbody></table>
 <h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>主要涉及各种信号：ScanDone、BSSAdded、BssRemoved、PropertiesChanged</p>
@@ -6572,7 +7002,7 @@
 <h3 id="BSSAdded"><a href="#BSSAdded" class="headerlink" title="BSSAdded"></a>BSSAdded</h3><p>data type: <code>(oa&#123;sv&#125;)</code> </p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(</span><br><span class="line">    objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">257</span>&#x27;<span class="punctuation">,</span> </span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;SSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;BSSID&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xdb</span><span class="punctuation">,</span> <span class="number">0x15</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0x8b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Privacy&#x27;<span class="punctuation">:</span> &lt;<span class="literal"><span class="keyword">true</span></span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Mode&#x27;<span class="punctuation">:</span> &lt;&#x27;infrastructure&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Signal&#x27;<span class="punctuation">:</span> &lt;int16 <span class="number">-70</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Frequency&#x27;<span class="punctuation">:</span> &lt;uint16 <span class="number">5805</span>&gt;<span class="punctuation">,</span></span><br><span class="line">        &#x27;Rates&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>uint32 <span class="number">54000000</span><span class="punctuation">,</span> <span class="number">48000000</span><span class="punctuation">,</span> <span class="number">36000000</span><span class="punctuation">,</span> <span class="number">24000000</span><span class="punctuation">,</span> <span class="number">18000000</span><span class="punctuation">,</span> <span class="number">12000000</span><span class="punctuation">,</span> <span class="number">9000000</span><span class="punctuation">,</span> <span class="number">6000000</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPA&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;</span><br><span class="line">         <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;RSN&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;KeyMgmt&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;wpa-psk&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Group&#x27;<span class="punctuation">:</span> &lt;&#x27;tkip&#x27;&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;Pairwise&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>&#x27;tkip&#x27;<span class="punctuation">,</span> &#x27;ccmp&#x27;<span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">            &#x27;MgmtGroup&#x27;<span class="punctuation">:</span> &lt;&#x27;aes128cmac&#x27;&gt;</span><br><span class="line">        <span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;WPS&#x27;<span class="punctuation">:</span> &lt;@a<span class="punctuation">&#123;</span>sv<span class="punctuation">&#125;</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;IEs&#x27;<span class="punctuation">:</span> &lt;<span class="punctuation">[</span>byte <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x4b</span><span class="punctuation">,</span> <span class="number">0x69</span><span class="punctuation">,</span> <span class="number">0x74</span><span class="punctuation">,</span> <span class="number">0x5f</span><span class="punctuation">,</span> <span class="number">0x35</span><span class="punctuation">,</span> <span class="number">0x47</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x8c</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x98</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xb0</span><span class="punctuation">,</span> <span class="number">0x48</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0x6c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x30</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0xac</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2d</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0xef</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x17</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x87</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x3d</span><span class="punctuation">,</span> <span class="number">0x16</span><span class="punctuation">,</span> <span class="number">0xa1</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x06</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x7f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x80</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0x0b</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x0f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xca</span><span class="punctuation">,</span> <span class="number">0x12</span><span class="punctuation">,</span> <span class="number">0x7a</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x18</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x50</span><span class="punctuation">,</span> <span class="number">0xf2</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0xa4</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x42</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x5e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x62</span><span class="punctuation">,</span> <span class="number">0x32</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x2f</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x0a</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x4e</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x95</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x1e</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x79</span><span class="punctuation">,</span> <span class="number">0xc9</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x9b</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x23</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x1a</span><span class="punctuation">,</span> <span class="number">0x44</span><span class="punctuation">,</span> <span class="number">0x10</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x6f</span><span class="punctuation">,</span> <span class="number">0x09</span><span class="punctuation">,</span> <span class="number">0x8f</span><span class="punctuation">,</span> <span class="number">0x08</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xfa</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x39</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0xc7</span><span class="punctuation">,</span> <span class="number">0x71</span><span class="punctuation">,</span> <span class="number">0x1c</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x24</span><span class="punctuation">,</span> <span class="number">0xf4</span><span class="punctuation">,</span> <span class="number">0x3f</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0xfc</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x27</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x0e</span><span class="punctuation">,</span> <span class="number">0x26</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x20</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x40</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x60</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x07</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0x43</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xdd</span><span class="punctuation">,</span> <span class="number">0x21</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xe7</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0xbf</span><span class="punctuation">,</span> <span class="number">0x0c</span><span class="punctuation">,</span> <span class="number">0xb1</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x33</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0x92</span><span class="punctuation">,</span> <span class="number">0x04</span><span class="punctuation">,</span> <span class="number">0xc0</span><span class="punctuation">,</span> <span class="number">0x05</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x2a</span><span class="punctuation">,</span> <span class="number">0xff</span><span class="punctuation">,</span> <span class="number">0xc3</span><span class="punctuation">,</span> <span class="number">0x03</span><span class="punctuation">,</span> <span class="number">0x01</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0xf0</span><span class="punctuation">,</span> <span class="number">0x02</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">,</span> <span class="number">0x00</span><span class="punctuation">]</span>&gt;<span class="punctuation">,</span> </span><br><span class="line">        &#x27;Age&#x27;<span class="punctuation">:</span> &lt;uint32 <span class="number">0</span>&gt;</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<h3 id="BSSRemoved"><a href="#BSSRemoved" class="headerlink" title="BSSRemoved"></a>BSSRemoved</h3><p>data type: <code>(O)</code></p>
+<h3 id="BSSRemoved"><a href="#BSSRemoved" class="headerlink" title="BSSRemoved"></a>BSSRemoved</h3><p>data type: <code>(o)</code></p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line">(objectpath &#x27;/fi/w1/wpa_supplicant1/Interfaces/<span class="number">0</span>/BSSs/<span class="number">519</span>&#x27;<span class="punctuation">,</span>)</span><br></pre></td></tr></table></figure>
 
 
@@ -6591,6 +7021,7 @@
 <p><a href>3、wpa_supplicant</a></p>
 <p><a href="https://www.cnblogs.com/chenbin7/p/3266164.html">4、wpa_supplicant提供的接口</a></p>
 <p><a href="https://android.googlesource.com/platform/external/wpa_supplicant_8/+/master/wpa_supplicant/examples/wpas-dbus-new.py">5、wpa_supplicant dbus api example using python</a></p>
+<p><a href="https://kingtuo123.com/posts/wpa_supplicant/">6、使用 wpa_supplicant 连接无线网络</a></p>
 ]]></content>
       <categories>
         <category>Wi-Fi</category>
@@ -6659,8 +7090,8 @@
 <p>通过上面的信息，可以看到本地分支名和远程分支名一致了。</p>
 ]]></content>
       <tags>
-        <tag>Github</tag>
         <tag>hexo</tag>
+        <tag>Github</tag>
       </tags>
   </entry>
   <entry>
@@ -6735,8 +7166,8 @@
         <category>Blog</category>
       </categories>
       <tags>
-        <tag>hexo</tag>
         <tag>Blog</tag>
+        <tag>hexo</tag>
         <tag>hexo-theme-next</tag>
       </tags>
   </entry>
