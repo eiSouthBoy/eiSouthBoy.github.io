@@ -29,7 +29,7 @@
 <meta property="og:description" content="常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-08-21T09:25:00.000Z">
-<meta property="article:modified_time" content="2024-08-22T07:06:41.560Z">
+<meta property="article:modified_time" content="2024-10-30T08:42:19.138Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="ssh">
 <meta name="twitter:card" content="summary">
@@ -90,7 +90,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">45</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">31</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">34</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -141,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ssh"><span class="nav-number">1.</span> <span class="nav-text">安装ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95ssh"><span class="nav-number">2.</span> <span class="nav-text">登录ssh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%98%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.1.</span> <span class="nav-text">秘钥登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.2.</span> <span class="nav-text">公钥登录</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ssh"><span class="nav-number">1.</span> <span class="nav-text">安装ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95ssh"><span class="nav-number">2.</span> <span class="nav-text">登录ssh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%98%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.1.</span> <span class="nav-text">秘钥登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E7%99%BB%E5%BD%95"><span class="nav-number">2.2.</span> <span class="nav-text">公钥登录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%A4%9A%E4%B8%AAGit%E4%BB%93%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">管理多个Git仓库</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -156,18 +156,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -518,7 +518,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-08-22 07:06:41" itemprop="dateModified" datetime="2024-08-22T07:06:41+00:00">2024-08-22</time>
+      <time title="Modified: 2024-10-30 08:42:19" itemprop="dateModified" datetime="2024-10-30T08:42:19+00:00">2024-10-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -548,7 +548,7 @@ if(canvas.getContext){
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="安装ssh"><a href="#安装ssh" class="headerlink" title="安装ssh"></a>安装ssh</h2><p>一般都是在本地PC通过ssh远程连接服务器，在本地PC基本都有ssh client程序，而服务器不一定会有ssh server程序。所以首先第一步要确认服务器是否已经安装了ssh server程序（即openssh-server），若已经安装，则跳过；若没有安装，则接下来安装步骤。</p>
+    <div class="post-body" itemprop="articleBody"><h2 id="安装ssh"><a href="#安装ssh" class="headerlink" title="安装ssh"></a>安装ssh</h2><p>一般都是在本地PC通过ssh远程连接服务器，在本地PC基本都有ssh client程序，而服务器不一定会有ssh server程序。所以首先第一步要确认<strong>服务器</strong>是否已经安装了ssh server程序（即openssh-server），若已经安装，则跳过；若没有安装，则接下来安装步骤。</p>
 <ul>
 <li><p>服务器上检查是否安装 openssh-server</p>
 <p>可以通过如下命令查询：<code>dpkg -l | grep openssh-server</code></p>
@@ -564,22 +564,28 @@ if(canvas.getContext){
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式1</span></span><br><span class="line">systtemctl start ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式2</span></span><br><span class="line">service ssh start</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>至此，在服务器上安装ssh（即openssh-server）完成。</p>
-<h2 id="登录ssh"><a href="#登录ssh" class="headerlink" title="登录ssh"></a>登录ssh</h2><p>在服务器上安装ssh后，可以在本地PC通过连接到服务器ssh，登录的方式有：秘钥登录 和 公钥登录。</p>
+<h2 id="登录ssh"><a href="#登录ssh" class="headerlink" title="登录ssh"></a>登录ssh</h2><p>在服务器上安装ssh后，可以在本地PC通过ssh client连接到服务器ssh server，登录的方式有：<strong>秘钥登录</strong> 和 <strong>公钥登录</strong>。</p>
 <h3 id="秘钥登录"><a href="#秘钥登录" class="headerlink" title="秘钥登录"></a>秘钥登录</h3><p>秘钥登录就是通过用户名和密码进行登录，例如通过秘钥登录到树莓派（作为服务器角色）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># raspberry是树莓派的主机名，也可以替换为树莓派的IP地址。执行命令后，会要求输入pi用户的密码。</span></span><br><span class="line">ssh pi@raspberry</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># raspberry是树莓派的主机名，也可以替换为树莓派的IP地址。执行命令后，会要求输入pi用户的密码。</span></span><br><span class="line">ssh pi@raspberrypi</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：这里没有使用树莓派的IP，而是使用树莓派的主机名。因为树莓派启动了avahi-daemon服务，将树莓派主机名通过mDNS组播，这样树莓派主机名就可以替换它的IP地址。</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~$ ps -ef | grep avahi</span><br><span class="line">avahi       1014       1  0 15:29 ?        00:00:00 avahi-daemon: running [raspberrypi.local]</span><br><span class="line">avahi       1051    1014  0 15:30 ?        00:00:00 avahi-daemon: <span class="built_in">chroot</span> helper</span><br><span class="line">pi          3046    3029 50 15:50 pts/1    00:00:00 grep --color=auto avahi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
 <h3 id="公钥登录"><a href="#公钥登录" class="headerlink" title="公钥登录"></a>公钥登录</h3><p>公钥登录是指将本地PC的公钥上传到服务器上，本地PC将登录信息用私钥签名给服务器，服务器用本地PC的公钥鉴别。</p>
 <ul>
-<li><p>本地PC创建公钥</p>
-<p>通过命令创建公钥：<code>ssh-keygen</code>，接下来一路回车即可创建完成。</p>
-<p>秘钥生成的文件：<code>~/.ssh/id_rsa.pub</code> 和 <code>~/.ssh/id_rsa</code></p>
+<li><p><strong>本地PC创建公钥</strong></p>
+<p>通过命令创建公钥：<code>ssh-keygen</code>，接下来按下两次次回车键即可创建完成。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~$ ssh-keygen -t rsa -C <span class="string">&quot;caoj97141@gmail.com&quot;</span> -f ~/.ssh/id_rsa</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /home/pi/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /home/pi/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:*****ro74Dm9Zn****sfk91dbb****CLjnEOzJD**** caoj97141@gmail.com</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+---[RSA 3072]----+</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|                 |</span></span><br><span class="line"><span class="string">|          E      |</span></span><br><span class="line"><span class="string">|         = o    o|</span></span><br><span class="line"><span class="string">|        S o    .+|</span></span><br><span class="line"><span class="string">|        .*     .B|</span></span><br><span class="line"><span class="string">|       . +* o .*=|</span></span><br><span class="line"><span class="string">|        +.=Xo=oo*|</span></span><br><span class="line"><span class="string">|         =%@*o+=B|</span></span><br><span class="line"><span class="string">+----[SHA256]-----+</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>执行命令后会提示输入两次密码（该密码是你push文件的时候要输入的密码，而不是github管理者的密码），当然也不可以不输入密码，直接回车跳过。这样设置之后，git push时就不需要输入密码，直接提交到git仓库。</p>
+<p>命令执行完成后，生成秘钥文件（公钥和私钥）：<code>~/.ssh/id_rsa.pub</code> 和 <code>~/.ssh/id_rsa</code></p>
 </li>
-<li><p>上传公钥到服务器</p>
-<p>通过命令将公钥上传到服务器，可以使用如下命令：<code>cd ~/.ssh &amp;&amp; scp id_rsa.pub pi@raspberry:/home/pi</code></p>
+<li><p><strong>上传公钥到服务器</strong></p>
+<p>通过命令将公钥上传到服务器，可以使用如下命令：<code>cd ~/.ssh &amp;&amp; scp id_rsa.pub pi@raspberrypi:/home/pi</code></p>
 </li>
-<li><p>服务器修改ssh配置</p>
+<li><p><strong>服务器修改ssh配置</strong></p>
 <p>先在服务器创建 <code>~/.ssh/authorized_keys</code>，然后将本地PC的公钥写进入。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件</span></span><br><span class="line"><span class="built_in">mkdir</span> /home/pi/.ssh </span><br><span class="line"><span class="built_in">touch</span> /home/pi/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥写入</span></span><br><span class="line"><span class="built_in">cd</span> /home/pi/.ssh</span><br><span class="line"><span class="built_in">cat</span> /home/pi/id_rsa.pub &gt;&gt; authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改文件权限</span></span><br><span class="line"><span class="built_in">chmod</span> 600 authorized_keys</span><br></pre></td></tr></table></figure>
 
@@ -590,11 +596,18 @@ if(canvas.getContext){
 <p>修改完ssh服务的配置文件后，重启ssh服务，接着本地PC通过公钥登录服务器</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启ssh服务 方式1</span></span><br><span class="line">systemctl restart ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># # 重启ssh服务 方式2</span></span><br><span class="line">service ssh restart</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>本地PC通过ssh公钥认证登录：<code>ssh pi@raspberry</code>，此时会直接登录，无需密码。</p>
+<p>本地PC通过ssh client公钥认证登录：<code>ssh pi@raspberrypi</code>，此时会直接登录，无需密码。</p>
 <p>登录成功提示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">eiSouthBoy@eiSouthBoy-NMH-WCX9:~$ ssh  pi@raspberry</span><br><span class="line">Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-1009-raspi aarch64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/pro</span><br><span class="line"></span><br><span class="line">Expanded Security Maintenance <span class="keyword">for</span> Applications is not enabled.</span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line">Enable ESM Apps to receive additional future security updates.</span><br><span class="line">See https://ubuntu.com/esm or run: <span class="built_in">sudo</span> pro status</span><br><span class="line"></span><br><span class="line">*** System restart required ***</span><br><span class="line">Last login: Thu Aug 22 11:10:19 2024 from fdfc:869c:9ebb:0:2803:5d58:2f66:5d78</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">eiSouthBoy@eiSouthBoy-NMH-WCX9:~$ ssh  pi@raspberrypi</span><br><span class="line">Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-1009-raspi aarch64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/pro</span><br><span class="line"></span><br><span class="line">Expanded Security Maintenance <span class="keyword">for</span> Applications is not enabled.</span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line">Enable ESM Apps to receive additional future security updates.</span><br><span class="line">See https://ubuntu.com/esm or run: <span class="built_in">sudo</span> pro status</span><br><span class="line"></span><br><span class="line">*** System restart required ***</span><br><span class="line">Last login: Thu Aug 22 11:10:19 2024 from fdfc:869c:9ebb:0:2803:5d58:2f66:5d78</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
+
+<h2 id="管理多个Git仓库"><a href="#管理多个Git仓库" class="headerlink" title="管理多个Git仓库"></a>管理多个Git仓库</h2><p>同时拥有Github和Gitee两个账户下的仓库需要管理，如何通过ssh管理？</p>
+<p>在PC上分别为Gihub和Gitee创建ssh key，然后编写ssh config文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为Github创建ssh key</span></span><br><span class="line">pi@raspberrypi:~$ ssh-keygen -t rsa -C <span class="string">&quot;caoj97141@gmail.com&quot;</span> -f ~/.ssh/id_rsa-github</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为Gitee创建ssh key</span></span><br><span class="line">pi@raspberrypi:~$ ssh-keygen -t rsa -C <span class="string">&quot;caoj97141@gmail.com&quot;</span> -f ~/.ssh/id_rsa-gitee</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>编写ssh config文件（vim ~&#x2F;.ssh&#x2F;config），若没有该文件就创建它（touch ~&#x2F;.ssh&#x2F;config）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    HostName github.com</span><br><span class="line">    User yourname@gmail.com</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa-github</span><br><span class="line">    StrictHostKeyChecking no</span><br><span class="line">    UserKnownHostsFile=/dev/null</span><br><span class="line">Host gitee.com</span><br><span class="line">    HostName gitee.com</span><br><span class="line">    User yourname@163.com</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa-gitee</span><br><span class="line">    StrictHostKeyChecking no</span><br><span class="line">    UserKnownHostsFile=/dev/null</span><br></pre></td></tr></table></figure>
 
 
 
