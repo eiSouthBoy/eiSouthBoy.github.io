@@ -21,17 +21,22 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Talk is cheap. Show me your code.">
+    <meta name="description" content="在使用Ubuntu OS 或者 HA OS等操作系统时，发现网络都是被NetworkManager进程接管，提供强大的UI客户端和CLI客户端供用户连接网络。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NetworkManager Application">
 <meta property="og:url" content="https://eisouthboy.github.io/2024/10/31/NetworkManager-Application/index.html">
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
-<meta property="og:description" content="Talk is cheap. Show me your code.">
+<meta property="og:description" content="在使用Ubuntu OS 或者 HA OS等操作系统时，发现网络都是被NetworkManager进程接管，提供强大的UI客户端和CLI客户端供用户连接网络。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/31/NetworkManager-Application/image-20241031145554396.png">
 <meta property="article:published_time" content="2024-10-31T06:08:24.000Z">
-<meta property="article:modified_time" content="2024-10-31T06:08:24.792Z">
+<meta property="article:modified_time" content="2024-11-05T11:45:17.407Z">
 <meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="NetworkManager">
+<meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/10/31/NetworkManager-Application/image-20241031145554396.png">
 
 
 <link rel="canonical" href="https://eisouthboy.github.io/2024/10/31/NetworkManager-Application/">
@@ -89,7 +94,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">34</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">61</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -127,7 +132,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -140,6 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NetworkManager"><span class="nav-number">1.</span> <span class="nav-text">NetworkManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#D-Bus-API"><span class="nav-number">2.</span> <span class="nav-text">D-Bus API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libnm"><span class="nav-number">3.</span> <span class="nav-text">libnm</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -154,18 +160,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -494,7 +500,7 @@ if(canvas.getContext){
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="NetworkManager Application | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="在使用Ubuntu OS 或者 HA OS等操作系统时，发现网络都是被NetworkManager进程接管，提供强大的UI客户端和CLI客户端供用户连接网络。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -511,6 +517,22 @@ if(canvas.getContext){
 
       <time title="Created: 2024-10-31 06:08:24" itemprop="dateCreated datePublished" datetime="2024-10-31T06:08:24+00:00">2024-10-31</time>
     </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-05 11:45:17" itemprop="dateModified" datetime="2024-11-05T11:45:17+00:00">2024-11-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Wi-Fi/" itemprop="url" rel="index"><span itemprop="name">Wi-Fi</span></a>
+        </span>
+    </span>
 
   
     <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
@@ -522,6 +544,7 @@ if(canvas.getContext){
     </span>
 </div>
 
+            <div class="post-description">在使用Ubuntu OS 或者 HA OS等操作系统时，发现网络都是被NetworkManager进程接管，提供强大的UI客户端和CLI客户端供用户连接网络。</div>
  
         </div>
       </header>
@@ -529,7 +552,19 @@ if(canvas.getContext){
     
     
     
-    <div class="post-body" itemprop="articleBody">
+    <div class="post-body" itemprop="articleBody"><h2 id="NetworkManager"><a href="#NetworkManager" class="headerlink" title="NetworkManager"></a>NetworkManager</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://networkmanager.dev/docs/api/latest/NetworkManager.html">NetworkManager</a>是什么？</p>
+</blockquote>
+<p>NetworkManager 守护程序尝试通过管理主网络连接和其他网络接口（如以太网、Wi-Fi 和移动宽带设备）来使网络配置和操作尽可能轻松和自动化。当任何网络设备的连接可用时，NetworkManager 将连接该设备，除非该行为被禁用。有关网络的信息通过 D-Bus 接口导出到任何感兴趣的应用程序，从而提供丰富的 API 来检查和控制网络设置和操作。</p>
+<h2 id="D-Bus-API"><a href="#D-Bus-API" class="headerlink" title="D-Bus API"></a>D-Bus API</h2><h2 id="libnm"><a href="#libnm" class="headerlink" title="libnm"></a>libnm</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://networkmanager.dev/docs/libnm/latest/ref-overview.html">libnm</a>是什么？</p>
+</blockquote>
+<p>libnm 是 NetworkManager（标准 Linux 网络管理服务）的客户端库。NetworkManager 支持各种网络配置方案、硬件设备和协议系列。大多数功能都通过 <a target="_blank" rel="noopener" href="https://networkmanager.dev/docs/api/latest/spec.html">D-Bus API</a>公开，从而允许其他工具使用 NetworkManager 提供的功能。</p>
+<p>libnm 为 NetworkManager 提供的功能提供了 C 语言绑定，其他语言运行时也可以使用。</p>
+<p>libnm 与 NetworkManager 提供的实际 D-Bus API 映射得相当紧密，将远程 D-Bus 对象包装为本机 GObject，将 D-Bus 信号和属性映射到 GObject 信号和属性，并提供有用的访问器和实用函数。但是，与旧的 libnm-util&#x2F;libnm-glib API 不同，与 D-Bus API 的映射并不精确，并且 D-Bus API 的各种不便之处和历史异常都被掩盖了。</p>
+<p>以下是 libnm 对象结构的粗略概述以及如何使用它的各个部分：</p>
+<p><img src="/2024/10/31/NetworkManager-Application/image-20241031145554396.png" alt="image-20241031145554396"></p>
+
     </div>
 
     
@@ -537,6 +572,11 @@ if(canvas.getContext){
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/NetworkManager/" rel="tag"># NetworkManager</a>
+              <a href="/tags/Network/" rel="tag"># Network</a>
+          </div>
 
         
 
@@ -547,6 +587,9 @@ if(canvas.getContext){
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2024/10/31/DBUS-busctl-tool/" rel="next" title="DBUS: busctl tool">
+                  DBUS: busctl tool <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>

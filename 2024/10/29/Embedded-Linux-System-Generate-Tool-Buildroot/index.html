@@ -29,7 +29,7 @@
 <meta property="og:description" content="Buildroot是一个简单、高效、易用的通过交叉编译生成嵌入式Linux系统的工具。记录一下Buildroot的结构和具体使用记录。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-10-29T12:59:43.000Z">
-<meta property="article:modified_time" content="2024-10-30T07:40:46.704Z">
+<meta property="article:modified_time" content="2024-11-03T10:07:52.642Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="embedded linux">
 <meta property="article:tag" content="Buildroot">
@@ -91,7 +91,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">34</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">61</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Buildroot"><span class="nav-number">1.</span> <span class="nav-text">Buildroot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text">交叉编译工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kconfig"><span class="nav-number">3.</span> <span class="nav-text">Kconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#makefile"><span class="nav-number">4.</span> <span class="nav-text">makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">参考引用</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Buildroot"><span class="nav-number">1.</span> <span class="nav-text">Buildroot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text">交叉编译工具链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E5%90%8E%E7%AB%AF"><span class="nav-number">2.1.</span> <span class="nav-text">内部工具链后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E5%90%8E%E7%AB%AF"><span class="nav-number">2.2.</span> <span class="nav-text">外部工具链后端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">初始化系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kconfig"><span class="nav-number">4.</span> <span class="nav-text">Kconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#makefile"><span class="nav-number">5.</span> <span class="nav-text">makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">参考引用</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -157,18 +157,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -519,7 +519,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-30 07:40:46" itemprop="dateModified" datetime="2024-10-30T07:40:46+00:00">2024-10-30</time>
+      <time title="Modified: 2024-11-03 10:07:52" itemprop="dateModified" datetime="2024-11-03T10:07:52+00:00">2024-11-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -568,14 +568,13 @@ if(canvas.getContext){
 </ul>
 <p>Buildroot输出保存在<code>output/.</code> 目录下，这个目录包含如下几个子目录：</p>
 <ul>
-<li>images：存放所有的images（kernel image、bootloader、root filesystem image），这些都是需要放到目标系统上的文件。</li>
-<li>build：存放所有需要编译的应用，每个应用都以一个文件夹表示。</li>
-<li>host：包含为主机构建的工具（主要是主机需要的工具和交叉编译工具）和目标工具链的sysroot（主要是用户交叉编译的头文件和库文件）。</li>
-<li>staging：host目录内目标工具链sysroot的符号链接，其存在是为了向后兼容</li>
-<li>target：包含了目标几乎完整的根文件系统。最后导入目标主机的根文件系统就是这个</li>
+<li><strong>images</strong>：存放所有的images（kernel image、bootloader、root filesystem image），这些都是需要放到目标系统上的文件。</li>
+<li><strong>build</strong>：存放所有需要编译的应用，每个应用都以一个文件夹表示。</li>
+<li><strong>host</strong>：包含为主机构建的工具（主要是主机上Buildroot需要的工具和交叉编译工具）和目标工具链的sysroot（主要是用户交叉编译的头文件和库文件）。</li>
+<li><strong>staging</strong>：host目录内目标工具链sysroot的符号链接，其存在是为了向后兼容</li>
+<li><strong>target</strong>：包含了目标几乎完整的根文件系统。最后导入目标主机的根文件系统就是这个</li>
 </ul>
-<p><code>make menuconfig</code> 中，可以输入<code>/</code> 进行目标搜索。当搜索到所有目标，可以通过按下目标的数字编号进行跳转。</p>
-<p>Buildroot不提供编译工具链，需要用户自己安装。</p>
+<p><code>make menuconfig</code> 中，可以输入<code>/</code> 进行目标搜索。当搜索到所有目标，可以通过按下<strong>目标的数字编号</strong>进行跳转。</p>
 <p><code>buildroot/package</code> 目录下，可以为自己的应用创建文件夹，文件夹下至少有两个文件：<code>xxx.mk</code> 和 <code>Config.in</code> 。</p>
 <ul>
 <li><code>xxx.mk</code>：这是一个Makefile文件，包含了对应用package的下载、配置、编译和安装</li>
@@ -586,15 +585,32 @@ if(canvas.getContext){
 <p>交叉编译是什么？</p>
 </blockquote>
 <p>因为你的目标主机（arm架构）的cpu、ram、rom都是极其有限的，无法在目标主机编译应用程序。所以我们一般在源主机（x86架构）上为目标主机（arm架构）编译应用程序，如果我们选择系统默认的编译链工具，编译出来的可执行文件只能在x86架构主机运行。若想在目标主机（arm架构）上运行应用程序，需要在源主机（x86架构）上安装交叉编译工具链。</p>
-<blockquote>
-<p>交叉编译工具链是什么？</p>
-</blockquote>
+<p><strong>编译工具链是什么？</strong></p>
 <p>编译工具链是一组可用于编译系统代码的工具。它由<strong>编译器、汇编器和链接器</strong>等二进制实用程序以及 <strong>C 标准库</strong>组成。</p>
+<p><strong>交叉编译工具链是什么？</strong></p>
+<p>一个在主机系统上运行但为 <em>目标系统</em>（和目标处理器）生成代码的编译工具链。例如，如果您的主机系统使用 x86 而目标系统使用 ARM，则主机上的常规编译工具链在 x86 上运行并为 x86 生成代码，而交叉编译工具链在 x86 上运行并为 ARM 生成代码。</p>
+<p><strong>Buildroot不提供编译工具链，需要用户自己安装。</strong></p>
 <p>Buildroot为交叉编译工具链提供了两种解决方案：</p>
 <ul>
-<li>内部工具链后端，<code>Buildroot toolchain</code>在配置界面 调用。</li>
-<li>外部工具链后端，<code>External toolchain</code>在配置界面 调用。</li>
+<li>内部工具链后端，<code>Buildroot toolchain</code>在配置界面调用。</li>
+<li>外部工具链后端，<code>External toolchain</code>在配置界面调用。</li>
 </ul>
+<h3 id="内部工具链后端"><a href="#内部工具链后端" class="headerlink" title="内部工具链后端"></a>内部工具链后端</h3><p><em>内部工具链后端</em>是Buildroot 在为目标嵌入式系统构建用户空间应用程序和库之前自行构建交叉编译工具链的后端。</p>
+<h3 id="外部工具链后端"><a href="#外部工具链后端" class="headerlink" title="外部工具链后端"></a>外部工具链后端</h3><p><em>外部工具链后端</em>允许使用现有的预构建交叉编译工具链。Buildroot 了解许多著名的交叉编译工具链（来自 <a target="_blank" rel="noopener" href="http://www.linaro.org/">Linaro</a> for ARM、 Sourcery CodeBench for ARM、x86-64、PowerPC 和 MIPS），并且能够自动下载它们，或者可以指向自定义工具链，可下载或本地安装。</p>
+<p>有三种使用外部工具链的解决方案：</p>
+<ul>
+<li>使用预定义的外部工具链配置文件，让 Buildroot 下载、提取和安装工具链。</li>
+<li>使用预定义的外部工具链配置文件，但不是让 Buildroot 下载并提取工具链，而是可以告诉 Buildroot 您的工具链已安装在系统上的位置。</li>
+<li>使用完全自定义的外部工具链。</li>
+</ul>
+<h2 id="初始化系统"><a href="#初始化系统" class="headerlink" title="初始化系统"></a>初始化系统</h2><p><em>init</em>程序是内核启动的第一个用户空间程序（它的 PID 编号为 1），负责启动用户空间服务和程序（例如：Web 服务器、图形应用程序、其他网络服务器等）。</p>
+<p>Buildroot 允许使用三种不同类型的 init 系统：</p>
+<ul>
+<li>第一个解决方案是<strong>BusyBox</strong>：在众多程序中，BusyBox 有一个基本<code>init</code>程序的实现，对于大多数嵌入式系统来说已经足够了。</li>
+<li>第二种解决方案是<strong>systemV</strong>：此解决方案使用旧的传统<em>sysvinit</em>程序，该程序在 Buildroot 中打包 <code>package/sysvinit</code>。这是大多数桌面 Linux 发行版中使用的解决方案，直到他们转向 Upstart 或 Systemd 等较新的替代方案。</li>
+<li>第三个解决方案是<strong>systemd</strong>：<code>systemd</code>它是新一代的 Linux 初始化系统。</li>
+</ul>
+<p>Buildroot 开发人员推荐的解决方案是使用 <strong>BusyBox init</strong>，因为它对于大多数嵌入式系统来说已经足够了。systemd可用于更复杂的情况。</p>
 <h2 id="Kconfig"><a href="#Kconfig" class="headerlink" title="Kconfig"></a>Kconfig</h2><blockquote>
 <p>Kconfig是什么？</p>
 </blockquote>
@@ -643,8 +659,7 @@ if(canvas.getContext){
 <li>$(eval $(python-package))：适用于 Python 软件包的规则。用于构建和安装 Python 模块。</li>
 </ul>
 <p><em>注意：PKG是你的应用名称</em></p>
-<p>内置变量：</p>
-<ul>
+<h2 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h2><ul>
 <li>TOPDIR：<code>buildroot</code> 目录</li>
 <li>TARGET_MAKE_ENV</li>
 <li>TARGET_CC</li>

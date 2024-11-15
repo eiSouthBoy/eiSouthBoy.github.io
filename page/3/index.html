@@ -87,7 +87,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">34</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">61</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -152,18 +152,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -477,7 +477,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/05/Matter-Smart-Plugs-Outlets-and-Other-Actuators/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/10/08/overview-of-major-emabedded-linux-software-stacks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -495,7 +495,7 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/09/05/Matter-Smart-Plugs-Outlets-and-Other-Actuators/" class="post-title-link" itemprop="url">Matter: Smart Plugs/Outlets and Other Actuators</a>
+          <a href="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/" class="post-title-link" itemprop="url">overview of major emabedded linux software stacks</a>
         </h2>
 
         <div class="post-meta-container">
@@ -506,14 +506,14 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-09-05 12:58:36" itemprop="dateCreated datePublished" datetime="2024-09-05T12:58:36+00:00">2024-09-05</time>
+      <time title="Created: 2024-10-08 11:13:31" itemprop="dateCreated datePublished" datetime="2024-10-08T11:13:31+00:00">2024-10-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-06 07:45:08" itemprop="dateModified" datetime="2024-09-06T07:45:08+00:00">2024-09-06</time>
+      <time title="Modified: 2024-10-31 06:25:22" itemprop="dateModified" datetime="2024-10-31T06:25:22+00:00">2024-10-31</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -521,7 +521,7 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+          <a href="/categories/bootlin/" itemprop="url" rel="index"><span itemprop="name">bootlin</span></a>
         </span>
     </span>
 
@@ -536,10 +536,10 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为插头/插座类设备的数据属性，以便后续回顾和查询。</p>
+          <p>embedded-linux-slides.pdf文档中关于overview of major emabedded linux software stacks章节的阅读过程和相关理解记录。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/09/05/Matter-Smart-Plugs-Outlets-and-Other-Actuators/">
+              <a class="btn" href="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/">
                 Read more &raquo;
               </a>
             </div>
@@ -570,7 +570,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/03/core-dump-and-gdb/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/29/bluetooth-le-advertise-scan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -588,7 +588,7 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/09/03/core-dump-and-gdb/" class="post-title-link" itemprop="url">core dump and gdb</a>
+          <a href="/2024/09/29/bluetooth-le-advertise-scan/" class="post-title-link" itemprop="url">bluetooth: le advertise scan</a>
         </h2>
 
         <div class="post-meta-container">
@@ -599,200 +599,14 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-09-03 12:17:15" itemprop="dateCreated datePublished" datetime="2024-09-03T12:17:15+00:00">2024-09-03</time>
+      <time title="Created: 2024-09-29 02:58:50" itemprop="dateCreated datePublished" datetime="2024-09-29T02:58:50+00:00">2024-09-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-14 08:23:36" itemprop="dateModified" datetime="2024-10-14T08:23:36+00:00">2024-10-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
- 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近一个应用崩溃出现了报错：Segment Fault，对于这个错误早就不陌生了。但是我需要捕捉这个错误，分析出错的位置。在linux中，可以开启core dump功能，在程序崩溃时，生成core文件，然后通过gdb分析core文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/09/03/core-dump-and-gdb/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="eiSouthBoy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eiSouthBoy's Blog">
-      <meta itemprop="description" content="Talk is cheap. Show me your code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/" class="post-title-link" itemprop="url">Matter: Switches and Controls Device Types</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-31 02:14:26" itemprop="dateCreated datePublished" datetime="2024-08-31T02:14:26+00:00">2024-08-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-05 08:44:55" itemprop="dateModified" datetime="2024-09-05T08:44:55+00:00">2024-09-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
- 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为开关和控制类设备的数据属性，以便后续回顾和查询。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="eiSouthBoy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eiSouthBoy's Blog">
-      <meta itemprop="description" content="Talk is cheap. Show me your code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/28/raspberry4b-play-audio/" class="post-title-link" itemprop="url">bluetooth：raspberry4b play audio</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-28 06:12:36" itemprop="dateCreated datePublished" datetime="2024-08-28T06:12:36+00:00">2024-08-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-28 03:14:57" itemprop="dateModified" datetime="2024-10-28T03:14:57+00:00">2024-10-28</time>
+      <time title="Modified: 2024-09-30 02:39:49" itemprop="dateModified" datetime="2024-09-30T02:39:49+00:00">2024-09-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -815,10 +629,10 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。</p>
+          <p>关于LE设备数据如何获取的，这部分还是一知半解，觉得有必要结合文档和实践加深一下概念。下面就是理解bluez中hcitool源码的过程，主要是le scan部分。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/08/28/raspberry4b-play-audio/">
+              <a class="btn" href="/2024/09/29/bluetooth-le-advertise-scan/">
                 Read more &raquo;
               </a>
             </div>
@@ -849,7 +663,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/21/ssh-remote-login/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -867,7 +681,7 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/21/ssh-remote-login/" class="post-title-link" itemprop="url">ssh remote login</a>
+          <a href="/2024/09/25/bluetoothd-source-file-reading/" class="post-title-link" itemprop="url">bluetoothd: source file reading</a>
         </h2>
 
         <div class="post-meta-container">
@@ -878,200 +692,14 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-08-21 09:25:00" itemprop="dateCreated datePublished" datetime="2024-08-21T09:25:00+00:00">2024-08-21</time>
+      <time title="Created: 2024-09-25 07:04:17" itemprop="dateCreated datePublished" datetime="2024-09-25T07:04:17+00:00">2024-09-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-30 08:42:19" itemprop="dateModified" datetime="2024-10-30T08:42:19+00:00">2024-10-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
- 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>常用ssh client远程登录服务器上的ssh server，以便控制和操作服务器。ssh client登录服务一般有两种方式：密码登录 和 公钥登录。密码登录每次都要输入密码，也容易面临暴力破解的风险。而公钥登录很难被破解密码，每次登录使用非对称加密算法保密通信。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/08/21/ssh-remote-login/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/18/Shell-and-Shell-Scripts/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="eiSouthBoy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eiSouthBoy's Blog">
-      <meta itemprop="description" content="Talk is cheap. Show me your code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/18/Shell-and-Shell-Scripts/" class="post-title-link" itemprop="url">Shell and Shell Scripts</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-18 21:34:00" itemprop="dateCreated datePublished" datetime="2024-08-18T21:34:00+00:00">2024-08-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-29 12:34:53" itemprop="dateModified" datetime="2024-10-29T12:34:53+00:00">2024-10-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
- 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>很早之前就想系统的学习一下shell scripts，但是每次都没有坚持下来，总认为需要的时候去查一查就行了。当然，简单的使用Linux，这样子做没有问题，但是在工作中使用Linux进行日常开发，那么就要求对shell scripts非常熟悉，并且要求自己能够编写自定义的shell scripts文件。以下内容就是我对于 shell && shell scripts 的学习和记录。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/08/18/Shell-and-Shell-Scripts/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/16/bluetoothctl-client-tool/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="eiSouthBoy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eiSouthBoy's Blog">
-      <meta itemprop="description" content="Talk is cheap. Show me your code.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/16/bluetoothctl-client-tool/" class="post-title-link" itemprop="url">bluetoothctl client tool</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-16 14:49:00" itemprop="dateCreated datePublished" datetime="2024-08-16T14:49:00+00:00">2024-08-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-10-30 09:38:58" itemprop="dateModified" datetime="2024-10-30T09:38:58+00:00">2024-10-30</time>
+      <time title="Modified: 2024-10-24 07:10:23" itemprop="dateModified" datetime="2024-10-24T07:10:23+00:00">2024-10-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1094,10 +722,10 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>通过bluetoothctl tool源码实现自定义封装bluetooth client library。能够实现如下功能：获取hci controller信息、 设置hci controller属性、开始/停止扫描蓝牙设备、配对蓝牙设备、连接/断开蓝牙设备、移除蓝牙设备。</p>
+          <p>在之前编写bluetooth客户端时，测试connect接口时，出现了一些问题，也尝试通过关键字搜索查找目标代码，但经过两天的搜索和查找，还是没有找到目标代码的实现。那么能否阅读bluetoothd源码，并从整体性去理解它的框架，从而解决我的疑问呢？</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/08/16/bluetoothctl-client-tool/">
+              <a class="btn" href="/2024/09/25/bluetoothd-source-file-reading/">
                 Read more &raquo;
               </a>
             </div>
@@ -1128,7 +756,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/15/esp-matter-light-project/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/23/bluetoothd-device-cache/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -1146,7 +774,7 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/15/esp-matter-light-project/" class="post-title-link" itemprop="url">esp-matter：light project</a>
+          <a href="/2024/09/23/bluetoothd-device-cache/" class="post-title-link" itemprop="url">bluetoothd: device cache</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1157,14 +785,14 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-08-15 14:36:33" itemprop="dateCreated datePublished" datetime="2024-08-15T14:36:33+00:00">2024-08-15</time>
+      <time title="Created: 2024-09-23 06:19:49" itemprop="dateCreated datePublished" datetime="2024-09-23T06:19:49+00:00">2024-09-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-20 08:07:28" itemprop="dateModified" datetime="2024-09-20T08:07:28+00:00">2024-09-20</time>
+      <time title="Modified: 2024-09-29 02:03:34" itemprop="dateModified" datetime="2024-09-29T02:03:34+00:00">2024-09-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1172,7 +800,7 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+          <a href="/categories/bluetooth/" itemprop="url" rel="index"><span itemprop="name">bluetooth</span></a>
         </span>
     </span>
 
@@ -1187,10 +815,10 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>自2022年由CSA发布Matter v1.0以来，Matter发展和迭代非常迅速。在仅仅不到2年的时间，已经发布了Matter v1.3，支持的IoT设备类型和功能越来越多。ESP在Matter SDK的基础上封装了一层，形成了ESP-MATTER SDK，方便使用ESP芯片的用户快速开发产品。以下内容就是测试ESP-MATTER的官方用例，验证ESP-MATTER环境是否可用，同时也初步了解chip-tool的使用。</p>
+          <p>当使用蓝牙客户端程序bluetoothctl发送"scan on"扫描附近蓝牙设备时，蓝牙服务器程序bluetoothd会将开始扫描附近蓝牙设备，并将蓝牙设备数据存储到本地文件系统中。若满足预定的条件，bluetoothd会把临时蓝牙设备数据删除。那么存储的蓝牙设备数据格式是什么样的呢？满足什么样的预定条件才会删除蓝牙设备数据呢？以下就是关于这些方面的探索</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/08/15/esp-matter-light-project/">
+              <a class="btn" href="/2024/09/23/bluetoothd-device-cache/">
                 Read more &raquo;
               </a>
             </div>
@@ -1221,7 +849,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/13/Matter-Lighting-Device-Types/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/10/Matter-Level-Control-Cluster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -1239,7 +867,7 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/13/Matter-Lighting-Device-Types/" class="post-title-link" itemprop="url">Matter：Lighting Device Types</a>
+          <a href="/2024/09/10/Matter-Level-Control-Cluster/" class="post-title-link" itemprop="url">Matter: Level Control Cluster</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1250,14 +878,14 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-08-13 16:53:00" itemprop="dateCreated datePublished" datetime="2024-08-13T16:53:00+00:00">2024-08-13</time>
+      <time title="Created: 2024-09-10 09:08:52" itemprop="dateCreated datePublished" datetime="2024-09-10T09:08:52+00:00">2024-09-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-05 09:37:21" itemprop="dateModified" datetime="2024-09-05T09:37:21+00:00">2024-09-05</time>
+      <time title="Modified: 2024-09-19 05:58:51" itemprop="dateModified" datetime="2024-09-19T05:58:51+00:00">2024-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1280,10 +908,10 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为照明类设备的数据属性，以便后续回顾和查询。</p>
+          <p>在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/08/13/Matter-Lighting-Device-Types/">
+              <a class="btn" href="/2024/09/10/Matter-Level-Control-Cluster/">
                 Read more &raquo;
               </a>
             </div>
@@ -1314,7 +942,7 @@ if(canvas.getContext){
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/13/Matter-Standard/">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/07/hexo-assert-image-problem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -1332,7 +960,94 @@ if(canvas.getContext){
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/13/Matter-Standard/" class="post-title-link" itemprop="url">Matter Standard</a>
+          <a href="/2024/09/07/hexo-assert-image-problem/" class="post-title-link" itemprop="url">hexo-asset-image problem</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-09-07 14:12:01 / Modified: 07:27:07" itemprop="dateCreated datePublished" datetime="2024-09-07T14:12:01+00:00">2024-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>使用hexo搭建博客后，希望在博客内容中能够插入图片。刚好找到一种解决方法：hexo-asset-image，但是实际操作的时候，最终图片还是显示异常。以下记录如何解决这个问题的过程。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/09/07/hexo-assert-image-problem/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/07/ESP32-C3-DevKitM-1-Schematic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/" class="post-title-link" itemprop="url">ESP32-C3-DevKitM-1 Schematic</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1343,14 +1058,200 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2024-08-13 10:08:33" itemprop="dateCreated datePublished" datetime="2024-08-13T10:08:33+00:00">2024-08-13</time>
+      <time title="Created: 2024-09-07 03:34:01" itemprop="dateCreated datePublished" datetime="2024-09-07T03:34:01+00:00">2024-09-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-19 06:51:34" itemprop="dateModified" datetime="2024-09-19T06:51:34+00:00">2024-09-19</time>
+      <time title="Modified: 2024-11-04 13:21:38" itemprop="dateModified" datetime="2024-11-04T13:21:38+00:00">2024-11-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近在学习Matter的Button和LED项目时，发现居然忘记了怎么去点亮LED灯。对应的LED灯的GPIO口是多少也不记得，但是我还是知道去查阅开发板的原理图。最终还是决定先把开发板的基础部分过一遍，这里记录了原理图的部分。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/06/esp-matter-blink-project/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/06/esp-matter-blink-project/" class="post-title-link" itemprop="url">esp-matter: blink project</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-06 14:32:02" itemprop="dateCreated datePublished" datetime="2024-09-06T14:32:02+00:00">2024-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-04 13:21:49" itemprop="dateModified" datetime="2024-11-04T13:21:49+00:00">2024-11-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>学习esp32c3的第一课：点亮LED灯，这就像编程语言中的第一课：输出 “hello world“ 是一样的。以下就是esp官网给的blink示例，以及对于这部分的理解记录。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/09/06/esp-matter-blink-project/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/06/Matter-On-Off-Cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/06/Matter-On-Off-Cluster/" class="post-title-link" itemprop="url">Matter: On/Off Cluster</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-06 10:33:07" itemprop="dateCreated datePublished" datetime="2024-09-06T10:33:07+00:00">2024-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-20 09:08:58" itemprop="dateModified" datetime="2024-09-20T09:08:58+00:00">2024-09-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1373,10 +1274,103 @@ if(canvas.getContext){
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>国外四巨头（苹果、谷歌、亚马逊、三星）为主的企业组件了CSA，紧接着在2022年发布了MATTER v1.0，参与Matter项目的企业和个人越来越多，到底Matter在IoT领域有什么影响？以及Matter对于用户和设备厂商有什么好处？以下内容就是针对Matter理解。</p>
+          <p>在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。On/Off Cluster是通用的Cluster。以下内容仅为On/Off Cluster的内容介绍，以便后续回顾和查询。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/08/13/Matter-Standard/">
+              <a class="btn" href="/2024/09/06/Matter-On-Off-Cluster/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/06/Matter-Sensor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | eiSouthBoy's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/06/Matter-Sensor/" class="post-title-link" itemprop="url">Matter: Sensor</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-06 07:47:32" itemprop="dateCreated datePublished" datetime="2024-09-06T07:47:32+00:00">2024-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-23 01:46:04" itemprop="dateModified" datetime="2024-09-23T01:46:04+00:00">2024-09-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在阅读CSA发布的matter-1-3-device-library-specification.pdf文档时，记录Matter设备数据属性，以便后续对于Matter设备的开发。Matter支持的设备类型很多，将会对不同的设备分不同的文章进行记录。以下内容仅为传感器类设备的数据属性，以便后续回顾和查询。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/09/06/Matter-Sensor/">
                 Read more &raquo;
               </a>
             </div>
@@ -1400,7 +1394,7 @@ if(canvas.getContext){
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

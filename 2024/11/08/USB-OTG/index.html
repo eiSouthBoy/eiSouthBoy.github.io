@@ -21,25 +21,31 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Talk is cheap. Show me your code.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="eiSouthBoy&#39;s Blog">
-<meta property="og:url" content="https://eisouthboy.github.io/categories/esp32c3/index.html">
+    <meta name="description" content="当一个设备通过USB接口连接到另一个设备时，该设备可以通过什么方式来判断连接是仅用于供电还是同时支持数据传输？以下就是关于这方面的记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USB-OTG">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/11/08/USB-OTG/index.html">
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
-<meta property="og:description" content="Talk is cheap. Show me your code.">
+<meta property="og:description" content="当一个设备通过USB接口连接到另一个设备时，该设备可以通过什么方式来判断连接是仅用于供电还是同时支持数据传输？以下就是关于这方面的记录。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/08/USB-OTG/image-20241111173957481.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/08/USB-OTG/image-20241111105502903.png">
+<meta property="article:published_time" content="2024-11-08T06:11:25.000Z">
+<meta property="article:modified_time" content="2024-11-12T08:49:55.802Z">
 <meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="USB OTG">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/11/08/USB-OTG/image-20241111173957481.png">
 
 
-<link rel="canonical" href="https://eisouthboy.github.io/categories/esp32c3/">
+<link rel="canonical" href="https://eisouthboy.github.io/2024/11/08/USB-OTG/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":"","permalink":"","path":"categories/esp32c3/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/11/08/USB-OTG/","path":"2024/11/08/USB-OTG/","title":"USB-OTG"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Category: esp32c3 | eiSouthBoy's Blog</title>
+<title>USB-OTG | eiSouthBoy's Blog</title>
   
 
 
@@ -87,7 +93,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">34</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">61</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -125,7 +131,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -138,6 +144,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#USB"><span class="nav-number">1.</span> <span class="nav-text">USB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%91%E9%97%AE"><span class="nav-number">2.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -152,18 +159,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">61</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -467,71 +474,159 @@ if(canvas.getContext){
 
     </div>
 
-    <div class="main-inner category posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">esp32c3
-          <small>Category</small>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/11/08/USB-OTG/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="USB-OTG | eiSouthBoy's Blog">
+      <meta itemprop="description" content="当一个设备通过USB接口连接到另一个设备时，该设备可以通过什么方式来判断连接是仅用于供电还是同时支持数据传输？以下就是关于这方面的记录。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          USB-OTG
         </h1>
-      </div>
 
-      
-    <div class="collection-year">
-      <span class="collection-header">2024</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-08 06:11:25" itemprop="dateCreated datePublished" datetime="2024-11-08T06:11:25+00:00">2024-11-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-12 08:49:55" itemprop="dateModified" datetime="2024-11-12T08:49:55+00:00">2024-11-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">当一个设备通过USB接口连接到另一个设备时，该设备可以通过什么方式来判断连接是仅用于供电还是同时支持数据传输？以下就是关于这方面的记录。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="USB"><a href="#USB" class="headerlink" title="USB"></a>USB</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/USB">USB</a>是什么？</p>
+</blockquote>
+<p>USB（Universal Serial Bus）是一种通用的总线标准，用于连接主机和外设设备。<strong>USB 主机（USB Host）</strong>可以通过 USB 接口与 <strong>USB 设备（UBS Device）</strong>连接，实现 <strong>数据传输、电源供给</strong> 等功能。</p>
+<p>USB IF（USB Implementers Forum）是 USB 标准的制定者，它制定了 USB 标准，包括 USB 1.1、USB 2.0、USB 3.0 等，定义了 USB 接口的物理层、数据链路层、传输层、会话层、表示层等协议，以及 USB 设备类（Device Class）标准，常见的设备类包括 HID（Human Interface Device，人机接口设备）、MSC（Mass Storage Class，大容量存储设备）、CDC（Communication Device Class，通信设备）、Audio、Video 等。</p>
+<p><strong>USB协议版本（协议版本向下兼容）：</strong></p>
+<ul>
+<li>USB 1.0&#x2F;1.1(low&#x2F;full speed)，传输速率最大为12Mbps</li>
+<li>USB 2.0(high speed)，传输速率最大480Mbps</li>
+<li>USB 3.0(super speed)，传输速率最大5Gbps</li>
+</ul>
+<p><strong>USB接口类型：</strong></p>
+<ul>
+<li>Type A，即使我们电脑上的那种接口。</li>
+<li>Type B，不太常见，比较方正的T型接口，有的嵌入式开发板会用。</li>
+<li>Type C，2013年公布该接口类型，现在开始流行起来了，最大的好处就是可以盲插，而不用区分正反。后续电子产品接口将实现 Typc-C 接口大一统。</li>
+<li>Micro&#x2F;mini，早期的安卓手机上使用Micro USB比较常见。</li>
+</ul>
+<p>USB各种接口图片：<a target="_blank" rel="noopener" href="https://www.usbzh.com/article/detail-144.html">https://www.usbzh.com/article/detail-144.html</a></p>
+<p><strong>USB Device：</strong></p>
+<p>USB Device 是连接到USB Host的外设，它响应Host的命令和请求，提供特定的功能或服务。USB Device可以是简单的输入设备（如键盘、鼠标）、存储设备（如U盘、外置硬盘）、打印机、摄像头等。</p>
+<p><strong>USB Host：</strong></p>
+<p>USB Host 是USB通信中的控制者，负责初始化和管理所有USB通信。它通常是一个计算设备，如个人计算机、笔记本电脑、平板电脑或某些嵌入式系统（如支持USB OTG的微控制器）。</p>
+<p><strong>USB OTG：</strong></p>
+<p>USB On-The-Go 通常缩写为<strong>USB OTG</strong>，是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/USB_2.0">USB 2.0</a>规格的补充标准。它可使USB设备，例如播放器或手机，从USB周边设备变为USB主机，与其他USB设备连接通信。在正常情况下，这些支持OTG的USB设备和USB主机（例如：PC），仍然作为USB周边设备使用。</p>
+<p>支持OTG的设备，如USB打印机，可以不连接电脑的情况下直接接入U盘来读取设备内文件进行打印；或平板电脑可以直接接入USB存储碟、键盘或鼠标来扩充外界硬件功能。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p> <strong>1、USB Type-C OTG 口自身怎么判断当前只是供电，还是既供电又传输数据？</strong></p>
+<p><img src="/2024/11/08/USB-OTG/image-20241111173957481.png" alt="image-20241111173957481"></p>
+<p><img src="/2024/11/08/USB-OTG/image-20241111105502903.png" alt="image-20241111105502903"></p>
+<ul>
+<li>CC线（CC1或CC2）：CC线用于协商电源角色和数据角色，以及检测连接的设备类型（电源适配器或USB设备）。电源适配器通常只提供电源，不支持数据传输。USB设备会通过CC线与USB Host进行通信，协商电源和数据角色。</li>
+<li>VBUS线：通过检测VBUS线有5V电压来确认连接的设备提供电源。</li>
+<li>D+和D-线：两根查分信号线，支持USB2.0用于传输高速数字信号，最高传输速率可达480 Mbps。或支持Type-C 耳机的左右声道信号。</li>
+<li>TX和RX：支持USB 3.2&#x2F;4.0 信号传输</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-iot-solution/zh_CN/latest/usb/usb_overview/usb_overview.html"><strong>ESP USB 外设介绍</strong></a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bujidao1128/p/18307221">Type-c接口及其协议介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://nihil.cc/posts/usb/">USB 2.0 与 USB 3.2</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.espressif.com/zh-hans/solutions/peripherals/usb-solutions">ESP USB方案</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jia_weihui/article/details/128562625">OTG硬件检测电路</a></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2024-09-07T03:34:01+00:00"
-              content="2024-09-07">
-          09-07
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/" itemprop="url">
-            <span itemprop="name">ESP32-C3-DevKitM-1 Schematic</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/USB-OTG/" rel="tag"># USB OTG</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/05/mDNS/" rel="prev" title="mDNS">
+                  <i class="fa fa-angle-left"></i> mDNS
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/13/esp-idf-py-command/" rel="next" title="esp: idf.py command">
+                  esp: idf.py command <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2024-09-06T14:32:02+00:00"
-              content="2024-09-06">
-          09-06
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/09/06/esp-matter-blink-project/" itemprop="url">
-            <span itemprop="name">esp-matter: blink project</span>
-          </a>
-      </div>
 
-      
-    </header>
-  </article>
 
-    </div>
-  </div>
-  
-  
-  
 
+
+    <div class="comments gitalk-container"></div>
 </div>
   </main>
 
@@ -607,7 +702,7 @@ if(canvas.getContext){
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"3a69c88ced9fee409d5f8f6dc3ded142"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"36a2d0effc823e8d7a226107224c4943"}</script>
 <script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
