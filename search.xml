@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>esp: button component</title>
+    <url>/2024/11/26/2024/esp-button-component/</url>
+    <content><![CDATA[<h2 id="button组件"><a href="#button组件" class="headerlink" title="button组件"></a>button组件</h2><p><a href="https://components.espressif.com/">esp组件仓库</a>  </p>
+<ul>
+<li><a href="https://components.espressif.com/components/espressif/button/versions/3.4.0">espressif&#x2F;button</a>：当前最新版本是v3.4.0</li>
+</ul>
+<p>如何将button组件添加到目标项目？</p>
+<blockquote>
+<p>Please use the component manager command <code>add-dependency</code> to add the <code>button</code> to your project’s dependency, during the <code>CMake</code> step the component will be downloaded automatically</p>
+<p>释义：请使用 add-dependency 组件管理命令将 button 添加到目标项目依赖，在执行 CMake 步骤时，button 组件将会被自动下载到目标项目。</p>
+</blockquote>
+<p>组件管理命令添加button组件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 添加指定button最新版本依赖</span></span><br><span class="line">idf.py add-dependency <span class="string">&quot;espressif/button=*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加指定button指定版本组件依赖</span></span><br><span class="line">idf.py add-dependency <span class="string">&quot;espressif/button^3.4.0&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>组件管理命令执行后，在项目的 main 文件夹下将出现 <code>idf_component.yml</code> 文件，文件内容如下：</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">## IDF Component Manager Manifest File</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="attr">espressif/button:</span> <span class="string">&quot;^3.4.0&quot;</span></span><br><span class="line">  <span class="comment">## Required IDF version</span></span><br><span class="line">  <span class="attr">idf:</span></span><br><span class="line">    <span class="attr">version:</span> <span class="string">&quot;&gt;=4.1.0&quot;</span></span><br><span class="line">  <span class="comment"># # Put list of dependencies here</span></span><br><span class="line">  <span class="comment"># # For components maintained by Espressif:</span></span><br><span class="line">  <span class="comment"># component: &quot;~1.0.0&quot;</span></span><br><span class="line">  <span class="comment"># # For 3rd party components:</span></span><br><span class="line">  <span class="comment"># username/component: &quot;&gt;=1.0.0,&lt;2.0.0&quot;</span></span><br><span class="line">  <span class="comment"># username2/component2:</span></span><br><span class="line">  <span class="comment">#   version: &quot;~1.0.0&quot;</span></span><br><span class="line">  <span class="comment">#   # For transient dependencies `public` flag can be set.</span></span><br><span class="line">  <span class="comment">#   # `public` flag doesn&#x27;t have an effect dependencies of the `main` component.</span></span><br><span class="line">  <span class="comment">#   # All dependencies of `main` are public by default.</span></span><br><span class="line">  <span class="comment">#   public: true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>idf.py build</code> 完成后，在项目下创建了 <code>managed_components</code> 文件夹，该文件夹有下载的组件：<code>espressif__button</code> 和 <code>espressif__cmake_utilities</code></p>
+<p>同时发现还有其他文件被新建：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-NMH-WCX9:~/esp/app-example/get-started/button$ <span class="built_in">ls</span> -al</span><br><span class="line">total 84</span><br><span class="line">drwxrwxr-x  5 pi pi  4096 11月 26 14:39 .</span><br><span class="line">drwxrwxr-x 16 pi pi  4096 11月 20 14:18 ..</span><br><span class="line">drwxrwxr-x  8 pi pi  4096 11月 26 14:39 build</span><br><span class="line">-rw-rw-r--  1 pi pi   244 11月 26 14:36 CMakeLists.txt</span><br><span class="line">-rw-rw-r--  1 pi pi   637 11月 26 14:39 dependencies.lock</span><br><span class="line">drwxrwxr-x  2 pi pi  4096 11月 26 14:12 main</span><br><span class="line">drwxrwxr-x  4 pi pi  4096 11月 26 14:39 managed_components</span><br><span class="line">-rw-rw-r--  1 pi pi 56876 11月 26 14:39 sdkconfig</span><br></pre></td></tr></table></figure>
+
+<p>很明显，dependencies.lock、sdkconfig文件是自动新建的，managed_components文件夹也是自动被新建的。</p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>button按键组件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu 22.04: VirtualBox7</title>
     <url>/2024/11/26/2024/Ubuntu-22-04-VirtualBox7/</url>
     <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a href="https://www.virtualbox.org/">Oracle Virtualbox</a> VirtualBox 是一款开源虚拟机软件。由德国 Innotek 公司开发，Sun Microsystems 公司出品。使用 Qt 编写，在 Sun 被 Oracle 收购后正式更名成 Oracle VM VirtualBox。采用 GPL 协议开源。</p>
