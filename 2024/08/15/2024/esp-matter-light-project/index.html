@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="自2022年由CSA发布Matter v1.0以来，Matter发展和迭代非常迅速。在仅仅不到2年的时间，已经发布了Matter v1.3，支持的IoT设备类型和功能越来越多。ESP在Matter SDK的基础上封装了一层，形成了ESP-MATTER SDK，方便使用ESP芯片的用户快速开发产品。以下内容就是测试ESP-MATTER的官方用例，验证ESP-MATTER环境是否可用，同时也初步了解c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="esp-matter：light project">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/08/15/2024/esp-matter-light-project/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="自2022年由CSA发布Matter v1.0以来，Matter发展和迭代非常迅速。在仅仅不到2年的时间，已经发布了Matter v1.3，支持的IoT设备类型和功能越来越多。ESP在Matter SDK的基础上封装了一层，形成了ESP-MATTER SDK，方便使用ESP芯片的用户快速开发产品。以下内容就是测试ESP-MATTER的官方用例，验证ESP-MATTER环境是否可用，同时也初步了解c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-15T14:36:33.000Z">
+<meta property="article:modified_time" content="2024-09-20T08:07:28.941Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="esp-matter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/08/15/2024/esp-matter-light-project/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/15/2024/esp-matter-light-project/","path":"2024/08/15/2024/esp-matter-light-project/","title":"esp-matter：light project"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>esp-matter：light project | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">设置目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">编译固件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%A7%E5%BD%95%E5%9B%BA%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">烧录固件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%91"><span class="nav-number">2.</span> <span class="nav-text">配网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chip-tool%E5%91%BD%E4%BB%A4%E9%85%8D%E7%BD%91"><span class="nav-number">2.1.</span> <span class="nav-text">chip-tool命令配网</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%AB%E7%A0%81%E9%85%8D%E7%BD%91"><span class="nav-number">3.</span> <span class="nav-text">扫码配网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E8%AF%BB"><span class="nav-number">5.</span> <span class="nav-text">解读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/15/2024/esp-matter-light-project/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="esp-matter：light project | eiSouthBoy's Blog">
+      <meta itemprop="description" content="自2022年由CSA发布Matter v1.0以来，Matter发展和迭代非常迅速。在仅仅不到2年的时间，已经发布了Matter v1.3，支持的IoT设备类型和功能越来越多。ESP在Matter SDK的基础上封装了一层，形成了ESP-MATTER SDK，方便使用ESP芯片的用户快速开发产品。以下内容就是测试ESP-MATTER的官方用例，验证ESP-MATTER环境是否可用，同时也初步了解chip-tool的使用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          esp-matter：light project
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-15 14:36:33" itemprop="dateCreated datePublished" datetime="2024-08-15T14:36:33+00:00">2024-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-20 08:07:28" itemprop="dateModified" datetime="2024-09-20T08:07:28+00:00">2024-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">自2022年由CSA发布Matter v1.0以来，Matter发展和迭代非常迅速。在仅仅不到2年的时间，已经发布了Matter v1.3，支持的IoT设备类型和功能越来越多。ESP在Matter SDK的基础上封装了一层，形成了ESP-MATTER SDK，方便使用ESP芯片的用户快速开发产品。以下内容就是测试ESP-MATTER的官方用例，验证ESP-MATTER环境是否可用，同时也初步了解chip-tool的使用。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置目标"><a href="#设置目标" class="headerlink" title="设置目标"></a>设置目标</h3><p>开发板Soc是esp32-c3，故设置目标选择：esp32c3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 激活esp-idf和esp-matter环境</span></span><br><span class="line">get_idf</span><br><span class="line">get_matter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标</span></span><br><span class="line">idf.py set-target esp32c3</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译固件"><a href="#编译固件" class="headerlink" title="编译固件"></a>编译固件</h3><p>直接开始编译固件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">idf.py build</span><br></pre></td></tr></table></figure>
+
+<h3 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h3><p>将开发板插入PC的USB接口，修改串口权限，开始烧录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找串口权限</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改串口权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 664 /dev/ttyUSB0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 烧录固件</span></span><br><span class="line">idf.py -p /dev/ttyUSB0 flash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若想完全重新编译，需要先删除build目录下所有文件</span></span><br><span class="line">idf.py fullclean</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：不同开发板的接入PC后，串口名称可能不同，目前已知的两种名称：<code>/dev/ttyUSB0</code> 和 <code>/dev/ttyACM0</code></em></p>
+<p><em>乐鑫esp32c3开发板串口名称：&#x2F;dev&#x2F;ttyUSB0</em></p>
+<p><em>合宙esp32c3开发板串口名称：&#x2F;dev&#x2F;ttyACM0</em></p>
+<h2 id="配网"><a href="#配网" class="headerlink" title="配网"></a>配网</h2><p>通过BLE方式给设备配网：指通过低功耗蓝牙（即BLE）将SSID和密码发送给WiFi设备，然后WiFi连接到指定的WiFi网络。</p>
+<blockquote>
+<p>什么是配网？</p>
+</blockquote>
+<p>配网指的是外部向 WiFi 设备提供 SSID和密码，以便 WiFi 设备可以连接指定的AP并加入AP所建立的 WiFi 网络。配网的核心问题是通过各种方法（SoftAP配网、一键配网、蓝牙配网、其他方式配网），将WiFi的 SSID和密码发送到需要联网的WiFi设备，然后由WiFi设备去连接指定的WiFi网络，达到接入局域网或互联网的目的。</p>
+<h3 id="chip-tool命令配网"><a href="#chip-tool命令配网" class="headerlink" title="chip-tool命令配网"></a>chip-tool命令配网</h3><p>启动Terminal A用于monitor串口数据，启动Terminal B用于执行chip-tool命令。其中chip-tool工具有两种使用方式：单次执行 和 交互执行。交互执行控制设备时，响应速度非常快，并且不容易产生超时报错。单次执行某条指令需要再一定时间周期内完成，否则chip-tool将会报错：Timeout。</p>
+<p><strong>单次执行：</strong></p>
+<p>单次执行配网命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模版</span></span><br><span class="line">chip-tool pairing ble-wifi &lt;node_id&gt; &lt;ssid&gt; &lt;password&gt; &lt;pin_code&gt; &lt;discriminator&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">chip-tool pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+
+<p><em>命令解释：</em></p>
+<ul>
+<li><p><code>0x7283</code> 是自定义一个随机的 <code>node_id</code></p>
+</li>
+<li><p><code>CUBEC_AP_2.4G</code> 、<code>cubec2015</code>：分别是wifi的 <code>ssid</code> 和 <code>password</code></p>
+</li>
+<li><p><code>20202021</code> 是 <code>pin_code</code></p>
+</li>
+<li><p><code>3840</code> 是 <code>discriminator</code></p>
+</li>
+</ul>
+<p><em>单次执行容易导致超时，建议使用交互执行！！！</em></p>
+<p><strong>交互执行（建议）：</strong></p>
+<p><strong>Terminal A</strong>处于等待配网状态，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">I (1725) esp_matter_core: Dynamic endpoint 1 added</span><br><span class="line">I (1735) chip[DL]: WIFI_EVENT_STA_START</span><br><span class="line">W (1735) wifi:Haven<span class="string">&#x27;t to connect to a suitable AP now!</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Done driving station state, nothing else to do...</span></span><br><span class="line"><span class="string">I (1745) chip[DL]: Configuring CHIPoBLE advertising (interval 25 ms, connectable)</span></span><br><span class="line"><span class="string">I (1755) NimBLE: GAP procedure initiated: advertise; </span></span><br><span class="line"><span class="string">I (1765) NimBLE: disc_mode=2</span></span><br><span class="line"><span class="string">I (1765) NimBLE:  adv_channel_map=0 own_addr_type=1 adv_filter_policy=0 adv_itvl_min=40 adv_itvl_max=40</span></span><br><span class="line"><span class="string">I (1775) NimBLE: </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I (1775) chip[DL]: CHIPoBLE advertising started</span></span><br><span class="line"><span class="string">I (1785) app_main: Commissioning window opened</span></span><br><span class="line"><span class="string">I (1855) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">&gt; I (4725) esp_matter_core: Store the deferred attribute 0x0 of cluster 0x8 on endpoint 0x1</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：若想将设备清除所有的配网信息，可以将设备恢复出厂状态，在 Terminal A 执行命令：<code>matter device factoryreset</code></em></p>
+<p><strong>Terminal B</strong>中执行命令：<code>chip-tool interactive start</code></p>
+<p>此时进入交互模式，状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | Command sets:                                                                       |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">  | * any                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> sending IM messages based on cluster <span class="built_in">id</span>, not cluster name.         |</span><br><span class="line">  | * delay                                                                             |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> waiting <span class="keyword">for</span> something to happen.                                   |</span><br><span class="line">  | * discover                                                                          |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> device discovery.                                                  |</span><br><span class="line">  | * groupsettings                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> manipulating group keys and memberships <span class="keyword">for</span> chip-tool itself.      |</span><br><span class="line">  | * icd                                                                               |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> client-side ICD management.                                        |</span><br><span class="line">  | * pairing                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> commissioning devices.                                             |</span><br><span class="line">  | * payload                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> parsing and generating setup payloads.                             |</span><br><span class="line">  | * sessionmanagement                                                                 |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing CASE and PASE session state.                              |</span><br><span class="line">  | * subscriptions                                                                     |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> shutting down subscriptions.                                       |</span><br><span class="line">  | * interactive                                                                       |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> starting long-lived interactive modes.                             |</span><br><span class="line">  | * storage                                                                           |</span><br><span class="line">  |   - Commands <span class="keyword">for</span> managing persistent data stored by chip-tool.                      |</span><br><span class="line">  +-------------------------------------------------------------------------------------+</span><br><span class="line">&gt;&gt;&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在交互模式内执行命令为设备配网：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pairing ble-wifi 0x7283 CUBEC_AP_2.4G cubec2015 20202021 3840</span><br></pre></td></tr></table></figure>
+
+
+
+<p>若设备配网成功，在Terminal A会出现设备设备已获取IP地址，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">I (323035) wifi:&lt;ba-add&gt;idx:1 (ifx:0, <span class="built_in">fc</span>:83:c6:00:8f:ae), tid:6, ssn:1, winSize:64</span><br><span class="line">I (323075) chip[DL]: Confirm received <span class="keyword">for</span> CHIPoBLE TX characteristic indication (con 1) status= 14 </span><br><span class="line">I (323845) esp_netif_handlers: sta ip: 192.168.5.201, mask: 255.255.255.0, gw: 192.168.5.1</span><br><span class="line">I (323845) chip[DL]: IP_EVENT_STA_GOT_IP</span><br><span class="line">I (323855) chip[DL]: IPv4 address changed on WiFi station interface: 192.168.5.201/255.255.255.0 gateway 192.168.5.1</span><br><span class="line">I (323865) chip[DL]: IPv4 Internet connectivity ESTABLISHED</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="扫码配网"><a href="#扫码配网" class="headerlink" title="扫码配网"></a>扫码配网</h2><h2 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h2><blockquote>
+<p>chip-tool是什么？</p>
+</blockquote>
+<p>chip-tool是用于开发和调试Matter设备的命令行工具。</p>
+<p>设备配网成功后，接着可以在Terminal B通过chip-tool交互模式内控制设备，例如：打开LED、关闭LED、反转LED、调节亮度、调节颜色</p>
+<p><strong>单次执行：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">chip-tool onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">chip-tool onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">chip-tool onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">chip-tool levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">chip-tool levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">chip-tool colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br></pre></td></tr></table></figure>
+
+<p><strong>交互执行（建议）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开LED</span></span><br><span class="line">onoff on 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭LED</span></span><br><span class="line">onoff off 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反转LED</span></span><br><span class="line">onoff toggle 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节亮度</span></span><br><span class="line"><span class="comment">## 设置亮度为10%（实际低于30%后,LED就熄灭了）</span></span><br><span class="line">levelcontrol move-to-level 10 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置亮度为100%</span></span><br><span class="line">levelcontrol move-to-level 100 0 0 0 0x7283 0x1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调节颜色</span></span><br><span class="line"><span class="comment">## 设置暖色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 500 0 0 0 0x7283 0x1</span><br><span class="line"><span class="comment">## 设置冷色调色温</span></span><br><span class="line">colorcontrol move-to-color-temperature 154 0 0 0 0x7283 0x1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>命令解释：</em></p>
+<p><em>1、onoff：表示OnOff Cluster</em></p>
+<p><em>2、on、off、toggle：分别表示On、Off、Toggle命令</em></p>
+<p><em>3、0x7283：表示Node ID，这是之前在配网时定义的值</em></p>
+<p><em>4、0x01：表示Endpoint 1，这是Light Project项目代码中新建的一个Endpoint。</em></p>
+<p><em>5、levelcontrol、colorcontorl：分别表示 LevelControl Cluster 和 ColorControl Cluster</em></p>
+<p><em>6、move-to-level 、move-to-color-temperature：分别表示对应Cluster下的命令</em></p>
+<p><strong>chip-tool命令扩展：</strong></p>
+<p>从Matter设备读取（read）信息，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; onoff <span class="built_in">read</span> on-off 0x7283 0x01</span><br><span class="line">[1726799530.981378][352215:352215] CHIP:TOO: Command: onoff <span class="built_in">read</span> on-off 0x7283 0x01 </span><br><span class="line">[1726799530.981581][352215:352217] CHIP:TOO: Sending <span class="built_in">command</span> to node 0x7283</span><br><span class="line">[1726799530.981826][352215:352217] CHIP:CSM: FindOrEstablishSession: PeerId = [1:0000000000007283]</span><br><span class="line">[1726799530.981836][352215:352217] CHIP:CSM: FindOrEstablishSession: No existing OperationalSessionSetup instance found</span><br><span class="line">[1726799530.981852][352215:352217] CHIP:DIS: Found an existing secure session to [1:0000000000007283]!</span><br><span class="line">[1726799530.981860][352215:352217] CHIP:DIS: OperationalSessionSetup[1:0000000000007283]: State change 1 --&gt; 5</span><br><span class="line">[1726799530.981875][352215:352217] CHIP:TOO: Sending ReadAttribute to:</span><br><span class="line">[1726799530.982385][352215:352217] CHIP:TOO: 	cluster 0x0000_0006, attribute: 0x0000_0000, endpoint 1</span><br><span class="line">[1726799530.982404][352215:352217] CHIP:DMG: SendReadRequest ReadClient[0x72cc4000a6c0]: Sending Read Request</span><br><span class="line">[1726799530.982496][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18684i S:41998 M:177312788] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:02 (IM:ReadRequest)</span><br><span class="line">[1726799530.982607][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingIn]</span><br><span class="line">[1726799531.173092][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18684i S:41998 M:189153990 (Ack:177312788)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799531.173129][352215:352217] CHIP:EM: Found matching exchange: 18684i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799531.173146][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312788 from Retrans Table on exchange 18684i</span><br><span class="line">[1726799531.173182][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799531.173193][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799531.173206][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799531.173221][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799531.173232][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799531.173250][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799531.173261][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799531.173278][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799531.173291][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f82,</span><br><span class="line">[1726799531.173307][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799531.173321][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799531.173334][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799531.173348][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799531.173363][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799531.173376][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799531.173395][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799531.173409][352215:352217] CHIP:DMG: 				Data = <span class="literal">false</span>, </span><br><span class="line">[1726799531.173422][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799531.173436][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799531.173446][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799531.173461][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799531.173470][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799531.173484][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799531.173495][352215:352217] CHIP:DMG: 	SuppressResponse = <span class="literal">true</span>, </span><br><span class="line">[1726799531.173506][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799531.173515][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799531.175422][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642882</span><br><span class="line">[1726799531.175440][352215:352217] CHIP:TOO:   OnOff: FALSE</span><br><span class="line">[1726799531.175518][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18684i S:41998 M:177312789 (Ack:189153990)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799531.175575][352215:352217] CHIP:EM: Flushed pending ack <span class="keyword">for</span> MessageCounter:189153990 on exchange 18684i</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从Matter设备订阅（subscribe）信息，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; onoff subscribe on-off 5 30  0x7283 0x1</span><br><span class="line">[1726799808.099530][352215:352215] CHIP:TOO: Command: onoff subscribe on-off 5 30 0x7283 0x1 </span><br><span class="line">[1726799808.099753][352215:352217] CHIP:TOO: Sending <span class="built_in">command</span> to node 0x7283</span><br><span class="line">[1726799808.100002][352215:352217] CHIP:CSM: FindOrEstablishSession: PeerId = [1:0000000000007283]</span><br><span class="line">[1726799808.100011][352215:352217] CHIP:CSM: FindOrEstablishSession: No existing OperationalSessionSetup instance found</span><br><span class="line">[1726799808.100026][352215:352217] CHIP:DIS: Found an existing secure session to [1:0000000000007283]!</span><br><span class="line">[1726799808.100035][352215:352217] CHIP:DIS: OperationalSessionSetup[1:0000000000007283]: State change 1 --&gt; 5</span><br><span class="line">[1726799808.100051][352215:352217] CHIP:TOO: Sending SubscribeAttribute to:</span><br><span class="line">[1726799808.100063][352215:352217] CHIP:TOO: 	cluster 0x0000_0006, attribute: 0x0000_0000, endpoint 1</span><br><span class="line">[1726799808.100169][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312790] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:03 (IM:SubscribeRequest)</span><br><span class="line">[1726799808.100270][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingIn]</span><br><span class="line">[1726799808.273067][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153991 (Ack:177312790)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799808.273108][352215:352217] CHIP:EM: Found matching exchange: 18685i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799808.273135][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312790 from Retrans Table on exchange 18685i</span><br><span class="line">[1726799808.273179][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799808.273192][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799808.273204][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799808.273218][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799808.273237][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799808.273248][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799808.273267][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799808.273279][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799808.273295][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799808.273313][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f82,</span><br><span class="line">[1726799808.273332][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799808.273351][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799808.273369][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799808.273389][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799808.273409][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799808.273424][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799808.273440][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799808.273469][352215:352217] CHIP:DMG: 				Data = <span class="literal">false</span>, </span><br><span class="line">[1726799808.273481][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799808.273497][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799808.273508][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799808.273523][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799808.273533][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799808.273549][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799808.273559][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799808.273569][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799808.273644][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642882</span><br><span class="line">[1726799808.273682][352215:352217] CHIP:TOO:   OnOff: FALSE</span><br><span class="line">[1726799808.273711][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [AwaitingSu]</span><br><span class="line">[1726799808.273944][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312791 (Ack:189153991)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:01 (IM:StatusResponse)</span><br><span class="line">[1726799808.624854][352215:352217] CHIP:EM: Retransmitting MessageCounter:177312791 on exchange 18685i Send Cnt 1</span><br><span class="line">[1726799808.654348][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153992 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:04 (IM:SubscribeResponse)</span><br><span class="line">[1726799808.654383][352215:352217] CHIP:EM: Found matching exchange: 18685i, Delegate: 0x72cc4000a6d0</span><br><span class="line">[1726799808.654408][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312791 from Retrans Table on exchange 18685i</span><br><span class="line">[1726799808.654433][352215:352217] CHIP:DMG: SubscribeResponse is received</span><br><span class="line">[1726799808.654462][352215:352217] CHIP:DMG: SubscribeResponseMessage =</span><br><span class="line">[1726799808.654475][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799808.654487][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799808.654501][352215:352217] CHIP:DMG: 	MaxInterval = 0x1e,</span><br><span class="line">[1726799808.654514][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799808.654526][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799808.654544][352215:352217] CHIP:DMG: Subscription established with SubscriptionID = 0xef8890e9 MinInterval = 5s MaxInterval = 30s Peer = 01:0000000000007283</span><br><span class="line">[1726799808.654562][352215:352217] CHIP:DMG: MoveToState ReadClient[0x72cc4000a6c0]: Moving to [Subscripti]</span><br><span class="line">[1726799808.654597][352215:352217] CHIP:DMG: Refresh LivenessCheckTime <span class="keyword">for</span> 34224 milliseconds with SubscriptionId = 0xef8890e9 Peer = 01:0000000000007283</span><br><span class="line">[1726799808.654708][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312792 (Ack:189153992)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799808.654836][352215:352217] CHIP:EM: Flushed pending ack <span class="keyword">for</span> MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093742][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153993 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799809.093839][352215:352217] CHIP:IN: Received a duplicate message with MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093855][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:18685i S:41998 M:189153992 (Ack:177312791)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:04 (IM:SubscribeResponse)</span><br><span class="line">[1726799809.093875][352215:352217] CHIP:EM: Generating StandaloneAck via exchange: 18685i</span><br><span class="line">[1726799809.093885][352215:352217] CHIP:EM: Forcing tx of solitary ack <span class="keyword">for</span> duplicate MessageCounter:189153992 on exchange 18685i</span><br><span class="line">[1726799809.093964][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:18685i S:41998 M:177312793 (Ack:189153992)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799814.284411][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:64465r S:41998 M:189153994] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0001:05 (IM:ReportData)</span><br><span class="line">[1726799814.284442][352215:352217] CHIP:EM: Handling via exchange: 64465r, Delegate: 0x59c53aff2ea8</span><br><span class="line">[1726799814.284474][352215:352217] CHIP:DMG: ReportDataMessage =</span><br><span class="line">[1726799814.284491][352215:352217] CHIP:DMG: &#123;</span><br><span class="line">[1726799814.284498][352215:352217] CHIP:DMG: 	SubscriptionId = 0xef8890e9,</span><br><span class="line">[1726799814.284502][352215:352217] CHIP:DMG: 	AttributeReportIBs =</span><br><span class="line">[1726799814.284509][352215:352217] CHIP:DMG: 	[</span><br><span class="line">[1726799814.284513][352215:352217] CHIP:DMG: 		AttributeReportIB =</span><br><span class="line">[1726799814.284519][352215:352217] CHIP:DMG: 		&#123;</span><br><span class="line">[1726799814.284523][352215:352217] CHIP:DMG: 			AttributeDataIB =</span><br><span class="line">[1726799814.284528][352215:352217] CHIP:DMG: 			&#123;</span><br><span class="line">[1726799814.284533][352215:352217] CHIP:DMG: 				DataVersion = 0xe0b02f83,</span><br><span class="line">[1726799814.284538][352215:352217] CHIP:DMG: 				AttributePathIB =</span><br><span class="line">[1726799814.284544][352215:352217] CHIP:DMG: 				&#123;</span><br><span class="line">[1726799814.284549][352215:352217] CHIP:DMG: 					Endpoint = 0x1,</span><br><span class="line">[1726799814.284555][352215:352217] CHIP:DMG: 					Cluster = 0x6,</span><br><span class="line">[1726799814.284561][352215:352217] CHIP:DMG: 					Attribute = 0x0000_0000,</span><br><span class="line">[1726799814.284567][352215:352217] CHIP:DMG: 				&#125;</span><br><span class="line">[1726799814.284573][352215:352217] CHIP:DMG: 					</span><br><span class="line">[1726799814.284583][352215:352217] CHIP:DMG: 				Data = <span class="literal">true</span>, </span><br><span class="line">[1726799814.284589][352215:352217] CHIP:DMG: 			&#125;,</span><br><span class="line">[1726799814.284595][352215:352217] CHIP:DMG: 			</span><br><span class="line">[1726799814.284598][352215:352217] CHIP:DMG: 		&#125;,</span><br><span class="line">[1726799814.284603][352215:352217] CHIP:DMG: 		</span><br><span class="line">[1726799814.284607][352215:352217] CHIP:DMG: 	],</span><br><span class="line">[1726799814.284612][352215:352217] CHIP:DMG: 	</span><br><span class="line">[1726799814.284616][352215:352217] CHIP:DMG: 	InteractionModelRevision = 11</span><br><span class="line">[1726799814.284620][352215:352217] CHIP:DMG: &#125;</span><br><span class="line">[1726799814.284686][352215:352217] CHIP:TOO: Endpoint: 1 Cluster: 0x0000_0006 Attribute 0x0000_0000 DataVersion: 3769642883</span><br><span class="line">[1726799814.284712][352215:352217] CHIP:TOO:   OnOff: TRUE</span><br><span class="line">[1726799814.284738][352215:352217] CHIP:DMG: Refresh LivenessCheckTime <span class="keyword">for</span> 34224 milliseconds with SubscriptionId = 0xef8890e9 Peer = 01:0000000000007283</span><br><span class="line">[1726799814.284998][352215:352217] CHIP:EM: &lt;&lt;&lt; [E:64465r S:41998 M:177312794 (Ack:189153994)] (S) Msg TX to 1:0000000000007283 [428F] [UDP:[fe80::f29e:9eff:fe99:1260%wlp1s0]:5540] --- Type 0001:01 (IM:StatusResponse)</span><br><span class="line">[1726799814.371141][352215:352217] CHIP:EM: &gt;&gt;&gt; [E:64465r S:41998 M:189153995 (Ack:177312794)] (S) Msg RX from 1:0000000000007283 [428F] --- Type 0000:10 (SecureChannel:StandaloneAck)</span><br><span class="line">[1726799814.371163][352215:352217] CHIP:EM: Found matching exchange: 64465r, Delegate: (nil)</span><br><span class="line">[1726799814.371177][352215:352217] CHIP:EM: Rxd Ack; Removing MessageCounter:177312794 from Retrans Table on exchange 64465r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>light project示例演示了Extended Color Light设备的开发。以下就是对代码的理解：</p>
+<ul>
+<li><p>创建一个Matter节点</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个Matter节点和增加endpoint 0</span></span><br><span class="line">node::<span class="type">config_t</span> node_config;</span><br><span class="line"></span><br><span class="line"><span class="type">node_t</span> *node = node::<span class="built_in">create</span>(&amp;node_config, app_attribute_update_cb, app_identification_cb);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建Endpoint</p>
+<p>在本实例中创建 extended_color_light 设备类型的Endpoint。所有的Endpoint定义都在这个文件中：<code>esp/esp-matter/components/esp_matter/esp_matter_endpoint.h</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Matter节点下增加Endpoint，默认从1开始</span></span><br><span class="line">extended_color_light::<span class="type">config_t</span> light_config;</span><br><span class="line">light_config.on_off.on_off = DEFAULT_POWER;</span><br><span class="line">light_config.on_off.lighting.start_up_on_off = <span class="literal">nullptr</span>;</span><br><span class="line">light_config.level_control.current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.on_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.level_control.lighting.start_up_current_level = DEFAULT_BRIGHTNESS;</span><br><span class="line">light_config.color_control.color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.enhanced_color_mode = (<span class="type">uint8_t</span>)ColorControl::ColorMode::kColorTemperature;</span><br><span class="line">light_config.color_control.color_temperature.startup_color_temperature_mireds = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">endpoint_t</span> *endpoint = extended_color_light::<span class="built_in">create</span>(node, &amp;light_config, ENDPOINT_FLAG_NONE, light_handle);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>快速变化的属性标记延迟持久性</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过Endpoint 1获取其Level Control集群，然后通过对应的集群获取Attribute值，最后标记属性的延迟持久性</span></span><br><span class="line"><span class="type">cluster_t</span> *level_control_cluster = cluster::<span class="built_in">get</span>(endpoint, LevelControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_level_attribute = attribute::<span class="built_in">get</span>(level_control_cluster, LevelControl::Attributes::CurrentLevel::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_level_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">cluster_t</span> *color_control_cluster = cluster::<span class="built_in">get</span>(endpoint, ColorControl::Id);</span><br><span class="line"><span class="type">attribute_t</span> *current_x_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentX::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_x_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *current_y_attribute = attribute::<span class="built_in">get</span>(color_control_cluster, ColorControl::Attributes::CurrentY::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(current_y_attribute);</span><br><span class="line"></span><br><span class="line"><span class="type">attribute_t</span> *color_temp_attribute = attribute::<span class="built_in">get</span>(color_control_cluster,ColorControl::Attributes::ColorTemperatureMireds::Id);</span><br><span class="line">attribute::<span class="built_in">set_deferred_persistence</span>(color_temp_attribute);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>属性回调</p>
+<p>每当用户通过Matter客户端对Matter设备（作为Matter Server）进行控制时，其控制值最终都会更新设备数据模型中的属性值。</p>
+<p>当属性更新时，回调函数 <code>app_attribute_update_cb()</code> 用户通知应用程序（Matter设备）属性有更改。若回调函数类型为 <code>PRE_UPDATE</code> ，则更新Matter设备驱动程序。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">esp_err_t</span> <span class="title">app_attribute_update_cb</span><span class="params">(attribute::<span class="type">callback_type_t</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint16_t</span> endpoint_id, </span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">esp_matter_attr_val_t</span> *val,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="type">void</span> *priv_data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (type == PRE_UPDATE) &#123;</span><br><span class="line">        <span class="comment">/* Driver update */</span></span><br><span class="line">        <span class="type">app_driver_handle_t</span> driver_handle = (<span class="type">app_driver_handle_t</span>)priv_data;</span><br><span class="line">        err = <span class="built_in">app_driver_attribute_update</span>(driver_handle, endpoint_id, cluster_id, attribute_id, val);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设备驱动</p>
+<p>首先判断改变的是否为目标设备：light_endpoint_id，然后根据集群下的属性更新状态。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Attribute(属性) Update</span></span><br><span class="line"><span class="function"><span class="type">esp_err_t</span> <span class="title">app_driver_attribute_update</span><span class="params">(<span class="type">app_driver_handle_t</span> driver_handle,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint16_t</span> endpoint_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> cluster_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">uint32_t</span> attribute_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="type">esp_matter_attr_val_t</span> *val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err = ESP_OK;</span><br><span class="line">    <span class="comment">// Endpoint匹配</span></span><br><span class="line">    <span class="keyword">if</span> (endpoint_id == light_endpoint_id)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">led_indicator_handle_t</span> handle = (<span class="type">led_indicator_handle_t</span>)driver_handle;</span><br><span class="line">        <span class="comment">// Cluster匹配</span></span><br><span class="line">        <span class="keyword">if</span> (cluster_id == OnOff::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Attribute匹配</span></span><br><span class="line">            <span class="keyword">if</span> (attribute_id == OnOff::Attributes::OnOff::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_power</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == LevelControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == LevelControl::Attributes::CurrentLevel::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_brightness</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cluster_id == ColorControl::Id)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentHue::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_hue</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::CurrentSaturation::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_saturation</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id)</span><br><span class="line">            &#123;</span><br><span class="line">                err = <span class="built_in">app_driver_light_set_temperature</span>(handle, val);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-matter/en/latest/esp32c3/developing.html">1、Developing with the SDK of ESP-MATTER</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/esp-matter/" rel="tag"># esp-matter</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/13/2024/Matter-Lighting-Device-Types/" rel="prev" title="Matter：Lighting Device Types">
+                  <i class="fa fa-angle-left"></i> Matter：Lighting Device Types
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/16/2024/bluetoothctl-client-tool/" rel="next" title="bluetoothctl client tool">
+                  bluetoothctl client tool <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"ddf86e38ad1ba5a9870caccc0606c982"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

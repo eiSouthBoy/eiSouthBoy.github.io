@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="embedded-linux-slides.pdf文档中关于overview of major emabedded linux software stacks章节的阅读过程和相关理解记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="overview of major emabedded linux software stacks">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="embedded-linux-slides.pdf文档中关于overview of major emabedded linux software stacks章节的阅读过程和相关理解记录。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/diagram.svg">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009193405276.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241008192139617.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009151839214.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009153641765.png">
+<meta property="article:published_time" content="2024-10-08T11:13:31.000Z">
+<meta property="article:modified_time" content="2024-10-31T06:25:22.645Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="embeded linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/diagram.svg">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/","path":"2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/","title":"overview of major emabedded linux software stacks"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>overview of major emabedded linux software stacks | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#D-Bus"><span class="nav-number">1.</span> <span class="nav-text">D-Bus</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemd"><span class="nav-number">2.</span> <span class="nav-text">systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%85%83%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">基于单元的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl"><span class="nav-number">2.2.</span> <span class="nav-text">systemctl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#journalctl"><span class="nav-number">2.3.</span> <span class="nav-text">journalctl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-graphics-stack-overview"><span class="nav-number">3.</span> <span class="nav-text">linux graphics stack overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#display-controller-support"><span class="nav-number">4.</span> <span class="nav-text">display controller support</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU-support-OpenGL"><span class="nav-number">5.</span> <span class="nav-text">GPU support: OpenGL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Concept-of-display-serviers"><span class="nav-number">6.</span> <span class="nav-text">Concept of display serviers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X11-and-X-org"><span class="nav-number">7.</span> <span class="nav-text">X11 and X.org</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wayland"><span class="nav-number">8.</span> <span class="nav-text">Wayland</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Concept-of-graphics-toolkits"><span class="nav-number">9.</span> <span class="nav-text">Concept of graphics toolkits</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Qt"><span class="nav-number">10.</span> <span class="nav-text">Qt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gtk"><span class="nav-number">11.</span> <span class="nav-text">Gtk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flutter"><span class="nav-number">12.</span> <span class="nav-text">Flutter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDL"><span class="nav-number">13.</span> <span class="nav-text">SDL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-graphical-toolkits"><span class="nav-number">14.</span> <span class="nav-text">Other graphical toolkits</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-multimedia-stack-overview"><span class="nav-number">15.</span> <span class="nav-text">Linux multimedia stack overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Audio-stack"><span class="nav-number">16.</span> <span class="nav-text">Audio stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Video-stack"><span class="nav-number">17.</span> <span class="nav-text">Video stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GStreamer"><span class="nav-number">18.</span> <span class="nav-text">GStreamer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-networking-stack"><span class="nav-number">19.</span> <span class="nav-text">Linux networking stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-accessible-UI"><span class="nav-number">20.</span> <span class="nav-text">Web accessible UI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-browsers-rendering-engines"><span class="nav-number">21.</span> <span class="nav-text">Web browsers: rendering engines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-based-UIs"><span class="nav-number">22.</span> <span class="nav-text">Web-based UIs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Programming-languages"><span class="nav-number">23.</span> <span class="nav-text">Programming languages</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="overview of major emabedded linux software stacks | eiSouthBoy's Blog">
+      <meta itemprop="description" content="embedded-linux-slides.pdf文档中关于overview of major emabedded linux software stacks章节的阅读过程和相关理解记录。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          overview of major emabedded linux software stacks
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-08 11:13:31" itemprop="dateCreated datePublished" datetime="2024-10-08T11:13:31+00:00">2024-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-31 06:25:22" itemprop="dateModified" datetime="2024-10-31T06:25:22+00:00">2024-10-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/bootlin/" itemprop="url" rel="index"><span itemprop="name">bootlin</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">embedded-linux-slides.pdf文档中关于overview of major emabedded linux software stacks章节的阅读过程和相关理解记录。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://bootlin.com/doc/training/embedded-linux/embedded-linux-slides.pdf">overview of major emabedded linux software stacks</a></p>
+<h2 id="D-Bus"><a href="#D-Bus" class="headerlink" title="D-Bus"></a>D-Bus</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.freedesktop.org/wiki/Software/dbus/">D-Bus</a>是什么？</p>
+</blockquote>
+<p>D-Bus是一种应用程序之间进行通信的消息总线进程间通信（interprocess communication，即IPC）系统。</p>
+<p>D-Bus架构图：</p>
+<p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/diagram.svg" alt="diagram"></p>
+<ul>
+<li>面向消息的中间件机制，允许在同一台机器上同时运行的多个进程之间进行通信</li>
+<li>依靠守护进程在应用程序之间传递消息</li>
+<li>主要由系统守护进程使用，为客户端应用程序提供服务</li>
+<li>示例：以 root 身份运行的网络配置守护程序提供 D-Bus API，CLI 和 GUI 客户端可以使用它来<br>配置网络</li>
+<li>多条总线<ul>
+<li>一条系统总线，所有用户均可以访问，用于系统服务</li>
+<li>一条会话总线，供每个登录用户使用</li>
+</ul>
+</li>
+<li>对象模型：interface、object、method、signal</li>
+</ul>
+<p>一个很典型的蓝牙应用：BlueZ，就是基于D-Bus实现多个客户端与bluetoothd通信。</p>
+<p>以BlueZ项目，对D-Bus的一些概念进行简单的说明：</p>
+<p>BlueZ项目提供关键的两个应用是：bluetoothd 和 bluetoothctl。</p>
+<p>bluetoothd应用连接dbus-daemon，在dbus上注册bus name为 <code>org.bluez</code> 的服务， 紧接着注册object path name 为 <code>/org/bluez/hci0</code> 的对象路径，并在该对象路径下注册interface name 为 <code>org.bluez.Adapter1</code> 的接口，该接口下绑定了方法和属性。</p>
+<p>bluetoothctl应用连接dbus-daemon，接着就可以向 <code>org.bluez</code> 下 <code>/org/bluez/hci0</code> 下 <code>org.bluez.Adapter1</code> 下的 <code>StartDiscovery</code> 方法发送请求。</p>
+<p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009193405276.png" alt="image-20241009193405276"></p>
+<p><a target="_blank" rel="noopener" href="https://dbus.freedesktop.org/doc/api/html/group__DBusMessage.html#ga98ddc82450d818138ef326a284201ee0">D-Bus API接口</a></p>
+<h2 id="systemd"><a href="#systemd" class="headerlink" title="systemd"></a>systemd</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://systemd.io/">systemd</a>是什么？</p>
+</blockquote>
+<p>在基于UNIX的计算机操作系统中，<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Init">init</a> 是操作系统启动期间启动的第一个进程。init 是一个守护进程，它会持续运行直到系统关闭。它是所有其他进程的直接或间接祖先，并自动接收所有孤儿进程。在Linux系统中，进程的结构也是呈现树形，启动第一个进程就是 init （根），它的进程ID号是 1。</p>
+<p>上一代关于初始化程序是SysV init 或 BSD init，而现在是Systemd。</p>
+<ul>
+<li><p>几乎所有 Linux 桌面&#x2F;服务器发行版都使用现代 init 系统，即systemd</p>
+</li>
+<li><p>systemd比 Busybox init 复杂得多，但也功能更强大</p>
+</li>
+<li><p>仅支持glibc，不支持 uClibc 和 Musl</p>
+</li>
+<li><p>提供如下功能：</p>
+<ul>
+<li>并行启动服务，同时考虑依赖关系</li>
+<li>服务监控</li>
+<li>通过套接字激活按需启动服务</li>
+<li>服务的资源管理：CPU限制、内存限制</li>
+</ul>
+</li>
+<li><p>基于单元的配置文件</p>
+<ul>
+<li>声明性语言，而不是其他 init 系统中使用的 shell 脚本</li>
+</ul>
+</li>
+<li><p>其他</p>
+<ul>
+<li><p>journald：日志daemon，替换了syslogd</p>
+</li>
+<li><p>networkd：用于网络配置管理</p>
+</li>
+<li><p>udevd：热插拔和 &#x2F;dev 管理</p>
+</li>
+<li><p>logind：登录管理</p>
+</li>
+<li><p>systemctl：控制和监控 systemd 的工具</p>
+</li>
+<li><p>other</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于单元的配置文件"><a href="#基于单元的配置文件" class="headerlink" title="基于单元的配置文件"></a>基于单元的配置文件</h3><p>示例1：&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;sshd.service</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=OpenBSD Secure Shell server</span><br><span class="line">Documentation=man:sshd(8) man:sshd_config(5)</span><br><span class="line">After=network.target auditd.service</span><br><span class="line">ConditionPathExists=!/etc/ssh/sshd_not_to_be_run</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">EnvironmentFile=-/etc/default/ssh</span><br><span class="line">ExecStartPre=/usr/sbin/sshd -t</span><br><span class="line">ExecStart=/usr/sbin/sshd -D <span class="variable">$SSHD_OPTS</span></span><br><span class="line">ExecReload=/usr/sbin/sshd -t</span><br><span class="line">ExecReload=/bin/kill -HUP <span class="variable">$MAINPID</span></span><br><span class="line">KillMode=process</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartPreventExitStatus=255</span><br><span class="line">Type=notify</span><br><span class="line">RuntimeDirectory=sshd</span><br><span class="line">RuntimeDirectoryMode=0755</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">Alias=sshd.service</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>示例2：&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;wpa_supplicant.service</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=WPA supplicant</span><br><span class="line">Before=network.target</span><br><span class="line">After=dbus.service</span><br><span class="line">Wants=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=dbus</span><br><span class="line">BusName=fi.w1.wpa_supplicant1</span><br><span class="line">ExecStart=/usr/sbin/wpa_supplicant -u</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">Alias=dbus-fi.w1.wpa_supplicant1.service</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h3><ul>
+<li><code>systemctl status</code> 查询所有服务的状态</li>
+<li><code>systemctl status &lt;service&gt;</code> 查询指定服务的状态</li>
+<li><code>systemctl [start|stop|restart] &lt;service&gt;</code> 启动或停止或重启指定服务</li>
+<li><code>systemctl [enable|disable] &lt;service&gt;</code> 启用或禁用指定服务开机自启动</li>
+<li><code>systemctl is-enabled &lt;service&gt;</code> 查看指定服务是否开机启动</li>
+<li><code>systemctl daemon-reload</code> 刷新service配置文件生效</li>
+<li><code>systemctl list-units</code> 以表格形式打印所有可用的服务单元</li>
+</ul>
+<h3 id="journalctl"><a href="#journalctl" class="headerlink" title="journalctl"></a>journalctl</h3><p>journalctl 是用来查询<strong>systemd-journald</strong> 服务收集到的日志的工具。</p>
+<ul>
+<li><code>journalctl -a</code> 查询所有日志</li>
+<li><code>journalctl -f</code> 显示最后一个日志，并且实时打印新增的日志</li>
+<li><code>journalctl -u &lt;unit_name&gt;</code> 显示指定服务单元的日志</li>
+</ul>
+<p>示例1：查询wpa_supplicant.service的日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ journalctl -f -u wpa_supplicant.service</span><br><span class="line">Oct 31 05:43:27 homeassistant systemd[1]: Starting WPA supplicant...</span><br><span class="line">Oct 31 05:43:27 homeassistant wpa_supplicant[6665]: Successfully initialized wpa_supplicant</span><br><span class="line">Oct 31 05:43:27 homeassistant systemd[1]: Started WPA supplicant.</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: p2p-dev-wlan0: CTRL-EVENT-DSCP-POLICY clear_all</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: p2p-dev-wlan0: CTRL-EVENT-DSCP-POLICY clear_all</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: nl80211: deinit ifname=p2p-dev-wlan0 disabled_11b_rates=0</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: wlan0: CTRL-EVENT-DSCP-POLICY clear_all</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: wlan0: CTRL-EVENT-DSCP-POLICY clear_all</span><br><span class="line">Oct 31 05:43:48 homeassistant wpa_supplicant[6665]: nl80211: deinit ifname=wlan0 disabled_11b_rates=0</span><br><span class="line">Oct 31 05:44:17 homeassistant systemd[1]: wpa_supplicant.service: Deactivated successfully.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="linux-graphics-stack-overview"><a href="#linux-graphics-stack-overview" class="headerlink" title="linux graphics stack overview"></a>linux graphics stack overview</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241008192139617.png" alt="image-20241008192139617"></p>
+<h2 id="display-controller-support"><a href="#display-controller-support" class="headerlink" title="display controller support"></a>display controller support</h2><p><strong>fddev</strong> 是一个 Linux 子系统，用于在计算机显示器上（通常在系统控制台上）显示图形。不过已经被弃用了，但仍有一些旧的图形驱动程序仅在此子系统中可用。</p>
+<p><strong>DRM</strong> 是Linux 内核的一个子系统，负责与现代显卡的GPU进行交互。</p>
+<p>支持 SoC 或显卡的显示控制器，以及所有类型的显示面板和桥接器：并行、LVDS、DSI、HDMI、DisplayPort 等。当然，也支持通过I2C或者SPI连接的小型显示面板。设备在linux系统中暴露出来的路径为：<code>/dev/fri/cardX</code>。</p>
+<p>DRM对应的库：libdrm，提供了一个好用的测试工具：modetest。</p>
+<h2 id="GPU-support-OpenGL"><a href="#GPU-support-OpenGL" class="headerlink" title="GPU support: OpenGL"></a>GPU support: OpenGL</h2><blockquote>
+<p>OpenGL是什么？</p>
+</blockquote>
+<ul>
+<li><p>开源</p>
+<ul>
+<li><p>OpenGL是DRM 子系统中的内核驱动程序，用于向 GPU 发送命令并管理内存。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.mesa3d.org/">mesa3d</a> 用户空间库实现了各种 OpenGL API，包含大量GPU 特定逻辑</p>
+</li>
+<li><p>支持越来越多的GPU</p>
+</li>
+</ul>
+</li>
+<li><p>所有权</p>
+<ul>
+<li>许多嵌入式 GPU 过去仅通过专有 blob 获得支持 –&gt; 长期维护问题</li>
+<li>供应商提供的内核驱动程序 –&gt; 如果用户空间是闭源的，则上游不会接受它们</li>
+<li>一个（巨大的）闭源用户空间二进制 blob，实现各种 OpenGL API</li>
+</ul>
+</li>
+</ul>
+<h2 id="Concept-of-display-serviers"><a href="#Concept-of-display-serviers" class="headerlink" title="Concept of display serviers"></a>Concept of display serviers</h2><ul>
+<li><p>Linux 内核不处理应用程序之间的显示和输入设备的多路复用</p>
+<ul>
+<li>只有一个用户空间应用程序可以使用显示器和一组给定的输入设备</li>
+</ul>
+</li>
+<li><p>显示服务是特殊的用户空间应用程序，它由如下显示&#x2F;输入复用构成</p>
+<ul>
+<li>允许多个客户端 GUI 应用程序提交其窗口内容</li>
+<li>根据应用程序提交的内容、窗口可见性和分层，组成屏幕上可见的最终帧</li>
+<li>根据焦点将输入事件传播到适当的客户端</li>
+</ul>
+</li>
+</ul>
+<h2 id="X11-and-X-org"><a href="#X11-and-X-org" class="headerlink" title="X11 and X.org"></a>X11 and X.org</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.x.org/wiki/">X.org</a>是什么？</p>
+</blockquote>
+<ul>
+<li><p>X.org是UNIX系统的历史显示服务，包括Linux系统</p>
+</li>
+<li><p>X11协议被用于客户端和服务器结构</p>
+<ul>
+<li>本地客户端使用UNIX套接字，远程客户端使用TCP</li>
+</ul>
+</li>
+<li><p>在现代 Linux 上，在 DRM 或 fbdev 之上处理图形，输入子系统处理输入事件</p>
+</li>
+<li><p>仍保留，但已是遗留</p>
+</li>
+<li><p>X11许可</p>
+</li>
+</ul>
+<h2 id="Wayland"><a href="#Wayland" class="headerlink" title="Wayland"></a>Wayland</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://wayland.freedesktop.org/">Wayland</a>是什么？</p>
+</blockquote>
+<ul>
+<li>指定显示服务器与其客户端之间通信的通信协议，以及该协议的 C 库实现</li>
+<li>使用 Wayland 协议的显示服务称为 Wayland 合成器</li>
+<li>X11 协议的现代替代品</li>
+<li>更多地基于 OpenGL 技术</li>
+</ul>
+<p><strong>Wayland compositors</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://gitlab.freedesktop.org/wayland/weston">Weston</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitlab.gnome.org/GNOME/mutter">Mutter</a>：被 GNOME 桌面环境使用</li>
+<li>wlroots：一个 Wayland 合成器库<ul>
+<li>Cage</li>
+<li>swayWM</li>
+</ul>
+</li>
+</ul>
+<h2 id="Concept-of-graphics-toolkits"><a href="#Concept-of-graphics-toolkits" class="headerlink" title="Concept of graphics toolkits"></a>Concept of graphics toolkits</h2><ul>
+<li><p>X11 和 Wayland 协议是非常低级的协议</p>
+</li>
+<li><p>虽然可以使用X11和wayland，但直接使用这些协议或相应的客户端库开发应用程序会很麻烦</p>
+</li>
+<li><p>toolkits工具</p>
+<ul>
+<li>其中一些只能在显示服务上运行：X11 或 Wayland</li>
+<li>其中一些可以直接在 DRM + 输入 之上工作，适用于单个全屏应用程序</li>
+</ul>
+</li>
+<li><p>面向小部件的工具包，具有用于创建窗口、按钮、文本字段、下拉列表等的 API</p>
+</li>
+<li><p>面向游戏&#x2F;多媒体的工具包，没有预定义的小部件 API</p>
+</li>
+</ul>
+<h2 id="Qt"><a href="#Qt" class="headerlink" title="Qt"></a>Qt</h2><blockquote>
+<p>Qt是什么？</p>
+</blockquote>
+<ul>
+<li>非常受欢迎且文档丰富的开发框架，提供如下：<ul>
+<li>核心库：数据结构、事件处理、XML、数据库、网络等</li>
+<li>图形库：小组件和其他</li>
+</ul>
+</li>
+<li>标准 API 是 C++，但可以绑定到其他语言</li>
+<li>可以作为：<ul>
+<li>具有 DRM 和 OpenGL 的单个应用程序，或没有加速的 fbdev</li>
+<li>X11 或 Wayland 上的多个应用程序</li>
+</ul>
+</li>
+<li>多平台：Linux、MacOS、Windows</li>
+<li>许可有点复杂，混合了 LGPLv3、GPLv2、GPLv3 和（昂贵的）商业许可</li>
+</ul>
+<h2 id="Gtk"><a href="#Gtk" class="headerlink" title="Gtk"></a>Gtk</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.gtk.org/">Gtk</a>是什么？</p>
+</blockquote>
+<ul>
+<li><p>作为 GNOME 桌面环境基础的工具包，GNOME 桌面环境是 Linux 桌面发行版中最流行的桌面环境，但在嵌入式项目中逐渐失去吸引力</p>
+</li>
+<li><p>由 glib（核心库）、pango（文本处理）、cairo（矢量图形）、gtk（小组件库） 组成</p>
+</li>
+<li><p>C 中的标准 API，但许多语言都存在绑定</p>
+</li>
+<li><p>需要显示服务支持：X11 或 Wayland</p>
+</li>
+<li><p>LGPLv2许可</p>
+</li>
+<li><p>当前最流行的开发版本是v 3.x，接下来的版本是v 4.x</p>
+</li>
+<li><p>多平台：Linux、MacOS、Windows</p>
+</li>
+</ul>
+<h2 id="Flutter"><a href="#Flutter" class="headerlink" title="Flutter"></a>Flutter</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://flutter.dev/">Flutter</a>是什么？</p>
+</blockquote>
+<ul>
+<li>跨平台 UI 应用程序开发：Linux、Android、iOS、Windows、MacOS</li>
+<li>由Google负责开发和维护</li>
+<li>应用开发必须使用 Dart 编程语言</li>
+<li>应用程序可以在 Dart 虚拟机中运行，也可以进行本地编译以获得更好的性能</li>
+<li>BSD-3-Clause认证许可</li>
+</ul>
+<h2 id="SDL"><a href="#SDL" class="headerlink" title="SDL"></a>SDL</h2><ul>
+<li>跨平台开发库，旨在提供对音频、键盘、鼠标、操纵杆和图形硬件的低级访问</li>
+<li>使用C语言实现，轻量级</li>
+<li>没有提供小组件库</li>
+<li>游戏、媒体播放器、自定义 UI</li>
+<li>zlib认证许可</li>
+</ul>
+<h2 id="Other-graphical-toolkits"><a href="#Other-graphical-toolkits" class="headerlink" title="Other graphical toolkits"></a>Other graphical toolkits</h2><ul>
+<li>Enlightenment Foundation Libraries (EFL) &#x2F; Elementary<ul>
+<li>轻量且强大，但不是那么流行</li>
+<li>运行在X11 或 Wayland之上</li>
+<li>LGPLv2.1认证</li>
+</ul>
+</li>
+<li>LVGL<ul>
+<li>非常轻量，主要用于微控制器，但也能运行在Linux上</li>
+<li>MIT认证许可</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux-multimedia-stack-overview"><a href="#Linux-multimedia-stack-overview" class="headerlink" title="Linux multimedia stack overview"></a>Linux multimedia stack overview</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009151839214.png" alt="image-20241009151839214"></p>
+<h2 id="Audio-stack"><a href="#Audio-stack" class="headerlink" title="Audio stack"></a>Audio stack</h2><ul>
+<li>内核侧：ALSA子系统，Advanced Linux Sound Architecture<ul>
+<li>包括音频接口和音频编解码器的驱动程序</li>
+<li>暴露的音频设备接口 &#x2F;dev&#x2F;snd&#x2F;</li>
+</ul>
+</li>
+<li>用户空间库：alsa-lib</li>
+<li>音频服务<ul>
+<li>当多个应用程序共享音频设备时需要：混合音频流，将音频流从特定应用程序路由到特定设备</li>
+<li>JACK：主要用于专业音响</li>
+<li>pulseaudio：主要用于常规桌面 Linux 音频</li>
+<li>pipewire：pulseaudio 和 JACK 的现代替代品，已被一些 Linux 发行版采用</li>
+</ul>
+</li>
+</ul>
+<h2 id="Video-stack"><a href="#Video-stack" class="headerlink" title="Video stack"></a>Video stack</h2><ul>
+<li>内核侧：Video4Linux 子系统（简称V4L）<ul>
+<li>支持摄像头设备：网络摄像头以及 SoC 和摄像头传感器的摄像头接口（并行、CSI 等）</li>
+<li>还用于支持视频编码&#x2F;解码硬件加速器：H264、H265等</li>
+<li>暴露的视频设备接口 &#x2F;dev&#x2F;videoX</li>
+</ul>
+</li>
+<li>传统用户空间库：libv4l</li>
+<li>新的用户空间库，更现代，具有更多功能，正在采用：libcamera</li>
+<li>许多多媒体堆栈&#x2F;软件都支持：GStreamer、ffmpeg、VLC 等</li>
+</ul>
+<h2 id="GStreamer"><a href="#GStreamer" class="headerlink" title="GStreamer"></a>GStreamer</h2><blockquote>
+<p>Gstreamer是什么？</p>
+</blockquote>
+<ul>
+<li>用于构建媒体处理组件图表的库</li>
+<li>允许创建管道来转换、转变、流式传输、显示、捕获多媒体流（包括音频和视频）</li>
+<li>由大量插件组成：视频捕获&#x2F;显示、音频捕获&#x2F;播放、编码&#x2F;解码、缩放、过滤等</li>
+<li>一个有趣的替代方案是 ffmpeg</li>
+</ul>
+<h2 id="Linux-networking-stack"><a href="#Linux-networking-stack" class="headerlink" title="Linux networking stack"></a>Linux networking stack</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009153641765.png" alt="image-20241009153641765"></p>
+<h2 id="Web-accessible-UI"><a href="#Web-accessible-UI" class="headerlink" title="Web accessible UI"></a>Web accessible UI</h2><ul>
+<li>在嵌入式系统中，使用 Web 界面进行设备配置&#x2F;监控非常常见</li>
+<li>需要 web 服务器：Busybox httpd可以满足简单的需求、lighttpd、nginx、apache可以满足复杂的需求</li>
+<li>可以使用 PHP、NodeJS 或其他解释型语言，或者简单的 CGI shell 脚本</li>
+</ul>
+<h2 id="Web-browsers-rendering-engines"><a href="#Web-browsers-rendering-engines" class="headerlink" title="Web browsers: rendering engines"></a>Web browsers: rendering engines</h2><p>向你的设备添加 HTML 呈现功能：</p>
+<ul>
+<li>WebKit<ul>
+<li>由Apple发起，在 iOS 和 Safari 中被使用</li>
+<li>开源项目许可：LGPLv2.1 和 BSD-2-Clause</li>
+<li>在Gtk中集成方式：WebKitGtk</li>
+<li>在Qt中的集成方式：QtWebKit</li>
+<li>针对嵌入式设备优化的端口：WPE WebKit</li>
+</ul>
+</li>
+<li>Blink<ul>
+<li>从WebKit中分支出来的</li>
+<li>由Google开发，并被用在Chrome中</li>
+<li>在Qt中的集成方式：QtWebEngine</li>
+<li>被 Electron 使用</li>
+</ul>
+</li>
+</ul>
+<h2 id="Web-based-UIs"><a href="#Web-based-UIs" class="headerlink" title="Web-based UIs"></a>Web-based UIs</h2><ul>
+<li><p>原生 GUI 应用程序的替代方案是创建基于 Web 技术的 GUI</p>
+</li>
+<li><p>全屏运行 Web 浏览器，并使用流行的 Web 技术开发应用程序</p>
+</li>
+<li><p>一些可用选项：</p>
+<ul>
+<li>Cog：适用于 WPE Webkit 端口的简单启动器</li>
+<li>Electron：将 NodeJS 应用程序与 Web 渲染引擎打包成一个独立应用程序的方法</li>
+</ul>
+</li>
+<li><p>注意占用空间和性能影响：Web 渲染引擎是一个庞大且耗费资源的软件</p>
+</li>
+</ul>
+<h2 id="Programming-languages"><a href="#Programming-languages" class="headerlink" title="Programming languages"></a>Programming languages</h2><ul>
+<li>可用的语言和框架种类繁多，不仅限于 C&#x2F;C++</li>
+<li>注意空间和性能的影响</li>
+<li>编译型语言<ul>
+<li>C&#x2F;C++</li>
+<li>Rust</li>
+<li>Go</li>
+<li>Ada</li>
+<li>Fortran</li>
+</ul>
+</li>
+<li>解释型语言<ul>
+<li>Python</li>
+<li>Javascripts，NodeJS</li>
+<li>Lua</li>
+<li>Shell scripts</li>
+<li>Perl，Ruby，PHP</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/embeded-linux/" rel="tag"># embeded linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/29/2024/bluetooth-le-advertise-scan/" rel="prev" title="bluetooth: le advertise scan">
+                  <i class="fa fa-angle-left"></i> bluetooth: le advertise scan
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/11/2024/bluetooth-proper-terms-and-concepts/" rel="next" title="bluetooth: proper terms and concepts">
+                  bluetooth: proper terms and concepts <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"2a777b1568d466282e3c9d16b4ac4c2a"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

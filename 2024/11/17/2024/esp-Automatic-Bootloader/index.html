@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式(boot mode)。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。esp32开发板就已经支持这种自动下载方式了，以下就是对于自动下载方式的理解和记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="esp: Automatic Bootloader">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式(boot mode)。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。esp32开发板就已经支持这种自动下载方式了，以下就是对于自动下载方式的理解和记录。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117132345736.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117173318335.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117140224096.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/image-20241119134619149.png">
+<meta property="article:published_time" content="2024-11-17T12:08:43.000Z">
+<meta property="article:modified_time" content="2024-11-20T02:07:26.239Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="esp32">
+<meta property="article:tag" content="Automatic Bootloader">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117132345736.png">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/","path":"2024/11/17/2024/esp-Automatic-Bootloader/","title":"esp: Automatic Bootloader"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>esp: Automatic Bootloader | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%91%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="esp: Automatic Bootloader | eiSouthBoy's Blog">
+      <meta itemprop="description" content="在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式(boot mode)。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。esp32开发板就已经支持这种自动下载方式了，以下就是对于自动下载方式的理解和记录。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          esp: Automatic Bootloader
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-17 12:08:43" itemprop="dateCreated datePublished" datetime="2024-11-17T12:08:43+00:00">2024-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-20 02:07:26" itemprop="dateModified" datetime="2024-11-20T02:07:26+00:00">2024-11-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式(boot mode)。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。esp32开发板就已经支持这种自动下载方式了，以下就是对于自动下载方式的理解和记录。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>下载模式、烧录模式、Boot模式、Boot Mode都是同样的意思！！！</p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117132345736.png" alt="image-20241117132345736"></p>
+<p>下载模式分为：自动下载模式 和 手动下载模式。但有一个前提，如何进入下载模式？</p>
+<p>EN（也称为RST）上升沿（从低电平到高电平）时候，检测到GPIO0（也称为Boot）为低电平，进入下载模式。具体操作方式有两种：</p>
+<ul>
+<li>方式1：先按住Boot键不放，然后按住EN键</li>
+<li>方式2：先按住Boot键不放，然后断电和上电操作</li>
+</ul>
+<p><em>注意：默认GPIO0为高电平，当按下Boot键后，GPIO0为低电平。可以查看开发板原理图得知</em></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>那么开发板的自动下载模式的原理是什么呢？其实是通过电路模拟了进入Boot模式操作。</p>
+<p>乐鑫解释了如何进入自动下载模式，如下：</p>
+<blockquote>
+<p><code>esptool.py</code> resets ESP32 automatically by asserting <code>DTR</code> and <code>RTS</code> control lines of the USB to serial converter chip, i.e., FTDI, CP210x, or CH340x. The <code>DTR</code> and <code>RTS</code> control lines are in turn connected to <code>GPIO0</code> and <code>EN</code> (<code>CHIP_PU</code>) pins of ESP32, thus changes in the voltage levels of <code>DTR</code> and <code>RTS</code> will boot the ESP32 into Firmware Download mode.</p>
+<p>Note：When developing <code>esptool.py</code>, keep in mind <code>DTR</code> and <code>RTS</code> are active low signals, i.e., <code>True</code> &#x3D; pin @ 0V, <code>False</code> &#x3D; pin @ VCC.</p>
+<p>释义：esptool.py 通过置位 USB 转串口转换器芯片（即 FTDI、CP210x 或 CH340x）的 DTR 和 RTS 控制线来自动重置 ESP32。DTR 和 RTS 控制线依次连接到 ESP32 的 GPIO0 和 EN（CHIP_PU）引脚，因此 DTR 和 RTS 的电压变化将使 ESP32 进入固件下载模式。</p>
+<p>注意：在开发 esptool.py 时，请记住 DTR 和 RTS 是低电平有效信号，即 True &#x3D; 引脚 @ 0V，False &#x3D; 引脚 @ VCC。</p>
+</blockquote>
+<p>先来看开发板的原理图（依次为 图1 和 图2）：</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117173318335.png" alt="image-20241117173318335"></p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117140224096.png" alt="image-20241117140224096"></p>
+<p>这里可能会有一个疑问：DTR 和 RTS 在哪里？这两个引脚在 CP2102N芯片上（USB-UART Bridge 电路）</p>
+<p><strong>串口流控机制：</strong></p>
+<ul>
+<li>DTR： Data Terminal Ready，数据终端准备好，低有效</li>
+<li>RTS：Request To Send，请求发送，低有效</li>
+</ul>
+<p>另外 “Auto program” 中是有规律的，规律如下：</p>
+<ol>
+<li>当 DTR 和 RTS 同时为 0 或者同时为 1 时，三极管 Q1 和 Q2 均为截止状态，此时 EN 和 IO0 的状态由其他电路决定（内部&#x2F;外部上拉电阻）。</li>
+<li>当 DTR 和 RTS 不同时，EN &#x3D; RTS, IO0 &#x3D; DTR。</li>
+</ol>
+<p>自动进入下载模式的顺序应该是这样的（芯片断电，然后上电）：（EN&#x3D;0， IO0&#x3D;0）–&gt;（EN&#x3D;1，IO0&#x3D;0），可是看上图的 “Auto program” 是没有（EN&#x3D;0， IO0&#x3D;0）这种逻辑的。如果没有这个逻辑，那么是无法进入下载模式的。（暂时先不管）</p>
+<p>查看esptool.py关于自动下载模式的实现，在 <a target="_blank" rel="noopener" href="https://github.com/espressif/esptool/blob/master/esptool/reset.py">esptool&#x2F;reset.py</a> 找到了具体逻辑实现：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ClassicReset</span>(<span class="title class_ inherited__">ResetStrategy</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Classic reset sequence, sets DTR and RTS lines sequentially.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">False</span>)  <span class="comment"># IO0=HIGH</span></span><br><span class="line">        <span class="variable language_">self</span>._setRTS(<span class="literal">True</span>)  <span class="comment"># EN=LOW, chip in reset			(1)</span></span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">True</span>)  <span class="comment"># IO0=LOW 						(2)</span></span><br><span class="line">        <span class="variable language_">self</span>._setRTS(<span class="literal">False</span>)  <span class="comment"># EN=HIGH, chip out of reset 	(3)</span></span><br><span class="line">        time.sleep(<span class="variable language_">self</span>.reset_delay)</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">False</span>)  <span class="comment"># IO0=HIGH, done 				(4)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里有两个疑惑：为什么在 (1) 和 (2)之间要sleep?   为甚么 (3) 和 (4) 之间要sleep? </p>
+<p><strong>在(1)之后，设置EN&#x3D;0，由于充放电电路（图1）中的电容需要放电，所以EN并不是一下子从高电平1突变至低电平0，而是有一个放电时间。故这里 sleep 0.1秒，确保EN一定是低电平0。此时，芯片开始复位。</strong></p>
+<p><strong>在(3)之后，设置EN&#x3D;1，由于充放电电路（图1）中的电容需要充电，所以并不是一下从低电平0突变至高电平1，而是有一个充电时间。故这里 sleep reset_delay 秒，确保EN一定是高电平1。在EN从低电平到高电平（上升沿）时，检测到IO0为低电平0，芯片开始下载模式。</strong></p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>esptool 通过USB发送了什么数据给串口芯片的DTR和RTS呢？</p>
+<p>先把USB转串口电路的原理看下：</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241119134619149.png" alt="image-20241119134619149"></p>
+<p>首先从USB到串口芯片CP2102N只有两根信号线：USB_DN 和 USB_DP。然后通过串口芯片CP2102N出来了4根信号线：RXD、TXD；DTR（Data Terminal Ready、RTS（Request to Send）。其中RXD和TXD连接到MCU的TXD0和RXD0，而DTR和RTS分别连接到Q1（NPN三极管）和Q2（NPN）的基级，用于间接控制MCU的EN和IO0。</p>
+<p>esptool 使用了 pyserial 库，可以打开串口，然后直接控制 DTR 和 RTS，经过Q1 和 Q2 的电路特性间接控制MCU 的EN 和 IO0，只要控制 DTR 和 RTS 满足 MCU 进入下载模式的条件，即可使 MCU 进入下载模式。</p>
+<p>编译 Python 程序，使用 ESP32 先进入烧录模式，然后重启 ESP32</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一步：确定串口名，分为两种情况 </span></span><br><span class="line"><span class="comment">#   1）对于给定目标串口名(例如 /dev/ttyUSB0 or /dev/ttyACM0)</span></span><br><span class="line"><span class="comment">#   2）没有指定目标串口名，需要在计算机上编译所有的的串口，然后指定一个可用串口名</span></span><br><span class="line"><span class="comment"># 第二步：打开串口</span></span><br><span class="line"><span class="comment"># 第三步：使用串口Read or Write 数据</span></span><br><span class="line"><span class="comment"># 第四步：关闭串口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> serial <span class="comment">#导入模块</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">open_serial_port</span>(<span class="params">port, baudrate=<span class="number">9600</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    打开指定的串口。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param port: 串口号，例如 &#x27;COM1&#x27; 或 &#x27;/dev/ttyUSB0&#x27;</span></span><br><span class="line"><span class="string">    :param baudrate: 波特率，默认为 9600</span></span><br><span class="line"><span class="string">    :return: Serial 对象</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        ser = serial.Serial(port, baudrate, timeout=<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Open port <span class="subst">&#123;port&#125;</span> success&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> ser</span><br><span class="line">    <span class="keyword">except</span> serial.SerialException <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Open port <span class="subst">&#123;port&#125;</span> fail: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_data</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从串口读取数据。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    :return: 读取的数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> ser.is_open:</span><br><span class="line">        <span class="comment"># 读取一行数据</span></span><br><span class="line">        line = ser.readline()</span><br><span class="line">        <span class="keyword">if</span> line:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Recv Data: <span class="subst">&#123;line.decode(<span class="string">&#x27;utf-8&#x27;</span>).strip()&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Not Recv Data&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;serial not open&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_data_cb</span>(<span class="params">ser, stop_event</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从串口读取数据的函数，运行在一个单独的线程中。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        received_data = []</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> stop_event.is_set():</span><br><span class="line">            <span class="keyword">if</span> ser.in_waiting &gt; <span class="number">0</span>:</span><br><span class="line">                line = ser.readline()</span><br><span class="line">                <span class="keyword">if</span> line:</span><br><span class="line">                    data = line.decode(<span class="string">&#x27;utf-8&#x27;</span>).strip()</span><br><span class="line">                    received_data.append(data)</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;Recv Data: <span class="subst">&#123;data&#125;</span>&quot;</span>)</span><br><span class="line">            time.sleep(<span class="number">0.01</span>)  <span class="comment"># 避免CPU占用过高</span></span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Data reading stopped.&quot;</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write_data</span>(<span class="params">ser, data</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    向串口发送数据。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    :param data: 要发送的数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> ser.is_open:</span><br><span class="line">        <span class="comment"># 发送数据</span></span><br><span class="line">        ser.write(data.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Send Data: <span class="subst">&#123;data.strip()&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Serial not open&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ClassicReset</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Classic reset sequence, sets DTR and RTS lines sequentially.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ser.dtr = <span class="literal">False</span>  <span class="comment"># IO0=HIGH</span></span><br><span class="line">    ser.rts = <span class="literal">True</span>  <span class="comment"># EN=LOW, chip in reset</span></span><br><span class="line">    time.sleep(<span class="number">0.1</span>)</span><br><span class="line">    ser.dtr = <span class="literal">True</span>  <span class="comment"># IO0=LOW</span></span><br><span class="line">    ser.rts = <span class="literal">False</span>  <span class="comment"># EN=HIGH, chip out of reset</span></span><br><span class="line">    <span class="comment"># default time (0.05) to wait before releasing boot pin after reset</span></span><br><span class="line">    time.sleep(<span class="number">0.05</span>)</span><br><span class="line">    ser.dtr = <span class="literal">False</span>  <span class="comment"># IO0=HIGH, done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">HardReset</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Reset sequence for hard resetting the chip.</span></span><br><span class="line"><span class="string">    Can be used to reset out of the bootloader or to restart a running app.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ser.dtr = <span class="literal">False</span></span><br><span class="line">    ser.rts = <span class="literal">True</span>  <span class="comment"># EN-&gt;LOW</span></span><br><span class="line">    <span class="comment"># Give the chip some time to come out of reset,</span></span><br><span class="line">    <span class="comment"># to be able to handle further DTR/RTS transitions</span></span><br><span class="line">    time.sleep(<span class="number">0.2</span>)</span><br><span class="line">    ser.rts = <span class="literal">False</span></span><br><span class="line">    time.sleep(<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 设置串口参数</span></span><br><span class="line">    port = <span class="string">&#x27;/dev/ttyUSB0&#x27;</span>  <span class="comment"># 根据你的设备修改此值</span></span><br><span class="line">    baudrate = <span class="number">115200</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 打开串口</span></span><br><span class="line">    ser = open_serial_port(port, baudrate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 创建一个线程来读取串口数据</span></span><br><span class="line">            stop_event = threading.Event()</span><br><span class="line">            read_thread = threading.Thread(target=read_data_cb, args=(ser, stop_event))</span><br><span class="line">            read_thread.start()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 发送数据</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt; ESP32 autoboot mode&quot;</span>)</span><br><span class="line">            ClassicReset(ser) <span class="comment"># 设置DTR 和 RTS，将ESP32进入烧录模式</span></span><br><span class="line">            time.sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt; ESP32 reset&quot;</span>)</span><br><span class="line">            HardReset(ser) <span class="comment"># 设置RTS，复位ESP32</span></span><br><span class="line">            time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                <span class="comment"># 输入数据</span></span><br><span class="line">                user_input = <span class="built_in">input</span>(<span class="string">&quot;Please input send data:&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> user_input.lower() <span class="keyword">in</span> [<span class="string">&#x27;q&#x27;</span>, <span class="string">&#x27;quit&#x27;</span>, <span class="string">&#x27;exit&#x27;</span>]:</span><br><span class="line">                    stop_event.<span class="built_in">set</span>() <span class="comment"># 通知子线程结束</span></span><br><span class="line">                    read_thread.join() <span class="comment"># 等待子线程结束</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 发送数据</span></span><br><span class="line">                write_data(ser, user_input + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Program is interrupted(Ctrl+C) by user&quot;</span>)</span><br><span class="line">            stop_event.<span class="built_in">set</span>() <span class="comment"># 通知子线程结束</span></span><br><span class="line">            read_thread.join() <span class="comment"># 等待子线程结束</span></span><br><span class="line">        <span class="keyword">finally</span>:</span><br><span class="line">            <span class="comment"># 关闭串口</span></span><br><span class="line">            ser.close()</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Port <span class="subst">&#123;port&#125;</span> close&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.muselab-tech.com/esp8266-esp32zi-dong-xia-zai-dian-lu-yuan-li-fen-xi/">ESP8266&#x2F;ESP32自动下载电路原理分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html">Boot Mode Selection</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/espressif/esptool/tree/master">esptool</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tangwc/p/18523621">ESP32自动下载电路</a></p>
+<p><a target="_blank" rel="noopener" href="https://wzx046.github.io/post/37/">ESP32自动下载电路分析</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/esp32/" rel="tag"># esp32</a>
+              <a href="/tags/Automatic-Bootloader/" rel="tag"># Automatic Bootloader</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/16/2024/Captive-Portal/" rel="prev" title="Captive Portal">
+                  <i class="fa fa-angle-left"></i> Captive Portal
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/" rel="next" title="esp: Hardware Communation Interface Or Protocol">
+                  esp: Hardware Communation Interface Or Protocol <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"3b65cc5ed621654f03b85dd28dd0b7da"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

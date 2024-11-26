@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="当使用蓝牙客户端程序bluetoothctl发送&quot;scan on&quot;扫描附近蓝牙设备时，蓝牙服务器程序bluetoothd会将开始扫描附近蓝牙设备，并将蓝牙设备数据存储到本地文件系统中。若满足预定的条件，bluetoothd会把临时蓝牙设备数据删除。那么存储的蓝牙设备数据格式是什么样的呢？满足什么样的预定条件才会删除蓝牙设备数据呢？以下就是关于这些方面的探索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bluetoothd: device cache">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/09/23/2024/bluetoothd-device-cache/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="当使用蓝牙客户端程序bluetoothctl发送&quot;scan on&quot;扫描附近蓝牙设备时，蓝牙服务器程序bluetoothd会将开始扫描附近蓝牙设备，并将蓝牙设备数据存储到本地文件系统中。若满足预定的条件，bluetoothd会把临时蓝牙设备数据删除。那么存储的蓝牙设备数据格式是什么样的呢？满足什么样的预定条件才会删除蓝牙设备数据呢？以下就是关于这些方面的探索">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-23T06:19:49.000Z">
+<meta property="article:modified_time" content="2024-11-17T03:00:37.449Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="bluez">
+<meta property="article:tag" content="bluetoothd">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/09/23/2024/bluetoothd-device-cache/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/09/23/2024/bluetoothd-device-cache/","path":"2024/09/23/2024/bluetoothd-device-cache/","title":"bluetoothd: device cache"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>bluetoothd: device cache | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">目录结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#settings%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">settings文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">info文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">方法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#StartDiscovery%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.</span> <span class="nav-text">StartDiscovery方法的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RemoveDevice%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">RemoveDevice方法的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StopDiscovery%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.</span> <span class="nav-text">StopDiscovery方法的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">2.4.</span> <span class="nav-text">临时定时器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87"><span class="nav-number">3.</span> <span class="nav-text">疑难杂症</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/23/2024/bluetoothd-device-cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="bluetoothd: device cache | eiSouthBoy's Blog">
+      <meta itemprop="description" content="当使用蓝牙客户端程序bluetoothctl发送"scan on"扫描附近蓝牙设备时，蓝牙服务器程序bluetoothd会将开始扫描附近蓝牙设备，并将蓝牙设备数据存储到本地文件系统中。若满足预定的条件，bluetoothd会把临时蓝牙设备数据删除。那么存储的蓝牙设备数据格式是什么样的呢？满足什么样的预定条件才会删除蓝牙设备数据呢？以下就是关于这些方面的探索">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bluetoothd: device cache
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-23 06:19:49" itemprop="dateCreated datePublished" datetime="2024-09-23T06:19:49+00:00">2024-09-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-17 03:00:37" itemprop="dateModified" datetime="2024-11-17T03:00:37+00:00">2024-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/bluetooth/" itemprop="url" rel="index"><span itemprop="name">bluetooth</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">当使用蓝牙客户端程序bluetoothctl发送"scan on"扫描附近蓝牙设备时，蓝牙服务器程序bluetoothd会将开始扫描附近蓝牙设备，并将蓝牙设备数据存储到本地文件系统中。若满足预定的条件，bluetoothd会把临时蓝牙设备数据删除。那么存储的蓝牙设备数据格式是什么样的呢？满足什么样的预定条件才会删除蓝牙设备数据呢？以下就是关于这些方面的探索</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>关于蓝牙数据的存储，在bluez的doc目录下有一个文件（<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/settings-storage.txt">settings-storage.txt</a>）作出了说明。</p>
+<blockquote>
+<p>Adapter and remote device info are read form the storage during object initialization. Write to storage is performed immediately on every value<br>change.</p>
+<p>Default storage directory is &#x2F;var&#x2F;lib&#x2F;bluetooth. This can be adjusted by the –localstatedir configure switch. Default is –localstatedir&#x3D;&#x2F;var.</p>
+</blockquote>
+<p>翻译：在对象初始化期间，从存储中读取适配器和远程设备信息。每次值更改时都会立即写入存储。默认存储目录为 <code>/var/lib/bluetooth</code>。可以通过 –localstatedir 配置开关进行调整。默认值为 <code>--localstatedir=/var</code>。</p>
+<p><strong>首次运行bluetoothd的存储目录结构：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ tree bluetooth</span><br><span class="line">bluetooth/</span><br><span class="line">└── 40:80:E1:50:1D:47</span><br><span class="line">    ├── attributes</span><br><span class="line">    └── settings</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：<code>40:80:E1:50:1D:47</code>是本地蓝牙适配器的MAC地址作为目录名称。若本地存在多个蓝牙适配器，那么就有多个这样的目录。</em></p>
+<p><strong>执行扫描、配对、连接后的存储目录结构：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">bluetooth/</span><br><span class="line">└── 40:80:E1:50:1D:47</span><br><span class="line">    ├── attributes</span><br><span class="line">    ├── cache</span><br><span class="line">    │   ├── 08:F0:B6:58:2E:90</span><br><span class="line">    │   ├── 18:C2:3C:31:3C:3A</span><br><span class="line">    │   ├── 23:07:04:00:03:C0</span><br><span class="line">    │   ├── 3A:29:EC:03:27:D0</span><br><span class="line">    │   ├── 44:17:93:CD:E4:36</span><br><span class="line">    │   ├── 60:F4:3A:A6:4D:E1</span><br><span class="line">    │   ├── 64:68:76:FC:B5:E3</span><br><span class="line">    │   ├── 88:4A:18:88:9F:F5</span><br><span class="line">    │   ├── 8C:F6:81:FC:9D:F1</span><br><span class="line">    │   ├── 90:F0:52:BE:DC:6E</span><br><span class="line">    │   ├── 98:8D:46:1A:60:20</span><br><span class="line">    │   ├── AC:D8:29:09:18:B6</span><br><span class="line">    │   ├── B4:8C:9D:06:D4:83</span><br><span class="line">    │   ├── B8:14:4D:73:52:99</span><br><span class="line">    │   ├── C8:94:02:E1:6D:C4</span><br><span class="line">    │   ├── D0:62:2C:13:2E:8F</span><br><span class="line">    │   ├── E4:19:C1:E4:35:21</span><br><span class="line">    │   └── F4:4E:FD:7A:71:09</span><br><span class="line">    ├── F4:4E:FD:7A:71:09</span><br><span class="line">    │   ├── attributes</span><br><span class="line">    │   └── info</span><br><span class="line">    └── settings</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：执行扫描操作后，<code>cache</code> 目录就被创建，同时扫描到的蓝牙设备也会以其MAC地址名称作为文件名。若配对、连接指定蓝牙设备成功后，则会创建以其MAC地址名称作为目录名，而且该目录下也会创建 attribute 和 info两个文件。</em></p>
+<p>cache目录下蓝牙设备文件被创建的位置，通过device_store_cached_name()函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">device_store_cached_name</span><span class="params">(<span class="keyword">struct</span> btd_device *dev, <span class="type">const</span> <span class="type">char</span> *name)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> filename[PATH_MAX];</span><br><span class="line">	<span class="type">char</span> d_addr[<span class="number">18</span>];</span><br><span class="line">	GKeyFile *key_file;</span><br><span class="line">	GError *gerr = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="type">char</span> *data;</span><br><span class="line">	<span class="type">char</span> *data_old;</span><br><span class="line">	gsize length = <span class="number">0</span>;</span><br><span class="line">	gsize length_old = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (device_address_is_private(dev)) &#123;</span><br><span class="line">		DBG(<span class="string">&quot;Can&#x27;t store name for private addressed device %s&quot;</span>,</span><br><span class="line">								dev-&gt;path);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ba2str(&amp;dev-&gt;bdaddr, d_addr);</span><br><span class="line">	create_filename(filename, PATH_MAX, <span class="string">&quot;/%s/cache/%s&quot;</span>,</span><br><span class="line">			btd_adapter_get_storage_dir(dev-&gt;adapter), d_addr);</span><br><span class="line">	create_file(filename, <span class="number">0600</span>);</span><br><span class="line"></span><br><span class="line">	key_file = g_key_file_new();</span><br><span class="line">	<span class="keyword">if</span> (!g_key_file_load_from_file(key_file, filename, <span class="number">0</span>, &amp;gerr)) &#123;</span><br><span class="line">		error(<span class="string">&quot;Unable to load key file from %s: (%s)&quot;</span>, filename,</span><br><span class="line">								gerr-&gt;message);</span><br><span class="line">		g_clear_error(&amp;gerr);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	data_old = g_key_file_to_data(key_file, &amp;length_old, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	g_key_file_set_string(key_file, <span class="string">&quot;General&quot;</span>, <span class="string">&quot;Name&quot;</span>, name);</span><br><span class="line"></span><br><span class="line">	data = g_key_file_to_data(key_file, &amp;length, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((length != length_old) || (<span class="built_in">memcmp</span>(data, data_old, length))) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!g_file_set_contents(filename, data, length, &amp;gerr)) &#123;</span><br><span class="line">			error(<span class="string">&quot;Unable set contents for %s: (%s)&quot;</span>, filename,</span><br><span class="line">								gerr-&gt;message);</span><br><span class="line">			g_clear_error(&amp;gerr);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	g_free(data);</span><br><span class="line">	g_free(data_old);</span><br><span class="line"></span><br><span class="line">	g_key_file_free(key_file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="settings文件"><a href="#settings文件" class="headerlink" title="settings文件"></a>settings文件</h3><p>settings文件包含了适配器的一个组的信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[General]</span><br><span class="line">Discoverable=<span class="literal">false</span></span><br><span class="line">Alias=SCO_AUDIO1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Alias：适配器的别名，默认值是主机名</li>
+<li>Discoverable：适配器的可被发现的属性</li>
+</ul>
+<p>settings文件以及内容被创建位置，通过 <code>src/adapter.c</code> 中的store_adapter_info()函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">store_adapter_info</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter)</span></span><br><span class="line">&#123;</span><br><span class="line">	GKeyFile *key_file;</span><br><span class="line">	GError *gerr = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="type">char</span> filename[PATH_MAX];</span><br><span class="line">	<span class="type">char</span> *str;</span><br><span class="line">	gsize length = <span class="number">0</span>;</span><br><span class="line">	gboolean discoverable;</span><br><span class="line"></span><br><span class="line">	key_file = g_key_file_new();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;pairable_timeout != btd_opts.pairto)</span><br><span class="line">		g_key_file_set_integer(key_file, <span class="string">&quot;General&quot;</span>, <span class="string">&quot;PairableTimeout&quot;</span>,</span><br><span class="line">					adapter-&gt;pairable_timeout);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((adapter-&gt;current_settings &amp; MGMT_SETTING_DISCOVERABLE) &amp;&amp;</span><br><span class="line">						!adapter-&gt;discoverable_timeout)</span><br><span class="line">		discoverable = TRUE;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		discoverable = FALSE;</span><br><span class="line"></span><br><span class="line">	g_key_file_set_boolean(key_file, <span class="string">&quot;General&quot;</span>, <span class="string">&quot;Discoverable&quot;</span>,</span><br><span class="line">							discoverable);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;discoverable_timeout != btd_opts.discovto)</span><br><span class="line">		g_key_file_set_integer(key_file, <span class="string">&quot;General&quot;</span>,</span><br><span class="line">					<span class="string">&quot;DiscoverableTimeout&quot;</span>,</span><br><span class="line">					adapter-&gt;discoverable_timeout);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;stored_alias)</span><br><span class="line">		g_key_file_set_string(key_file, <span class="string">&quot;General&quot;</span>, <span class="string">&quot;Alias&quot;</span>,</span><br><span class="line">							adapter-&gt;stored_alias);</span><br><span class="line"></span><br><span class="line">	create_filename(filename, PATH_MAX, <span class="string">&quot;/%s/settings&quot;</span>,</span><br><span class="line">					btd_adapter_get_storage_dir(adapter));</span><br><span class="line">	create_file(filename, <span class="number">0600</span>);</span><br><span class="line"></span><br><span class="line">	str = g_key_file_to_data(key_file, &amp;length, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (!g_file_set_contents(filename, str, length, &amp;gerr)) &#123;</span><br><span class="line">		error(<span class="string">&quot;Unable set contents for %s: (%s)&quot;</span>, filename,</span><br><span class="line">								gerr-&gt;message);</span><br><span class="line">		g_error_free(gerr);</span><br><span class="line">	&#125;</span><br><span class="line">	g_free(str);</span><br><span class="line"></span><br><span class="line">	g_key_file_free(key_file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="info文件"><a href="#info文件" class="headerlink" title="info文件"></a>info文件</h3><p>info文件包含了与蓝牙设备关联的多组信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[General]</span><br><span class="line">Name=JBL ROCK</span><br><span class="line">Class=0x240404</span><br><span class="line">SupportedTechnologies=BR/EDR;</span><br><span class="line">Trusted=<span class="literal">false</span></span><br><span class="line">Blocked=<span class="literal">false</span></span><br><span class="line">Services=0000110b-0000-1000-8000-00805f9b34fb;0000110c-0000-1000-8000-00805f9b34fb;0000110e-0000-1000-8000-00805f9b34fb;0000111e-0000-1000-8000-00805f9b34fb;</span><br><span class="line"></span><br><span class="line">[LinkKey]</span><br><span class="line">Key=2BB06C500CC2926271D2B31687931BFF</span><br><span class="line">Type=4</span><br><span class="line">PINLength=0</span><br></pre></td></tr></table></figure>
+
+<p>info文件的创建位置：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">store_link_key</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">				<span class="keyword">struct</span> btd_device *device, <span class="type">const</span> <span class="type">uint8_t</span> *key,</span></span><br><span class="line"><span class="params">				<span class="type">uint8_t</span> type, <span class="type">uint8_t</span> pin_length)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> device_addr[<span class="number">18</span>];</span><br><span class="line">	<span class="type">char</span> filename[PATH_MAX];</span><br><span class="line">	GKeyFile *key_file;</span><br><span class="line">	GError *gerr = <span class="literal">NULL</span>;</span><br><span class="line">	gsize length = <span class="number">0</span>;</span><br><span class="line">	<span class="type">char</span> key_str[<span class="number">33</span>];</span><br><span class="line">	<span class="type">char</span> *str;</span><br><span class="line">	<span class="type">int</span> i;</span><br><span class="line"></span><br><span class="line">	ba2str(device_get_address(device), device_addr);</span><br><span class="line"></span><br><span class="line">	create_filename(filename, PATH_MAX, <span class="string">&quot;/%s/%s/info&quot;</span>,</span><br><span class="line">			btd_adapter_get_storage_dir(adapter), device_addr);</span><br><span class="line">	create_file(filename, <span class="number">0600</span>);</span><br><span class="line"></span><br><span class="line">	key_file = g_key_file_new();</span><br><span class="line">	<span class="keyword">if</span> (!g_key_file_load_from_file(key_file, filename, <span class="number">0</span>, &amp;gerr)) &#123;</span><br><span class="line">		error(<span class="string">&quot;Unable to load key file from %s: (%s)&quot;</span>, filename,</span><br><span class="line">								gerr-&gt;message);</span><br><span class="line">		g_error_free(gerr);</span><br><span class="line">		g_key_file_free(key_file);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">16</span>; i++)</span><br><span class="line">		<span class="built_in">sprintf</span>(key_str + (i * <span class="number">2</span>), <span class="string">&quot;%2.2X&quot;</span>, key[i]);</span><br><span class="line"></span><br><span class="line">	g_key_file_set_string(key_file, <span class="string">&quot;LinkKey&quot;</span>, <span class="string">&quot;Key&quot;</span>, key_str);</span><br><span class="line"></span><br><span class="line">	g_key_file_set_integer(key_file, <span class="string">&quot;LinkKey&quot;</span>, <span class="string">&quot;Type&quot;</span>, type);</span><br><span class="line">	g_key_file_set_integer(key_file, <span class="string">&quot;LinkKey&quot;</span>, <span class="string">&quot;PINLength&quot;</span>, pin_length);</span><br><span class="line"></span><br><span class="line">	str = g_key_file_to_data(key_file, &amp;length, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (!g_file_set_contents(filename, str, length, &amp;gerr)) &#123;</span><br><span class="line">		error(<span class="string">&quot;Unable set contents for %s: (%s)&quot;</span>, filename,</span><br><span class="line">								gerr-&gt;message);</span><br><span class="line">		g_error_free(gerr);</span><br><span class="line">	&#125;</span><br><span class="line">	g_free(str);</span><br><span class="line"></span><br><span class="line">	g_key_file_free(key_file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="方法实现"><a href="#方法实现" class="headerlink" title="方法实现"></a>方法实现</h2><p>在 <code>org.bluez.Adapter1</code> 接口文档中提供了三个接口函数：</p>
+<ul>
+<li>StartDiscovery()</li>
+<li>StopDiscovery()</li>
+<li>RemoveDevice()</li>
+</ul>
+<p>当 <code>StartDiscovery()</code> 函数被执行时，cache目录下就会有新的蓝牙设备文件被创建，而当 <code>StopDiscovery()</code> 函数被执行时，cache目录下就会有蓝牙设备文件被删除，<code>RemoveDevice()</code> 函数被执行时，<code>&lt;controller address&gt;</code> 目录下有已配对或已连接过的蓝牙设备文件夹会被删除。</p>
+<p><em>注意：当蓝牙设备被自动移除时，cache目录的蓝牙设备文件部分还是保留，为什么会保留呢？</em></p>
+<p><code>src/adapter.c</code> 关于适配器相关的方法实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 适配器注册的方法</span></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> GDBusMethodTable adapter_methods[] = &#123;</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;StartDiscovery&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, start_discovery) &#125;,</span><br><span class="line">	&#123; GDBUS_METHOD(<span class="string">&quot;SetDiscoveryFilter&quot;</span>,</span><br><span class="line">				GDBUS_ARGS(&#123; <span class="string">&quot;properties&quot;</span>, <span class="string">&quot;a&#123;sv&#125;&quot;</span> &#125;), <span class="literal">NULL</span>,</span><br><span class="line">				set_discovery_filter) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;StopDiscovery&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, stop_discovery) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;RemoveDevice&quot;</span>,</span><br><span class="line">			GDBUS_ARGS(&#123; <span class="string">&quot;device&quot;</span>, <span class="string">&quot;o&quot;</span> &#125;), <span class="literal">NULL</span>, remove_device) &#125;,</span><br><span class="line">	&#123; GDBUS_METHOD(<span class="string">&quot;GetDiscoveryFilters&quot;</span>, <span class="literal">NULL</span>,</span><br><span class="line">			GDBUS_ARGS(&#123; <span class="string">&quot;filters&quot;</span>, <span class="string">&quot;as&quot;</span> &#125;),</span><br><span class="line">			get_discovery_filters) &#125;,</span><br><span class="line">	&#123; GDBUS_EXPERIMENTAL_ASYNC_METHOD(<span class="string">&quot;ConnectDevice&quot;</span>,</span><br><span class="line">				GDBUS_ARGS(&#123; <span class="string">&quot;properties&quot;</span>, <span class="string">&quot;a&#123;sv&#125;&quot;</span> &#125;), <span class="literal">NULL</span>,</span><br><span class="line">				connect_device) &#125;,</span><br><span class="line">	&#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 适配器注册的属性</span></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> GDBusPropertyTable adapter_properties[] = &#123;</span><br><span class="line">	&#123; <span class="string">&quot;Address&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_address &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;AddressType&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_address_type &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Name&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_name &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Alias&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_alias, property_set_alias &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Class&quot;</span>, <span class="string">&quot;u&quot;</span>, property_get_class &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Powered&quot;</span>, <span class="string">&quot;b&quot;</span>, property_get_powered, property_set_powered &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;PowerState&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_power_state &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Discoverable&quot;</span>, <span class="string">&quot;b&quot;</span>, property_get_discoverable,</span><br><span class="line">					property_set_discoverable &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;DiscoverableTimeout&quot;</span>, <span class="string">&quot;u&quot;</span>, property_get_discoverable_timeout,</span><br><span class="line">					property_set_discoverable_timeout &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Pairable&quot;</span>, <span class="string">&quot;b&quot;</span>, property_get_pairable, property_set_pairable &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;PairableTimeout&quot;</span>, <span class="string">&quot;u&quot;</span>, property_get_pairable_timeout,</span><br><span class="line">					property_set_pairable_timeout &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Discovering&quot;</span>, <span class="string">&quot;b&quot;</span>, property_get_discovering &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;UUIDs&quot;</span>, <span class="string">&quot;as&quot;</span>, property_get_uuids &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Modalias&quot;</span>, <span class="string">&quot;s&quot;</span>, property_get_modalias, <span class="literal">NULL</span>,</span><br><span class="line">					property_exists_modalias &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Roles&quot;</span>, <span class="string">&quot;as&quot;</span>, property_get_roles &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;ExperimentalFeatures&quot;</span>, <span class="string">&quot;as&quot;</span>, property_get_experimental, <span class="literal">NULL</span>,</span><br><span class="line">					property_experimental_exists &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Manufacturer&quot;</span>, <span class="string">&quot;q&quot;</span>, property_get_manufacturer &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;Version&quot;</span>, <span class="string">&quot;y&quot;</span>, property_get_version &#125;,</span><br><span class="line">	&#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="StartDiscovery方法的实现"><a href="#StartDiscovery方法的实现" class="headerlink" title="StartDiscovery方法的实现"></a>StartDiscovery方法的实现</h3><p>在src&#x2F;adapter.c给出了StartDiscovery方法的实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">start_discovery</span><span class="params">(DBusConnection *conn,</span></span><br><span class="line"><span class="params">					DBusMessage *msg, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *sender = dbus_message_get_sender(msg);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">discovery_client</span> *<span class="title">client</span>;</span></span><br><span class="line">	<span class="type">bool</span> is_discovering;</span><br><span class="line">	<span class="type">int</span> err;</span><br><span class="line"></span><br><span class="line">	DBG(<span class="string">&quot;sender %s&quot;</span>, sender);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!btd_adapter_get_powered(adapter))</span><br><span class="line">		<span class="keyword">return</span> btd_error_not_ready(msg);</span><br><span class="line"></span><br><span class="line">	is_discovering = get_discovery_client(adapter, sender, &amp;client);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Every client can only start one discovery, if the client</span></span><br><span class="line"><span class="comment">	 * already started a discovery then return an error.</span></span><br><span class="line"><span class="comment">	 * 每一个客户端仅能启动一次扫描，如果客户端早已启动了扫描，那么此时返回一个错误</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (is_discovering)</span><br><span class="line">		<span class="keyword">return</span> btd_error_busy(msg);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * If there was pre-set filter, just reconnect it to discovery_list,</span></span><br><span class="line"><span class="comment">	 * and trigger scan.</span></span><br><span class="line"><span class="comment">	 * 如果有预设置的过滤器，那么只是到扫描列表去重连它并触发扫描</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (client) &#123;</span><br><span class="line">		<span class="keyword">if</span> (client-&gt;msg)</span><br><span class="line">			<span class="keyword">return</span> btd_error_busy(msg);</span><br><span class="line"></span><br><span class="line">		adapter-&gt;set_filter_list = g_slist_remove(</span><br><span class="line">					     adapter-&gt;set_filter_list, client);</span><br><span class="line">		adapter-&gt;discovery_list = g_slist_prepend(</span><br><span class="line">					      adapter-&gt;discovery_list, client);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">goto</span> done;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	client = g_new0(<span class="keyword">struct</span> discovery_client, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	client-&gt;adapter = adapter;</span><br><span class="line">	client-&gt;owner = g_strdup(sender);</span><br><span class="line">	client-&gt;discovery_filter = <span class="literal">NULL</span>;</span><br><span class="line">	client-&gt;watch = g_dbus_add_disconnect_watch(dbus_conn, sender,</span><br><span class="line">						discovery_disconnect, client,</span><br><span class="line">						<span class="literal">NULL</span>);</span><br><span class="line">	adapter-&gt;discovery_list = g_slist_prepend(adapter-&gt;discovery_list,</span><br><span class="line">								client);</span><br><span class="line"></span><br><span class="line">done:</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Just trigger the discovery here. In case an already running</span></span><br><span class="line"><span class="comment">	 * discovery in idle phase exists, it will be restarted right</span></span><br><span class="line"><span class="comment">	 * away.</span></span><br><span class="line"><span class="comment">	 * 只需在此处触发扫描。如果存在在空闲段运行的发现，它将立即重新启动扫描。</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	err = update_discovery_filter(adapter);</span><br><span class="line">	<span class="keyword">if</span> (!err)</span><br><span class="line">		<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* If the discovery has to be started wait it complete to reply */</span></span><br><span class="line">	<span class="keyword">if</span> (err == -EINPROGRESS) &#123;</span><br><span class="line">		client-&gt;msg = dbus_message_ref(msg);</span><br><span class="line">		adapter-&gt;client = client;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> btd_error_failed(msg, strerror(-err));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="RemoveDevice方法的实现"><a href="#RemoveDevice方法的实现" class="headerlink" title="RemoveDevice方法的实现"></a>RemoveDevice方法的实现</h3><p>在src&#x2F;adapter.c给出了RemoveDevice方法的实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RemoveDevice方法的回调函数</span></span><br><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">remove_device</span><span class="params">(DBusConnection *conn,</span></span><br><span class="line"><span class="params">					DBusMessage *msg, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *path;</span><br><span class="line">	GSList *<span class="built_in">list</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// RemoveDevice方法传递的参数类型是一个路径对象</span></span><br><span class="line">	<span class="keyword">if</span> (dbus_message_get_args(msg, <span class="literal">NULL</span>, DBUS_TYPE_OBJECT_PATH, &amp;path,</span><br><span class="line">						DBUS_TYPE_INVALID) == FALSE)</span><br><span class="line">		<span class="keyword">return</span> btd_error_invalid_args(msg);</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 在链表中查找是否存在目标蓝牙设备</span></span><br><span class="line">	<span class="built_in">list</span> = g_slist_find_custom(adapter-&gt;devices, path, device_path_cmp);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">list</span>)</span><br><span class="line">		<span class="keyword">return</span> btd_error_does_not_exist(msg);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 判断适配器Powered是否为TRUE，若为FALSE，则执行花括号里面的内容。</span></span><br><span class="line">	<span class="keyword">if</span> (!btd_adapter_get_powered(adapter))</span><br><span class="line">		<span class="keyword">return</span> btd_error_not_ready(msg);</span><br><span class="line"></span><br><span class="line">	device = <span class="built_in">list</span>-&gt;data;</span><br><span class="line"></span><br><span class="line">	btd_device_set_temporary(device, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 判断Device是否connected为TRUE，若为FALSE，则执行花括号里面的内容。</span></span><br><span class="line">	<span class="keyword">if</span> (!btd_device_is_connected(device)) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// 适配器移除蓝牙设备，然后构造一条消息作为方法调用的应答</span></span><br><span class="line">		btd_adapter_remove_device(adapter, device);</span><br><span class="line">		<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 请求断开目标蓝牙设备的连接</span></span><br><span class="line">	device_request_disconnect(device, msg);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="StopDiscovery方法的实现"><a href="#StopDiscovery方法的实现" class="headerlink" title="StopDiscovery方法的实现"></a>StopDiscovery方法的实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// StopDiscovery方法的回调函数</span></span><br><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">stop_discovery</span><span class="params">(DBusConnection *conn,</span></span><br><span class="line"><span class="params">					DBusMessage *msg, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *sender = dbus_message_get_sender(msg);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">discovery_client</span> *<span class="title">client</span>;</span></span><br><span class="line">	GSList *<span class="built_in">list</span>;</span><br><span class="line">	<span class="type">int</span> err;</span><br><span class="line"></span><br><span class="line">	DBG(<span class="string">&quot;sender %s&quot;</span>, sender);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 检查适配器的Powered是否为TRUE</span></span><br><span class="line">	<span class="keyword">if</span> (!btd_adapter_get_powered(adapter))</span><br><span class="line">		<span class="keyword">return</span> btd_error_not_ready(msg);</span><br><span class="line">	<span class="comment">// 检查发送者是否在发现列表中，即该发送者之前是否发送过StartDiscovery方法</span></span><br><span class="line">	<span class="built_in">list</span> = g_slist_find_custom(adapter-&gt;discovery_list, sender,</span><br><span class="line">						compare_sender);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">list</span>)</span><br><span class="line">		<span class="keyword">return</span> btd_error_failed(msg, <span class="string">&quot;No discovery started&quot;</span>);</span><br><span class="line"></span><br><span class="line">	client = <span class="built_in">list</span>-&gt;data;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 检查客户端是否有了待处理的消息</span></span><br><span class="line">	<span class="keyword">if</span> (client-&gt;msg)</span><br><span class="line">		<span class="keyword">return</span> btd_error_busy(msg);</span><br><span class="line">	<span class="comment">// 调用扫描停止函数</span></span><br><span class="line">	err = discovery_stop(client);</span><br><span class="line">	<span class="keyword">switch</span> (err) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line">	<span class="keyword">case</span> -EINPROGRESS:</span><br><span class="line">		client-&gt;msg = dbus_message_ref(msg);</span><br><span class="line">		adapter-&gt;client = client;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="keyword">return</span> btd_error_failed(msg, strerror(-err));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="临时定时器"><a href="#临时定时器" class="headerlink" title="临时定时器"></a>临时定时器</h3><p>在&#x2F;src&#x2F;main.conf文件中，有关于扫描到的设备临时（temporary）时间定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[General]</span><br><span class="line"></span><br><span class="line"># How long to keep temporary devices around</span><br><span class="line"># The value is in seconds. Default is 30.</span><br><span class="line"># 0 = disable timer, i.e. never keep temporary devices</span><br><span class="line">#TemporaryTimeout = 30</span><br></pre></td></tr></table></figure>
+
+<p>在&#x2F;src&#x2F;main.c文件中，关于临时（temporary）时间也有宏定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_PAIRABLE_TIMEOUT           0 <span class="comment">/* disabled */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_DISCOVERABLE_TIMEOUT     180 <span class="comment">/* 3 minutes */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_TEMPORARY_TIMEOUT         30 <span class="comment">/* 30 seconds */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_NAME_REQUEST_RETRY_DELAY 300 <span class="comment">/* 5 minutes */</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>&#x2F;src&#x2F;device.c源文件关于临时（temporary）定时器的记录</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">bool</span> <span class="title function_">device_disappeared</span><span class="params">(gpointer user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> user_data;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* If there are services connected restart the timer to give more time</span></span><br><span class="line"><span class="comment">	 * for the service to either complete the connection or disconnect.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (device_service_connected(dev))</span><br><span class="line">		<span class="keyword">return</span> TRUE;</span><br><span class="line"></span><br><span class="line">	dev-&gt;temporary_timer = <span class="number">0</span>;</span><br><span class="line">	<span class="comment">// here adapter remove device</span></span><br><span class="line">	btd_adapter_remove_device(dev-&gt;adapter, dev);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> FALSE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">set_temporary_timer</span><span class="params">(<span class="keyword">struct</span> btd_device *dev, <span class="type">unsigned</span> <span class="type">int</span> timeout)</span></span><br><span class="line">&#123;</span><br><span class="line">	clear_temporary_timer(dev);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!timeout)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	dev-&gt;temporary_timer = timeout_add_seconds(timeout, device_disappeared,</span><br><span class="line">								dev, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btd_device_set_temporary</span><span class="params">(<span class="keyword">struct</span> btd_device *device, <span class="type">bool</span> temporary)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (!device)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (device-&gt;temporary == temporary)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (device_address_is_private(device))</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	DBG(<span class="string">&quot;temporary %d&quot;</span>, temporary);</span><br><span class="line"></span><br><span class="line">	device-&gt;temporary = temporary;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (temporary) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (device-&gt;bredr)</span><br><span class="line">			adapter_accept_list_remove(device-&gt;adapter, device);</span><br><span class="line">		adapter_connect_list_remove(device-&gt;adapter, device);</span><br><span class="line">		<span class="keyword">if</span> (device-&gt;auto_connect) &#123;</span><br><span class="line">			device-&gt;disable_auto_connect = TRUE;</span><br><span class="line">			device_set_auto_connect(device, FALSE);</span><br><span class="line">		&#125;</span><br><span class="line">		set_temporary_timer(device, btd_opts.tmpto);<span class="comment">// here</span></span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		clear_temporary_timer(device);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (device-&gt;bredr)</span><br><span class="line">		adapter_accept_list_add(device-&gt;adapter, device);</span><br><span class="line"></span><br><span class="line">	store_device_info(device);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* attributes were not stored when resolved if device was temporary */</span></span><br><span class="line">	<span class="keyword">if</span> (device-&gt;bdaddr_type != BDADDR_BREDR &amp;&amp;</span><br><span class="line">			device-&gt;le_state.svc_resolved &amp;&amp;</span><br><span class="line">			g_slist_length(device-&gt;primaries) != <span class="number">0</span>)</span><br><span class="line">		store_services(device);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>btd_device_set_temporary()函数的参数temporary的值为 true时，device将被标记为临时设备，并通过 <code>set_temporary_timer(device, btd_opts.tmpto)</code> 启动了一个临时的定时器。</p>
+<p>&#x2F;src&#x2F;adapter.c关于临时（temporary）定时器的使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">btd_adapter_remove_device</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">				<span class="keyword">struct</span> btd_device *dev)</span></span><br><span class="line">&#123;</span><br><span class="line">	GList *l;</span><br><span class="line"></span><br><span class="line">	adapter-&gt;connect_list = g_slist_remove(adapter-&gt;connect_list, dev);</span><br><span class="line"></span><br><span class="line">	adapter_remove_device(adapter, dev);</span><br><span class="line">	btd_adv_monitor_device_remove(adapter-&gt;adv_monitor_manager, dev);</span><br><span class="line"></span><br><span class="line">	adapter-&gt;discovery_found = g_slist_remove(adapter-&gt;discovery_found,</span><br><span class="line">									dev);</span><br><span class="line"></span><br><span class="line">	adapter-&gt;connections = g_slist_remove(adapter-&gt;connections, dev);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;connect_le == dev)</span><br><span class="line">		adapter-&gt;connect_le = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	l = adapter-&gt;auths-&gt;head;</span><br><span class="line">	<span class="keyword">while</span> (l != <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">service_auth</span> *<span class="title">auth</span> =</span> l-&gt;data;</span><br><span class="line">		GList *next = g_list_next(l);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (auth-&gt;device != dev) &#123;</span><br><span class="line">			l = next;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		g_queue_delete_link(adapter-&gt;auths, l);</span><br><span class="line">		l = next;</span><br><span class="line"></span><br><span class="line">		service_auth_cancel(auth);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	device_remove(dev, TRUE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">discovery_cleanup</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter, <span class="type">int</span> timeout)</span></span><br><span class="line">&#123;</span><br><span class="line">	GSList *l, *next;</span><br><span class="line"></span><br><span class="line">	adapter-&gt;discovery_type = <span class="number">0x00</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;discovery_idle_timeout &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		timeout_remove(adapter-&gt;discovery_idle_timeout);</span><br><span class="line">		adapter-&gt;discovery_idle_timeout = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	g_slist_free_full(adapter-&gt;discovery_found,</span><br><span class="line">						invalidate_rssi_and_tx_power);</span><br><span class="line">	adapter-&gt;discovery_found = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!adapter-&gt;devices)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (l = adapter-&gt;devices; l != <span class="literal">NULL</span>; l = next) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> l-&gt;data;</span><br><span class="line"></span><br><span class="line">		next = g_slist_next(l);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (device_is_temporary(dev) &amp;&amp; !device_is_connectable(dev)</span><br><span class="line">			&amp;&amp; !btd_device_is_connected(dev))</span><br><span class="line">			btd_adapter_remove_device(adapter, dev); <span class="comment">// here</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">remove_temporary_devices</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter)</span></span><br><span class="line">&#123;</span><br><span class="line">	GSList *l, *next;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (l = adapter-&gt;devices; l; l = next) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> l-&gt;data;</span><br><span class="line"></span><br><span class="line">		next = g_slist_next(l);</span><br><span class="line">		<span class="keyword">if</span> (device_is_temporary(dev))</span><br><span class="line">			btd_adapter_remove_device(adapter, dev); <span class="comment">// here</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">remove_device</span><span class="params">(DBusConnection *conn,</span></span><br><span class="line"><span class="params">					DBusMessage *msg, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *path;</span><br><span class="line">	GSList *<span class="built_in">list</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (dbus_message_get_args(msg, <span class="literal">NULL</span>, DBUS_TYPE_OBJECT_PATH, &amp;path,</span><br><span class="line">						DBUS_TYPE_INVALID) == FALSE)</span><br><span class="line">		<span class="keyword">return</span> btd_error_invalid_args(msg);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">list</span> = g_slist_find_custom(adapter-&gt;devices, path, device_path_cmp);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">list</span>)</span><br><span class="line">		<span class="keyword">return</span> btd_error_does_not_exist(msg);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!btd_adapter_get_powered(adapter))</span><br><span class="line">		<span class="keyword">return</span> btd_error_not_ready(msg);</span><br><span class="line"></span><br><span class="line">	device = <span class="built_in">list</span>-&gt;data;</span><br><span class="line"></span><br><span class="line">	btd_device_set_temporary(device, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!btd_device_is_connected(device)) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// here adapter remove device</span></span><br><span class="line">		btd_adapter_remove_device(adapter, device);</span><br><span class="line">		<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	device_request_disconnect(device, msg);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是最终的问题还是没有得到解决：bluetoothd程序接收到客户端（例如：bluetoothctl）的请求： <code>StartDiscovery</code> 方法时，蓝牙设备被发现后，通过什么样的方式通知了客户端呢？同样的，客户端发送 <code>RemoveDevice</code> 方法时，bluetoothd又是通过什么方式告知客户端？最后一点，当附近设备被扫描到后，会作为一个临时设备，当临时时间最大时间到达后，在哪里执行删除临时设备操作，以及删除临时设备后，以什么方式通知客户端？</p>
+<h2 id="疑难杂症"><a href="#疑难杂症" class="headerlink" title="疑难杂症"></a>疑难杂症</h2><p>通过使用bluez提供的gdbus接口编写了一个客户端（从这边文章可以得知：<code>&#123;% post_link 'bluetoothctl-client-tool' %&#125;</code> ），并且为了测试连接的稳定性编译了一个自动化测试函数：</p>
+<ul>
+<li>第一步：<code>bt_open()</code> 打开蓝牙并进行初始化操作</li>
+<li>第二步：<code>bt_start_discovery()</code> 开始执行扫描操作</li>
+<li>第三步：进入while() 循环体，完成指定的连接次数<ul>
+<li>等待目标蓝牙设备被扫描到</li>
+<li>连接目标蓝牙设备</li>
+<li>移除目标蓝牙设备，并进入下一轮循环体</li>
+</ul>
+</li>
+<li>第四步：退出while() 循环体，<code>bt_cancel_discovery()</code> 停止扫描操作</li>
+<li>第五步：<code>bt_close()</code> 关闭蓝牙并释放相关的资源</li>
+</ul>
+<p>执行测试次数为100次，总会出现那么几次以上的连接超时失败：<code>Timeout was reached</code>。查看日志，发现执行connect操作后，立即出现了删除临时设备的操作（包括目标蓝牙设备），接下来就是连接超时报错了。</p>
+<p>如果没有扫描到目标蓝牙设备，直接去连接，则会报这个错误：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GDBus.Error:org.freedesktop.DBus.Error.UnknownObject: Method <span class="string">&quot;Connect&quot;</span> with signature <span class="string">&quot;&quot;</span> on interface <span class="string">&quot;org.bluez.Device1&quot;</span> doesn<span class="string">&#x27;t exist</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>所以关键的问题是找到执行connect操作会不会导致bluetoothd进程执行清理临时设备操作！</strong></p>
+<p>查询 <code>org.bluez.Device1</code> 的 Connect 方法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">const</span> GDBusMethodTable device_methods[] = &#123;</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Disconnect&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, dev_disconnect) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Connect&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, dev_connect) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;ConnectProfile&quot;</span>, GDBUS_ARGS(&#123; <span class="string">&quot;UUID&quot;</span>, <span class="string">&quot;s&quot;</span> &#125;),</span><br><span class="line">						<span class="literal">NULL</span>, connect_profile) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;DisconnectProfile&quot;</span>, GDBUS_ARGS(&#123; <span class="string">&quot;UUID&quot;</span>, <span class="string">&quot;s&quot;</span> &#125;),</span><br><span class="line">						<span class="literal">NULL</span>, disconnect_profile) &#125;,</span><br><span class="line">	&#123; GDBUS_ASYNC_METHOD(<span class="string">&quot;Pair&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, pair_device) &#125;,</span><br><span class="line">	&#123; GDBUS_METHOD(<span class="string">&quot;CancelPairing&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, cancel_pairing) &#125;,</span><br><span class="line">	&#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Connect方法的回调函数</span></span><br><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">dev_connect</span><span class="params">(DBusConnection *conn, DBusMessage *msg,</span></span><br><span class="line"><span class="params">							<span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> user_data;</span><br><span class="line">	<span class="type">uint8_t</span> bdaddr_type;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (dev-&gt;bredr_state.connected) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Check if services have been resolved and there is at least</span></span><br><span class="line"><span class="comment">		 * one connected before switching to connect LE.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">if</span> (dev-&gt;bredr_state.svc_resolved &amp;&amp;</span><br><span class="line">			find_service_with_state(dev-&gt;services,</span><br><span class="line">						BTD_SERVICE_STATE_CONNECTED))</span><br><span class="line">			bdaddr_type = dev-&gt;bdaddr_type;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			bdaddr_type = BDADDR_BREDR;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (dev-&gt;le_state.connected &amp;&amp; dev-&gt;bredr)</span><br><span class="line">		bdaddr_type = BDADDR_BREDR;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		bdaddr_type = select_conn_bearer(dev);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (bdaddr_type != BDADDR_BREDR) &#123;</span><br><span class="line">		<span class="type">int</span> err;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (dev-&gt;le_state.connected)</span><br><span class="line">			<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line"></span><br><span class="line">		btd_device_set_temporary(dev, <span class="literal">false</span>);<span class="comment">// 与临时设备相关的函数，移除缓存定时器</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (dev-&gt;disable_auto_connect) &#123;</span><br><span class="line">			dev-&gt;disable_auto_connect = FALSE;</span><br><span class="line">			device_set_auto_connect(dev, TRUE);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		err = device_connect_le(dev);</span><br><span class="line">		<span class="keyword">if</span> (err &lt; <span class="number">0</span>)</span><br><span class="line">			<span class="keyword">return</span> btd_error_failed(msg, strerror(-err));</span><br><span class="line"></span><br><span class="line">		dev-&gt;connect = dbus_message_ref(msg);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> connect_profiles(dev, bdaddr_type, msg, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然不能100%确认设备删除的时间点，但是我查到了相关调用关系，最终设备被移除时一定会调用函数 <code>g_dbus_unregister_interface()</code> ，那么我需要向上找出关于这个函数被调用的位置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># src/adapter.c</span><br><span class="line"># 第一个调用方向</span><br><span class="line">g_dbus_unregister_interface() --&gt; btd_device_unref() --&gt; device_remove()  </span><br><span class="line">--&gt; btd_adapter_remove_device() --&gt; remove_temporary_devices()</span><br><span class="line"></span><br><span class="line"># 第二个调用方向 </span><br><span class="line">g_dbus_unregister_interface() --&gt; btd_device_unref() --&gt; device_remove()  </span><br><span class="line">--&gt; btd_adapter_remove_device() --&gt;  discovery_cleanup() --&gt; discovery_remove() </span><br><span class="line">--&gt; start_discovery_complete() --&gt; start_discovery_timeout() </span><br><span class="line">--&gt; trigger_start_discovery() --&gt; discovering_callback()</span><br><span class="line"></span><br><span class="line"># 第三个调用方向</span><br><span class="line">g_dbus_unregister_interface() --&gt; btd_device_unref() --&gt; device_remove() </span><br><span class="line">--&gt; btd_adapter_remove_device() --&gt; remove_device()</span><br><span class="line"></span><br><span class="line"># src/device.c中btd_adapter_remove_device()的调用关系</span><br><span class="line">btd_adapter_remove_device() --&gt; device_disappeared() --&gt; set_temporary_timer() </span><br><span class="line">--&gt; btd_device_set_temporary() --&gt; dev_connect()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当然，最好将bluetoothd的日志保存到文件，但是也有一个烦恼的问题，就是日志文件太大了，动不动就是10M以上的大小，排查很困难。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/libexec/bluetooth/bluetoothd -d -n &gt; bluetoothd.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/bluez/" rel="tag"># bluez</a>
+              <a href="/tags/bluetoothd/" rel="tag"># bluetoothd</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/10/2024/Matter-Level-Control-Cluster/" rel="prev" title="Matter: Level Control Cluster">
+                  <i class="fa fa-angle-left"></i> Matter: Level Control Cluster
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/25/2024/bluetoothd-source-file-reading/" rel="next" title="bluetoothd: source file reading">
+                  bluetoothd: source file reading <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"bb117d1ddba6e8137b80044fc7e4abc8"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

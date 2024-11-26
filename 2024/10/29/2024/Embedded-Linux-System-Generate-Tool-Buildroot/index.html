@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Buildroot是一个简单、高效、易用的通过交叉编译生成嵌入式Linux系统的工具。记录一下Buildroot的结构和具体使用记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Embedded Linux System Generate Tool: Buildroot">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="Buildroot是一个简单、高效、易用的通过交叉编译生成嵌入式Linux系统的工具。记录一下Buildroot的结构和具体使用记录。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-29T12:59:43.000Z">
+<meta property="article:modified_time" content="2024-11-03T10:07:52.642Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="embedded linux">
+<meta property="article:tag" content="Buildroot">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/","path":"2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/","title":"Embedded Linux System Generate Tool: Buildroot"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Embedded Linux System Generate Tool: Buildroot | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Buildroot"><span class="nav-number">1.</span> <span class="nav-text">Buildroot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text">交叉编译工具链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E5%90%8E%E7%AB%AF"><span class="nav-number">2.1.</span> <span class="nav-text">内部工具链后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7%E9%93%BE%E5%90%8E%E7%AB%AF"><span class="nav-number">2.2.</span> <span class="nav-text">外部工具链后端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">初始化系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kconfig"><span class="nav-number">4.</span> <span class="nav-text">Kconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#makefile"><span class="nav-number">5.</span> <span class="nav-text">makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">参考引用</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Embedded Linux System Generate Tool: Buildroot | eiSouthBoy's Blog">
+      <meta itemprop="description" content="Buildroot是一个简单、高效、易用的通过交叉编译生成嵌入式Linux系统的工具。记录一下Buildroot的结构和具体使用记录。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Embedded Linux System Generate Tool: Buildroot
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-29 12:59:43" itemprop="dateCreated datePublished" datetime="2024-10-29T12:59:43+00:00">2024-10-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-03 10:07:52" itemprop="dateModified" datetime="2024-11-03T10:07:52+00:00">2024-11-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Buildroot/" itemprop="url" rel="index"><span itemprop="name">Buildroot</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">Buildroot是一个简单、高效、易用的通过交叉编译生成嵌入式Linux系统的工具。记录一下Buildroot的结构和具体使用记录。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="Buildroot"><a href="#Buildroot" class="headerlink" title="Buildroot"></a>Buildroot</h2><blockquote>
+<p>Buildroot是什么？</p>
+<p>官方手册：Buildroot is a tool that simplifies and automates the process of building a complete Linux system for an embedded system, using cross-compilation</p>
+</blockquote>
+<p>Buildroot 是一个工具，它使用交叉编译来简化和自动化嵌入式Linux系统构建过程。为了达到上述目的，Buildroot 能够生成交叉编译工具链（a cross-compilation toolchain）、根文档系统（a root filesysystem）、Linux 内核映像（a Linux kernel image）和引导加载进程（a bootloader）。</p>
+<p>Buildroot每3个月发布一次，2月、5月、8月、11月，发布号的格式为 YYYY.MM，例如 2013.02、2014.08。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/buildroot/buildroot">Buildroot的Github链接</a></p>
+<p>Buildroot如何使用？</p>
+<p>通过 <code>make menuconfig</code> 进入菜单，配置选项。全部配置完成后，配置工具将会生成一个<code>.config</code>文件，这个文件将被顶层Makefile读取。然后就可以进行构建：<code>make</code>，该命令一般会执行如下步骤：</p>
+<ul>
+<li>下载源文件</li>
+<li>配置、构建、安装交叉编译链，或者简单地导入外部交叉编译链</li>
+<li>配置、构建、安装已勾选的目标包</li>
+<li>构建内核镜像（kernel image），如果已勾选</li>
+<li>构建引导加载程序镜像（bootloader image），如果已勾选</li>
+<li>创建选定格式的根文件系统（root filesystem）</li>
+</ul>
+<p>Buildroot输出保存在<code>output/.</code> 目录下，这个目录包含如下几个子目录：</p>
+<ul>
+<li><strong>images</strong>：存放所有的images（kernel image、bootloader、root filesystem image），这些都是需要放到目标系统上的文件。</li>
+<li><strong>build</strong>：存放所有需要编译的应用，每个应用都以一个文件夹表示。</li>
+<li><strong>host</strong>：包含为主机构建的工具（主要是主机上Buildroot需要的工具和交叉编译工具）和目标工具链的sysroot（主要是用户交叉编译的头文件和库文件）。</li>
+<li><strong>staging</strong>：host目录内目标工具链sysroot的符号链接，其存在是为了向后兼容</li>
+<li><strong>target</strong>：包含了目标几乎完整的根文件系统。最后导入目标主机的根文件系统就是这个</li>
+</ul>
+<p><code>make menuconfig</code> 中，可以输入<code>/</code> 进行目标搜索。当搜索到所有目标，可以通过按下<strong>目标的数字编号</strong>进行跳转。</p>
+<p><code>buildroot/package</code> 目录下，可以为自己的应用创建文件夹，文件夹下至少有两个文件：<code>xxx.mk</code> 和 <code>Config.in</code> 。</p>
+<ul>
+<li><code>xxx.mk</code>：这是一个Makefile文件，包含了对应用package的下载、配置、编译和安装</li>
+<li><code>Config.in</code>：这是一个配置工具描述文件的一部分，它描述了应用package的选项。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://buildroot.org/downloads/manual/manual.html">Buildroot手册链接</a></p>
+<h2 id="交叉编译工具链"><a href="#交叉编译工具链" class="headerlink" title="交叉编译工具链"></a>交叉编译工具链</h2><blockquote>
+<p>交叉编译是什么？</p>
+</blockquote>
+<p>因为你的目标主机（arm架构）的cpu、ram、rom都是极其有限的，无法在目标主机编译应用程序。所以我们一般在源主机（x86架构）上为目标主机（arm架构）编译应用程序，如果我们选择系统默认的编译链工具，编译出来的可执行文件只能在x86架构主机运行。若想在目标主机（arm架构）上运行应用程序，需要在源主机（x86架构）上安装交叉编译工具链。</p>
+<p><strong>编译工具链是什么？</strong></p>
+<p>编译工具链是一组可用于编译系统代码的工具。它由<strong>编译器、汇编器和链接器</strong>等二进制实用程序以及 <strong>C 标准库</strong>组成。</p>
+<p><strong>交叉编译工具链是什么？</strong></p>
+<p>一个在主机系统上运行但为 <em>目标系统</em>（和目标处理器）生成代码的编译工具链。例如，如果您的主机系统使用 x86 而目标系统使用 ARM，则主机上的常规编译工具链在 x86 上运行并为 x86 生成代码，而交叉编译工具链在 x86 上运行并为 ARM 生成代码。</p>
+<p><strong>Buildroot不提供编译工具链，需要用户自己安装。</strong></p>
+<p>Buildroot为交叉编译工具链提供了两种解决方案：</p>
+<ul>
+<li>内部工具链后端，<code>Buildroot toolchain</code>在配置界面调用。</li>
+<li>外部工具链后端，<code>External toolchain</code>在配置界面调用。</li>
+</ul>
+<h3 id="内部工具链后端"><a href="#内部工具链后端" class="headerlink" title="内部工具链后端"></a>内部工具链后端</h3><p><em>内部工具链后端</em>是Buildroot 在为目标嵌入式系统构建用户空间应用程序和库之前自行构建交叉编译工具链的后端。</p>
+<h3 id="外部工具链后端"><a href="#外部工具链后端" class="headerlink" title="外部工具链后端"></a>外部工具链后端</h3><p><em>外部工具链后端</em>允许使用现有的预构建交叉编译工具链。Buildroot 了解许多著名的交叉编译工具链（来自 <a target="_blank" rel="noopener" href="http://www.linaro.org/">Linaro</a> for ARM、 Sourcery CodeBench for ARM、x86-64、PowerPC 和 MIPS），并且能够自动下载它们，或者可以指向自定义工具链，可下载或本地安装。</p>
+<p>有三种使用外部工具链的解决方案：</p>
+<ul>
+<li>使用预定义的外部工具链配置文件，让 Buildroot 下载、提取和安装工具链。</li>
+<li>使用预定义的外部工具链配置文件，但不是让 Buildroot 下载并提取工具链，而是可以告诉 Buildroot 您的工具链已安装在系统上的位置。</li>
+<li>使用完全自定义的外部工具链。</li>
+</ul>
+<h2 id="初始化系统"><a href="#初始化系统" class="headerlink" title="初始化系统"></a>初始化系统</h2><p><em>init</em>程序是内核启动的第一个用户空间程序（它的 PID 编号为 1），负责启动用户空间服务和程序（例如：Web 服务器、图形应用程序、其他网络服务器等）。</p>
+<p>Buildroot 允许使用三种不同类型的 init 系统：</p>
+<ul>
+<li>第一个解决方案是<strong>BusyBox</strong>：在众多程序中，BusyBox 有一个基本<code>init</code>程序的实现，对于大多数嵌入式系统来说已经足够了。</li>
+<li>第二种解决方案是<strong>systemV</strong>：此解决方案使用旧的传统<em>sysvinit</em>程序，该程序在 Buildroot 中打包 <code>package/sysvinit</code>。这是大多数桌面 Linux 发行版中使用的解决方案，直到他们转向 Upstart 或 Systemd 等较新的替代方案。</li>
+<li>第三个解决方案是<strong>systemd</strong>：<code>systemd</code>它是新一代的 Linux 初始化系统。</li>
+</ul>
+<p>Buildroot 开发人员推荐的解决方案是使用 <strong>BusyBox init</strong>，因为它对于大多数嵌入式系统来说已经足够了。systemd可用于更复杂的情况。</p>
+<h2 id="Kconfig"><a href="#Kconfig" class="headerlink" title="Kconfig"></a>Kconfig</h2><blockquote>
+<p>Kconfig是什么？</p>
+</blockquote>
+<p>配置数据库是以树状结构组织的配置选项的集合。</p>
+<p><em>注意：linux 在2.6版本以后将配置文件由原来的 Config.in 改为 Kconfig</em></p>
+<p>Kconfig的功能？</p>
+<p>Kconfig用来配置内核，它就是各种配置界面的源文件，内核的配置工具读取各个Kconfig文件，生成配置界面供开发人员配置内核，最后生成配置文件<code>.config</code>。通过配置界面进行勾选的项目将会以固定格式写入<code>.config</code> 文件。</p>
+<p>执行命令：<code>make menuconfig</code> ，自动读取当前目录下的 <code>Config.in</code>，形成配置界面</p>
+<p><strong>Kconfig 语法</strong></p>
+<p>example：Config.in</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">menu &quot;Network device support&quot;</span><br><span class="line">config BR2_PACKAGE_NETDEVICES</span><br><span class="line">    bool &quot;Enable Net Devices&quot;</span><br><span class="line">    depends on NET</span><br><span class="line">    select BR2_PACKAGE_LIBDEVICES</span><br><span class="line">    default y</span><br><span class="line">    help</span><br><span class="line">        This is help desciption。</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">endmenu</span><br></pre></td></tr></table></figure>
+
+<p><strong>Network device support</strong>：主菜单</p>
+<p><strong>menu … endmenu</strong>：标签中间的成为子菜单，子菜单由关键字config定义。</p>
+<p>其中config下面其他关键字是属性：bool、depends on、default、help，用于定义该菜单项的类型、依赖项、默认值、帮助信息等。</p>
+<p>类型定义：</p>
+<ul>
+<li>bool：布尔类型。显示 <code>[]</code></li>
+<li>tristate：三态（内建Y、模块M、移除N）。显示 <code>&lt;&gt;</code></li>
+<li>string：字符串</li>
+<li>hex：16进制。显示 <code>()</code></li>
+<li>integer：整型</li>
+</ul>
+<p>目录嵌套：子目录下的Kconfig必须添加到父目录中的Kconfig中。在父目录中的Kconfig类似语句：<code>source &quot;package/app/Kconfig&quot;</code></p>
+<p>用来包含（或嵌套）新的Kconfig文件，这样便可以使各个目录管理各自的配置内容，使不必把那些配置都写在同一个文件里，方便修改和管理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 条目</span><br><span class="line">config：生成可选项</span><br><span class="line">menu/endmenu：生成菜单</span><br><span class="line">choice/endchoice：将多个类似的配置选项组合在一起，供用户单选或多选。</span><br><span class="line">comment：在界面的第一行显示帮助信息</span><br><span class="line">if/endif:</span><br><span class="line">source：用于读取另外一个Kconfig文件，一般读取子目录的Kconfig文件</span><br></pre></td></tr></table></figure>
+
+<h2 id="makefile"><a href="#makefile" class="headerlink" title="makefile"></a>makefile</h2><p>.mk是一种android编译环境下的一种特殊的“makefile”文件</p>
+<ul>
+<li>PKG_NAME：定义软件包的名称。通常与软件包源代码的目录名相同。</li>
+<li>PKG_VERSION：定义软件包的版本号。</li>
+<li>PKG_SOURCE：定义软件包源代码的下载链接或路径。可以是远程 URL 或本地路径。</li>
+<li>PKG_SITE：定义软件包目录，它可以是一个url或者本地文件路径</li>
+<li>PKG_HASH：定义软件包源代码的哈希值，用于验证下载文件的完整性。通常使用 MD5 或 SHA256 算法计算。</li>
+<li>PKG_SITE_METHOD：定义拉取或者复制包源文件的方式</li>
+<li>PKG_LICENSE：定义软件包的许可证类型。可以是单个许可证或多个许可证的组合。</li>
+<li>PKG_BUILD_DIR：定义软件包构建过程中的临时目录。通常是 <code>$&#123;BUILD_DIR&#125;/$&#123;PKG_NAME&#125;-$&#123;PKG_VERSION&#125;</code>。</li>
+<li>PKG_INSTALL_DIR：定义软件包安装到目标系统的目录。通常是 <code>$&#123;TARGET_DIR&#125;</code>。</li>
+<li>PKG_CONFIG_DEPENDS：定义软件包构建过程中依赖的其他软件包。这些依赖将被自动解析和构建。</li>
+<li>PKG_BUILD_CMDS结尾的变量会在 buildroot 框架编译的时候执行，用于给源码的 Makefile 传递编译选项和链接选项，调用源码的Makefile。</li>
+<li>PKG_INSTALL_TARGET_CMDS结尾的变量是在编译完之后，自动安装执行，一般是让 buildroot 把编译出来的的 bin 或 lib 拷贝到指定目录。</li>
+<li>$(eval $(autotools-package))：使用 Autotools 构建系统的软件包规则。适用于使用 configure 脚本的软件包。</li>
+<li>$(eval $(cmake-package))：使用 CMake 构建系统的软件包规则。适用于使用 CMakeLists.txt 的软件包。</li>
+<li>$(eval $(generic-package))：通用的软件包规则，适用于没有特定构建系统的软件包。需要手动定义构建和安装过程。</li>
+<li>$(eval $(host-generic-package))：适用于主机（开发机）上构建的通用软件包规则。与目标系统无关。</li>
+<li>$(eval $(python-package))：适用于 Python 软件包的规则。用于构建和安装 Python 模块。</li>
+</ul>
+<p><em>注意：PKG是你的应用名称</em></p>
+<h2 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h2><ul>
+<li>TOPDIR：<code>buildroot</code> 目录</li>
+<li>TARGET_MAKE_ENV</li>
+<li>TARGET_CC</li>
+<li>TARGET_CXX</li>
+</ul>
+<h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><p>[1、Kconfig Language](<a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html">Kconfig Language — The Linux Kernel documentation</a>)</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiangzhaowei/p/7528099.html">2、Kconfig详解-文件的基本要素 - 江召伟 - 博客园 (cnblogs.com)</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/embedded-linux/" rel="tag"># embedded linux</a>
+              <a href="/tags/Buildroot/" rel="tag"># Buildroot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/28/2024/Linux-C-Program-Name-and-Program-ID/" rel="prev" title="Linux C: Program Name and Program ID">
+                  <i class="fa fa-angle-left"></i> Linux C: Program Name and Program ID
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/30/2024/wpa-supplicant-applicant-Scan-Method/" rel="next" title="wpa-supplicant applicant: Scan Method">
+                  wpa-supplicant applicant: Scan Method <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"a30959514ebc996d6c6591f96bd2ce2d"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

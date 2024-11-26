@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matter: Level Control Cluster">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/09/10/2024/Matter-Level-Control-Cluster/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-10T09:08:52.000Z">
+<meta property="article:modified_time" content="2024-09-19T05:58:51.347Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="LevelControl Cluster">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/09/10/2024/Matter-Level-Control-Cluster/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/09/10/2024/Matter-Level-Control-Cluster/","path":"2024/09/10/2024/Matter-Level-Control-Cluster/","title":"Matter: Level Control Cluster"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Matter: Level Control Cluster | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-ID"><span class="nav-number">1.</span> <span class="nav-text">Cluster ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attributes"><span class="nav-number">2.</span> <span class="nav-text">Attributes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commands"><span class="nav-number">3.</span> <span class="nav-text">Commands</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/09/10/2024/Matter-Level-Control-Cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Matter: Level Control Cluster | eiSouthBoy's Blog">
+      <meta itemprop="description" content="在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Matter: Level Control Cluster
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-10 09:08:52" itemprop="dateCreated datePublished" datetime="2024-09-10T09:08:52+00:00">2024-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-19 05:58:51" itemprop="dateModified" datetime="2024-09-19T05:58:51+00:00">2024-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>LevelControl Cluster的作用？</p>
+</blockquote>
+<p>该集群提供了一个接口，用于控制可设置为某个级别的设备特性，例如灯光的亮度、门的关闭程度或加热器的功率输出。</p>
+<h2 id="Cluster-ID"><a href="#Cluster-ID" class="headerlink" title="Cluster ID"></a>Cluster ID</h2><table>
+<thead>
+<tr>
+<th>Hierarchy</th>
+<th>Role</th>
+<th>Scope</th>
+<th>PICS Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base</td>
+<td>Application</td>
+<td>Endpoint</td>
+<td>LVL</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hierachy</th>
+<th>Name</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0008</td>
+<td>Base</td>
+<td>Level Control</td>
+<td></td>
+</tr>
+<tr>
+<td>0x001c</td>
+<td>Derived</td>
+<td>Pulse Width Modulation</td>
+<td>P</td>
+</tr>
+</tbody></table>
+<p><em>注意：Pulse Width Modulation cluster是临时性的</em></p>
+<h2 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Type</th>
+<th>Contraint</th>
+<th>Quality</th>
+<th>Default</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0000</td>
+<td>CurrentLevel</td>
+<td>uint8</td>
+<td>MinLevel to MaxLevel</td>
+<td>SNX</td>
+<td>null</td>
+<td>R V</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0001</td>
+<td>RemainingTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>LT</td>
+</tr>
+<tr>
+<td>0x0002</td>
+<td>MinLevel</td>
+<td>uint8</td>
+<td>1 to MaxLevel</td>
+<td></td>
+<td>1</td>
+<td>R V</td>
+<td>[LT]</td>
+</tr>
+<tr>
+<td>0x0002</td>
+<td>MinLevel</td>
+<td>uint8</td>
+<td>0 to MaxLevel</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>[!LT]</td>
+</tr>
+<tr>
+<td>0x0003</td>
+<td>MaxLevel</td>
+<td>uint8</td>
+<td>MinLevel to 254</td>
+<td></td>
+<td>254</td>
+<td>R V</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>CurrentFrequency</td>
+<td>uint16</td>
+<td>MinFrequency to MaxFrequency</td>
+<td>PS</td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0005</td>
+<td>MinFrequency</td>
+<td>uint16</td>
+<td>0 to MaxFrequency</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0006</td>
+<td>MaxFrequency</td>
+<td>uint16</td>
+<td>min Minfrequency</td>
+<td></td>
+<td>0</td>
+<td>R V</td>
+<td>FQ</td>
+</tr>
+<tr>
+<td>0x0010</td>
+<td>OnOffTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0011</td>
+<td>OnLevel</td>
+<td>uint8</td>
+<td>MinLevel to MaxLevel</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x0012</td>
+<td>OnTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0013</td>
+<td>OffTransitionTime</td>
+<td>uint16</td>
+<td>all</td>
+<td>X</td>
+<td>null</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x0014</td>
+<td>DefaultMoveRate</td>
+<td>uint8</td>
+<td>all</td>
+<td>X</td>
+<td>MS</td>
+<td>RW VO</td>
+<td>O</td>
+</tr>
+<tr>
+<td>0x000f</td>
+<td>Options</td>
+<td>OptionsBitmap</td>
+<td>desc</td>
+<td></td>
+<td>0</td>
+<td>RW VO</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x4000</td>
+<td>StartUpCurrentLevel</td>
+<td>uint8</td>
+<td>desc</td>
+<td>XN</td>
+<td>MS</td>
+<td>RW VM</td>
+<td>LT</td>
+</tr>
+</tbody></table>
+<p><strong>CurrentLevel Attribute</strong></p>
+<p>该属性暗示着设备当前级别。级别的含义取决于设备。</p>
+<p><strong>RemainingTime Attribute</strong></p>
+<p>该属性暗示着持续时间直到current命令执行完毕，它以十分之秒为单位。</p>
+<p><strong>MinLevel Attribute</strong></p>
+<p>该属性暗示着当前级别可以设置的最小值</p>
+<p><strong>MaxLevel Attribute</strong></p>
+<p>该属性暗示着当前级别可以设置的最大值</p>
+<p><strong>CurrentFrequency Attribute</strong></p>
+<p>该属性暗示着设备处于当前级别时的频率。当前频率的值为0，表示是未知的。</p>
+<p><strong>MinFrequency Attribute</strong></p>
+<p>该属性暗示着当前频率可以设置的最小值。最小频率属性的值应该小于或等于最大频率属性的值。</p>
+<p><strong>MaxFrequency Attribute</strong></p>
+<p>该属性暗示着当前频率可以设置的最小值。最大频率属性的值应该大于或等于最小属性的值。</p>
+<p><strong>Options Attribute</strong></p>
+<p>此属性应指示设备的选定选项。<br>选项属性是一个位图，它决定了某些集群命令的默认行为。每个依赖于选项属性的命令都应首先构造一个临时的选项位图，该位图在命令处理期间有效。临时选项位图具有与选项属性相同的格式和含义，但包括可能被命令字段覆盖的任何位。</p>
+<p><strong>OnOffTransitionTime Attribute</strong></p>
+<p>此属性应指示当同一个Endpoint上的 OnOff 集群收到On或 Off命令时，移动到目标级别或从目标级别移出所需的时间。以十分之一秒为单位。</p>
+<p><strong>OnLevel Attribute</strong></p>
+<p>此属性应指示当同一Endpoint上的 OnOff 集群的 OnOff 属性设置为 TRUE 时， CurrentLevel 属性被设置的值，这是处理 OnOff 集群命令的结果。如果未实现 OnLevel 属性，或将其设置为空值，则它不起作用。有关更多详细信息，请参阅开&#x2F;关命令对 CurrentLevel 属性的影响。</p>
+<p><strong>OnTrasitionTime Attribute</strong></p>
+<p>此属性应指示当同一 Endpoint 上的 OnOff 集群收到 On 命令时，将当前级别从最低级别移至最高级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
+<p><strong>OffTransitionTime Attribute</strong></p>
+<p>此属性应指示当同一 Endpoint上 的 OnOff 集群收到 Off 命令时，将当前级别从最高级别移至最低级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
+<p><strong>DefaultMoveRate Attribute</strong></p>
+<p>当收到带有空值速率参数的移动命令时，此属性应指示移动速率（以单位&#x2F;秒为单位）。</p>
+<p><strong>StartUpCurrentLevel Attribute</strong></p>
+<p>此属性应指示设备通电时所需的启动级别，并且此级别应反映在 CurrentLevel 属性中。StartUpCurrentLevel 属性的值如下所列：</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Action on power up</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>将 CurrentLevel 属性设置为设备允许的最小值</td>
+</tr>
+<tr>
+<td>null</td>
+<td>将 CurrentLevel 属性设置为它之前的值</td>
+</tr>
+<tr>
+<td>other values</td>
+<td>将CurrentLevel 属性设置为输入的值</td>
+</tr>
+</tbody></table>
+<p>此行为不适用于与 OTA 相关的重启。OTA 重启后，CurrentLevel 属性应返回到重启前的值。</p>
+<h2 id="Commands"><a href="#Commands" class="headerlink" title="Commands"></a>Commands</h2><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Direction</th>
+<th>Respone</th>
+<th>Access</th>
+<th>Conformance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x00</td>
+<td>MoveToLevel</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x01</td>
+<td>Move</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x02</td>
+<td>Step</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x03</td>
+<td>Stop</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x04</td>
+<td>MoveToLevelWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x05</td>
+<td>MoveWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x06</td>
+<td>StepWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x07</td>
+<td>StopWithOnOff</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+<tr>
+<td>0x08</td>
+<td>MoveToClosestFrequecny</td>
+<td>client –&gt; server</td>
+<td>Y</td>
+<td>O</td>
+<td>M</td>
+</tr>
+</tbody></table>
+<p><strong>MoveToLevel Command</strong></p>
+<p>收到此命令后，设备应从其当前级别移至级别字段中指定的值。“级别”的含义取决于设备 - 例如，对于灯来说，它可能表示亮度级别。</p>
+<p>移动应尽可能在技术上可行，即不是阶跃函数，并且移动到新级别所需的时间应等于 TransitionTime 字段的值（以十分之一秒为单位），或尽可能接近该值。</p>
+<p>如果 TransitionTime 字段的值为 null，则移动到新级别所需的时间应由 OnOffTransitionTime 属性决定。如果不存在 OnOffTransitionTime（可选属性），则设备应尽快移动到新级别。</p>
+<p><strong>Move Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，设备应从其当前级别开始以连续的方式向上或向下移动，如下所述：</p>
+<table>
+<thead>
+<tr>
+<th>MoveMode</th>
+<th>Action on Receipt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Up</td>
+<td>按照速率字段中给出的速率增加设备的级别。如果级别达到设备允许的最大值，则停止。</td>
+</tr>
+<tr>
+<td>Down</td>
+<td>按照“速率”字段中指定的速率降低设备的级别。如果级别达到设备允许的最低水平，则停止。</td>
+</tr>
+</tbody></table>
+<p><strong>Step Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，设备应从其当前级别向上或向下移动，如下所述：</p>
+<table>
+<thead>
+<tr>
+<th>StepMode</th>
+<th>Action on Receipt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Up</td>
+<td>按 StepSize 单位增加 CurrentLevel，或直到达到设备允许的最大级别（如果在此过程中已达到）。在后一种情况下，过渡时间应按比例减少。</td>
+</tr>
+<tr>
+<td>Down</td>
+<td>将 CurrentLevel 降低 StepSize 单位，或直到达到设备允许的最低级别（如果在此过程中已达到）。在后一种情况下，过渡时间应按比例减少。</td>
+</tr>
+</tbody></table>
+<p><strong>Stop Command</strong></p>
+<p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
+<p>收到此命令后，当前正在执行的任何 MoveToLevel、Move 或 Step 命令（及其“带开&#x2F;关”变体）都应终止。收到 Stop 命令后，CurrentLevel 的值应保留为原值，RemainingTime 应设置为零。</p>
+<p>此命令在命令列表中有两个条目，一个用于 MoveToLevel、Move 和 Step 命令，另一个用于它们的“带 On&#x2F;Off”对应项。这只是为了对称，以便轻松选择一组或另一组命令 - Stop 命令是相同的，因为 On&#x2F;Off 的依赖性由要停止的原始命令决定。</p>
+<p><strong>MoveToClosestFrequecny Command</strong></p>
+<p>收到此命令后，设备应将其当前频率更改为请求的频率，或更改为其可以生成的最接近的频率。如果设备无法接近该频率，则应返回默认响应，错误代码为 CONSTRAINT_ERROR。确定请求的频率是否可以近似为支持的频率是制造商特定的决定。</p>
+<p><strong>With On&#x2F;Off Commands</strong></p>
+<p>MoveToLevelWithOnOff、MoveWithOnOff 和 StepWithOnOff 命令分别与 MoveToLevel、Move 和 Step 命令具有相同的数据字段。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LevelControl-Cluster/" rel="tag"># LevelControl Cluster</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/07/2024/hexo-assert-image-problem/" rel="prev" title="hexo-asset-image problem">
+                  <i class="fa fa-angle-left"></i> hexo-asset-image problem
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/23/2024/bluetoothd-device-cache/" rel="next" title="bluetoothd: device cache">
+                  bluetoothd: device cache <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"efd92022036f48e1e2e7e7cf331a3176"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

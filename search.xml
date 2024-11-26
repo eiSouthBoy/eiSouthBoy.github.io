@@ -1,21 +1,341 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ubuntu 22.04: VirtualBox7</title>
+    <url>/2024/11/26/2024/Ubuntu-22-04-VirtualBox7/</url>
+    <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a href="https://www.virtualbox.org/">Oracle Virtualbox</a> VirtualBox 是一款开源虚拟机软件。由德国 Innotek 公司开发，Sun Microsystems 公司出品。使用 Qt 编写，在 Sun 被 Oracle 收购后正式更名成 Oracle VM VirtualBox。采用 GPL 协议开源。</p>
+<p><strong>注意：先进入PC的BIOS系统关闭安全启动（Secure Boot），否则VirtualBox起不来</strong></p>
+<ul>
+<li><p>安装VirtualBox7</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入GPG秘钥</span></span><br><span class="line">wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | <span class="built_in">sudo</span> gpg --dearmor --<span class="built_in">yes</span> --output /usr/share/keyrings/oracle-virtualbox-2016.gpg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加仓库地址，Ubuntu 22.04自带的仓库中VirtualBox版本比较旧，好像是v6.5</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] http://download.virtualbox.org/virtualbox/debian <span class="subst">$(. /etc/os-release &amp;&amp; echo <span class="string">&quot;<span class="variable">$VERSION_CODENAME</span>&quot;</span>)</span> contrib&quot;</span> | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/virtualbox.list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新软件包列表</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装7.0版本</span></span><br><span class="line"><span class="built_in">sudo</span> apt install virtualbox-7.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装VirtualBox 扩展包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 检查已安装的VirtualBox版本</span></span><br><span class="line">pi@pi-NMH-WCX9:~$ vboxmanage -v | <span class="built_in">cut</span> -dr -f1</span><br><span class="line">7.0.22</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载对应的扩展包</span></span><br><span class="line">wget https://download.virtualbox.org/virtualbox/7.0.22/Oracle_VM_VirtualBox_Extension_Pack-7.0.22.vbox-extpack</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装对应的扩展包</span></span><br><span class="line"><span class="built_in">sudo</span> vboxmanage extpack install Oracle_VM_VirtualBox_Extension_Pack-7.0.22.vbox-extpack</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查已安装的扩展包版本</span></span><br><span class="line">pi@pi-NMH-WCX9:~$ vboxmanage list extpacks</span><br><span class="line">Extension Packs: 1</span><br><span class="line">Pack no. 0:   Oracle VM VirtualBox Extension Pack</span><br><span class="line">Version:        7.0.22</span><br><span class="line">Revision:       165102</span><br><span class="line">Edition:        </span><br><span class="line">Description:    Oracle Cloud Infrastructure integration, Host Webcam, VirtualBox RDP, PXE ROM, Disk Encryption, NVMe, full VM encryption.</span><br><span class="line">VRDE Module:    VBoxVRDP</span><br><span class="line">Crypto Module:  VBoxPuelCrypto</span><br><span class="line">Usable:         <span class="literal">true</span></span><br><span class="line">Why unusable: </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加当前用户到vboxusers组</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG vboxusers <span class="variable">$USER</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>VirtualBox7</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>WAN/LAN 自适应</title>
+    <url>/2024/11/23/2024/WAN-LAN-adaptive/</url>
+    <content><![CDATA[<h2 id="网口的类型"><a href="#网口的类型" class="headerlink" title="网口的类型"></a>网口的类型</h2><p>一般家用路由器网口会标明：LAN、WAN、WAN&#x2F;LAN，例如：</p>
+<p><img src="/home/caojun/.config/Typora/typora-user-images/image-20241123182945665.png" alt="image-20241123182945665"></p>
+<ul>
+<li>WAN网口：Wide Area Network，广域网，例如互联网。</li>
+<li>LAN网口：Local Area Network，局域网，例如家庭内部网络、办公室内部网络。</li>
+<li>WAN&#x2F;LAN自适应网口：</li>
+</ul>
+<p><em>注意：早期路由器上的网线接口是区分WAN口、LAN口的。WAN口用来连接光猫、宽带猫、上网网线的;LAN接口使用来连接电脑、电视机、机顶盒等网络设备的。</em></p>
+]]></content>
+      <categories>
+        <category>Wi-Fi</category>
+      </categories>
+      <tags>
+        <tag>WAN/LAN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: Hardware Communation Interface Or Protocol</title>
+    <url>/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/</url>
+    <content><![CDATA[<blockquote>
+<p>以下内容来自AI的回答</p>
+</blockquote>
+<p>在嵌入式系统设计中，硬件通信接口或协议是实现不同设备之间数据交换的关键。这些接口和协议根据传输距离、速度、功耗等因素的不同而有所区别。下面是一些常见的硬件通信接口或协议：</p>
+<ol>
+<li><p><strong>UART (Universal Asynchronous Receiver&#x2F;Transmitter)</strong></p>
+<ul>
+<li>UART 是一种非常基础的串行通信协议，它允许两个设备之间进行异步数据传输。它简单易用，适用于短距离通信。</li>
+</ul>
+</li>
+<li><p><strong>SPI (Serial Peripheral Interface)</strong></p>
+<ul>
+<li>SPI 是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</li>
+</ul>
+</li>
+<li><p><strong>I2C (Inter-Integrated Circuit)</strong></p>
+<ul>
+<li>I2C 是一种多主机总线，使用两根线（SDA 数据线和 SCL 时钟线）进行半双工通信。它广泛应用于需要连接多个低速外围设备的场合。</li>
+</ul>
+</li>
+<li><p><strong>CAN (Controller Area Network)</strong></p>
+<ul>
+<li>CAN 协议是一种有效支持分布式实时控制的串行通信网络，主要用于汽车和工业自动化领域，具有较强的抗干扰能力。</li>
+</ul>
+</li>
+<li><p><strong>USB (Universal Serial Bus)</strong></p>
+<ul>
+<li>USB 是一种通用的串行总线标准，用于建立计算机与其外部设备之间的连接。它支持热插拔和即插即用功能。</li>
+</ul>
+</li>
+<li><p><strong>Ethernet (以太网)</strong></p>
+<ul>
+<li>以太网是一种广泛使用的局域网技术，可以实现高速的数据传输。在嵌入式系统中，以太网接口常用于连接互联网或构建本地网络。</li>
+</ul>
+</li>
+<li><p><strong>Modbus</strong></p>
+<ul>
+<li>Modbus 是一种工业标准通信协议，用于控制器与执行器之间的通信。它支持RTU和ASCII两种模式，适用于工业自动化环境。</li>
+</ul>
+</li>
+<li><p><strong>RS-232, RS-422, RS-485</strong></p>
+<ul>
+<li>这些是串行通信的标准，其中RS-232主要用于点对点通信，而RS-422和RS-485则支持多点网络，并且具有更好的电气特性，适合长距离通信。</li>
+</ul>
+</li>
+<li><p><strong>Bluetooth (蓝牙)</strong></p>
+<ul>
+<li>蓝牙是一种无线通信技术，适用于短距离内的设备互联，如移动电话、笔记本电脑和个人数字助理(PDA)等。</li>
+</ul>
+</li>
+<li><p><strong>Wi-Fi (Wireless Fidelity)</strong></p>
+<ul>
+<li>Wi-Fi 技术允许电子设备通过无线局域网(WLAN)连接到互联网。它是许多现代嵌入式系统和物联网(IoT)设备中的重要组成部分。</li>
+</ul>
+</li>
+<li><p><strong>Zigbee</strong></p>
+<ul>
+<li>Zigbee 是一种基于IEEE 802.15.4标准的低功耗、低数据速率的无线通信技术，特别适合于传感器网络和家庭自动化应用。</li>
+</ul>
+</li>
+<li><p><strong>Thread</strong> </p>
+<p>Thread 是一种低功耗、基于 IPv6 的无线网络协议，旨在为家庭和工业环境中的物联网设备提供可靠、安全的通信。它建立在 IEEE 802.15.4 标准之上，类似于 Zigbee，但提供了更强大的网络管理和安全性功能。</p>
+</li>
+<li><p><strong>NFC (Near Field Communication)</strong></p>
+<ul>
+<li>NFC 是一种短距离的高频无线通信技术，使两个电子设备（其中一个通常是移动电话）在彼此靠近时能够交换数据。</li>
+</ul>
+</li>
+<li><p><strong>I2S (Inter-IC Sound)</strong></p>
+<ul>
+<li>I2S 是一种专为音频设备间传输声音数据而设计的数字接口。它定义了一种标准格式，用于在集成电路之间高效地传输高质量的音频信号。I2S 接口通常用于连接数字音频处理器、DAC（数模转换器）和ADC（模数转换器）等组件。</li>
+</ul>
+</li>
+<li><p><strong>SDIO (Secure Digital Input Output)</strong></p>
+<ul>
+<li>SDIO 是一种扩展了SD卡标准的接口，允许设备通过相同的物理接口与多种类型的外设进行通信，例如Wi-Fi模块、蓝牙模块、GPS接收器等。它为嵌入式系统提供了一个灵活且标准化的方法来增加功能而不必改变硬件设计。</li>
+</ul>
+</li>
+<li><p><strong>PWM (Pulse Width Modulation)</strong></p>
+<ul>
+<li>PWM 不是一个通信协议，而是一种信号调制方法，常用于控制电机的速度、LED的亮度等需要模拟输出的应用场景。通过改变脉冲宽度来调整输出信号的平均值，从而实现对负载的有效控制。在嵌入式系统中，PWM 通常由定时器或专门的PWM控制器产生。</li>
+</ul>
+</li>
+<li><p><strong>RMT</strong>（Remote Control Protocol） 主要用于处理脉冲信号，特别是在红外通信中。它可以用来接收和发送经过调制的脉冲信号，比如常见的红外遥控信号。RMT 功能通常集成在某些微控制器或SoC（System on Chip）中，特别是那些针对智能家居、消费电子等领域的芯片。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>esp32</tag>
+        <tag>Interface</tag>
+        <tag>Protocol</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: Automatic Bootloader</title>
+    <url>/2024/11/17/2024/esp-Automatic-Bootloader/</url>
+    <content><![CDATA[<blockquote>
+<p>下载模式、烧录模式、Boot模式、Boot Mode都是同样的意思！！！</p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在对esp32开发板烧录固件时，每次都要先按住boot键不放，然后按住en键，此时才能进入烧录模式。感觉麻烦的，要是有一种自动下载模式就好了，无需开发者去操作按键，直接烧录就行。</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117132345736.png" alt="image-20241117132345736"></p>
+<p>下载模式分为：自动下载模式 和 手动下载模式。但有一个前提，如何进入下载模式？</p>
+<p>EN（也称为RST）上升沿（从低电平到高电平）时候，检测到GPIO0（也称为Boot）为低电平，进入下载模式。具体操作方式有两种：</p>
+<ul>
+<li>方式1：先按住Boot键不放，然后按住EN键</li>
+<li>方式2：先按住Boot键不放，然后断电和上电操作</li>
+</ul>
+<p><em>注意：默认GPIO0为高电平，当按下Boot键后，GPIO0为低电平。可以查看开发板原理图得知</em></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>那么开发板的自动下载模式的原理是什么呢？其实是通过电路模拟了进入Boot模式操作。</p>
+<p>乐鑫解释了如何进入自动下载模式，如下：</p>
+<blockquote>
+<p><code>esptool.py</code> resets ESP32 automatically by asserting <code>DTR</code> and <code>RTS</code> control lines of the USB to serial converter chip, i.e., FTDI, CP210x, or CH340x. The <code>DTR</code> and <code>RTS</code> control lines are in turn connected to <code>GPIO0</code> and <code>EN</code> (<code>CHIP_PU</code>) pins of ESP32, thus changes in the voltage levels of <code>DTR</code> and <code>RTS</code> will boot the ESP32 into Firmware Download mode.</p>
+<p>Note：When developing <code>esptool.py</code>, keep in mind <code>DTR</code> and <code>RTS</code> are active low signals, i.e., <code>True</code> &#x3D; pin @ 0V, <code>False</code> &#x3D; pin @ VCC.</p>
+<p>释义：esptool.py 通过置位 USB 转串口转换器芯片（即 FTDI、CP210x 或 CH340x）的 DTR 和 RTS 控制线来自动重置 ESP32。DTR 和 RTS 控制线依次连接到 ESP32 的 GPIO0 和 EN（CHIP_PU）引脚，因此 DTR 和 RTS 的电压变化将使 ESP32 进入固件下载模式。</p>
+<p>注意：在开发 esptool.py 时，请记住 DTR 和 RTS 是低电平有效信号，即 True &#x3D; 引脚 @ 0V，False &#x3D; 引脚 @ VCC。</p>
+</blockquote>
+<p>先来看开发板的原理图（依次为 图1 和 图2）：</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117173318335.png" alt="image-20241117173318335"></p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241117140224096.png" alt="image-20241117140224096"></p>
+<p>这里可能会有一个疑问：DTR 和 RTS 在哪里？这两个引脚在 CP2102N芯片上（USB-UART Bridge 电路）</p>
+<p><strong>串口流控机制：</strong></p>
+<ul>
+<li>DTR： Data Terminal Ready，数据终端准备好，低有效</li>
+<li>RTS：Request To Send，请求发送，低有效</li>
+</ul>
+<p>另外 “Auto program” 中是有规律的，规律如下：</p>
+<ol>
+<li>当 DTR 和 RTS 同时为 0 或者同时为 1 时，三极管 Q1 和 Q2 均为截止状态，此时 EN 和 IO0 的状态由其他电路决定（内部&#x2F;外部上拉电阻）。</li>
+<li>当 DTR 和 RTS 不同时，EN &#x3D; RTS, IO0 &#x3D; DTR。</li>
+</ol>
+<p>自动进入下载模式的顺序应该是这样的（芯片断电，然后上电）：（EN&#x3D;0， IO0&#x3D;0）–&gt;（EN&#x3D;1，IO0&#x3D;0），可是看上图的 “Auto program” 是没有（EN&#x3D;0， IO0&#x3D;0）这种逻辑的。如果没有这个逻辑，那么是无法进入下载模式的。（暂时先不管）</p>
+<p>查看esptool.py关于自动下载模式的实现，在 <a href="https://github.com/espressif/esptool/blob/master/esptool/reset.py">esptool&#x2F;reset.py</a> 找到了具体逻辑实现：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ClassicReset</span>(<span class="title class_ inherited__">ResetStrategy</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Classic reset sequence, sets DTR and RTS lines sequentially.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">False</span>)  <span class="comment"># IO0=HIGH</span></span><br><span class="line">        <span class="variable language_">self</span>._setRTS(<span class="literal">True</span>)  <span class="comment"># EN=LOW, chip in reset			(1)</span></span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">True</span>)  <span class="comment"># IO0=LOW 						(2)</span></span><br><span class="line">        <span class="variable language_">self</span>._setRTS(<span class="literal">False</span>)  <span class="comment"># EN=HIGH, chip out of reset 	(3)</span></span><br><span class="line">        time.sleep(<span class="variable language_">self</span>.reset_delay)</span><br><span class="line">        <span class="variable language_">self</span>._setDTR(<span class="literal">False</span>)  <span class="comment"># IO0=HIGH, done 				(4)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里有两个疑惑：为什么在 (1) 和 (2)之间要sleep?   为甚么 (3) 和 (4) 之间要sleep? </p>
+<p><strong>在(1)之后，设置EN&#x3D;0，由于充放电电路（图1）中的电容需要放电，所以EN并不是一下子从高电平1突变至低电平0，而是有一个放电时间。故这里 sleep 0.1秒，确保EN一定是低电平0。此时，芯片开始复位。</strong></p>
+<p><strong>在(3)之后，设置EN&#x3D;1，由于充放电电路（图1）中的电容需要充电，所以并不是一下从低电平0突变至高电平1，而是有一个充电时间。故这里 sleep reset_delay 秒，确保EN一定是高电平1。在EN从低电平到高电平（上升沿）时，检测到IO0为低电平0，芯片开始下载模式。</strong></p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>esptool 通过USB发送了什么数据给串口芯片的DTR和RTS呢？</p>
+<p>先把USB转串口电路的原理看下：</p>
+<p><img src="/2024/11/17/2024/esp-Automatic-Bootloader/image-20241119134619149.png" alt="image-20241119134619149"></p>
+<p>首先从USB到串口芯片CP2102N只有两根信号线：USB_DN 和 USB_DP。然后通过串口芯片CP2102N出来了4根信号线：RXD、TXD；DTR（Data Terminal Ready、RTS（Request to Send）。其中RXD和TXD连接到MCU的TXD0和RXD0，而DTR和RTS分别连接到Q1（NPN三极管）和Q2（NPN）的基级，用于间接控制MCU的EN和IO0。</p>
+<p>esptool 使用了 pyserial 库，可以打开串口，然后直接控制 DTR 和 RTS，经过Q1 和 Q2 的电路特性间接控制MCU 的EN 和 IO0，只要控制 DTR 和 RTS 满足 MCU 进入下载模式的条件，即可使 MCU 进入下载模式。</p>
+<p>编译 Python 程序，使用 ESP32 先进入烧录模式，然后重启 ESP32</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 第一步：确定串口名，分为两种情况 </span></span><br><span class="line"><span class="comment">#   1）对于给定目标串口名(例如 /dev/ttyUSB0 or /dev/ttyACM0)</span></span><br><span class="line"><span class="comment">#   2）没有指定目标串口名，需要在计算机上编译所有的的串口，然后指定一个可用串口名</span></span><br><span class="line"><span class="comment"># 第二步：打开串口</span></span><br><span class="line"><span class="comment"># 第三步：使用串口Read or Write 数据</span></span><br><span class="line"><span class="comment"># 第四步：关闭串口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> serial <span class="comment">#导入模块</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">open_serial_port</span>(<span class="params">port, baudrate=<span class="number">9600</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    打开指定的串口。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param port: 串口号，例如 &#x27;COM1&#x27; 或 &#x27;/dev/ttyUSB0&#x27;</span></span><br><span class="line"><span class="string">    :param baudrate: 波特率，默认为 9600</span></span><br><span class="line"><span class="string">    :return: Serial 对象</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        ser = serial.Serial(port, baudrate, timeout=<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Open port <span class="subst">&#123;port&#125;</span> success&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> ser</span><br><span class="line">    <span class="keyword">except</span> serial.SerialException <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Open port <span class="subst">&#123;port&#125;</span> fail: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_data</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从串口读取数据。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    :return: 读取的数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> ser.is_open:</span><br><span class="line">        <span class="comment"># 读取一行数据</span></span><br><span class="line">        line = ser.readline()</span><br><span class="line">        <span class="keyword">if</span> line:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Recv Data: <span class="subst">&#123;line.decode(<span class="string">&#x27;utf-8&#x27;</span>).strip()&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Not Recv Data&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;serial not open&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_data_cb</span>(<span class="params">ser, stop_event</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从串口读取数据的函数，运行在一个单独的线程中。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        received_data = []</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> stop_event.is_set():</span><br><span class="line">            <span class="keyword">if</span> ser.in_waiting &gt; <span class="number">0</span>:</span><br><span class="line">                line = ser.readline()</span><br><span class="line">                <span class="keyword">if</span> line:</span><br><span class="line">                    data = line.decode(<span class="string">&#x27;utf-8&#x27;</span>).strip()</span><br><span class="line">                    received_data.append(data)</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;Recv Data: <span class="subst">&#123;data&#125;</span>&quot;</span>)</span><br><span class="line">            time.sleep(<span class="number">0.01</span>)  <span class="comment"># 避免CPU占用过高</span></span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Data reading stopped.&quot;</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write_data</span>(<span class="params">ser, data</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    向串口发送数据。</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    :param ser: Serial 对象</span></span><br><span class="line"><span class="string">    :param data: 要发送的数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> ser.is_open:</span><br><span class="line">        <span class="comment"># 发送数据</span></span><br><span class="line">        ser.write(data.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Send Data: <span class="subst">&#123;data.strip()&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Serial not open&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ClassicReset</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Classic reset sequence, sets DTR and RTS lines sequentially.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ser.dtr = <span class="literal">False</span>  <span class="comment"># IO0=HIGH</span></span><br><span class="line">    ser.rts = <span class="literal">True</span>  <span class="comment"># EN=LOW, chip in reset</span></span><br><span class="line">    time.sleep(<span class="number">0.1</span>)</span><br><span class="line">    ser.dtr = <span class="literal">True</span>  <span class="comment"># IO0=LOW</span></span><br><span class="line">    ser.rts = <span class="literal">False</span>  <span class="comment"># EN=HIGH, chip out of reset</span></span><br><span class="line">    <span class="comment"># default time (0.05) to wait before releasing boot pin after reset</span></span><br><span class="line">    time.sleep(<span class="number">0.05</span>)</span><br><span class="line">    ser.dtr = <span class="literal">False</span>  <span class="comment"># IO0=HIGH, done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">HardReset</span>(<span class="params">ser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Reset sequence for hard resetting the chip.</span></span><br><span class="line"><span class="string">    Can be used to reset out of the bootloader or to restart a running app.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ser.dtr = <span class="literal">False</span></span><br><span class="line">    ser.rts = <span class="literal">True</span>  <span class="comment"># EN-&gt;LOW</span></span><br><span class="line">    <span class="comment"># Give the chip some time to come out of reset,</span></span><br><span class="line">    <span class="comment"># to be able to handle further DTR/RTS transitions</span></span><br><span class="line">    time.sleep(<span class="number">0.2</span>)</span><br><span class="line">    ser.rts = <span class="literal">False</span></span><br><span class="line">    time.sleep(<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 设置串口参数</span></span><br><span class="line">    port = <span class="string">&#x27;/dev/ttyUSB0&#x27;</span>  <span class="comment"># 根据你的设备修改此值</span></span><br><span class="line">    baudrate = <span class="number">115200</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 打开串口</span></span><br><span class="line">    ser = open_serial_port(port, baudrate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ser <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 创建一个线程来读取串口数据</span></span><br><span class="line">            stop_event = threading.Event()</span><br><span class="line">            read_thread = threading.Thread(target=read_data_cb, args=(ser, stop_event))</span><br><span class="line">            read_thread.start()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 发送数据</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt; ESP32 autoboot mode&quot;</span>)</span><br><span class="line">            ClassicReset(ser) <span class="comment"># 设置DTR 和 RTS，将ESP32进入烧录模式</span></span><br><span class="line">            time.sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt; ESP32 reset&quot;</span>)</span><br><span class="line">            HardReset(ser) <span class="comment"># 设置RTS，复位ESP32</span></span><br><span class="line">            time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                <span class="comment"># 输入数据</span></span><br><span class="line">                user_input = <span class="built_in">input</span>(<span class="string">&quot;Please input send data:&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> user_input.lower() <span class="keyword">in</span> [<span class="string">&#x27;q&#x27;</span>, <span class="string">&#x27;quit&#x27;</span>, <span class="string">&#x27;exit&#x27;</span>]:</span><br><span class="line">                    stop_event.<span class="built_in">set</span>() <span class="comment"># 通知子线程结束</span></span><br><span class="line">                    read_thread.join() <span class="comment"># 等待子线程结束</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 发送数据</span></span><br><span class="line">                write_data(ser, user_input + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Program is interrupted(Ctrl+C) by user&quot;</span>)</span><br><span class="line">            stop_event.<span class="built_in">set</span>() <span class="comment"># 通知子线程结束</span></span><br><span class="line">            read_thread.join() <span class="comment"># 等待子线程结束</span></span><br><span class="line">        <span class="keyword">finally</span>:</span><br><span class="line">            <span class="comment"># 关闭串口</span></span><br><span class="line">            ser.close()</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Port <span class="subst">&#123;port&#125;</span> close&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.muselab-tech.com/esp8266-esp32zi-dong-xia-zai-dian-lu-yuan-li-fen-xi/">ESP8266&#x2F;ESP32自动下载电路原理分析</a></p>
+<p><a href="https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html">Boot Mode Selection</a></p>
+<p><a href="https://github.com/espressif/esptool/tree/master">esptool</a></p>
+<p><a href="https://www.cnblogs.com/tangwc/p/18523621">ESP32自动下载电路</a></p>
+<p><a href="https://wzx046.github.io/post/37/">ESP32自动下载电路分析</a></p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>esp32</tag>
+        <tag>Automatic Bootloader</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Captive Portal</title>
+    <url>/2024/11/16/2024/Captive-Portal/</url>
+    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在校园、机场、酒店、银行、咖啡店、肯德基、麦当劳等场所连接 WiFi 时，你发现不用输入WiFi 的密码，而是弹出一个网页。有的需要你输入手机号并点击获取验证码，并将通过短信获取的验证码输入，你就可以正常上网了。有的需要你输入正确的账号和密码并点击登录，然后你也可以上网。</p>
+<p>那么问题来了，为什么我在家里连接 WiFi 时，并没有弹出所谓的网页呢？经过我在浏览器的疯狂搜索和浏览，原来使用一种叫做 “Captive Portal” 的技术实现。</p>
+<h2 id="captive-portal"><a href="#captive-portal" class="headerlink" title="captive portal"></a>captive portal</h2><p>captive portal（中文称之为 <strong>强制门户</strong>）是一种通过 Web 浏览器访问的网页，在授予新连接的 Wi-Fi 或有线网络用户更广泛的网络资源访问权限之前，会向他们显示该网页。强制门户通常用于显示着陆页或登录页面，该页面可能要求身份验证、付款、接受最终用户许可协议可接受使用政策、完成调查或提供主机和用户都同意遵守的其他有效凭证。强制门户广泛用于各种移动和步行宽带服务，包括有线和商业提供的 Wi-Fi 和家庭热点。强制门户还可用于提供对企业或住宅有线网络的访问，例如公寓、酒店房间和商务中心。</p>
+<p><img src="/2024/11/16/2024/Captive-Portal/image-20241116191019492.png" alt="image-20241116191019492"></p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>自动弹出Captive Portal认证页面实现原理：终端（手机、平板、电脑等设备）连接到WiFi后（一般该WiFi加密方式为OPEN），主动发出HTTP的探测请求报文，检测目的地址是否可达，以及回应的内容是否符合预期，以此来判断接入的网络是否需要进行Captive Portal认证。终端探测的目标URL一般是固定的网址，各终端或APP应用存在差异。如果目标URL不可达或回应内容不符合预期，那么终端会调用浏览器再次发出HTTP请求，路由器拦截到此请求进行重定向，实现自动弹出Captive Portal认证页面的功能。</p>
+<p>某些终端无法自动弹出页面的原因：</p>
+<ul>
+<li>终端不会主动发出探测请求报文。</li>
+<li>终端可以发出一次探测请求报文，但是由于某些安装的APP影响导致终端无法调用浏览器再次发出请求，无法自动弹出页面。</li>
+<li>大部分安卓手机，自动弹portal功能，依赖用户手动点击ssid界面进行触发。</li>
+</ul>
+<p>不同平台对应的测试固定网址如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Platform</strong></th>
+<th><strong>Test URL</strong></th>
+<th><strong>Expected response</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Apple (MacOS&#x2F;IOS Family)</td>
+<td><a href="http://captive.apple.com/hotspot-detect.html">http://captive.apple.com/hotspot-detect.html</a></td>
+<td>“Success” (plain text)</td>
+</tr>
+<tr>
+<td>Google (Android&#x2F;ChromeOS)</td>
+<td><a href="http://connectivitycheck.gstatic.com/generate_204">http://connectivitycheck.gstatic.com/generate_204</a></td>
+<td>HTTP status code 204 with an empty body</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><a href="http://www.msftconnecttest.com/connecttest.txt">http://www.msftconnecttest.com/connecttest.txt</a></td>
+<td>“Microsoft Connect Test” (plain text)</td>
+</tr>
+<tr>
+<td>NetworkManager (GNOME)</td>
+<td><a href="http://nmcheck.gnome.org/check_network_status.txt">http://nmcheck.gnome.org/check_network_status.txt</a></td>
+<td>“NetworkManager is online” (plain text)</td>
+</tr>
+<tr>
+<td>NetworkManager (KDE Plasma)</td>
+<td><a href="http://networkcheck.kde.org/">http://networkcheck.kde.org/</a></td>
+<td>“OK” (plain text)</td>
+</tr>
+</tbody></table>
+<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>captive portal的实现方式：</p>
+<ul>
+<li>DNS拦截：将所有 DNS 请求指向自己的 portal 地址</li>
+<li>HTTP重定向：直接劫持 HTTP&#x2F;HTTPS 流量，响应自己的页面</li>
+</ul>
+<p><em>注意：仅网关实现了Captive Portal还不够，还不能自动弹出认证页面。需要操作系统支持才能实现在网络连接后主动弹出认证页面的功能。</em></p>
+<h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><p>今天（2024-11-17）上午我连接上了图书馆的WiFi（ssid&#x3D;reader），在Ubuntu系统消息中心上弹出了Web认证消息，点击后就可以跳转到网页。此时我的WifI图标还是带问号，但我输入正确的账号和密码，就成功跳转到图书馆的官网主页，同时WiFI图标的问号消失。</p>
+<p>我使用 wireshark 把这个过程的数据包都抓下来了。当我点击 reader WiFi网络时，此时我其实已经连接上了 reader WiFi网络，我的IP地址是 <code>10.5.243.105</code>，只是无法接入互联网。在wireshark 中出现了很多 mDNS 数据包，按照正常的步骤，Ubuntu 应该会尝试去访问固定的URL，那么首先要进行DNS解析，所有先把 DNS 数据包过滤出来。</p>
+<p>Ubuntu 会发出 DNS 数据包，这个数据包的作用是：请求本地网关帮我解析域名 <code>connectivity-check.ubuntu.com</code> ，如果本地网关（网络IP是 <code>10.5.9.9</code>）也不知道，接着报数据包转发给上一级 DNS 服务器。可是从抓包结果来看，本地网络显然是知道该域名对应的IP地址的。</p>
+<p><img src="/2024/11/16/2024/Captive-Portal/image-20241117100111698.png" alt="image-20241117100111698"></p>
+<p>Ubuntu 拿到了域名 <code>connectivity-check.ubuntu.com</code> 的IP地址，接着就会发出 HTTP 请求，URL是 <code>http:connectivity-check.ubuntu.com:80</code> ，所有我在 wireshark 中把 HTTP 数据包过滤出来。</p>
+<p><img src="/2024/11/16/2024/Captive-Portal/image-20241117102414335.png" alt="image-20241117102414335"></p>
+<p>HTTP 请求成功了，看一下 HTTP 应答的内容是什么？这时候有意思的地方来了，HTTP 应答报文为如下部分：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Frame 662: 562 bytes on wire (4496 bits), 562 bytes captured (4496 bits) on interface wlp1s0, <span class="built_in">id</span> 0</span><br><span class="line">Ethernet II, Src: HuaweiTe_28:33:a0 (e8:ea:4d:28:33:a0), Dst: 60:e9:aa:d3:81:93 (60:e9:aa:d3:81:93)</span><br><span class="line">Internet Protocol Version 4, Src: 91.189.91.97, Dst: 10.5.243.105</span><br><span class="line">Transmission Control Protocol, Src Port: 80, Dst Port: 42282, Seq: 1, Ack: 88, Len: 508</span><br><span class="line">Hypertext Transfer Protocol</span><br><span class="line">    HTTP/1.1 200 OK\r\n</span><br><span class="line">    Content-Type: text/html\r\n</span><br><span class="line">    Content-Length: 443\r\n</span><br><span class="line">    \r\n</span><br><span class="line">    [HTTP response 1/1]</span><br><span class="line">    [Time since request: 0.003968927 seconds]</span><br><span class="line">    [Request <span class="keyword">in</span> frame: 661]</span><br><span class="line">    [Request URI: http://connectivity-check.ubuntu.com/]</span><br><span class="line">    File Data: 443 bytes</span><br><span class="line">Line-based text data: text/html (9 lines)</span><br><span class="line">    &lt;HTML&gt;\r\n</span><br><span class="line">    &lt;HEAD&gt;\r\n</span><br><span class="line">    &lt;TITLE&gt; Web Authentication Redirect&lt;/TITLE&gt;\r\n</span><br><span class="line">    &lt;META http-equiv=<span class="string">&quot;Cache-control&quot;</span> content=<span class="string">&quot;no-cache&quot;</span>&gt;\r\n</span><br><span class="line">    &lt;META http-equiv=<span class="string">&quot;Pragma&quot;</span> content=<span class="string">&quot;no-cache&quot;</span>&gt;\r\n</span><br><span class="line">    &lt;META http-equiv=<span class="string">&quot;Expires&quot;</span> content=<span class="string">&quot;-1&quot;</span>&gt;\r\n</span><br><span class="line">    &lt;META http-equiv=<span class="string">&quot;refresh&quot;</span> content=<span class="string">&quot;1; URL=http://10.5.12.50:8445/portal?wac%2Dmac=f4fbb823682f&amp;redirect%2Durl=http%3A%2F%2Fconnectivity%2Dcheck%2Eubuntu%2Ecom&amp;ssid=reader&amp;uaddress=10%2E5%2E243%2E105&amp;umac=60e9aad38193&quot;</span>&gt;\r\n</span><br><span class="line">    &lt;/HEAD&gt;\r\n</span><br><span class="line">    &lt;/HTML&gt;\r\n</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>而上述内容中的URL就是Web认证网页，用户只要在Ubuntu的消息中心点击WiFi认证消息，就会向这个URL发送HTTP请求，然后出现WiFI认证页面。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>1、如果我不想在Ubuntu开启网络检测，该如何设置？</p>
+<p>其实在Ubuntu 22.04 中，网络检测是默认开启的，当我们连接到一个有限网络或无线网络时，Ubuntu 会尝试去访问固定的URL来判断是否可以访问互联网。</p>
+<p><img src="/2024/11/16/2024/Captive-Portal/image-20241117110835593.png" alt="image-20241117110835593"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.twomeetings.com/2020-07-24-how-to-build-captive-portal-with-nodogslash/">如何搭建类似麦当劳店中需登录认证的wifi</a></p>
+<p><a href="https://blog.sixiaolong.win/2023/02/06/%E4%BD%BF%E7%94%A8ESP32C3%E5%BC%80%E5%8F%91%E6%9D%BF%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%BC%BA%E5%88%B6%E9%97%A8%E6%88%B7%EF%BC%88Captive-Portal%EF%BC%89/">使用ESP32C3开发板实现一个强制门户（Captive Portal）</a></p>
+<p><a href="https://pimylifeup.com/raspberry-pi-wireless-access-point/">树莓派搭建wifi热点</a></p>
+<p><a href="https://pimylifeup.com/raspberry-pi-captive-portal/">树莓派搭建captive-portal</a></p>
+<p><a href="https://github.com/ospanic/Captive_Portal_ESP">Captive_Portal_ESP</a></p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>Captive Portal</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: idf project architecture</title>
+    <url>/2024/11/15/2024/esp-idf-project-architecture/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>WiFi Easy Connect</title>
-    <url>/2024/11/15/WiFi-Easy-Connect/</url>
-    <content><![CDATA[<h2 id="WPS"><a href="#WPS" class="headerlink" title="WPS"></a>WPS</h2><p><strong>WPS（Wi-Fi Protected Setup，Wi-Fi安全防护设定）</strong>是由Wi-Fi联盟推出的全新标准，推出该标准的主要原因是为了解决长久以来无线网络加密认证设定的步骤过于繁杂之弊病。WPS简化了Wi-Fi的安全设置和网络管理，它支持两种模式：<strong>个人识别码（PIN）模式</strong> 和 <strong>按钮（PBC）模式</strong> 。</p>
-<p><img src="/2024/11/15/WiFi-Easy-Connect/image-20241105144735611.png" alt="image-20241105144735611"></p>
+    <url>/2024/11/15/2024/WiFi-Easy-Connect/</url>
+    <content><![CDATA[<h2 id="WPS"><a href="#WPS" class="headerlink" title="WPS"></a>WPS</h2><p><strong>WPS（Wi-Fi Protected Setup，Wi-Fi安全防护设定）</strong>是由Wi-Fi联盟推出的全新标准，2018年推出该标准的主要原因是为了解决长久以来无线网络加密认证设定的步骤过于繁杂之弊病。WPS简化了Wi-Fi的安全设置和网络管理，它支持两种模式：<strong>个人识别码（PIN）模式</strong> 、 <strong>按钮（PBC）模式</strong> 和 <strong>NFC模式</strong> 。</p>
+<p><img src="/2024/11/15/2024/WiFi-Easy-Connect/image-20241105144735611.png" alt="image-20241105144735611"></p>
 <p><em>注意：这里要求Wi-Fi设备支持WPS功能（wps client），而且要求路由器也支持WPS功能（wps server）。</em></p>
 <h2 id="WiFi-Easy-Connect"><a href="#WiFi-Easy-Connect" class="headerlink" title="WiFi Easy Connect"></a>WiFi Easy Connect</h2><p><strong><a href="https://www.wi-fi.org/zh-hans/file/wi-fi-certified-easy-connect-jishugaishu-2022">WiFi Easy Connect</a></strong> （也称为设备配置协议 ，DPP）也是有Wi-Fi Alliance（Wi-Fi联盟，简称WFA）推出的标准，用于替代 Wi-Fi 保护设置 (WPS)。Wi-Fi Easy Connect技术提高了安全的网络接入标准，提高了易用性以提升用户将设备连接到Wi-Fi网络的体验。通过使用QR代码和用户选择的设备来管理网络接入，用户界面有限或没有用户界面的设备也能轻松接入，例如智能家居和物联网（IoT）产品。</p>
-<p><em>Tips：WPS 在 Android 9 中已弃用，WiFi Easy Connect在 Android 10及其更后的版本才支持。</em></p>
+<p>Wi-Fi Easy Connect中包含两个角色类型：</p>
 <ul>
-<li>为什么会提出WiFi Easy Connect?</li>
+<li>Configurator：可以是手机、平板等移动设备上的应用程序，AP的Web接口或应用程序接口。</li>
+<li>Enrollee：除Configurator外的其他都是Enrollee。</li>
 </ul>
-<p>​	对于智能家居和物联网（IoT）市场更是这样，这些市场上采用的设备，有些是 <strong>用户界面受限或根本没有用户界面</strong>。为了将Wi-Fi设备连入网络而对其加以配置时，需要向设备提供网络信息和安全证书。将用户界面受限或根本没有用户界面的设备连入网络时，其过程可能非常繁琐，而且繁琐程度视厂商实现方案的不同而不同。为配置Wi-Fi设备提供标准化的简便方法，可使用户在选择不同厂商的产品时，有更大的余地，并在整个生态系统内提供一致的用户体验。</p>
+<p><em>Tips：</em></p>
+<p><em>1、WPS 在 Android 9 中已弃用，WiFi Easy Connect在 Android 10及其更后的版本才支持。</em></p>
+<p><em>2、DPP，即Device Provisioning Protocol</em></p>
+<p><strong>为什么会提出WiFi Easy Connect?</strong></p>
+<p>对于智能家居和物联网（IoT）市场更是这样，这些市场上采用的设备，有些是 <strong>用户界面受限或根本没有用户界面</strong>。为了将Wi-Fi设备连入网络而对其加以配置时，需要向设备提供网络信息和安全证书。将用户界面受限或根本没有用户界面的设备连入网络时，其过程可能非常繁琐，而且繁琐程度视厂商实现方案的不同而不同。为配置Wi-Fi设备提供标准化的简便方法，可使用户在选择不同厂商的产品时，有更大的余地，并在整个生态系统内提供一致的用户体验。</p>
+<p><strong>如何利用WiFi Easy Connect为设备配网呢？</strong></p>
+<p>Wi-Fi Easy Connect™为以更简便的方式配置Wi-Fi设备建立了一种标准化的机制，从而使设备配置毫不费力，仅需用 智能手机扫描产品的 “快速响应（QR）”码，或者使用近距离无线通信（NFC）标签，就可使该产品连入Wi-Fi网络。</p>
+<p><img src="/2024/11/15/2024/WiFi-Easy-Connect/image-20241118135015436.png" alt="image-20241118135015436"></p>
+<p>具体操作过程：</p>
 <ul>
-<li>如何利用WiFi Easy Connect为设备配网呢？</li>
+<li><p>配置AP</p>
+<p>首先用户可以使用手机（Configurator角色）等设备扫描AP（一般指支持wifi easy connect功能的路由器）上的二维码，通过设备配置协议（Device Provisioning Protocol，DPP）来配置AP使其创建网络。</p>
+</li>
+<li><p>配置设备</p>
+<p>当手机与路由器网络建立后，就可以开始配置其他客户端设备了。可以通过手机扫描待配网设备的二维码（包含设备的公钥、信道、MAC地址等信息），每个设备（待配网设备）都将获得自己特有的配置用以加入网络。同时，会生成属于该设备与网络间独特的安全证书，保护双方的通信。</p>
+</li>
+<li><p>设备连接到网络</p>
+<p>一旦配置完成，设备就会使用得到的配置信息去尝试连接目标无线网络。</p>
+</li>
 </ul>
-<p>​	Wi-Fi Easy Connect™为以更简便的方式配置Wi-Fi设备建立了一种标准化的机制，从而使设备配置毫不费力，仅需用 智能手机扫描产品的 “快速响应（QR）”码，或者使用近距离无线通信（NFC）标签，就可使该产品连入Wi-Fi网络。</p>
+<p><em>注意：使用WiFi easy connect功能，需要路由器和手机、终端均支持WiFi easy connect</em></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/network/esp_dpp.html">Wi-Fi Easy Connect (DPP) for ESP32</a></p>
+<p><a href="https://community.tp-link.com/en/home/stories/detail/1056">Wi-Fi Easy Connect 是什么、为什么以及如何使用</a></p>
+<p><a href="https://juejin.cn/post/7354940558672707593">从Android视角全面解读Wifi Easy Connect</a></p>
+<p><a href="https://www.wi-fi.org/beacon/dan-harkins/wi-fi-easy-connect-simple-and-secure-onboarding-for-iot">Wi-Fi Easy Connect™：简单、安全的物联网接入</a></p>
 ]]></content>
       <categories>
         <category>esp</category>
@@ -27,7 +347,7 @@
   </entry>
   <entry>
     <title>esp: idf.py command</title>
-    <url>/2024/11/13/esp-idf-py-command/</url>
+    <url>/2024/11/13/2024/esp-idf-py-command/</url>
     <content><![CDATA[<h2 id="esp-idf"><a href="#esp-idf" class="headerlink" title="esp-idf"></a>esp-idf</h2><blockquote>
 <p><a href="https://www.espressif.com/zh-hans/products/sdks/esp-idf">esp-idf</a>是什么？</p>
 </blockquote>
@@ -51,7 +371,7 @@
   </entry>
   <entry>
     <title>USB-OTG</title>
-    <url>/2024/11/08/USB-OTG/</url>
+    <url>/2024/11/08/2024/USB-OTG/</url>
     <content><![CDATA[<h2 id="USB"><a href="#USB" class="headerlink" title="USB"></a>USB</h2><blockquote>
 <p><a href="https://zh.wikipedia.org/wiki/USB">USB</a>是什么？</p>
 </blockquote>
@@ -79,8 +399,8 @@
 <p>USB On-The-Go 通常缩写为<strong>USB OTG</strong>，是<a href="https://zh.wikipedia.org/wiki/USB_2.0">USB 2.0</a>规格的补充标准。它可使USB设备，例如播放器或手机，从USB周边设备变为USB主机，与其他USB设备连接通信。在正常情况下，这些支持OTG的USB设备和USB主机（例如：PC），仍然作为USB周边设备使用。</p>
 <p>支持OTG的设备，如USB打印机，可以不连接电脑的情况下直接接入U盘来读取设备内文件进行打印；或平板电脑可以直接接入USB存储碟、键盘或鼠标来扩充外界硬件功能。</p>
 <h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p> <strong>1、USB Type-C OTG 口自身怎么判断当前只是供电，还是既供电又传输数据？</strong></p>
-<p><img src="/2024/11/08/USB-OTG/image-20241111173957481.png" alt="image-20241111173957481"></p>
-<p><img src="/2024/11/08/USB-OTG/image-20241111105502903.png" alt="image-20241111105502903"></p>
+<p><img src="/2024/11/08/2024/USB-OTG/image-20241111173957481.png" alt="image-20241111173957481"></p>
+<p><img src="/2024/11/08/2024/USB-OTG/image-20241111105502903.png" alt="image-20241111105502903"></p>
 <ul>
 <li>CC线（CC1或CC2）：CC线用于协商电源角色和数据角色，以及检测连接的设备类型（电源适配器或USB设备）。电源适配器通常只提供电源，不支持数据传输。USB设备会通过CC线与USB Host进行通信，协商电源和数据角色。</li>
 <li>VBUS线：通过检测VBUS线有5V电压来确认连接的设备提供电源。</li>
@@ -102,26 +422,79 @@
   </entry>
   <entry>
     <title>mDNS</title>
-    <url>/2024/11/05/mDNS/</url>
-    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在计算机网络中，多播DNS（Multicast DNS，mDNS）协议将主机名（hostname）解析为不包含本地名称服务器端的小型网络中的IP地址，旨在提供本地网络服务和主机发现。这是一种零配置的服务器端，mDNS与传统域名解析服务（DNS）有着基本相同的编程接口、数据包格式和操作方式。</p>
+    <url>/2024/11/05/2024/mDNS/</url>
+    <content><![CDATA[<h2 id="mDNS"><a href="#mDNS" class="headerlink" title="mDNS"></a>mDNS</h2><p>在计算机网络中，多播DNS（Multicast DNS，mDNS）协议将主机名（hostname）解析为不包含本地名称服务器端的小型网络中的IP地址，旨在提供 <strong>本地网络服务</strong> 和 <strong>主机发现</strong>。这是一种零配置的服务器端，mDNS与传统域名解析服务（DNS）有着基本相同的编程接口、数据包格式和操作方式。</p>
 <p>mDNS由Bill Woodcock和Bill Manning于2000年在IETF中首次提出，在2013年最终由Stuart Cheshire和Marc Krochmal作为标准协议发布在 <strong>RFC 6762</strong>，并由<strong>Apple Bonjour</strong>和<strong>开源Avahi</strong> 软件包实现，包含在大多数Linux发行版中（例如Ubuntu 22.04）。</p>
 <p>mDNS 是本地网络的域名解析协议，使用 <strong>5353</strong> 端口，组播地址是 <strong>224.0.0.251</strong>，是运行于 <strong>UDP</strong> 之上的应用协议。不同于传统的DNS协议，mDNS协议不需要DNS服务器端进行域名解析，可节省本地网络的域名服务器端配置。</p>
 <p>如果主机查询一个域名，那么该怎么区分该域名是DNS域名还是mDNS域名呢？mDNS域名与DNS域名是通过后缀.local区分的。</p>
+<h2 id="DNS-SD"><a href="#DNS-SD" class="headerlink" title="DNS-SD"></a>DNS-SD</h2><p><a href="http://www.dns-sd.org/">DNS-SD</a>（DNS-Based Service Discovery，即基于DNS的服务发现）是一个网络协议框架，它基于mDNS实现。DNS-SD主要用于在本地网络中自动发现并使用网络服务，如打印机、文件共享、媒体播放等。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>DNS-SD借助于多播DNS（mDNS），在本地网络（local network）内进行服务的发现和发布。以下是DNS-SD的基本工作原理：</p>
+<ol>
+<li><strong>服务注册</strong>：<br>服务提供者自注册。该信息通常包括服务名称、类型（如 “_http._tcp”）、端口号、及其他附加参数。</li>
+<li><strong>服务发现</strong>：<br>客户端在本地网络中查询特定类型的服务。例如，客户端广播一个查询，想找到所有的 “_http._tcp” 服务。其它设备收到这个查询后，会响应其提供的服务信息。</li>
+<li><strong>服务解析</strong>：<br>客户端在发现服务后，可以进一步解析获取具体的服务细节。例如，从服务名称解析出具体的 IP 地址和端口号。</li>
+</ol>
+<h3 id="DNS-SD-记录类型"><a href="#DNS-SD-记录类型" class="headerlink" title="DNS-SD 记录类型"></a>DNS-SD 记录类型</h3><p>DNS-SD 中采用了多个特定的 DNS 记录类型来进行服务的发现和信息传递：</p>
+<ul>
+<li><strong>PTR 记录</strong>：用于枚举网络中 <em>某一类型</em> 的所有服务。例如，”_http._tcp.local” PTR 记录列出了网络中所有的 HTTP 服务。</li>
+<li><strong>SRV 记录</strong>：提供具体的服务主机名和端口信息；每个服务有一个或者多个 SRV 记录。</li>
+<li><strong>TXT 记录</strong>：用来存储与服务相关的任意文本信息，如服务的配置选项等。</li>
+<li><strong>A&#x2F;AAAA 记录</strong>：将服务主机名解析为一个或多个 IP 地址，其中A记录为IPv4地址，AAAA记录为IPv6地址。</li>
+</ul>
+<h3 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h3><ul>
+<li><strong>局域网范围</strong>：DNS-SD 和 mDNS 一般只在局域网内工作，因为它们使用多播地址。</li>
+<li><strong>名称冲突</strong>：多个设备在同一个局域网内提供相同名称服务时，会发生名称冲突，需要进行名称分配和冲突解决机制。</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>DNS-SD 被广泛应用于各种需要自动发现网络服务的应用环境，如家庭网络、办公室局域网、多媒体设备连接等。例如：</p>
+<ul>
+<li>Apple 的 Bonjour 服务发现技术就是基于 DNS-SD 和 mDNS 实现的。</li>
+<li>各种智能家居设备和 IoT 设备的互联互通，比如Matter、Home Assistant。</li>
+</ul>
+<h3 id="DNS-SD设备发现"><a href="#DNS-SD设备发现" class="headerlink" title="DNS-SD设备发现"></a>DNS-SD设备发现</h3><p>例1：我想查询本地局域网所有（全局搜索）的 <strong>smb</strong> 服务，即查询PTR：<code>_smb._tcp.local</code>，若存在该服务，那么就会返回并解析结果（SRV、A&#x2F;AAAA、TXT）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">I (641773) mdns-test: Query PTR: _smb._tcp.local</span><br><span class="line">1: Interface: WIFI_STA_DEF, Type: V4, TTL: 120</span><br><span class="line">  PTR : raspberrypi._smb._tcp</span><br><span class="line">  SRV : raspberrypi.local:445</span><br><span class="line">  A   : 192.168.0.210</span><br><span class="line">  AAAA: fe80:0000:0000:0000:0145:95a9:8787:0030</span><br></pre></td></tr></table></figure>
+
+<p>例2：我想查询本地局域网所有的 <strong>http</strong> 服务，即查询PTR：<code>_http._tcp.local</code>，若存在该服务，那么就会返回并解析结果（SRV、A&#x2F;AAAA、TXT）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">I (651073) mdns-test: Lookup selfhosted service: _http._tcp.local</span><br><span class="line">  PTR : ESP32-WebServer._http._tcp</span><br><span class="line">  SRV : esp32-mdns.local:80</span><br><span class="line">  TXT : [3] p=password(8); u=user(4); board=esp32(5); </span><br><span class="line">  PTR : ESP32-WebServer1._http._tcp</span><br><span class="line">  SRV : esp32-mdns.local:80</span><br><span class="line">  TXT : [2] u=admin(5); path=/foobar(7); </span><br></pre></td></tr></table></figure>
+
+<p>例3：我想查询本地局域网所有的 <strong>HomeAssistant</strong> 服务，即查询PTR：<code>_home-assistant._tcp</code>，若存在该服务，那么就会返回并解析结果。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (42702) mdns-test: Query PTR: _home-assistant._tcp.local</span><br><span class="line">1: Interface: WIFI_STA_DEF, Type: V6, TTL: 120</span><br><span class="line">  PTR : MyHome._home-assistant._tcp</span><br><span class="line">  SRV : ab96469f357e444280b0182d96da73b3.local:8123</span><br><span class="line">  TXT : [7] location_name=MyHome(6); uuid=ab96469f357e444280b0182d96da73b3(32); version=2024.11.3(9); external_url=NULL(0); internal_url=http://192.168.5.193:8123(25); base_url=http://192.168.5.193:8123(25); requires_api_password=True(4); </span><br><span class="line">  AAAA: fdfc:869c:9ebb:0000:0000:0000:0000:0936</span><br><span class="line">  A   : 192.168.5.193</span><br><span class="line">  AAAA: fdfc:869c:9ebb:0000:c1a5:a79e:bc90:54b8</span><br><span class="line">  AAAA: fe80:0000:0000:0000:2498:72a5:dcc1:61e8</span><br><span class="line">2: Interface: WIFI_STA_DEF, Type: V4, TTL: 120</span><br><span class="line">  PTR : MyHome._home-assistant._tcp</span><br><span class="line">  SRV : ab96469f357e444280b0182d96da73b3.local:8123</span><br><span class="line">  TXT : [7] location_name=MyHome(6); uuid=ab96469f357e444280b0182d96da73b3(32); version=2024.11.3(9); external_url=NULL(0); internal_url=http://192.168.5.193:8123(25); base_url=http://192.168.5.193:8123(25); requires_api_password=True(4); </span><br><span class="line">  AAAA: fdfc:869c:9ebb:0000:0000:0000:0000:0936</span><br><span class="line">  A   : 192.168.5.193</span><br><span class="line">  AAAA: fdfc:869c:9ebb:0000:c1a5:a79e:bc90:54b8</span><br><span class="line">  AAAA: fe80:0000:0000:0000:2498:72a5:dcc1:61e8</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>mDNS示例：<a href="https://github.com/espressif/esp-protocols/tree/master/components/mdns/examples/query_advertise">query_advertise</a></p>
 <p>当设备（例如esp32-c3）和PC处于同一个局域网，那么PC如何找到设备的IP地址呢？ 此时mDNS就起作用了，设备启用了mDNS服务，当连接上路由器后，设备会向局域网组播地址发送组播报文：“我是谁，我的IP地址是多少，我提供的服务和端口号是多少”。如果PC想要查询mDNS域名，会先查询自己的缓存信息，如果没有查询到目标mDNS域名，则会向局域网组播查询目标mDNS域名（esp32-mdns.local）的IP是多少，以及提供的服务（service）和端口（port）是多少。</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">I (373) mdns-test: mdns hostname <span class="built_in">set</span> to: [esp32-mdns]</span><br><span class="line"></span><br><span class="line">I (613) example_connect: Connecting to ZTE_5GCPE_F876...</span><br><span class="line">I (613) example_connect: Waiting <span class="keyword">for</span> IP(s)</span><br><span class="line">I (3323) wifi:new:&lt;7,1&gt;, old:&lt;1,0&gt;, ap:&lt;255,255&gt;, sta:&lt;7,1&gt;, prof:1</span><br><span class="line">I (3323) wifi:state: init -&gt; auth (b0)</span><br><span class="line">I (3333) wifi:state: auth -&gt; assoc (0)</span><br><span class="line">I (3363) wifi:state: assoc -&gt; run (10)</span><br><span class="line">I (3383) wifi:connected with ZTE_5GCPE_F876, aid = 1, channel 7, 40U, bssid = b0:0a:d5:75:f8:76</span><br><span class="line">I (3393) wifi:security: WPA2-PSK, phy: bgn, rssi: -58</span><br><span class="line">I (3393) wifi:pm start, <span class="built_in">type</span>: 1</span><br><span class="line"></span><br><span class="line">I (3393) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us</span><br><span class="line">I (3403) wifi:<span class="built_in">set</span> rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000</span><br><span class="line">I (3593) wifi:dp: 5, bi: 102400, li: 5, scale listen interval from 307200 us to 512000 us</span><br><span class="line">I (3593) wifi:AP<span class="string">&#x27;s beacon interval = 102400 us, DTIM period = 5</span></span><br><span class="line"><span class="string">I (5373) example_connect: Got IPv6 event: Interface &quot;example_netif_sta&quot; address: fe80:0000:0000:0000:f29e:9eff:fe99:1260, type: ESP_IP6_ADDR_IS_LINK_LOCAL</span></span><br><span class="line"><span class="string">I (6483) wifi:&lt;ba-add&gt;idx:0 (ifx:0, b0:0a:d5:75:f8:76), tid:0, ssn:0, winSize:64</span></span><br><span class="line"><span class="string">I (7413) esp_netif_handlers: example_netif_sta ip: 192.168.0.169, mask: 255.255.255.0, gw: 192.168.0.1</span></span><br><span class="line"><span class="string">I (7413) example_connect: Got IPv4 event: Interface &quot;example_netif_sta&quot; address: 192.168.0.169</span></span><br><span class="line"><span class="string">I (7423) example_common: Connected to example_netif_sta</span></span><br><span class="line"><span class="string">I (7423) example_common: - IPv4 address: 192.168.0.169,</span></span><br><span class="line"><span class="string">I (7433) example_common: - IPv6 address: fe80:0000:0000:0000:f29e:9eff:fe99:1260, type: ESP_IP6_ADDR_IS_LINK_LOCAL</span></span><br><span class="line"><span class="string">I (7443) gpio: GPIO[9]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 </span></span><br><span class="line"><span class="string">I (7453) main_task: Returned from app_main()</span></span><br><span class="line"><span class="string">I (623103) mdns-test: Query both A and AAA: esp32-mdns.local</span></span><br><span class="line"><span class="string">I (624203) mdns-test: Query A esp32-mdns.local finished</span></span><br><span class="line"><span class="string">I (624203) mdns-test: Query AAAA esp32-mdns.local finished</span></span><br><span class="line"><span class="string">I (624253) mdns-test: Query A: esp32.local</span></span><br><span class="line"><span class="string">W (626273) mdns-test: ESP_ERR_NOT_FOUND: Host was not found!</span></span><br><span class="line"><span class="string">I (626273) mdns-test: Query PTR: _arduino._tcp.local</span></span><br><span class="line"><span class="string">W (629373) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (629373) mdns-test: Query PTR: _http._tcp.local</span></span><br><span class="line"><span class="string">W (632473) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (632473) mdns-test: Query PTR: _printer._tcp.local</span></span><br><span class="line"><span class="string">W (635573) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (635573) mdns-test: Query PTR: _ipp._tcp.local</span></span><br><span class="line"><span class="string">W (638673) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (638673) mdns-test: Query PTR: _afpovertcp._tcp.local</span></span><br><span class="line"><span class="string">W (641773) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (641773) mdns-test: Query PTR: _smb._tcp.local</span></span><br><span class="line"><span class="string">1: Interface: WIFI_STA_DEF, Type: V4, TTL: 120</span></span><br><span class="line"><span class="string">  PTR : raspberrypi._smb._tcp</span></span><br><span class="line"><span class="string">  SRV : raspberrypi.local:445</span></span><br><span class="line"><span class="string">  A   : 192.168.0.210</span></span><br><span class="line"><span class="string">  AAAA: fe80:0000:0000:0000:0145:95a9:8787:0030</span></span><br><span class="line"><span class="string">2: Interface: WIFI_STA_DEF, Type: V6, TTL: 120</span></span><br><span class="line"><span class="string">  PTR : raspberrypi._smb._tcp</span></span><br><span class="line"><span class="string">  SRV : raspberrypi.local:445</span></span><br><span class="line"><span class="string">  AAAA: fe80:0000:0000:0000:0145:95a9:8787:0030</span></span><br><span class="line"><span class="string">I (644893) mdns-test: Query PTR: _ftp._tcp.local</span></span><br><span class="line"><span class="string">W (647973) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (647973) mdns-test: Query PTR: _nfs._tcp.local</span></span><br><span class="line"><span class="string">W (651073) mdns-test: No results found!</span></span><br><span class="line"><span class="string">I (651073) mdns-test: Lookup selfhosted service: _http._tcp.local</span></span><br><span class="line"><span class="string">  PTR : ESP32-WebServer._http._tcp</span></span><br><span class="line"><span class="string">  SRV : esp32-mdns.local:80</span></span><br><span class="line"><span class="string">  TXT : [3] p=password(8); u=user(4); board=esp32(5); </span></span><br><span class="line"><span class="string">  PTR : ESP32-WebServer1._http._tcp</span></span><br><span class="line"><span class="string">  SRV : esp32-mdns.local:80</span></span><br><span class="line"><span class="string">  TXT : [2] u=admin(5); path=/foobar(7); </span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><p><img src="/2024/11/05/mDNS/image-20241107103144932.png" alt="image-20241107103144932"></p>
-<h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><p>1、如果将mDNS demo固件烧录到相同的开发板，那么理论上两块开发板设置的本地mDNS域名应该都是 <code>esp32-mdns.local</code></p>
+<h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><p><img src="/2024/11/05/2024/mDNS/image-20241107103144932.png" alt="image-20241107103144932"></p>
+<h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><p>1、如果将esp32 mDNS demo固件烧录到相同的开发板，那么理论上两块开发板设置的本地mDNS域名应该都是 <code>esp32-mdns.local</code></p>
 <p>验证结果：实际的结果跟猜想不一致，开发板A的本地mDNS域名是 <code>esp32-mdns.local</code>，而开发板B的本地mDNS域名是 <code>esp32-mdns-2.local</code></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过和开发板在同一局域网的PC利用avahi-browse</span></span><br><span class="line">$ avahi-browse -a -r -l</span><br><span class="line">= wlp1s0 IPv4 ESP32-WebServer1-10                           Web Site             <span class="built_in">local</span></span><br><span class="line">   hostname = [esp32-mdns.local]</span><br><span class="line">   address = [192.168.0.169]</span><br><span class="line">   port = [80]</span><br><span class="line">   txt = [<span class="string">&quot;path=/foobar&quot;</span> <span class="string">&quot;u=admin&quot;</span>]</span><br><span class="line">= wlp1s0 IPv4 ESP32-WebServer1                              Web Site             <span class="built_in">local</span></span><br><span class="line">   hostname = [esp32-mdns-2.local]</span><br><span class="line">   address = [192.168.0.155]</span><br><span class="line">   port = [80]</span><br><span class="line">   txt = [<span class="string">&quot;path=/foobar&quot;</span> <span class="string">&quot;u=admin&quot;</span>]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
-
-
+<p>2、通过mDNS可以获取局域网内的主机名和IP，那么还能获取什么信息？</p>
+<p>还是以 “esp32 mDNS demo” 为例，看一下在发布mDNS组播数据包需要设置哪些东西。</p>
+<ul>
+<li><p>mDNS属性</p>
+<ul>
+<li><code>hostname</code>：设备会去响应的主机名，如果没有设置，会根据设备的网络接口名定义 <code>hostname</code> 。例如，<code>my-esp32</code> 会被解析为 <code>my-esp32.local</code>。</li>
+<li><code>default_instance</code>：默认实例名（即易记的设备名），例如 <code>Jhon&#39;s ESP32 Thing</code>。如果没有设置，将会使用 <code>hostname</code>。</li>
+</ul>
+</li>
+<li><p>mDNS服务（ DNS-Based Service Discovery，DNS-SD）</p>
+<p>mDNS 可以广播设备能够提供的网络服务的相关信息，每个服务会由以下属性构成：</p>
+<ul>
+<li><code>instance_name</code>：实例名（即易记的服务名），例如 <code>Jhon&#39;s ESP32 Web Server</code>。如果没有定义，会使用 <code>default_instance</code>。</li>
+<li><code>service_type</code>：（必需）服务类型，以下划线为前缀，<a href="http://www.dns-sd.org/serviceTypes.html">这里</a> 列出了常见的类型。</li>
+<li><code>proto</code>：（必需）服务运行所依赖的协议，以下划线为前缀，例如 <code>_tcp</code> 或者 <code>_udp</code>。</li>
+<li><code>port</code>：（必需）服务运行所用的端口号。</li>
+<li><code>txt</code>：形如 <code>&#123;var, val&#125;</code> 的字符串数组，用于定义服务的属性。</li>
+</ul>
+<p>例如：可以发布一个http服务：<code>http://esp32-mdns.local:80/foobar</code></p>
+</li>
+</ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.waynecommand.com/post/mdns">1、multicast DNS</a></p>
 <p><a href="https://blog.csdn.net/Marchtwentytwo/article/details/122770716">2、ESP mDNS 学习</a></p>
 ]]></content>
@@ -134,7 +507,7 @@
   </entry>
   <entry>
     <title>esp: Wi-Fi network configuration</title>
-    <url>/2024/11/05/esp-Wi-Fi-network-configuration/</url>
+    <url>/2024/11/05/2024/esp-Wi-Fi-network-configuration/</url>
     <content><![CDATA[<h2 id="Wi-Fi配网"><a href="#Wi-Fi配网" class="headerlink" title="Wi-Fi配网"></a>Wi-Fi配网</h2><blockquote>
 <p>什么是WiFi配网？</p>
 </blockquote>
@@ -143,26 +516,26 @@
 <p>Wi-Fi配网的实现方式有：<strong>SoftAP配网、一键配网、蓝牙配网、其他方式配网</strong>。</p>
 <h3 id="SoftAP配网"><a href="#SoftAP配网" class="headerlink" title="SoftAP配网"></a>SoftAP配网</h3><p>SoftAP配网又称为传统配网。</p>
 <p>工作流程：首先，待配网的Wi-Fi设备自身会建立一个AP，用户将智能手机连接到这个AP。然后，智能手机中的APP将要连接的SSID和密码发送给待配网的Wi-Fi设备，待配网的Wi-Fi设备收到信息后，找到对应的AP并与之连接，完成配网。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105142135546.png" alt="image-20241105142135546"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105142135546.png" alt="image-20241105142135546"></p>
 <p><em>注意：这里要求Wi-Fi设备支持 AP模式 和 Station模式。启用AP模式，智能手机可以连接Wi-Fi设备发出的热点；启用Station模式，Wi-Fi设备可以连接到路由器发出的热点。</em></p>
 <h3 id="一键配网"><a href="#一键配网" class="headerlink" title="一键配网"></a>一键配网</h3><p>一键配网是指智能手机将SSID和密码按照一定的编码格式填充在MAC包中<strong>不加密</strong>的包头部分，并采用<strong>广播或组播</strong>方式发送数据包，Wi-Fi设备监听无线信道中的广播包或组播包，然后从数据包的头部解析出SSID和密码，最后去连接SSID对应的Wi-Fi。一般需要在发送SSID和密码的设备上安装一个App，该App实现了和Wi-Fi设备之间发送SSID和密码的协议交互。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105142652143.png" alt="image-20241105142652143"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105142652143.png" alt="image-20241105142652143"></p>
 <p><em>注意：这里要求Wi-Fi设备至少支持Station模式</em></p>
 <h3 id="蓝牙配网"><a href="#蓝牙配网" class="headerlink" title="蓝牙配网"></a>蓝牙配网</h3><p>待配网的Wi-Fi设备会建立一个蓝牙的Profile，向蓝牙信道一直广播数据，用户将智能手机或其他可以具备人机交互功能的设备（如平板电脑等）通过蓝牙信道连接到设备，然后通过蓝牙将要连接的信息发送给待配网的Wi-Fi设备。待配网的Wi-Fi设备接收到信息后，找到对应的AP并主动与之连接，完成配网。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105143818868.png" alt="image-20241105143818868"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105143818868.png" alt="image-20241105143818868"></p>
 <p><em>注意：这里要求Wi-Fi设置至少支持Station模式，同时具备BLE功能。</em></p>
 <h3 id="其他方式配网"><a href="#其他方式配网" class="headerlink" title="其他方式配网"></a>其他方式配网</h3><p>其他方式配网包括：直接配网、路由器配网、零配（Zeroconfig）配网、手机AP配网</p>
 <h4 id="直接配网"><a href="#直接配网" class="headerlink" title="直接配网"></a>直接配网</h4><p>直接配网是指通过<strong>UART、SPI、SDIO、I2C</strong>等外设接口，遵循一定的通信协议，将SSID和密码直接发送给Wi-Fi设备，所以这种方式也称为有线配网。Wi-Fi设备在收到SSID和密码后连接AP，并将连接的结果从主机接口返回。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105144552396.png" alt="image-20241105144552396"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105144552396.png" alt="image-20241105144552396"></p>
 <p><em>注意：这里要求Wi-Fi设备引出外设的GPIO接口。</em></p>
 <h4 id="路由器配网"><a href="#路由器配网" class="headerlink" title="路由器配网"></a>路由器配网</h4><p><strong>WPS（Wi-Fi Protected Setup，Wi-Fi安全防护设定）</strong>是由Wi-Fi联盟推出的全新标准，推出该标准的主要原因是为了解决长久以来无线网络加密认证设定的步骤过于繁杂之弊病。WPS简化了Wi-Fi的安全设置和网络管理，它支持两种模式：<strong>个人识别码（PIN）模式</strong> 和 <strong>按钮（PBC）模式</strong>。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105144735611.png" alt="image-20241105144735611"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105144735611.png" alt="image-20241105144735611"></p>
 <p><em>注意：这里要求Wi-Fi设备支持WPS功能（wps client），而且要求路由器也支持WPS功能（wps server）。</em></p>
 <h4 id="零配（Zeroconfig）配网"><a href="#零配（Zeroconfig）配网" class="headerlink" title="零配（Zeroconfig）配网"></a>零配（Zeroconfig）配网</h4><p>零配配网的本质是用一台已联网的设备给另外一台设备配网，在整个环节中，智能手机这个角色用别的设备替换掉了，如智能音箱等。</p>
 <p>待配网的Wi-Fi设备进入配网状态，并将自己的MAC地址通过自定义报文的方式发送出去，此时路由器下支持的零配配网设备就可以获取到待配网设备的MAC地址，同时已联网设备会将自己保存的路由器SSID和密码通过自定义报文发送给待配网设备，并等待待配网设备连接上网络，进行外网绑定等流程。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105145445101.png" alt="image-20241105145445101"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105145445101.png" alt="image-20241105145445101"></p>
 <h4 id="手机AP配网"><a href="#手机AP配网" class="headerlink" title="手机AP配网"></a>手机AP配网</h4><p>手机AP配网是将智能手机设置成一个具有特定名字和密码的AP，然后让待配网设备连接智能手机，再发送和接收配网绑定信息。</p>
-<p><img src="/2024/11/05/esp-Wi-Fi-network-configuration/image-20241105145735981.png" alt="image-20241105145735981"></p>
+<p><img src="/2024/11/05/2024/esp-Wi-Fi-network-configuration/image-20241105145735981.png" alt="image-20241105145735981"></p>
 ]]></content>
       <categories>
         <category>esp</category>
@@ -173,7 +546,7 @@
   </entry>
   <entry>
     <title>esp: flash search and configure</title>
-    <url>/2024/11/04/esp-flash-search-and-configure/</url>
+    <url>/2024/11/04/2024/esp-flash-search-and-configure/</url>
     <content><![CDATA[<p>串口日志报警告：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">spi_flash: Detected size(4096k) larger than the size <span class="keyword">in</span> the binary image header(2048k). Using the size <span class="keyword">in</span> the binary image header.</span><br></pre></td></tr></table></figure>
 
@@ -184,7 +557,7 @@
 <p>Detected flash size: 4MB，就是实际的flash大小。</p>
 <h2 id="设置flash大小"><a href="#设置flash大小" class="headerlink" title="设置flash大小"></a>设置flash大小</h2><p>通过 <code>idf.py menuconfig</code> 菜单修改flash的大小。</p>
 <p>操作过程：”Serial flasher config” –&gt; “Flash size” –&gt; “4M”，然后保存退出。</p>
-<p><img src="/2024/11/04/esp-flash-search-and-configure/image-20241105114934762.png" alt="image-20241105114934762"></p>
+<p><img src="/2024/11/04/2024/esp-flash-search-and-configure/image-20241105114934762.png" alt="image-20241105114934762"></p>
 ]]></content>
       <categories>
         <category>esp</category>
@@ -195,7 +568,7 @@
   </entry>
   <entry>
     <title>Ubuntu 22.04: smb</title>
-    <url>/2024/11/04/Ubuntu-22-04-smb/</url>
+    <url>/2024/11/04/2024/Ubuntu-22-04-smb/</url>
     <content><![CDATA[<h2 id="安装smb"><a href="#安装smb" class="headerlink" title="安装smb"></a>安装smb</h2><p>在Ubuntu 22.04 安装smb服务：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> apt update</span><br><span class="line">$ <span class="built_in">sudo</span> apt install smb</span><br></pre></td></tr></table></figure>
 
@@ -217,11 +590,11 @@
 
 
 <h2 id="访问smb"><a href="#访问smb" class="headerlink" title="访问smb"></a>访问smb</h2><p>在iPad中打开 “文件App” ，点击右上角…，接着可以点击”连接服务器”，输入：<code>smb://&lt;xxx.xxx.xxx.xxx&gt;</code></p>
-<p><img src="/2024/11/04/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202501.jpg" alt="微信图片_20241104202501"></p>
+<p><img src="/2024/11/04/2024/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202501.jpg" alt="微信图片_20241104202501"></p>
 <p>然后输入test的用户名和密码：</p>
-<p><img src="/2024/11/04/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202804.jpg" alt="微信图片_20241104202804"></p>
+<p><img src="/2024/11/04/2024/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202804.jpg" alt="微信图片_20241104202804"></p>
 <p>接着就进入了smb服务器的共享文件夹</p>
-<p><img src="/2024/11/04/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202535.jpg" alt="微信图片_20241104202535"></p>
+<p><img src="/2024/11/04/2024/Ubuntu-22-04-smb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20241104202535.jpg" alt="微信图片_20241104202535"></p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -232,7 +605,7 @@
   </entry>
   <entry>
     <title>Linux: grub</title>
-    <url>/2024/11/03/Linux-grub/</url>
+    <url>/2024/11/03/2024/Linux-grub/</url>
     <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>由于未知原因（ 1、我猜测是升级了内核，且内核成为 grub 默认启动项； 2、也有可能是我删除了<code>/lib/modules/6.8.0-48-generic</code> 这个目录），导致Ubuntu 22.04启动失败，报错：Failed to start load kernel modules。</p>
 <p>这让我有点慌，毕竟重装系统对我来说不难，但是系统内的软件安装和数据都是非常繁琐的，不到万不得已，肯定不会做这样的事，那么接下来只能查看原因，并寻求其他解决方法。</p>
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>首先，我通过物理按键强制关机，接着启动计算机，发现出现了grub菜单。</p>
@@ -274,7 +647,7 @@
   </entry>
   <entry>
     <title>Ubuntu 22.04: ch34x UART Error</title>
-    <url>/2024/10/31/Ubuntu-22-04-ch34x-UART-Error/</url>
+    <url>/2024/10/31/2024/Ubuntu-22-04-ch34x-UART-Error/</url>
     <content><![CDATA[<p>USB-TTL模块接入PC后，无法识别为正常的USB接口。接着一系列问题排查过程：</p>
 <ul>
 <li><p>确认USB-TTL模块是否被识别</p>
@@ -310,7 +683,7 @@
   </entry>
   <entry>
     <title>DBUS: busctl tool</title>
-    <url>/2024/10/31/DBUS-busctl-tool/</url>
+    <url>/2024/10/31/2024/DBUS-busctl-tool/</url>
     <content><![CDATA[<h2 id="busctl"><a href="#busctl" class="headerlink" title="busctl"></a>busctl</h2><blockquote>
 <p><a href="https://www.freedesktop.org/software/systemd/man/latest/busctl.html">busctl</a>是什么的？</p>
 </blockquote>
@@ -338,7 +711,7 @@
   </entry>
   <entry>
     <title>NetworkManager Application</title>
-    <url>/2024/10/31/NetworkManager-Application/</url>
+    <url>/2024/10/31/2024/NetworkManager-Application/</url>
     <content><![CDATA[<h2 id="NetworkManager"><a href="#NetworkManager" class="headerlink" title="NetworkManager"></a>NetworkManager</h2><blockquote>
 <p><a href="https://networkmanager.dev/docs/api/latest/NetworkManager.html">NetworkManager</a>是什么？</p>
 </blockquote>
@@ -350,7 +723,7 @@
 <p>libnm 为 NetworkManager 提供的功能提供了 C 语言绑定，其他语言运行时也可以使用。</p>
 <p>libnm 与 NetworkManager 提供的实际 D-Bus API 映射得相当紧密，将远程 D-Bus 对象包装为本机 GObject，将 D-Bus 信号和属性映射到 GObject 信号和属性，并提供有用的访问器和实用函数。但是，与旧的 libnm-util&#x2F;libnm-glib API 不同，与 D-Bus API 的映射并不精确，并且 D-Bus API 的各种不便之处和历史异常都被掩盖了。</p>
 <p>以下是 libnm 对象结构的粗略概述以及如何使用它的各个部分：</p>
-<p><img src="/2024/10/31/NetworkManager-Application/image-20241031145554396.png" alt="image-20241031145554396"></p>
+<p><img src="/2024/10/31/2024/NetworkManager-Application/image-20241031145554396.png" alt="image-20241031145554396"></p>
 ]]></content>
       <categories>
         <category>Wi-Fi</category>
@@ -363,7 +736,7 @@
   </entry>
   <entry>
     <title>wpa-supplicant applicant: Scan Method</title>
-    <url>/2024/10/30/wpa-supplicant-applicant-Scan-Method/</url>
+    <url>/2024/10/30/2024/wpa-supplicant-applicant-Scan-Method/</url>
     <content><![CDATA[<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>代码过程：</p>
 <ul>
 <li>注册信号回调函数</li>
@@ -379,7 +752,7 @@
 <h2 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h2><p><strong>难点1：</strong></p>
 <p>这里实现过程的逻辑参考了<a href="https://android.googlesource.com/platform/external/wpa_supplicant_8/+/master/wpa_supplicant/examples/wpas-dbus-new.py">wpa_supplicant dbus api example using python</a> ，通过python编程实现。</p>
 <p><strong>难点2：</strong></p>
-<p>订阅各种信号的返回值类型以及如何对它进行解析也是一个问题。这需要参考官方文档：<a href="https://w1.fi/wpa_supplicant/devel/dbus.html">wpa_supplicant 官方dbus接口文档</a> ，为了方便查询，我把它转换成了表格形式，具体查看这篇文章 [% post_link wpa-supplicant application %]</p>
+<p>订阅各种信号的返回值类型以及如何对它进行解析也是一个问题。这需要参考官方文档：<a href="https://w1.fi/wpa_supplicant/devel/dbus.html">wpa_supplicant 官方dbus接口文档</a> ，为了方便查询，我把它转换成了表格形式，具体查看这篇文章 <code>&#123;% post_link wpa-supplicant application %&#125;</code></p>
 <p>这里对各种信号原始数据进行记录：</p>
 <p>主要涉及各种信号：ScanDone、BSSAdded、BssRemoved、PropertiesChanged</p>
 <h3 id="ScanDone"><a href="#ScanDone" class="headerlink" title="ScanDone"></a>ScanDone</h3><p>data type: <code>(b)</code></p>
@@ -409,7 +782,7 @@
   </entry>
   <entry>
     <title>Embedded Linux System Generate Tool: Buildroot</title>
-    <url>/2024/10/29/Embedded-Linux-System-Generate-Tool-Buildroot/</url>
+    <url>/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/</url>
     <content><![CDATA[<h2 id="Buildroot"><a href="#Buildroot" class="headerlink" title="Buildroot"></a>Buildroot</h2><blockquote>
 <p>Buildroot是什么？</p>
 <p>官方手册：Buildroot is a tool that simplifies and automates the process of building a complete Linux system for an embedded system, using cross-compilation</p>
@@ -539,7 +912,7 @@
   </entry>
   <entry>
     <title>Linux C: Program Name and Program ID</title>
-    <url>/2024/10/28/Linux-C-Program-Name-and-Program-ID/</url>
+    <url>/2024/10/28/2024/Linux-C-Program-Name-and-Program-ID/</url>
     <content><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>在Linux上查询程序的pid，可以通过如下方式：</p>
 <ul>
 <li><p>ps命令</p>
@@ -550,7 +923,7 @@
 </ul>
 <p>那么是否可以通过C代码封装成接口，方便直接在代码中调用呢？可以</p>
 <p>首先，Linux所有进程状态信息都存储在这个目录下：<code>/proc</code> ，每一个数字文件夹代表一个进程。</p>
-<p><img src="/2024/10/28/Linux-C-Program-Name-and-Program-ID/image-20241028195503492.png" alt="image-20241028195503492"></p>
+<p><img src="/2024/10/28/2024/Linux-C-Program-Name-and-Program-ID/image-20241028195503492.png" alt="image-20241028195503492"></p>
 <p>进程文件夹下有status文件，例如：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@localhost:~/study$ <span class="built_in">cat</span> /proc/1017/status </span><br><span class="line">Name:	bluealsa</span><br><span class="line">Umask:	0022</span><br><span class="line">State:	S (sleeping)</span><br><span class="line">Tgid:	1017</span><br><span class="line">Ngid:	0</span><br><span class="line">Pid:	1017</span><br><span class="line">PPid:	1</span><br><span class="line">TracerPid:	0</span><br><span class="line">Uid:	0	0	0	0</span><br><span class="line">Gid:	0	0	0	0</span><br><span class="line">FDSize:	128</span><br><span class="line">Groups:	 </span><br><span class="line">NStgid:	1017</span><br><span class="line">NSpid:	1017</span><br><span class="line">NSpgid:	1017</span><br><span class="line">NSsid:	1017</span><br><span class="line">Kthread:	0</span><br><span class="line">VmPeak:	  231224 kB</span><br><span class="line">VmSize:	  231224 kB</span><br><span class="line">VmLck:	       0 kB</span><br><span class="line">VmPin:	       0 kB</span><br><span class="line">VmHWM:	    5504 kB</span><br><span class="line">VmRSS:	    5504 kB</span><br><span class="line">RssAnon:	     384 kB</span><br><span class="line">RssFile:	    5120 kB</span><br><span class="line">RssShmem:	       0 kB</span><br><span class="line">VmData:	   25416 kB</span><br><span class="line">VmStk:	     132 kB</span><br><span class="line">VmExe:	     160 kB</span><br><span class="line">VmLib:	    7720 kB</span><br><span class="line">VmPTE:	      84 kB</span><br><span class="line">VmSwap:	       0 kB</span><br><span class="line">HugetlbPages:	       0 kB</span><br><span class="line">CoreDumping:	0</span><br><span class="line">THP_enabled:	1</span><br><span class="line">untag_mask:	0xffffffffffffff</span><br><span class="line">Threads:	4</span><br><span class="line">SigQ:	1/28918</span><br><span class="line">SigPnd:	0000000000000000</span><br><span class="line">ShdPnd:	0000000000000000</span><br><span class="line">SigBlk:	0000000000000000</span><br><span class="line">SigIgn:	0000000000001000</span><br><span class="line">SigCgt:	0000000100004002</span><br><span class="line">CapInh:	0000000000000000</span><br><span class="line">CapPrm:	000001ffffffffff</span><br><span class="line">CapEff:	000001ffffffffff</span><br><span class="line">CapBnd:	000001ffffffffff</span><br><span class="line">CapAmb:	0000000000000000</span><br><span class="line">NoNewPrivs:	0</span><br><span class="line">Seccomp:	0</span><br><span class="line">Seccomp_filters:	0</span><br><span class="line">Speculation_Store_Bypass:	vulnerable</span><br><span class="line">SpeculationIndirectBranch:	unknown</span><br><span class="line">Cpus_allowed:	f</span><br><span class="line">Cpus_allowed_list:	0-3</span><br><span class="line">Mems_allowed:	1</span><br><span class="line">Mems_allowed_list:	0</span><br><span class="line">voluntary_ctxt_switches:	26</span><br><span class="line">nonvoluntary_ctxt_switches:	8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -571,7 +944,7 @@
   </entry>
   <entry>
     <title>Linux: Read-only file system</title>
-    <url>/2024/10/25/Linux-Read-only-file-system/</url>
+    <url>/2024/10/25/2024/Linux-Read-only-file-system/</url>
     <content><![CDATA[<p>无论是通过touch创建文件，还是通过vi编辑文件都失败，出现报错提示：Read-only file system</p>
 <p>可以通过lsblk命令查询可用块设备信息：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># touch aaa</span></span><br><span class="line"><span class="built_in">touch</span>: aaa: Read-only file system</span><br><span class="line"><span class="comment"># ls</span></span><br><span class="line">mosquitto.acl       mosquitto.conf      mosquitto.password</span><br><span class="line"><span class="comment"># lsblk </span></span><br><span class="line">NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">mmcblk0     179:0    0 29.2G  0 disk </span><br><span class="line">|-mmcblk0p1 179:1    0  256M  0 part /bootloader</span><br><span class="line">|-mmcblk0p2 179:2    0  256M  0 part </span><br><span class="line">|-mmcblk0p3 179:3    0    1G  0 part /</span><br><span class="line">|-mmcblk0p4 179:4    0    1G  0 part </span><br><span class="line">|-mmcblk0p5 179:5    0  128M  0 part /var/lib/bluetooth</span><br><span class="line">|                                    /overlay</span><br><span class="line">`-mmcblk0p6 179:6    0 26.5G  0 part /data</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -593,9 +966,9 @@
   </entry>
   <entry>
     <title>Git: branch and tag</title>
-    <url>/2024/10/24/Git-branch-and-tag/</url>
+    <url>/2024/10/24/2024/Git-branch-and-tag/</url>
     <content><![CDATA[<p>branch 和 tag 在Github的体现：</p>
-<p><img src="/2024/10/24/Git-branch-and-tag/image-20241024113806476.png" alt="image-20241024113806476"></p>
+<p><img src="/2024/10/24/2024/Git-branch-and-tag/image-20241024113806476.png" alt="image-20241024113806476"></p>
 <p>标签（tag）代表特定分支在某一时刻的commit提交的记录，即通过tag可以快速定位到某一个commit提交的记录。Git 可以给仓库历史中的某一个提交（commit）打上标签，以示重要。 比较有代表性的是人们会使用这个功能来标记发布结点（ <code>v1.0</code> 、 <code>v2.0</code> 等等）。</p>
 <p>分支（branch）代表一条单独的时间线，一个仓库可以有多个分支，即存在多条时间线，可以同时进行。初始化一个仓库时，第一次commit提交后，就会默认创建master分支（或main分支），之后可以针对不同的开发任务从master分支衍生（git checkout -b new_branch）新分支，当新分支任务完成后，切回master分支（git checkout master），然后可以将新分支合并（git merge new_branch）到master分支中。</p>
 <p>参考来源：</p>
@@ -613,7 +986,7 @@
   </entry>
   <entry>
     <title>embedded linux application development</title>
-    <url>/2024/10/19/embedded-linux-application-development/</url>
+    <url>/2024/10/19/2024/embedded-linux-application-development/</url>
     <content><![CDATA[<h2 id="Developing-applications-on-embeded-Linux"><a href="#Developing-applications-on-embeded-Linux" class="headerlink" title="Developing applications on embeded Linux"></a>Developing applications on embeded Linux</h2><ul>
 <li>嵌入式 Linux 系统只是一个普通的 Linux 系统，通常组件选择较少</li>
 <li>在应用程序开发方面，在嵌入式 Linux 上进行开发与在桌面 Linux 系统上进行开发完全相同</li>
@@ -682,7 +1055,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="Remote-debugging-architeture"><a href="#Remote-debugging-architeture" class="headerlink" title="Remote debugging: architeture"></a>Remote debugging: architeture</h2><p><img src="/2024/10/19/embedded-linux-application-development/image-20241020183318748.png" alt="image-20241020183318748"></p>
+<h2 id="Remote-debugging-architeture"><a href="#Remote-debugging-architeture" class="headerlink" title="Remote debugging: architeture"></a>Remote debugging: architeture</h2><p><img src="/2024/10/19/2024/embedded-linux-application-development/image-20241020183318748.png" alt="image-20241020183318748"></p>
 <h2 id="Remote-debugging-target-setup"><a href="#Remote-debugging-target-setup" class="headerlink" title="Remote debugging: target setup"></a>Remote debugging: target setup</h2><ul>
 <li><p>在目标上，通过 gdbserver 运行程序。</p>
 <p>程序不会立即执行</p>
@@ -741,8 +1114,8 @@
   </entry>
   <entry>
     <title>DBUS: data type or container type</title>
-    <url>/2024/10/18/DBUS-data-type-or-container-type/</url>
-    <content><![CDATA[<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>其实DBUS的数据类型在 <a href="/2024/08/16/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a>  中的dbus数据模型就有记录和说明过。通过基本类型数据进行嵌套可以组合成复杂数据类型，一般可以用简称表示，例如 <code>a&#123;sv&#125;</code> 。如何将数据进行构造和解析才是难点和重点。</p>
+    <url>/2024/10/18/2024/DBUS-data-type-or-container-type/</url>
+    <content><![CDATA[<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>其实DBUS的数据类型在 <a href="/2024/08/16/2024/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a>  中的dbus数据模型就有记录和说明过。通过基本类型数据进行嵌套可以组合成复杂数据类型，一般可以用简称表示，例如 <code>a&#123;sv&#125;</code> 。如何将数据进行构造和解析才是难点和重点。</p>
 <h3 id="Numeric"><a href="#Numeric" class="headerlink" title="Numeric"></a>Numeric</h3><p>数字的数据类型涉及: <code>b</code>, <code>y</code>, <code>n</code>, <code>q</code>, <code>i</code>, <code>u</code>, <code>x</code>, <code>t</code>, <code>h</code>, <code>d</code></p>
 <table>
 <thead>
@@ -837,7 +1210,7 @@
   </entry>
   <entry>
     <title>callback and notify</title>
-    <url>/2024/10/14/callback-and-notify/</url>
+    <url>/2024/10/14/2024/callback-and-notify/</url>
     <content><![CDATA[<blockquote>
 <p><a href="https://zh.wikipedia.org/wiki/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">回调函数</a>是什么？</p>
 </blockquote>
@@ -863,7 +1236,7 @@
   </entry>
   <entry>
     <title>bluetooth: proper terms and concepts</title>
-    <url>/2024/10/11/bluetooth-proper-terms-and-concepts/</url>
+    <url>/2024/10/11/2024/bluetooth-proper-terms-and-concepts/</url>
     <content><![CDATA[<p>来源：<a href="https://www.bluetooth.org/DocMan/handlers/DownloadDoc.ashx?doc_id=587177">Core Specification (amended) 5.4</a></p>
 <table>
 <thead>
@@ -1236,14 +1609,14 @@
   </entry>
   <entry>
     <title>overview of major emabedded linux software stacks</title>
-    <url>/2024/10/08/overview-of-major-emabedded-linux-software-stacks/</url>
+    <url>/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/</url>
     <content><![CDATA[<p><a href="https://bootlin.com/doc/training/embedded-linux/embedded-linux-slides.pdf">overview of major emabedded linux software stacks</a></p>
 <h2 id="D-Bus"><a href="#D-Bus" class="headerlink" title="D-Bus"></a>D-Bus</h2><blockquote>
 <p><a href="https://www.freedesktop.org/wiki/Software/dbus/">D-Bus</a>是什么？</p>
 </blockquote>
 <p>D-Bus是一种应用程序之间进行通信的消息总线进程间通信（interprocess communication，即IPC）系统。</p>
 <p>D-Bus架构图：</p>
-<p><img src="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/diagram.svg" alt="diagram"></p>
+<p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/diagram.svg" alt="diagram"></p>
 <ul>
 <li>面向消息的中间件机制，允许在同一台机器上同时运行的多个进程之间进行通信</li>
 <li>依靠守护进程在应用程序之间传递消息</li>
@@ -1261,7 +1634,7 @@
 <p>BlueZ项目提供关键的两个应用是：bluetoothd 和 bluetoothctl。</p>
 <p>bluetoothd应用连接dbus-daemon，在dbus上注册bus name为 <code>org.bluez</code> 的服务， 紧接着注册object path name 为 <code>/org/bluez/hci0</code> 的对象路径，并在该对象路径下注册interface name 为 <code>org.bluez.Adapter1</code> 的接口，该接口下绑定了方法和属性。</p>
 <p>bluetoothctl应用连接dbus-daemon，接着就可以向 <code>org.bluez</code> 下 <code>/org/bluez/hci0</code> 下 <code>org.bluez.Adapter1</code> 下的 <code>StartDiscovery</code> 方法发送请求。</p>
-<p><img src="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/image-20241009193405276.png" alt="image-20241009193405276"></p>
+<p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009193405276.png" alt="image-20241009193405276"></p>
 <p><a href="https://dbus.freedesktop.org/doc/api/html/group__DBusMessage.html#ga98ddc82450d818138ef326a284201ee0">D-Bus API接口</a></p>
 <h2 id="systemd"><a href="#systemd" class="headerlink" title="systemd"></a>systemd</h2><blockquote>
 <p><a href="https://systemd.io/">systemd</a>是什么？</p>
@@ -1333,7 +1706,7 @@
 
 
 
-<h2 id="linux-graphics-stack-overview"><a href="#linux-graphics-stack-overview" class="headerlink" title="linux graphics stack overview"></a>linux graphics stack overview</h2><p><img src="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/image-20241008192139617.png" alt="image-20241008192139617"></p>
+<h2 id="linux-graphics-stack-overview"><a href="#linux-graphics-stack-overview" class="headerlink" title="linux graphics stack overview"></a>linux graphics stack overview</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241008192139617.png" alt="image-20241008192139617"></p>
 <h2 id="display-controller-support"><a href="#display-controller-support" class="headerlink" title="display controller support"></a>display controller support</h2><p><strong>fddev</strong> 是一个 Linux 子系统，用于在计算机显示器上（通常在系统控制台上）显示图形。不过已经被弃用了，但仍有一些旧的图形驱动程序仅在此子系统中可用。</p>
 <p><strong>DRM</strong> 是Linux 内核的一个子系统，负责与现代显卡的GPU进行交互。</p>
 <p>支持 SoC 或显卡的显示控制器，以及所有类型的显示面板和桥接器：并行、LVDS、DSI、HDMI、DisplayPort 等。当然，也支持通过I2C或者SPI连接的小型显示面板。设备在linux系统中暴露出来的路径为：<code>/dev/fri/cardX</code>。</p>
@@ -1494,7 +1867,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="Linux-multimedia-stack-overview"><a href="#Linux-multimedia-stack-overview" class="headerlink" title="Linux multimedia stack overview"></a>Linux multimedia stack overview</h2><p><img src="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/image-20241009151839214.png" alt="image-20241009151839214"></p>
+<h2 id="Linux-multimedia-stack-overview"><a href="#Linux-multimedia-stack-overview" class="headerlink" title="Linux multimedia stack overview"></a>Linux multimedia stack overview</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009151839214.png" alt="image-20241009151839214"></p>
 <h2 id="Audio-stack"><a href="#Audio-stack" class="headerlink" title="Audio stack"></a>Audio stack</h2><ul>
 <li>内核侧：ALSA子系统，Advanced Linux Sound Architecture<ul>
 <li>包括音频接口和音频编解码器的驱动程序</li>
@@ -1530,7 +1903,7 @@
 <li>由大量插件组成：视频捕获&#x2F;显示、音频捕获&#x2F;播放、编码&#x2F;解码、缩放、过滤等</li>
 <li>一个有趣的替代方案是 ffmpeg</li>
 </ul>
-<h2 id="Linux-networking-stack"><a href="#Linux-networking-stack" class="headerlink" title="Linux networking stack"></a>Linux networking stack</h2><p><img src="/2024/10/08/overview-of-major-emabedded-linux-software-stacks/image-20241009153641765.png" alt="image-20241009153641765"></p>
+<h2 id="Linux-networking-stack"><a href="#Linux-networking-stack" class="headerlink" title="Linux networking stack"></a>Linux networking stack</h2><p><img src="/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/image-20241009153641765.png" alt="image-20241009153641765"></p>
 <h2 id="Web-accessible-UI"><a href="#Web-accessible-UI" class="headerlink" title="Web accessible UI"></a>Web accessible UI</h2><ul>
 <li>在嵌入式系统中，使用 Web 界面进行设备配置&#x2F;监控非常常见</li>
 <li>需要 web 服务器：Busybox httpd可以满足简单的需求、lighttpd、nginx、apache可以满足复杂的需求</li>
@@ -1598,7 +1971,7 @@
   </entry>
   <entry>
     <title>bluetooth: le advertise scan</title>
-    <url>/2024/09/29/bluetooth-le-advertise-scan/</url>
+    <url>/2024/09/29/2024/bluetooth-le-advertise-scan/</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>bluetooth</category>
@@ -1611,7 +1984,7 @@
   </entry>
   <entry>
     <title>bluetoothd: source file reading</title>
-    <url>/2024/09/25/bluetoothd-source-file-reading/</url>
+    <url>/2024/09/25/2024/bluetoothd-source-file-reading/</url>
     <content><![CDATA[<p><a href="https://github.com/bluez/bluez">bluez</a></p>
 <h2 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h2><p>首先从 <code>/src/main.c</code> 的 main() 函数开始，对于本地定义的函数功能作出解读。</p>
 <ul>
@@ -1686,25 +2059,25 @@
 <ul>
 <li><p>查询扫描类型（inquiry scan type）</p>
 <p>Inquiry_Scan_Type 配置参数指示查询扫描是否使用非隔行扫描或隔行扫描进行。目前，定义了一种强制查询扫描类型和一种可选查询扫描类型。</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023191822349.png" alt="image-20241023191822349"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/image-20241023191822349.png" alt="image-20241023191822349"></p>
 </li>
 <li><p>查询扫描窗口（inquiry scan window）：持续扫描查询的时间，必须小于或等于扫描间隔。取值范围：0x0011 ~ 0x1000，转化为时间单位范围：10.625 ms ~ 2560 ms，默认值：0x0012（11.25ms）</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212348333.png" alt="image-20241008212348333"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/image-20241008212348333.png" alt="image-20241008212348333"></p>
 <p><em>注意：一个扫描窗口并不会扫描所有的40个射频通道，完全取决于硬件底层实现。</em></p>
 </li>
 <li><p>查询扫描间隔（inquiry scan interval）：从上一次扫描查询开始扫下一次扫描查询开始的时间间隔。取值范围：0x0012 ~ 0x1000，转化为时间单位范围：11.25 ms ~ 2560 ms，默认值：0x1000（2560ms） </p>
 <p>Inquiry_Scan_Interval 配置参数定义连续查询扫描之间的时间量。这定义为从 BR&#x2F;EDR 控制器开始其上一次查询扫描到开始下一次查询扫描的时间间隔</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241008212407775.png" alt="image-20241008212407775"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/image-20241008212407775.png" alt="image-20241008212407775"></p>
 </li>
 <li><p>页扫描间隔（page scan interval）：Page_Scan_Interval 配置参数定义连续页面扫描之间的时间量。此时间间隔定义为从控制器开始其上一次页面扫描到开始下一次页面扫描的时间。</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023193938906.png" alt="image-20241023193938906"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/image-20241023193938906.png" alt="image-20241023193938906"></p>
 </li>
 <li><p>页扫描窗口（page scan window）：Page_Scan_Window 配置参数定义页面扫描的持续时间。Page_Scan_Window 只能小于或等于 Page_Scan_Interval。</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/image-20241023194040460.png" alt="image-20241023194040460"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/image-20241023194040460.png" alt="image-20241023194040460"></p>
 </li>
 </ul>
 <p>扫描窗口和扫描间隔的关系：</p>
-<p><img src="/2024/09/25/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png"></p>
+<p><img src="/2024/09/25/2024/bluetoothd-source-file-reading/1bb9cc19d90e21a6df65dd230d9a0020.png"></p>
 <p>其他学习参考<a href="https://www.ebyte.com/news/1369.html#:~:text=%E6%89%AB%E6%8F%8F%E5%8F%82%E6%95%B0%E6%98%AF%E8%93%9D%E7%89%99%E4%B8%BB%E6%9C%BA%E8%AE%BE">BLE设备功耗太高？弄懂这几个参数，功耗想不降都难</a></p>
 <p><strong>扫描参数</strong></p>
 <p>在 main.conf 配置文件中涉及到bredr 和 le 的扫描参数。</p>
@@ -1737,7 +2110,7 @@
   </entry>
   <entry>
     <title>bluetoothd: device cache</title>
-    <url>/2024/09/23/bluetoothd-device-cache/</url>
+    <url>/2024/09/23/2024/bluetoothd-device-cache/</url>
     <content><![CDATA[<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>关于蓝牙数据的存储，在bluez的doc目录下有一个文件（<a href="https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/settings-storage.txt">settings-storage.txt</a>）作出了说明。</p>
 <blockquote>
 <p>Adapter and remote device info are read form the storage during object initialization. Write to storage is performed immediately on every value<br>change.</p>
@@ -1814,7 +2187,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">btd_adapter_remove_device</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter,</span></span><br><span class="line"><span class="params">				<span class="keyword">struct</span> btd_device *dev)</span></span><br><span class="line">&#123;</span><br><span class="line">	GList *l;</span><br><span class="line"></span><br><span class="line">	adapter-&gt;connect_list = g_slist_remove(adapter-&gt;connect_list, dev);</span><br><span class="line"></span><br><span class="line">	adapter_remove_device(adapter, dev);</span><br><span class="line">	btd_adv_monitor_device_remove(adapter-&gt;adv_monitor_manager, dev);</span><br><span class="line"></span><br><span class="line">	adapter-&gt;discovery_found = g_slist_remove(adapter-&gt;discovery_found,</span><br><span class="line">									dev);</span><br><span class="line"></span><br><span class="line">	adapter-&gt;connections = g_slist_remove(adapter-&gt;connections, dev);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;connect_le == dev)</span><br><span class="line">		adapter-&gt;connect_le = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	l = adapter-&gt;auths-&gt;head;</span><br><span class="line">	<span class="keyword">while</span> (l != <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">service_auth</span> *<span class="title">auth</span> =</span> l-&gt;data;</span><br><span class="line">		GList *next = g_list_next(l);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (auth-&gt;device != dev) &#123;</span><br><span class="line">			l = next;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		g_queue_delete_link(adapter-&gt;auths, l);</span><br><span class="line">		l = next;</span><br><span class="line"></span><br><span class="line">		service_auth_cancel(auth);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	device_remove(dev, TRUE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">discovery_cleanup</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter, <span class="type">int</span> timeout)</span></span><br><span class="line">&#123;</span><br><span class="line">	GSList *l, *next;</span><br><span class="line"></span><br><span class="line">	adapter-&gt;discovery_type = <span class="number">0x00</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (adapter-&gt;discovery_idle_timeout &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		timeout_remove(adapter-&gt;discovery_idle_timeout);</span><br><span class="line">		adapter-&gt;discovery_idle_timeout = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	g_slist_free_full(adapter-&gt;discovery_found,</span><br><span class="line">						invalidate_rssi_and_tx_power);</span><br><span class="line">	adapter-&gt;discovery_found = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!adapter-&gt;devices)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (l = adapter-&gt;devices; l != <span class="literal">NULL</span>; l = next) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> l-&gt;data;</span><br><span class="line"></span><br><span class="line">		next = g_slist_next(l);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (device_is_temporary(dev) &amp;&amp; !device_is_connectable(dev)</span><br><span class="line">			&amp;&amp; !btd_device_is_connected(dev))</span><br><span class="line">			btd_adapter_remove_device(adapter, dev); <span class="comment">// here</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">remove_temporary_devices</span><span class="params">(<span class="keyword">struct</span> btd_adapter *adapter)</span></span><br><span class="line">&#123;</span><br><span class="line">	GSList *l, *next;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (l = adapter-&gt;devices; l; l = next) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">dev</span> =</span> l-&gt;data;</span><br><span class="line"></span><br><span class="line">		next = g_slist_next(l);</span><br><span class="line">		<span class="keyword">if</span> (device_is_temporary(dev))</span><br><span class="line">			btd_adapter_remove_device(adapter, dev); <span class="comment">// here</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> DBusMessage *<span class="title function_">remove_device</span><span class="params">(DBusConnection *conn,</span></span><br><span class="line"><span class="params">					DBusMessage *msg, <span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_adapter</span> *<span class="title">adapter</span> =</span> user_data;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">btd_device</span> *<span class="title">device</span>;</span></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *path;</span><br><span class="line">	GSList *<span class="built_in">list</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (dbus_message_get_args(msg, <span class="literal">NULL</span>, DBUS_TYPE_OBJECT_PATH, &amp;path,</span><br><span class="line">						DBUS_TYPE_INVALID) == FALSE)</span><br><span class="line">		<span class="keyword">return</span> btd_error_invalid_args(msg);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">list</span> = g_slist_find_custom(adapter-&gt;devices, path, device_path_cmp);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">list</span>)</span><br><span class="line">		<span class="keyword">return</span> btd_error_does_not_exist(msg);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!btd_adapter_get_powered(adapter))</span><br><span class="line">		<span class="keyword">return</span> btd_error_not_ready(msg);</span><br><span class="line"></span><br><span class="line">	device = <span class="built_in">list</span>-&gt;data;</span><br><span class="line"></span><br><span class="line">	btd_device_set_temporary(device, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!btd_device_is_connected(device)) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// here adapter remove device</span></span><br><span class="line">		btd_adapter_remove_device(adapter, device);</span><br><span class="line">		<span class="keyword">return</span> dbus_message_new_method_return(msg);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	device_request_disconnect(device, msg);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但是最终的问题还是没有得到解决：bluetoothd程序接收到客户端（例如：bluetoothctl）的请求： <code>StartDiscovery</code> 方法时，蓝牙设备被发现后，通过什么样的方式通知了客户端呢？同样的，客户端发送 <code>RemoveDevice</code> 方法时，bluetoothd又是通过什么方式告知客户端？最后一点，当附近设备被扫描到后，会作为一个临时设备，当临时时间最大时间到达后，在哪里执行删除临时设备操作，以及删除临时设备后，以什么方式通知客户端？</p>
-<h2 id="疑难杂症"><a href="#疑难杂症" class="headerlink" title="疑难杂症"></a>疑难杂症</h2><p>通过使用bluez提供的gdbus接口编写了一个客户端（从这边文章可以得知：<a href="/2024/08/16/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a> ），并且为了测试连接的稳定性编译了一个自动化测试函数：</p>
+<h2 id="疑难杂症"><a href="#疑难杂症" class="headerlink" title="疑难杂症"></a>疑难杂症</h2><p>通过使用bluez提供的gdbus接口编写了一个客户端（从这边文章可以得知：<code>&#123;% post_link 'bluetoothctl-client-tool' %&#125;</code> ），并且为了测试连接的稳定性编译了一个自动化测试函数：</p>
 <ul>
 <li>第一步：<code>bt_open()</code> 打开蓝牙并进行初始化操作</li>
 <li>第二步：<code>bt_start_discovery()</code> 开始执行扫描操作</li>
@@ -1854,7 +2227,7 @@
   </entry>
   <entry>
     <title>Matter: Level Control Cluster</title>
-    <url>/2024/09/10/Matter-Level-Control-Cluster/</url>
+    <url>/2024/09/10/2024/Matter-Level-Control-Cluster/</url>
     <content><![CDATA[<blockquote>
 <p>LevelControl Cluster的作用？</p>
 </blockquote>
@@ -2255,7 +2628,7 @@
   </entry>
   <entry>
     <title>hexo-asset-image problem</title>
-    <url>/2024/09/07/hexo-assert-image-problem/</url>
+    <url>/2024/09/07/2024/hexo-assert-image-problem/</url>
     <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在之前使用hexo搭建博客后，认为在内容中插入图片还是不可缺少了。所以找到了一个博主发布的一遍文章：<a href="https://blog.csdn.net/m0_43401436/article/details/107191688">hexo博客中插入图片失败——解决思路及个人最终解决办法</a>，专门解决我这个需求的。</p>
 <p>先介绍一下我的hexo环境：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cj@52e0bd6293ac:/workspace/blog$ hexo --version</span><br><span class="line">INFO  Validating config</span><br><span class="line">hexo: 7.3.0</span><br><span class="line">hexo-cli: 4.3.2</span><br><span class="line">os: linux 6.8.0-40-generic Ubuntu 22.04.4 LTS 22.04.4 LTS (Jammy Jellyfish)</span><br><span class="line">node: 12.22.9</span><br><span class="line">v8: 7.8.279.23-node.56</span><br><span class="line">uv: 1.43.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.18.1</span><br><span class="line">modules: 72</span><br><span class="line">nghttp2: 1.43.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 2.1.6</span><br><span class="line">http_parser: 2.9.4</span><br><span class="line">openssl: 1.1.1m</span><br><span class="line">cldr: 40.0</span><br><span class="line">icu: 70.1</span><br><span class="line">tz: 2021a3</span><br><span class="line">unicode: 14.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -2270,7 +2643,7 @@
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 仅修改一处：将false修改为true</span></span><br><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Typora修改图片偏好设置</p>
-<p><img src="/2024/09/07/hexo-assert-image-problem/image-20240907142349989.png" alt="image-20240907142349989"></p>
+<p><img src="/2024/09/07/2024/hexo-assert-image-problem/image-20240907142349989.png" alt="image-20240907142349989"></p>
 </li>
 <li><p>在Typora编译md文件，并复制图片到内容中</p>
 </li>
@@ -2306,10 +2679,10 @@
   </entry>
   <entry>
     <title>ESP32-C3-DevKitM-1 Schematic</title>
-    <url>/2024/09/07/ESP32-C3-DevKitM-1-Schematic/</url>
+    <url>/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/</url>
     <content><![CDATA[<p><a href="https://docs.espressif.com/projects/esp-dev-kits/zh_CN/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html">ESP32-C3-DevKit-M1 官网文档介绍</a></p>
 <h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>先看一下开发板的缩略图：</p>
-<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_11-47-30.png" alt="开发板的缩略图"></p>
+<p><img src="/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_11-47-30.png" alt="开发板的缩略图"></p>
 <p>缩略图只列举了功能模块部分，并没有体现电路部分。但是还是可以通过上图知道该开发板提供的功能：</p>
 <ul>
 <li>Micro MiNi-USB：支持供电（3.3V）和传输数据（通过USB-UART Bridge实现）</li>
@@ -2321,12 +2694,12 @@
 <li>BT：支持蓝牙功能</li>
 </ul>
 <h2 id="按键电路图"><a href="#按键电路图" class="headerlink" title="按键电路图"></a>按键电路图</h2><p>接下来看一下Boot和RST按键的电路图：</p>
-<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_12-01-02.png"></p>
+<p><img src="/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/Snipaste_esp32c3_2024-09-07_12-01-02.png"></p>
 <p>SW1按键（即Boot按键），当SW1被按下时，电路被导通，GPIO9从高电平到低电平变化；反之，当SW1被松开时，电路被断开，GPIO9从低电平到高电平变化；</p>
 <p>SW2按键（即RST按键），当SW2被按下时，电路被导通，CHIP_PU（即芯片的EN接口）从高电平到低电平变化，直接将开发板复位。接着查看一下CHIP_PU连接的复位电路：</p>
-<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/image-20240907140310317.png" alt="image-20240907140310317"></p>
+<p><img src="/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/image-20240907140310317.png" alt="image-20240907140310317"></p>
 <h2 id="LED电路图"><a href="#LED电路图" class="headerlink" title="LED电路图"></a>LED电路图</h2><p>接下来看一下LED的电路图：</p>
-<p><img src="/2024/09/07/ESP32-C3-DevKitM-1-Schematic/image-20240907152038685.png" alt="image-20240907152038685"></p>
+<p><img src="/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/image-20240907152038685.png" alt="image-20240907152038685"></p>
 <p>通过GPIO8来控制LED灯，开发板提供的LED支持的功能包括：开&#x2F;关、调节亮度、调节RGB</p>
 <h2 id="GPIO汇总"><a href="#GPIO汇总" class="headerlink" title="GPIO汇总"></a>GPIO汇总</h2><p>ESP32-C3 芯片具有 22 个物理 GPIO 管脚（GPIO0 ~ GPIO21）。每个管脚都可用作一个通用 IO，或连接一个内部的外设信号。通过 GPIO 交换矩阵和 IO MUX，可配置外设模块的输入信号来源于任何的 IO 管脚，并且外设模块的输出信号也可连接到任意 IO 管脚。这些模块共同组成了芯片的 IO 控制。</p>
 <p>参考来源：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v5.2.2/esp32c3/api-reference/peripherals/gpio.html">ESP32-C3 GPIO描述</a></p>
@@ -2458,8 +2831,8 @@
       </tags>
   </entry>
   <entry>
-    <title>esp-matter: blink project</title>
-    <url>/2024/09/06/esp-matter-blink-project/</url>
+    <title>esp: blink project</title>
+    <url>/2024/09/06/2024/esp-blink-project/</url>
     <content><![CDATA[<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>blink示例的目录结构：</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">--blink</span><br><span class="line">  |--main（必有的main目录）</span><br><span class="line">     |--blink_example.c</span><br><span class="line">     |--CMakeLists.txt（底层编译配置文件）</span><br><span class="line">     |--idf_componect.yml</span><br><span class="line">     |--Kconfig.projbuild（Kconfig配置文件）</span><br><span class="line">  |--CMakeLists.txt（顶层编译配置文件）</span><br><span class="line">  |--pytest_blink.py</span><br><span class="line">  |--README.md</span><br><span class="line">  |--sdkconfig.ci.led_strip_spi</span><br></pre></td></tr></table></figure>
 
@@ -2508,7 +2881,7 @@
   </entry>
   <entry>
     <title>Matter: On/Off Cluster</title>
-    <url>/2024/09/06/Matter-On-Off-Cluster/</url>
+    <url>/2024/09/06/2024/Matter-On-Off-Cluster/</url>
     <content><![CDATA[<blockquote>
 <p>On&#x2F;Off Cluster的作用？</p>
 </blockquote>
@@ -2743,7 +3116,7 @@
   </entry>
   <entry>
     <title>Matter: Sensor</title>
-    <url>/2024/09/06/Matter-Sensor/</url>
+    <url>/2024/09/06/2024/Matter-Sensor/</url>
     <content><![CDATA[<p>对于传感器器类型设备有很多种，分别有：</p>
 <ul>
 <li>Contact Sensor（接触式传感器）</li>
@@ -3717,7 +4090,7 @@
   </entry>
   <entry>
     <title>Matter: Smart Plugs/Outlets and Other Actuators</title>
-    <url>/2024/09/05/Matter-Smart-Plugs-Outlets-and-Other-Actuators/</url>
+    <url>/2024/09/05/2024/Matter-Smart-Plugs-Outlets-and-Other-Actuators/</url>
     <content><![CDATA[<p>智能插头&#x2F;插座和其他执行器分为很多种，分别有：On&#x2F;Off Plug-in Unit、Dimmable Plug-In Unit、Pump、Water Value</p>
 <p>Smart Plugs&#x2F;Outlets and Other Actuators类型所有设备信息：</p>
 <table>
@@ -4259,7 +4632,7 @@
   </entry>
   <entry>
     <title>core dump and gdb</title>
-    <url>/2024/09/03/core-dump-and-gdb/</url>
+    <url>/2024/09/03/2024/core-dump-and-gdb/</url>
     <content><![CDATA[<h2 id="core-dump功能"><a href="#core-dump功能" class="headerlink" title="core dump功能"></a>core dump功能</h2><p><code>core dump</code> 文件是在程序因严重错误（如段错误）而崩溃时由操作系统生成的一个内存映像文件（支持自定义设置设备文件名格式）。这个文件包含了程序崩溃时刻的内存状态，包括寄存器的状态、栈、全局变量等数据。这对于调试程序（gdb）非常有用，因为它可以帮助开发者理解程序在崩溃前的状态，从而定位和解决问题。</p>
 <p>linux系统默认关闭core dump文件的生成，原因是：需要占用一部分系统开销。</p>
 <ul>
@@ -4317,7 +4690,7 @@
   </entry>
   <entry>
     <title>Matter: Switches and Controls Device Types</title>
-    <url>/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/</url>
+    <url>/2024/08/31/2024/Matter-Switches-and-Controls-DeviceTypes/</url>
     <content><![CDATA[<p>开关类设备的类别也为多种，包括：On&#x2F;Off Light Switch、Dimmer Switch、Color Dimmer Switch、Control Bridge、Pump Controller、Generic Switch</p>
 <p>switches and controls类型所有信息：</p>
 <table>
@@ -4835,14 +5208,13 @@
   </entry>
   <entry>
     <title>bluetooth：raspberry4b play audio</title>
-    <url>/2024/08/28/raspberry4b-play-audio/</url>
+    <url>/2024/08/28/2024/raspberry4b-play-audio/</url>
     <content><![CDATA[<p>环境介绍：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 硬件信息</span></span><br><span class="line">树莓派4B 8GB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统信息</span></span><br><span class="line"><span class="built_in">uname</span> -a</span><br><span class="line">Linux caojun-desktop 6.8.0-1010-raspi <span class="comment">#11-Ubuntu SMP PREEMPT_DYNAMIC Thu Aug  8 23:22:41 UTC 2024 aarch64 aarch64 aarch64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><a href="/2024/08/16/bluetoothctl-client-tool/" title="bluetoothctl client tool">bluetoothctl client tool</a> 介绍了为什么要写一个蓝牙应用库，既然选择了在树莓派上开发，那么就需要在树莓派上验证蓝牙应用库的可用性。通过树莓派运行蓝牙应用库连接蓝牙音响设备播放音频文件，我就可以证明蓝牙应用库的可用性。
-
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p><code>&#123;% post_link 'bluetoothctl client tool' %&#125;</code> 介绍了为什么要写一个蓝牙应用库，既然选择了在树莓派上开发，那么就需要在树莓派上验证蓝牙应用库的可用性。通过树莓派运行蓝牙应用库连接蓝牙音响设备播放音频文件，我就可以证明蓝牙应用库的可用性。</p>
 <p>在购入树莓派之前，我有查询过树莓派可以实现多媒体应用：视频和音频。树莓派硬件自带了一个3.5mm的音频输出口，以及两个micro hdmi接口。</p>
 <h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>查看树莓派4B有哪些音频播放接口，可以通过一下两种方式：</p>
 <ul>
@@ -4932,7 +5304,7 @@
   </entry>
   <entry>
     <title>ssh remote login</title>
-    <url>/2024/08/21/ssh-remote-login/</url>
+    <url>/2024/08/21/2024/ssh-remote-login/</url>
     <content><![CDATA[<h2 id="安装ssh"><a href="#安装ssh" class="headerlink" title="安装ssh"></a>安装ssh</h2><p>一般都是在本地PC通过ssh远程连接服务器，在本地PC基本都有ssh client程序，而服务器不一定会有ssh server程序。所以首先第一步要确认<strong>服务器</strong>是否已经安装了ssh server程序（即openssh-server），若已经安装，则跳过；若没有安装，则接下来安装步骤。</p>
 <ul>
 <li><p>服务器上检查是否安装 openssh-server</p>
@@ -5018,7 +5390,7 @@
   </entry>
   <entry>
     <title>Shell and Shell Scripts</title>
-    <url>/2024/08/18/Shell-and-Shell-Scripts/</url>
+    <url>/2024/08/18/2024/Shell-and-Shell-Scripts/</url>
     <content><![CDATA[<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><p>在Linux中有很多Shell可以使用，常用的有如下：</p>
 <ul>
 <li>sh：即Bourne shell，由Steven Bourne开发，这是第一个流行的shell</li>
@@ -5153,7 +5525,7 @@
   </entry>
   <entry>
     <title>Hello World</title>
-    <url>/2024/08/17/hello-world/</url>
+    <url>/2024/08/17/2024/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
 
@@ -5179,7 +5551,7 @@
   </entry>
   <entry>
     <title>bluetoothctl client tool</title>
-    <url>/2024/08/16/bluetoothctl-client-tool/</url>
+    <url>/2024/08/16/2024/bluetoothctl-client-tool/</url>
     <content><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>在使用某一家SoC的蓝牙库的时候，很多东西都无法修改。但是在测试的过程中，发现这家SoC的蓝牙库也是基于bluez的dbus实现的，那么我也可以封装一个蓝牙库。</p>
 <p>首先，我手里有树莓派4B一台，该设备具备了蓝牙和Wi-Fi功能。那么只需要通过研究bluez项目中的bluetoothctl工具的源码，然后进行自定义修改，最后封装成自己的蓝牙库。</p>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="硬件平台"><a href="#硬件平台" class="headerlink" title="硬件平台"></a>硬件平台</h3><p>树莓派环境介绍：</p>
@@ -5981,7 +6353,7 @@
 <li>armv7l</li>
 </ul>
 <p>开发完成后，需要测试接口稳定性，包括：打开&#x2F;关闭、连接&#x2F;断开。</p>
-<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919110533887.png" alt="image-20240919110533887"></p>
+<p><img src="/2024/08/16/2024/bluetoothctl-client-tool/image-20240919110533887.png" alt="image-20240919110533887"></p>
 <h3 id="x86-64平台"><a href="#x86-64平台" class="headerlink" title="x86_64平台"></a>x86_64平台</h3><blockquote>
 <p>bluez版本：5.64</p>
 </blockquote>
@@ -5991,8 +6363,8 @@
 </blockquote>
 <p>在aarch64平台测试连接蓝牙设备接口的稳定性，出现一个奇怪的现象：</p>
 <p>当扫描到目标蓝牙设备后，立即执行连接操作，但是目标蓝牙设备立马就被删除了，导致连接操作超时。</p>
-<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919111450094.png" alt="image-20240919111450094"></p>
-<p><img src="/2024/08/16/bluetoothctl-client-tool/image-20240919111528213.png" alt="image-20240919111528213"></p>
+<p><img src="/2024/08/16/2024/bluetoothctl-client-tool/image-20240919111450094.png" alt="image-20240919111450094"></p>
+<p><img src="/2024/08/16/2024/bluetoothctl-client-tool/image-20240919111528213.png" alt="image-20240919111528213"></p>
 <p>很明显，目标蓝牙设备被bluetoothd过早移除了。查阅<a href="https://www.bluez.org/bluez-5-api-introduction-and-porting-guide/">bluez官网文档</a>，有这么一句话：</p>
 <blockquote>
 <p>Once the discovery stops, devices neither connected to or paired will be automatically removed by bluetoothd within three minutes.</p>
@@ -6035,7 +6407,7 @@
   </entry>
   <entry>
     <title>esp-matter：light project</title>
-    <url>/2024/08/15/esp-matter-light-project/</url>
+    <url>/2024/08/15/2024/esp-matter-light-project/</url>
     <content><![CDATA[<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>拷贝 <code>~/esp/esp-matter/examples</code> 到指定目录</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/esp/example-matter</span><br><span class="line"><span class="built_in">cp</span> -r ~/esp/esp-matter/examples/* ~/esp/example-matter</span><br><span class="line"><span class="built_in">cd</span> ~/esp/example-matter/light</span><br></pre></td></tr></table></figure>
 
@@ -6153,7 +6525,7 @@
   </entry>
   <entry>
     <title>Matter：Lighting Device Types</title>
-    <url>/2024/08/13/Matter-Lighting-Device-Types/</url>
+    <url>/2024/08/13/2024/Matter-Lighting-Device-Types/</url>
     <content><![CDATA[<h2 id="Light基础"><a href="#Light基础" class="headerlink" title="Light基础"></a>Light基础</h2><p>色调、饱和度和亮度（hue, saturation, and brightness）以人对红、绿、蓝（RGB）三色组合的感觉为基础。</p>
 <ul>
 <li>色调（hue）是在可见光光谱中能量最强时的波长</li>
@@ -6924,7 +7296,7 @@
   </entry>
   <entry>
     <title>Matter Standard</title>
-    <url>/2024/08/13/Matter-Standard/</url>
+    <url>/2024/08/13/2024/Matter-Standard/</url>
     <content><![CDATA[<h2 id="Matter介绍"><a href="#Matter介绍" class="headerlink" title="Matter介绍"></a>Matter介绍</h2><p>市场上对于IoT领域生态有很多，例如：苹果生态（Homekit）、谷歌生态（Weave）、亚马逊生态（Echo）、三星生态、小米生态。设备厂商针对某一个生态生产的设备仅支持这个生态（苹果生态），不能支持其他生态（谷歌生态、三星生态），形成了生态壁垒。</p>
 <p><strong>用户：</strong></p>
 <p>如果用户使用苹果手机，那么用户只能购买支持苹果生态的IoT设备。一旦用户不在使用苹果手机，而使用谷歌手机，那么支持苹果生态的IoT设备就成了一堆废品。现在用户想使用IoT设备，那么必须再购买支持谷歌生态的IoT设备，对于用户来说，这又是一笔不小的开销。</p>
@@ -7004,8 +7376,10 @@
   </entry>
   <entry>
     <title>wpa-supplicant application</title>
-    <url>/2024/08/12/wpa-supplicant-application/</url>
-    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点（即AP模式），供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.4GHz 和 5GHz。</p>
+    <url>/2024/08/12/2024/wpa-supplicant-application/</url>
+    <content><![CDATA[<h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点（即AP模式，Access Point Mode），供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.4GHz 和 5GHz。</p>
+<p>2.4GHz 工作频段范围：2.4GHz ~ 2.4835GHz，共划分14个信道（但第14信道一般不用），每个信道频宽20MHz，其特点表现为频率低、波长（0.125m）长，传输距离远（覆盖范围大），但是传输速度慢。</p>
+<p>5GHz 工作频段范围：5.170GHz ~ 5.850GHz，大约有个45个信道，其中38、46、151、159信道频宽为40MHz，其余信道频宽均为20MHz，其特点表现为频率高、波长（0.052m）短，传输距离短（覆盖范围小），但传输速度快。</p>
 <p>无线热点的基本信息：</p>
 <ul>
 <li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
@@ -7022,6 +7396,89 @@
 <li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
 </li>
 </ul>
+<h2 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h2><p>信道也称作通道(Channel)、频段，是以无线信号（电磁波）作为传输载体的数据信号传送通道。</p>
+<p>不管是802.11b&#x2F;g还是802.11a&#x2F;b&#x2F;g&#x2F;n&#x2F;ac一般都支持13个信道。它们的中心频率虽然不同，但是因为都占据一定的频率范围，所以会有一些相互重叠的情况。</p>
+<p>2.4GHz频带的信道划分14个信道（2412 MHz ~ 2484 MHz），但第14信道一般不用，每个信道的有效宽度是 20MHz，另外还有2MHz的强制隔离频带。2.4G WiFi信道分布图可以看到信道之间会彼此重叠，从而容易造成WiFi干扰，但1、6、11信道除外，这三个信道没有重叠部分，故路由器一般将这三个信道作为默认的信道来使用。</p>
+<table>
+<thead>
+<tr>
+<th>信道</th>
+<th>频宽(MHz)</th>
+<th>中心频率(MHz)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>20</td>
+<td>2412</td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>2417</td>
+</tr>
+<tr>
+<td>3</td>
+<td>20</td>
+<td>2422</td>
+</tr>
+<tr>
+<td>4</td>
+<td>20</td>
+<td>2427</td>
+</tr>
+<tr>
+<td>5</td>
+<td>20</td>
+<td>2432</td>
+</tr>
+<tr>
+<td>6</td>
+<td>20</td>
+<td>2437</td>
+</tr>
+<tr>
+<td>7</td>
+<td>20</td>
+<td>2442</td>
+</tr>
+<tr>
+<td>8</td>
+<td>20</td>
+<td>2447</td>
+</tr>
+<tr>
+<td>9</td>
+<td>20</td>
+<td>2452</td>
+</tr>
+<tr>
+<td>10</td>
+<td>20</td>
+<td>2457</td>
+</tr>
+<tr>
+<td>11</td>
+<td>20</td>
+<td>2462</td>
+</tr>
+<tr>
+<td>12</td>
+<td>20</td>
+<td>2467</td>
+</tr>
+<tr>
+<td>13</td>
+<td>20</td>
+<td>2472</td>
+</tr>
+<tr>
+<td>14</td>
+<td>20</td>
+<td>2484</td>
+</tr>
+</tbody></table>
+<p><img src="/2024/08/12/2024/wpa-supplicant-application/2.4G.png" alt="2.4G"></p>
 <h2 id="WPA-SUPPLICANT"><a href="#WPA-SUPPLICANT" class="headerlink" title="WPA_SUPPLICANT"></a>WPA_SUPPLICANT</h2><blockquote>
 <p>wap_supplicant是什么？</p>
 </blockquote>
@@ -7045,7 +7502,7 @@
 
 
 <p>wpa_supplicant结构图：</p>
-<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
+<p><img src="/2024/08/12/2024/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。而配置文件的默认保存路径是：<code>/etc/wpa_supplicant/wpa_supplicant.conf</code></p>
 <p>wpa_supplicant.conf 可以设置哪些配置？</p>
 <ul>
@@ -7074,7 +7531,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListNames</span><br></pre></td></tr></table></figure>
 
 <p>借助D-Bus图形工具 <strong>D-Feet</strong> 可以查看到更具体的信息：</p>
-<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016211846477.png" alt="image-20241016211846477"></p>
+<p><img src="/2024/08/12/2024/wpa-supplicant-application/image-20241016211846477.png" alt="image-20241016211846477"></p>
 <h3 id="dbus-for-wpa-supplicant接口"><a href="#dbus-for-wpa-supplicant接口" class="headerlink" title="dbus for wpa_supplicant接口"></a>dbus for wpa_supplicant接口</h3><p>wpa_supplicant dbus api 文档涉及到各个不同接口：</p>
 <ul>
 <li><strong>fi.w1.wpa_supplicant1</strong></li>
@@ -7622,7 +8079,7 @@
   </entry>
   <entry>
     <title>Blog deploy to Github Page.md</title>
-    <url>/2024/08/11/Blog-deploy-to-Github-Page/</url>
+    <url>/2024/08/11/2024/Blog-deploy-to-Github-Page/</url>
     <content><![CDATA[<blockquote>
 <p>2024-08-11 星期日 晴</p>
 </blockquote>
@@ -7685,7 +8142,7 @@
   </entry>
   <entry>
     <title>Create Blog with hexo</title>
-    <url>/2024/08/10/Create-Blog-with-hexo/</url>
+    <url>/2024/08/10/2024/Create-Blog-with-hexo/</url>
     <content><![CDATA[<blockquote>
 <p>2024-08-10 星期六 晴</p>
 </blockquote>

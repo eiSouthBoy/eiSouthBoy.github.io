@@ -2,7 +2,115 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/15/WiFi-Easy-Connect/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/26/2024/Ubuntu-22-04-VirtualBox7/</loc>
+    
+    <lastmod>2024-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/05/2024/mDNS/</loc>
+    
+    <lastmod>2024-11-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/23/2024/WAN-LAN-adaptive/</loc>
+    
+    <lastmod>2024-11-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/08/12/2024/wpa-supplicant-application/</loc>
+    
+    <lastmod>2024-11-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/09/06/2024/esp-blink-project/</loc>
+    
+    <lastmod>2024-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/</loc>
+    
+    <lastmod>2024-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/17/2024/esp-Automatic-Bootloader/</loc>
+    
+    <lastmod>2024-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/15/2024/WiFi-Easy-Connect/</loc>
+    
+    <lastmod>2024-11-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/16/2024/Captive-Portal/</loc>
+    
+    <lastmod>2024-11-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/10/30/2024/wpa-supplicant-applicant-Scan-Method/</loc>
+    
+    <lastmod>2024-11-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/09/23/2024/bluetoothd-device-cache/</loc>
+    
+    <lastmod>2024-11-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/08/28/2024/raspberry4b-play-audio/</loc>
+    
+    <lastmod>2024-11-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/2024/11/15/2024/esp-idf-project-architecture/</loc>
     
     <lastmod>2024-11-15</lastmod>
     
@@ -11,7 +119,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/04/esp-flash-search-and-configure/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/04/2024/esp-flash-search-and-configure/</loc>
     
     <lastmod>2024-11-14</lastmod>
     
@@ -20,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/13/esp-idf-py-command/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/13/2024/esp-idf-py-command/</loc>
     
     <lastmod>2024-11-13</lastmod>
     
@@ -29,7 +137,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/08/USB-OTG/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/08/2024/USB-OTG/</loc>
     
     <lastmod>2024-11-12</lastmod>
     
@@ -38,16 +146,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/05/mDNS/</loc>
-    
-    <lastmod>2024-11-08</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/08/17/hello-world/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/17/2024/hello-world/</loc>
     
     <lastmod>2024-11-07</lastmod>
     
@@ -56,7 +155,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/31/NetworkManager-Application/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/31/2024/NetworkManager-Application/</loc>
     
     <lastmod>2024-11-05</lastmod>
     
@@ -65,7 +164,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/05/2024/esp-Wi-Fi-network-configuration/</loc>
     
     <lastmod>2024-11-05</lastmod>
     
@@ -74,16 +173,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/05/esp-Wi-Fi-network-configuration/</loc>
-    
-    <lastmod>2024-11-05</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/09/06/esp-matter-blink-project/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/07/2024/ESP32-C3-DevKitM-1-Schematic/</loc>
     
     <lastmod>2024-11-04</lastmod>
     
@@ -92,7 +182,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/07/ESP32-C3-DevKitM-1-Schematic/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/04/2024/Ubuntu-22-04-smb/</loc>
     
     <lastmod>2024-11-04</lastmod>
     
@@ -101,7 +191,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/04/Ubuntu-22-04-smb/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/31/2024/Ubuntu-22-04-ch34x-UART-Error/</loc>
     
     <lastmod>2024-11-04</lastmod>
     
@@ -110,16 +200,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/31/Ubuntu-22-04-ch34x-UART-Error/</loc>
-    
-    <lastmod>2024-11-04</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/10/29/Embedded-Linux-System-Generate-Tool-Buildroot/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/29/2024/Embedded-Linux-System-Generate-Tool-Buildroot/</loc>
     
     <lastmod>2024-11-03</lastmod>
     
@@ -128,7 +209,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/31/DBUS-busctl-tool/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/31/2024/DBUS-busctl-tool/</loc>
     
     <lastmod>2024-11-03</lastmod>
     
@@ -137,7 +218,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/11/03/Linux-grub/</loc>
+    <loc>https://eisouthboy.github.io/2024/11/03/2024/Linux-grub/</loc>
     
     <lastmod>2024-11-03</lastmod>
     
@@ -146,7 +227,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/18/DBUS-data-type-or-container-type/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/18/2024/DBUS-data-type-or-container-type/</loc>
     
     <lastmod>2024-10-31</lastmod>
     
@@ -155,7 +236,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/08/overview-of-major-emabedded-linux-software-stacks/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/08/2024/overview-of-major-emabedded-linux-software-stacks/</loc>
     
     <lastmod>2024-10-31</lastmod>
     
@@ -164,7 +245,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/30/wpa-supplicant-applicant-Scan-Method/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/16/2024/bluetoothctl-client-tool/</loc>
     
     <lastmod>2024-10-30</lastmod>
     
@@ -173,7 +254,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/16/bluetoothctl-client-tool/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/21/2024/ssh-remote-login/</loc>
     
     <lastmod>2024-10-30</lastmod>
     
@@ -182,16 +263,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/21/ssh-remote-login/</loc>
-    
-    <lastmod>2024-10-30</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/08/18/Shell-and-Shell-Scripts/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/18/2024/Shell-and-Shell-Scripts/</loc>
     
     <lastmod>2024-10-29</lastmod>
     
@@ -200,7 +272,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/28/Linux-C-Program-Name-and-Program-ID/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/28/2024/Linux-C-Program-Name-and-Program-ID/</loc>
     
     <lastmod>2024-10-29</lastmod>
     
@@ -209,16 +281,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/</loc>
-    
-    <lastmod>2024-10-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/10/25/Linux-Read-only-file-system/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/25/2024/Linux-Read-only-file-system/</loc>
     
     <lastmod>2024-10-25</lastmod>
     
@@ -227,7 +290,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/25/bluetoothd-source-file-reading/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/25/2024/bluetoothd-source-file-reading/</loc>
     
     <lastmod>2024-10-24</lastmod>
     
@@ -236,7 +299,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/24/Git-branch-and-tag/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/24/2024/Git-branch-and-tag/</loc>
     
     <lastmod>2024-10-24</lastmod>
     
@@ -245,7 +308,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/14/callback-and-notify/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/14/2024/callback-and-notify/</loc>
     
     <lastmod>2024-10-22</lastmod>
     
@@ -254,7 +317,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/19/embedded-linux-application-development/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/19/2024/embedded-linux-application-development/</loc>
     
     <lastmod>2024-10-20</lastmod>
     
@@ -263,7 +326,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/03/core-dump-and-gdb/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/03/2024/core-dump-and-gdb/</loc>
     
     <lastmod>2024-10-14</lastmod>
     
@@ -272,7 +335,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/10/11/bluetooth-proper-terms-and-concepts/</loc>
+    <loc>https://eisouthboy.github.io/2024/10/11/2024/bluetooth-proper-terms-and-concepts/</loc>
     
     <lastmod>2024-10-12</lastmod>
     
@@ -281,7 +344,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/29/bluetooth-le-advertise-scan/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/29/2024/bluetooth-le-advertise-scan/</loc>
     
     <lastmod>2024-09-30</lastmod>
     
@@ -290,16 +353,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/23/bluetoothd-device-cache/</loc>
-    
-    <lastmod>2024-09-29</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/2024/09/06/Matter-Sensor/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/06/2024/Matter-Sensor/</loc>
     
     <lastmod>2024-09-23</lastmod>
     
@@ -308,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/06/Matter-On-Off-Cluster/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/06/2024/Matter-On-Off-Cluster/</loc>
     
     <lastmod>2024-09-20</lastmod>
     
@@ -317,7 +371,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/15/esp-matter-light-project/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/15/2024/esp-matter-light-project/</loc>
     
     <lastmod>2024-09-20</lastmod>
     
@@ -326,7 +380,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/13/Matter-Standard/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/13/2024/Matter-Standard/</loc>
     
     <lastmod>2024-09-19</lastmod>
     
@@ -335,7 +389,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/10/Matter-Level-Control-Cluster/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/10/2024/Matter-Level-Control-Cluster/</loc>
     
     <lastmod>2024-09-19</lastmod>
     
@@ -344,7 +398,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/07/hexo-assert-image-problem/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/07/2024/hexo-assert-image-problem/</loc>
     
     <lastmod>2024-09-07</lastmod>
     
@@ -353,7 +407,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/09/05/Matter-Smart-Plugs-Outlets-and-Other-Actuators/</loc>
+    <loc>https://eisouthboy.github.io/2024/09/05/2024/Matter-Smart-Plugs-Outlets-and-Other-Actuators/</loc>
     
     <lastmod>2024-09-06</lastmod>
     
@@ -362,7 +416,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/11/Blog-deploy-to-Github-Page/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/11/2024/Blog-deploy-to-Github-Page/</loc>
     
     <lastmod>2024-09-06</lastmod>
     
@@ -371,7 +425,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/13/Matter-Lighting-Device-Types/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/13/2024/Matter-Lighting-Device-Types/</loc>
     
     <lastmod>2024-09-05</lastmod>
     
@@ -380,7 +434,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/31/2024/Matter-Switches-and-Controls-DeviceTypes/</loc>
     
     <lastmod>2024-09-05</lastmod>
     
@@ -389,7 +443,7 @@
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/2024/08/10/Create-Blog-with-hexo/</loc>
+    <loc>https://eisouthboy.github.io/2024/08/10/2024/Create-Blog-with-hexo/</loc>
     
     <lastmod>2024-08-17</lastmod>
     
@@ -427,7 +481,7 @@
 
   <url>
     <loc>https://eisouthboy.github.io/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -435,427 +489,476 @@
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Github/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/hexo/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Blog/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/hexo-theme-next/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/embedded-linux/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/Buildroot/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/ESP32-C3-DevKit-M1-%E5%8E%9F%E7%90%86%E5%9B%BE/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/version-control/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/IPC/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/DBUS/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/Linux/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/Captive-Portal/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/grub/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/ESP32-C3-DevKit-M1-%E5%8E%9F%E7%90%86%E5%9B%BE/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/LevelControl-Cluster/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/embedded-linux/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/Light-of-Matter-Device/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/Buildroot/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/matter-1-3-device-library-specification/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/version-control/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Linux%E7%BC%96%E7%A8%8B/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/Linux/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/grub/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/Light-of-Matter-Device/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/matter-1-3-device-library-specification/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/LevelControl-Cluster/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Sensor-Device/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/Switches-and-Controls-of-Matter-Device/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Smart-Plug-Outlet/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Actuator/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Matter/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/NetworkManager/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/Network/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/USB-OTG/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/Switches-and-Controls-of-Matter-Device/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Matter-Standard/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/CSA/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/IoT/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/UART/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/NetworkManager/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/ch34x/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/Network/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Shell/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Shell-Scripts/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/wifi-easy-connect/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/USB-OTG/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/wps/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/VirtualBox7/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/smb/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/UART/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/ch34x/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/WAN-LAN/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/le-advertise-scan/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/hci/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/le/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/wifi-easy-connect/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/wps/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/bluez/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/bluetoothd/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/embeded-linux/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/linux/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/gdb/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/core-dump/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/esp-idf/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/embeded-linux/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/esp32/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/Interface/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/Protocol/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/WiFi%E9%85%8D%E7%BD%91/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/tags/%E7%82%B9%E7%81%AF/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/ESP32-C3-DevKit-M-1/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/tags/Automatic-Bootloader/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/esp32c3/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/%E7%82%B9%E7%81%AF/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/ESP32-C3-DevKit-M-1/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/esp-idf/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/hexo-command/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/hexo-asset-image%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%BC%82%E5%B8%B8/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/raspberry4b/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/tags/ssh/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/mDNS/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/raspberry4b/</loc>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/tags/ssh/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Core-Specification-v5-4-with-Amendment-Notices/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/esp-matter/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/Wi-Fi/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/wpa-supplicant/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/bluetooth/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/raspberry-4b/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/dbus/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/tags/gdbus/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -863,85 +966,85 @@
 
   
   <url>
-    <loc>https://eisouthboy.github.io/categories/IPC/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://eisouthboy.github.io/categories/Blog/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eisouthboy.github.io/categories/Buildroot/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <loc>https://eisouthboy.github.io/categories/IPC/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/esp/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/categories/Buildroot/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/Git/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/Linux/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/Matter/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/Wi-Fi/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/bluetooth/</loc>
-    <lastmod>2024-11-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eisouthboy.github.io/categories/bootlin/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/C-C/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eisouthboy.github.io/categories/bootlin/</loc>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://eisouthboy.github.io/categories/hexo/</loc>
-    <lastmod>2024-11-15</lastmod>
+    <lastmod>2024-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
