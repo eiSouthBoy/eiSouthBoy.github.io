@@ -1,9 +1,776 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Rust Program Language</title>
+    <url>/2024/12/14/2024/Rust/</url>
+    <content><![CDATA[<p><a href="https://kaisery.github.io/trpl-zh-cn/">《Rust 程序设计语言》 简体中文版</a></p>
+<p><a href="https://doc.rust-lang.org/stable/book/#the-rust-programming-language">《The Rust Programming Language》英文版</a></p>
+<p>熟悉关于Rust单词：</p>
+<ul>
+<li>Rustacean：Rust编程语言的用户或开发者。</li>
+</ul>
+<p>什么选择 Rust？</p>
+<ul>
+<li><p>高性能</p>
+<p>Rust 速度惊人且<strong>内存</strong>利用率极高。由于没有运行时和垃圾回收，它能够胜任对性能要求特别高的服务，可以在<strong>嵌入式设备</strong>上运行，还能轻松和其他语言集成。</p>
+</li>
+<li><p>可靠性</p>
+<p>Rust 丰富的类型系统和所有权模型保证了<strong>内存安全</strong>和<strong>线程安全</strong>，让您在编译期就能够消除各种各样的错误。</p>
+</li>
+<li><p>生产力</p>
+<p>Rust 拥有出色的文档、友好的编译器和清晰的错误提示信息， 还集成了一流的工具——包管理器和构建工具， 智能地自动补全和类型检验的多编辑器支持， 以及自动格式化代码等等。</p>
+</li>
+</ul>
+<p><a href="https://zh.wikipedia.org/wiki/Rust">Rust</a> 的历史？</p>
+<p>Rust语言原本是 <a href="https://zh.wikipedia.org/wiki/Mozilla">Mozilla</a> 员工 <code>Graydon Hoare</code> 的个人项目，而 Mozilla 于2009年开始赞助这个项目，并且在2010年首次公开。也在同一年，其编译器源代码开始由原本的<a href="https://zh.wikipedia.org/wiki/OCaml">OCaml语言</a>转移到用Rust语言，进行自我编译工作，称做“rustc”，并于2011年实际完成。这个可自我编译的编译器在架构上采用了<a href="https://zh.wikipedia.org/wiki/LLVM">LLVM</a>做为它的后端。</p>
+<p>第一个有版本号的Rust编译器于2012年1月发布。<em><strong>Rust 1.0是第一个稳定版本，于2015年5月15日发布</strong></em>。</p>
+<p><strong>Rust 开发工具</strong>：</p>
+<ul>
+<li><em>Cargo</em> 是内置的依赖管理器和构建工具，它能轻松增加、编译和管理依赖，并使依赖在 Rust 生态系统中保持一致。</li>
+<li><em>Rustfmt</em> 格式化工具确保开发者遵循一致的代码风格。</li>
+<li><em>rust-analyzer</em> 为集成开发环境（IDE）提供了强大的代码补全和内联错误信息功能</li>
+</ul>
+<p><strong>Rust 应用场景：</strong></p>
+<ul>
+<li>命令行工具</li>
+<li>Web服务</li>
+<li>DevOps工具</li>
+<li>嵌入式设备</li>
+<li>音视频分析与转码</li>
+<li>加密货币</li>
+<li>生物信息学</li>
+<li>搜索引擎</li>
+<li>物联网（IOT）程序</li>
+<li>机器学习</li>
+</ul>
+<h2 id="Rust-安装"><a href="#Rust-安装" class="headerlink" title="Rust 安装"></a>Rust 安装</h2><p>通过 <code>rustup</code>  安装官方的编译器 <code>rustc</code> 和 构建系统工具&amp;包管理工具 <code>cargo</code>。</p>
+<p>在 Linux 或 macOS 的命令行终端执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">alex@alex-NMH-WCX9:~$ curl --proto &#x27;=https&#x27; --tlsv1.2 https://sh.rustup.rs -sSf | sh</span><br><span class="line">info: downloading installer</span><br><span class="line"></span><br><span class="line">Welcome to Rust!</span><br><span class="line"></span><br><span class="line">This will download and install the official compiler for the Rust</span><br><span class="line">programming language, and its package manager, Cargo.</span><br><span class="line"></span><br><span class="line">Rustup metadata and toolchains will be installed into the Rustup</span><br><span class="line">home directory, located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.rustup</span><br><span class="line"></span><br><span class="line">This can be modified with the RUSTUP_HOME environment variable.</span><br><span class="line"></span><br><span class="line">The Cargo home directory is located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.cargo</span><br><span class="line"></span><br><span class="line">This can be modified with the CARGO_HOME environment variable.</span><br><span class="line"></span><br><span class="line">The cargo, rustc, rustup and other commands will be added to</span><br><span class="line">Cargo&#x27;s bin directory, located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.cargo/bin</span><br><span class="line"></span><br><span class="line">This path will then be added to your PATH environment variable by</span><br><span class="line">modifying the profile files located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.profile</span><br><span class="line">  /home/alex/.bashrc</span><br><span class="line"></span><br><span class="line">You can uninstall at any time with rustup self uninstall and</span><br><span class="line">these changes will be reverted.</span><br><span class="line"></span><br><span class="line">Current installation options:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   default host triple: x86_64-unknown-linux-gnu</span><br><span class="line">     default toolchain: stable (default)</span><br><span class="line">               profile: default</span><br><span class="line">  modify PATH variable: yes</span><br><span class="line"></span><br><span class="line">1) Proceed with standard installation (default - just press enter)</span><br><span class="line">2) Customize installation</span><br><span class="line">3) Cancel installation</span><br><span class="line">&gt;</span><br><span class="line"></span><br><span class="line">info: profile set to &#x27;default&#x27;</span><br><span class="line">info: default host triple is x86_64-unknown-linux-gnu</span><br><span class="line">info: syncing channel updates for &#x27;stable-x86_64-unknown-linux-gnu&#x27;</span><br><span class="line">info: latest update on 2024-11-28, rust version 1.83.0 (90b35a623 2024-11-26)</span><br><span class="line">info: downloading component &#x27;cargo&#x27;</span><br><span class="line">  8.6 MiB /   8.6 MiB (100 %) 140.8 KiB/s in 58s ETA:  0s </span><br><span class="line">info: downloading component &#x27;clippy&#x27;</span><br><span class="line">  2.7 MiB /   2.7 MiB (100 %) 155.8 KiB/s in 17s ETA:  0s</span><br><span class="line">info: downloading component &#x27;rust-docs&#x27;</span><br><span class="line"> 16.4 MiB /  16.4 MiB (100 %) 244.4 KiB/s in  1m 44s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rust-std&#x27;</span><br><span class="line"> 26.1 MiB /  26.1 MiB (100 %) 146.2 KiB/s in  4m  0s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rustc&#x27;</span><br><span class="line"> 69.3 MiB /  69.3 MiB (100 %) 134.4 KiB/s in 11m 10s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rustfmt&#x27;</span><br><span class="line">  2.4 MiB /   2.4 MiB (100 %) 150.4 KiB/s in 22s ETA:  0s</span><br><span class="line">info: installing component &#x27;cargo&#x27;</span><br><span class="line">info: installing component &#x27;clippy&#x27;</span><br><span class="line">info: installing component &#x27;rust-docs&#x27;</span><br><span class="line"> 16.4 MiB /  16.4 MiB (100 %)  10.9 MiB/s in  1s ETA:  0s</span><br><span class="line">info: installing component &#x27;rust-std&#x27;</span><br><span class="line"> 26.1 MiB /  26.1 MiB (100 %)  16.5 MiB/s in  1s ETA:  0s</span><br><span class="line">info: installing component &#x27;rustc&#x27;</span><br><span class="line"> 69.3 MiB /  69.3 MiB (100 %)  17.9 MiB/s in  3s ETA:  0s</span><br><span class="line">info: installing component &#x27;rustfmt&#x27;</span><br><span class="line">info: default toolchain set to &#x27;stable-x86_64-unknown-linux-gnu&#x27;</span><br><span class="line"></span><br><span class="line">  stable-x86_64-unknown-linux-gnu installed - rustc 1.83.0 (90b35a623 2024-11-26)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Rust is installed now. Great!</span><br><span class="line"></span><br><span class="line">To get started you may need to restart your current shell.</span><br><span class="line">This would reload your PATH environment variable to include</span><br><span class="line">Cargo&#x27;s bin directory ($HOME/.cargo/bin).</span><br><span class="line"></span><br><span class="line">To configure your current shell, you need to source</span><br><span class="line">the corresponding env file under $HOME/.cargo.</span><br><span class="line"></span><br><span class="line">This is usually done by running one of the following (note the leading DOT):</span><br><span class="line">. &quot;$HOME/.cargo/env&quot;            # For sh/bash/zsh/ash/dash/pdksh</span><br><span class="line">source &quot;$HOME/.cargo/env.fish&quot;  # For fish</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>安装完成，重启当前的 Terminal ，检查 rustc 版本，执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ rustc --version</span><br><span class="line">rustc 1.83.0 (90b35a623 2024-11-26)</span><br></pre></td></tr></table></figure>
+
+<p>接着检查 cargo 版本，执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cargo --verison</span><br><span class="line">cargo 1.83.0 (5ffbef321 2024-10-29)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="VSCode-Rust插件"><a href="#VSCode-Rust插件" class="headerlink" title="VSCode Rust插件"></a>VSCode Rust插件</h2><ul>
+<li><p><strong>rust-analyzer</strong>：实时编译和分析 Rust 代码，提示代码中的错误，还可以代码跳转，并对类型进行标准。</p>
+</li>
+<li><p><strong>Even Better TOML</strong>：支持 .toml 文件语法高亮</p>
+</li>
+<li><p>Error Lens：支持获得错误提示</p>
+</li>
+<li><p>CodeLLDB：支持 Debugger 程序</p>
+</li>
+<li><p>Rust Syntax：支持 Rust 语法高亮</p>
+</li>
+<li><p><strong>Git Graph</strong>：支持 Git 以图形化显示，还是可以进行通过UI执行 git 命令</p>
+</li>
+</ul>
+<h2 id="Rust-语法"><a href="#Rust-语法" class="headerlink" title="Rust 语法"></a>Rust 语法</h2><p>但凡编程语言，基本都会有一个共性：数据、数据类型、关键字、分支结构、循环结构、函数。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><h4 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h4><p>变量默认是不可改变的（immutable）。</p>
+<p>常量（constants）是绑定到一个名称的、不允许改变的值，不过常量与变量还是有一些区别。</p>
+<ul>
+<li>声明常量使用 <code>const</code> 关键字，不允许对常量使用 <code>mut</code>，并且 必须 注明值的类型。</li>
+<li>常量不光默认不可变，它总是不可变。</li>
+<li>常量 只能 被设置为常量表达式，而不可以是其他任何 只能 在运行时计算出的值。</li>
+</ul>
+<p>声明一个常量的例子：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> THREE_HOURS_IN_SECONDS: <span class="type">u32</span> = <span class="number">60</span> * <span class="number">60</span> * <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Rust 对常量的命名约定是在单词之间使用全大写加下划线（非强制性要求）。</p>
+<h4 id="隐藏"><a href="#隐藏" class="headerlink" title="隐藏"></a>隐藏</h4><p>可以定义一个与之前变量同名的新变量，第一个变量被第二个变量 隐藏（Shadowing） 了，不仅隐藏了变量名称，而且还隐藏了变量类型。这在C语言中是不被允许的，而且编译会报错：重复定义变量。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = x + <span class="number">1</span>;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">x</span> = x * <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;the value of x in the inner scope is: &#123;x&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;the value of x is: &#123;x&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>Rust 是静态类型语言，也就是说：在编译时就必须知道所有变量的类型。根据值及其使用方式，编译器通常可以推断出我们想要的类型，尽管我们没有显示说明具体类型。</p>
+<p>Rust 有两类数据类型子集：标量（scalar）和 复合（compound）。</p>
+<p>标量类型代表一个单独的值。Rust 有 4 种基本的标量类型：<strong>整型、浮点型、布尔类型、字符类型</strong>。</p>
+<h5 id="标量类型"><a href="#标量类型" class="headerlink" title="标量类型"></a>标量类型</h5><p>Rust 中的<strong>整型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th>有符号</th>
+<th>无符号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8 bit</td>
+<td>i8</td>
+<td>u8</td>
+</tr>
+<tr>
+<td>16 bit</td>
+<td>i16</td>
+<td>u16</td>
+</tr>
+<tr>
+<td>32 bit</td>
+<td>i32</td>
+<td>u32</td>
+</tr>
+<tr>
+<td>64 bit</td>
+<td>i64</td>
+<td>u64</td>
+</tr>
+<tr>
+<td>128 bit</td>
+<td>i128</td>
+<td>u128</td>
+</tr>
+<tr>
+<td>arch</td>
+<td>isize</td>
+<td>usize</td>
+</tr>
+</tbody></table>
+<p><em>注意：isize 和 usize 类型依赖运行程序的计算机架构：32位架构上他们是32位的，64为架构上他们是64位的。</em></p>
+<p>Rust 整型字面值：</p>
+<table>
+<thead>
+<tr>
+<th>数字字面值</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Decimal（十进制）</td>
+<td>98_222</td>
+</tr>
+<tr>
+<td>Hex（十六进制）</td>
+<td>0xff</td>
+</tr>
+<tr>
+<td>Octal（八进制）</td>
+<td>0o77</td>
+</tr>
+<tr>
+<td>Binary（二进制）</td>
+<td>0b1111_0000</td>
+</tr>
+<tr>
+<td>Byte（单字节字符，仅限于u8）</td>
+<td>b’A’</td>
+</tr>
+</tbody></table>
+<p>如果没有显示定义数字类型，Rust 的默认整型类型通常是 i32。</p>
+<p>Rust 的<strong>浮点数类型</strong>是 f32 和 f64，默认浮点数类型是 f64，所有浮点数类型都是有符号的。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">2.0</span>; <span class="comment">// f64</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span>: <span class="type">f32</span> = <span class="number">3.0</span>; <span class="comment">// f32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rust 的<strong>布尔类型</strong>：true 和 false。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">t</span> = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">f</span>: <span class="type">bool</span> = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rust 的<strong>字符类型</strong>：char，char 类型的大小为四字节，并代表了一个 Unicode 标量值，这意味着它可以比 ASCII 表示更多内容。在 Rust 中，带变音符号的字母，中文、日文、韩文等字符，emoji （绘文字）以及零长度的空表字符都是有效的 char 值。</p>
+<p><em>注意：这里一定把C语言中的char 类型区分开来，C语言中char 类型只有1个字节。</em></p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = <span class="string">&#x27;z&#x27;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z</span>: <span class="type">char</span> = <span class="string">&#x27;Z&#x27;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">heart_eyed_cat</span> = &#x27;😻&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h5><p>复合类型可以将多个值组合成一个类型。Rust 有两个原生的复合类型：元组（tuple）和 数组（array）。</p>
+<p>元组是一个将多个其他数据类型的值组合到一个复合类型的主要方式。元组长度固定：一旦声明，其长度不会增加或减小。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">tup</span>: (<span class="type">i32</span>, <span class="type">f64</span>, <span class="type">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 元组解构 方式1</span></span><br><span class="line">    <span class="keyword">let</span> (x, y, z) = tup;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x is: &#123;x&#125;, y is: &#123;y&#125;, z is: &#123;z&#125;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 元组解构 方式2</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">one</span> = tup.<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">two</span> = tup.<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">three</span> = tup.<span class="number">2</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;one is: &#123;one&#125;, two is: &#123;two&#125;, three is: &#123;three&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>数组是将多个相同数据类型组合到一起。Rust 中的数组长度是固定的。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">1</span> ,<span class="number">2</span> <span class="number">3</span>, <span class="number">4</span> ,<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">months</span> = [<span class="string">&quot;January&quot;</span>, <span class="string">&quot;February&quot;</span>, <span class="string">&quot;March&quot;</span>, <span class="string">&quot;April&quot;</span>, <span class="string">&quot;May&quot;</span>, <span class="string">&quot;June&quot;</span>, <span class="string">&quot;July&quot;</span>,</span><br><span class="line">              <span class="string">&quot;August&quot;</span>, <span class="string">&quot;September&quot;</span>, <span class="string">&quot;October&quot;</span>, <span class="string">&quot;November&quot;</span>, <span class="string">&quot;December&quot;</span>];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">let</span> <span class="variable">b</span>: [<span class="type">i32</span>; <span class="number">5</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]; <span class="comment">// 显示声明数组中元素的数据类型</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = [<span class="number">3</span>; <span class="number">5</span>]; <span class="comment">// 数组c包含5个元素，每个元素的值都是3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：通过索引访问数组中的元素，索引从0开始</em></p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>Rust 使用 <code>fn</code> 关键字声明函数。Rust 代码中的函数和变量名使用 <em><strong>snake case</strong></em> 规范风格。在 <em>snake case</em> 中，所有字母都是 <em><strong>小写</strong></em> 并使用 <em><strong>下划线</strong></em> 分隔单词。</p>
+<p>在函数签名中， <em><strong>必须</strong></em> 声明每个参数的类型：要求在函数定义中提供乐行注解，意味着编译器再也不需要你在代码的其他地方注明类型来支出你的意图。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span>: <span class="type">i32</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span>: <span class="type">i32</span> = <span class="number">15</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z</span>: <span class="type">i32</span> = <span class="title function_ invoke__">sum</span>(x, y);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;x&#125; + &#123;y&#125; == &#123;z&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 求两个整数的和 */</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum</span>(x: <span class="type">i32</span>, y: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：在C语言中，sum函数的调用出现在定义之前是不被允许的，编译时会报错。但是在Rust 中，这种做法是没有问题的。</em></p>
+<h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><p>控制流一般是通过 <strong>分支结构</strong> 和 <strong>循环结构</strong> 实现。</p>
+<h4 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h4><p>Rust 代码中最常见的用来控制执行流的关键字是：<code>if</code> 、<code>else</code>、<code>else if</code></p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">number</span> = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> number % <span class="number">4</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 4&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> number % <span class="number">3</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 3&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> number % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 2&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is not divisible by 4, 3, or 2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h4><p>Rust 提供了多种循环：<code>loop</code>、<code>while</code>、<code>for</code>。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;again!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用关键字 <code>break</code> 跳出循环体，使用关键字 <code>continue</code> 跳过这一轮循环，进入下一轮循环。</p>
+<p><strong>从循环返回值</strong>，即结束循环，然后返回一个值</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">counter</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="keyword">loop</span> &#123;</span><br><span class="line">        counter += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> counter == <span class="number">10</span> &#123;</span><br><span class="line">            <span class="keyword">break</span> counter * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The result is &#123;result&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>循环标签</strong>：在多个循环之间消除歧义</p>
+<p>这个功能有点像C语言中的 <code>goto</code> 跳转到指定标签功能。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="symbol">&#x27;counting_up</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;count = &#123;count&#125;&quot;</span>);</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">remaining</span> = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">loop</span> &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;remaining = &#123;remaining&#125;&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> remaining == <span class="number">9</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> count == <span class="number">2</span> &#123;</span><br><span class="line">                <span class="keyword">break</span> <span class="symbol">&#x27;counting_up</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            remaining -= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        count += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;End count = &#123;count&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>while 循环</strong></p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">number</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> number != <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;number&#125;!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        number -= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;LIFTOFF!!!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>for 循环</strong></p>
+<p>使用 for 循环遍历数组</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">element</span> <span class="keyword">in</span> a &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;the value is: &#123;element&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 for 循环遍历元组</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">number</span> <span class="keyword">in</span> (<span class="number">1</span>..<span class="number">4</span>).<span class="title function_ invoke__">rev</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;number&#125;!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;LIFTOFF!!!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><p>Rust 定义结构体，需要使用关键字 <code>struct</code> 并为整个结构体提供一个名字。 </p>
+<p>定义一个用户结构体：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    active: <span class="type">bool</span>,</span><br><span class="line">    username: <span class="type">String</span>,</span><br><span class="line">    email: <span class="type">String</span>,</span><br><span class="line">    sign_in_count: <span class="type">u64</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">        email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;User Info:</span></span><br><span class="line"><span class="string">             username: &#123;&#125;</span></span><br><span class="line"><span class="string">             email: &#123;&#125;</span></span><br><span class="line"><span class="string">             active: &#123;&#125;</span></span><br><span class="line"><span class="string">             sign_in_count: &#123;&#125;&quot;</span>, user1.username, user1.email, </span><br><span class="line">             user1.active, user1.sign_in_count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>定义一个长方形结构体：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Rectangle</span> &#123;</span><br><span class="line">    width: <span class="type">u32</span>,</span><br><span class="line">    height: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rect1</span> = Rectangle &#123;</span><br><span class="line">        width: <span class="number">30</span>,</span><br><span class="line">        height: <span class="number">50</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;The area of the rectangle is &#123;&#125; square pixels.&quot;</span>,</span><br><span class="line">        <span class="title function_ invoke__">area</span>(&amp;rect1)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">area</span>(rectangle: &amp;Rectangle) <span class="punctuation">-&gt;</span> <span class="type">u32</span> &#123;</span><br><span class="line">    rectangle.width * rectangle.height</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+      <tags>
+        <tag>Rust</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Tasmota</title>
+    <url>/2024/12/14/2024/Tasmota/</url>
+    <content><![CDATA[<p>了解半导体行业几个单词：</p>
+<ul>
+<li>Vendor（供应商）：供应商是指向其他企业或消费者提供产品或服务的个人或公司。他们通常购买产品或原材料并转售，或提供特定的服务。</li>
+<li>Manufacturer（制造商）：制造商是指原材料或组件中制造产品的公司。他们负责设计、生产、和组件产品，并将其推向市场。</li>
+</ul>
+<h2 id="固件介绍"><a href="#固件介绍" class="headerlink" title="固件介绍"></a>固件介绍</h2><p><a href="https://tasmota.github.io/docs/">Tasmota</a> 是什么呢？官方介绍如下：</p>
+<blockquote>
+<p>Open source firmware for ESP devices</p>
+<p>释义：Tasmota是ESP 设备的开源固件</p>
+<p>Total local control with quick setup and updates. Control using MQTT, Web UI, HTTP or serial. Automate using timers, rules or scripts. Integration with home automation solutions. Incredibly expandable and flexible.</p>
+<p>释义：通过快速设置和更新实现全面的本地控制。使用MQTT、Web UI、HTTP 或 串口进行控制。使用定时器、规则或脚本实现自动化。支持与家庭自动化解决方案集成。令人难以置信的可扩展性和灵活性。</p>
+</blockquote>
+<p>Tasmota 是 <a href="https://github.com/arendst">Theo Arends</a> 在 2016 年 发起的针对ESP 8622设备的开源项目，随着项目的逐步完善，已经适配了乐鑫 ESP8266、ESP8285、ESP32、ESP32-S 或 ESP32-C3 芯片，最新Release 版本是 v14.4.0，License 是 GPL-3.0。</p>
+<h2 id="烧录方式"><a href="#烧录方式" class="headerlink" title="烧录方式"></a>烧录方式</h2><p>Tasmota 可以通过多种方式对ESP设备进行固件烧录：</p>
+<ul>
+<li><p>Web</p>
+<p>直接从网络浏览器将固件烧录至ESP设备（本质上是网络浏览器调用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API">Web Serial API</a>）。</p>
+</li>
+<li><p>Tasmotizer</p>
+<p>专为与 Tasmota 配合使用而设计，具有易于使用的GUI 和 esptool.py。不过仅适用于 ESP82XX，例如 ESP8266、ESP 8285。</p>
+</li>
+<li><p>esptool.py</p>
+<p>Esptool 是 Espressif 官方的 ESP 芯片刷机工具。它需要 Python，如果你没有安装 Python 2.x 或 3.x，请从<a href="https://www.python.org/">https://www.python.org</a>下载并安装（建议安装 Python 3.x）。</p>
+<p>如果电脑已经安装 Python ，那么可以使用 pip 进行安装，命令：<code>pip install esptool</code></p>
+<p>如果之前安装过 <code>ESP-IDF</code> ，那么不用重新安装 esptool。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">alex@alex-NMH-WCX9:~/.espressif/python_env/idf5.2_py3.10_env/bin$ ll</span><br><span class="line">total 376</span><br><span class="line">drwxrwxr-x 3 alex alex  4096  8月  9 21:22 ./</span><br><span class="line">drwxrwxr-x 5 alex alex  4096  8月  8 14:21 ../</span><br><span class="line">-rw-r--r-- 1 alex alex  2045  8月  8 14:20 activate</span><br><span class="line">-rw-r--r-- 1 alex alex   971  8月  8 14:20 activate.csh</span><br><span class="line">-rw-r--r-- 1 alex alex  2251  8月  8 14:20 activate.fish</span><br><span class="line">-rw-r--r-- 1 alex alex  9033  8月  8 14:20 Activate.ps1</span><br><span class="line">-rwxrwxr-x 1 alex alex   258  8月  8 14:23 alldefconfig*</span><br><span class="line">-rwxrwxr-x 1 alex alex   258  8月  8 14:23 allmodconfig*</span><br><span class="line">-rwxrwxr-x 1 alex alex   257  8月  8 14:23 allnoconfig*</span><br><span class="line">-rwxrwxr-x 1 alex alex   258  8月  8 14:23 allyesconfig*</span><br><span class="line">-rwxrwxr-x 1 alex alex  3867  8月  8 14:23 bin2hex.py*</span><br><span class="line">-rwxrwxr-x 1 alex alex   279  8月  8 14:23 compote*</span><br><span class="line">-rwxrwxr-x 1 alex alex 15881  8月  9 21:22 configure_esp_secure_cert.py*</span><br><span class="line">-rwxrwxr-x 1 alex alex   255  8月  8 14:23 defconfig*</span><br><span class="line">-rwxrwxr-x 1 alex alex   263  8月  8 14:23 doesitcache*</span><br><span class="line">-rwxrwxr-x 1 alex alex   278  8月  8 14:23 esp-coredump*</span><br><span class="line">-rwxrwxr-x 1 alex alex  1224  8月  8 14:23 espefuse.py*</span><br><span class="line">-rwxrwxr-x 1 alex alex   263  8月  9 21:22 esp-matter-mfg-tool*</span><br><span class="line">-rwxrwxr-x 1 alex alex 10540  8月  8 14:23 esp_rfc2217_server.py*</span><br><span class="line">-rwxrwxr-x 1 alex alex  1229  8月  8 14:23 espsecure.py*</span><br><span class="line">-rwxrwxr-x 1 alex alex  1219  8月  8 14:23 esptool.py*</span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="初始配置"><a href="#初始配置" class="headerlink" title="初始配置"></a>初始配置</h2><p>ESP设备烧录 Tasmota 固件，需要进行一些初始配置，例如网络配置。</p>
+<p>Tasmota 可以使用多种方式进行初始配置：</p>
+<ul>
+<li><p>Web</p>
+<p>通过 Web  烧录固件完成后，可以点击 “下一步”，扫描附近 Wi-Fi 网络，用户需要选择目标网络和输入密码进行连接。</p>
+</li>
+<li><p>Web UI</p>
+<p>ESP设备烧录固件后，用户可以通过智能终端（智能手机、笔记本电脑、平板电脑）搜索到ESP设备的AP热点，AP热点的名称：<code>tasmota_XXXXXX-####</code> 的 Wi-Fi AP （其中 <code>XXXXXX</code> 是从设备的 MAC 地址派生的字符串，<code>####</code>是数字）。当用户使用智能终端连接上ESP设备的AP热点后，将会自动拉起Web UI，在这个页面用户可以对ESP设备进行网络配置。</p>
+</li>
+<li><p>串口调试工具</p>
+<p>ESP设备烧录固件后，用户可以通过 “串口调试工具” 向ESP设备发送命令，对ESP设备进行网络配置。</p>
+<p>可以使用 putty （通过UI操作），也可以使用 minicom（通过命令行操作），或者通过 <code>idf.py -p /dev/ttyUSB0 monitor</code> 操作（前提是已经安装了 ESP-IDF，并加载了环境）。</p>
+</li>
+</ul>
+<h2 id="固件升级"><a href="#固件升级" class="headerlink" title="固件升级"></a>固件升级</h2><p>随着 Tasmota 不断开发和完善，支持的功能越来越多。用户想体验新功能，就要升级固件版本。</p>
+<blockquote>
+<p>基于 ESP 的设备可用内存有限。为了确保有足够的内存来刷新固件，最好将总大小保持在尽可能小的水平，并且绝对不要超过 625K，以确保可以进行 OTA 更新。</p>
+</blockquote>
+<p>Tasmota 可以使用多种方式进行固件升级：</p>
+<ul>
+<li><p>Web UI</p>
+<p>通过无线方式升级设备固件（又称 OTA， Over The Air）是最方便的升级方式。</p>
+<p>用户需要即可以选择 <strong>通过网络服务器升级</strong> 或  <strong>通过上传文件升级</strong>。 </p>
+</li>
+<li><p>命令</p>
+<p>通过MQTT、Web 请求 、 Web UI 中的控制台使用命令行进行升级</p>
+</li>
+<li><p>串口</p>
+<p>通过串口进行升级</p>
+</li>
+</ul>
+<h2 id="固件使用"><a href="#固件使用" class="headerlink" title="固件使用"></a>固件使用</h2><p>待补充</p>
+<h2 id="固件构建"><a href="#固件构建" class="headerlink" title="固件构建"></a>固件构建</h2><p>若用户想对于官方 Tasmota 一些功能进行阉割或额外适配一些新功能，那么可以从 <a href="https://github.com/arendst/tasmota">Tasmota Github</a> 上拉取代码仓库，在 “<a href="https://zh.wikipedia.org/wiki/PlatformIO">PlatformIO</a>“ 中进行自定义修改，然后重新编译。</p>
+<p>关于 PlatformIO 的简单介绍：</p>
+<p>PlatformIO 最早由乌克兰的 <a href="https://www.ikravets.com/about-me">Ivan Kravets</a> 在2014年发起开源项目。</p>
+<blockquote>
+<p>Ivan Kravets 博客网页对于 PlatformIO说明：</p>
+<p>在 2014 年，我创立了<a href="https://platformio.org/">PlatformIO，</a>旨在解决嵌入式系统行业的多平台开发问题。我们独特的理念赋予嵌入式开发人员真正的自由 - 亲自决定使用哪种操作系统、集成开发环境和硬件。不再局限于特定的半导体工具链。一个开源生态系统 - 多种架构、开发平台和处理器系列！在 PlatformIO，我们认为嵌入式系统行业迫切需要重塑。不仅 IDE 和工具是使用 20 世纪 90 年代的技术构建的，而且嵌入式工程师的复杂要求也是如此。我们正在使用现代技术从头开始重新构想和重建嵌入式基础设施的核心组件。我们致力于通过免费、开源和下一代专业开发工具来改善工程师的日常生活。</p>
+</blockquote>
+<p><strong>PlatformIO（也称PIO）</strong>是一款开源且跨平台的<a href="https://zh.wikipedia.org/wiki/%E5%B5%8C%E5%85%A5%E5%BC%8F">嵌入式</a>系统与产品程序的开发工具，可用于多种嵌入式架构与平台的开发。与通常与厂商绑定的嵌入式开发工具不同，PlatformIO支持多种嵌入式平台，例如<a href="https://zh.wikipedia.org/wiki/STM32">STM32</a>、<a href="https://zh.wikipedia.org/w/index.php?title=STM8&action=edit&redlink=1">STM8</a>、<a href="https://zh.wikipedia.org/wiki/ESP32">ESP32</a>、<a href="https://zh.wikipedia.org/w/index.php?title=Amtel_AVR&action=edit&redlink=1">Amtel AVR</a>、<a href="https://zh.wikipedia.org/wiki/ESP8266">ESP8266</a>、<a href="https://zh.wikipedia.org/wiki/8051">8051</a>等。</p>
+<p>PlatformIO的核心组件是称为“PIO Core”的命令行工具，基于<a href="https://zh.wikipedia.org/wiki/Python">Python</a>编写，它可以独立于<a href="https://zh.wikipedia.org/wiki/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">集成开发环境</a>与文本编辑器使用。PlatformIO也为许多集成开发环境与文本编辑器开发了插件，包括<a href="https://zh.wikipedia.org/wiki/Atom_(%E6%96%87%E5%AD%97%E7%B7%A8%E8%BC%AF%E5%99%A8)">Atom</a>、<a href="https://zh.wikipedia.org/wiki/Eclipse">Eclipse</a>、<a href="https://zh.wikipedia.org/wiki/Emacs">Emacs</a>、<a href="https://zh.wikipedia.org/wiki/NetBeans">NetBeans</a>、<a href="https://zh.wikipedia.org/wiki/Vim">Vim</a>、<a href="https://zh.wikipedia.org/wiki/Visual_Studio">Visual Studio</a>与<a href="https://zh.wikipedia.org/wiki/Visual_Studio_Code">Visual Studio Code</a>。</p>
+<p>PlatformIO支持单元测试与远程开发功能，还附带了简易的串口调试工具。</p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>Tasmota</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2.4G最优信道算法</title>
+    <url>/2024/12/13/2024/WiFi-Channel-Algorithm/</url>
+    <content><![CDATA[<h2 id="频段"><a href="#频段" class="headerlink" title="频段"></a>频段</h2><p>IEEE 802.11 为 ISM提供了 免执照 的 2.4G 频段，频率范围：2400 ~ 2483.5 MHz。</p>
+<p>2.4GHz为各国共同的ISM频段，因此<a href="https://zh.wikipedia.org/wiki/%E6%97%A0%E7%BA%BF%E5%B1%80%E5%9F%9F%E7%BD%91">无线局域网</a>（IEEE 802.11b&#x2F;IEEE 802.11g）、<a href="https://zh.wikipedia.org/wiki/%E8%93%9D%E7%89%99">蓝牙</a>、<a href="https://zh.wikipedia.org/wiki/ZigBee">ZigBee</a>等无线网络，均可工作在2.4GHz频段上。</p>
+<p>ISM频段：<strong>I</strong>ndustrial <strong>S</strong>cientific <strong>M</strong>edical Band，ISM频段就是各国挪出某一段频段主要开放给工业，科学和医学机构使用。应用这些频段无需许可证或费用，只需要遵守一定的发射功率（一般低于1W），并且不要对其它频段造成<a href="https://zh.wikipedia.org/wiki/%E5%B9%B2%E6%89%B0">干扰</a>即可。</p>
+<h3 id="Wi-Fi-频段"><a href="#Wi-Fi-频段" class="headerlink" title="Wi-Fi 频段"></a>Wi-Fi 频段</h3><p>在 802.11 b&#x2F;g&#x2F;n 模式下，信道带宽通常为 20MHz（其实也有40MHz），而且通道之间预留了 2MHz 的保护带宽，信道中心频率 <code>f=2412+(k-1)*5 MHz, k=1,…,14</code>。因此，当同一无线空域内有两个发射器时，相邻信道就可能发生频率重叠。</p>
+<p>除了 13 和 14 信道的中心频率间隔为 12 MHz，其他两个信道的间隔均为 5 MHz。</p>
+<blockquote>
+<p>Wi-Fi设备通常工作在固定的某个Channel上，工作在同一个Channel上的设备采用竞争的方式来使用该Channel。某个Wi-Fi Channel里的Wi-Fi信号可能是断断续续的，也可能是一直被挤占的。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>信道</th>
+<th>频宽(MHz)</th>
+<th>中心频率(MHz)</th>
+<th>20 MHz</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>20</td>
+<td>2412</td>
+<td><strong>2402~2422</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>2417</td>
+<td>2407~2427</td>
+</tr>
+<tr>
+<td>3</td>
+<td>20</td>
+<td>2422</td>
+<td>2412~2432</td>
+</tr>
+<tr>
+<td>4</td>
+<td>20</td>
+<td>2427</td>
+<td>2417~2437</td>
+</tr>
+<tr>
+<td>5</td>
+<td>20</td>
+<td>2432</td>
+<td>2422~2442</td>
+</tr>
+<tr>
+<td>6</td>
+<td>20</td>
+<td>2437</td>
+<td><strong>2427~2447</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>20</td>
+<td>2442</td>
+<td>2432~2452</td>
+</tr>
+<tr>
+<td>8</td>
+<td>20</td>
+<td>2447</td>
+<td>2437~2457</td>
+</tr>
+<tr>
+<td>9</td>
+<td>20</td>
+<td>2452</td>
+<td>2442~2462</td>
+</tr>
+<tr>
+<td>10</td>
+<td>20</td>
+<td>2457</td>
+<td>2447~2467</td>
+</tr>
+<tr>
+<td>11</td>
+<td>20</td>
+<td>2462</td>
+<td><strong>2452~2472</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>20</td>
+<td>2467</td>
+<td>2457~2477</td>
+</tr>
+<tr>
+<td>13</td>
+<td>20</td>
+<td>2472</td>
+<td>2462~2482</td>
+</tr>
+<tr>
+<td>14</td>
+<td>20</td>
+<td>2484</td>
+<td>&#x2F;</td>
+</tr>
+</tbody></table>
+<p>2.4G WiFi 信道分布图（带宽：20 MHz）</p>
+<p><img src="/2024/12/13/2024/WiFi-Channel-Algorithm/image-20241213111252424.png" alt="image-20241213111252424"></p>
+<p>从图中可以看到：1、6、11信道没有频段重叠部分，因此一般推荐用户使用这三个信道。</p>
+<h3 id="Zigbee-频段"><a href="#Zigbee-频段" class="headerlink" title="Zigbee 频段"></a>Zigbee 频段</h3><p><strong>ZigBee</strong> 是一种基于IEEE 802.15.4 标准的无线通信技术，其工作频段和信道分配如下：</p>
+<p><strong>工作频段</strong>：</p>
+<ul>
+<li><strong>2.4 GHz频段</strong>：这是 ZigBee 最常用且 <em><strong>全球通用</strong></em> 的频段。在这个频段上，ZigBee定义了16个物理信道(Channel)，每个信道的带宽为 5MHz。</li>
+<li><strong>868 MHz频段</strong>：主要用于 欧洲地区，该频段仅定义了一个物理信道。</li>
+<li><strong>915 MHz频段</strong>：主要用于 美国 和 中国台湾地区，该频段定义了 10 个物理信道，每个信道的带宽为 2MHz。</li>
+</ul>
+<p><strong>工作信道</strong>：</p>
+<ul>
+<li><strong>2.4 GHz频段</strong>：在 2.4GHz 频段中，ZigBee 使用了 16 个无重叠的信道，这些信道分别是 Channel 11至Channel 26，每个信道的中心频率间隔为5MHz。</li>
+<li><strong>868 MHz频段</strong>：在这个频段中，只定义了一个信道。</li>
+<li><strong>915 MHz频段</strong>：在这个频段中，定义了 10 个信道，具体为 Channel 1 至 Channel 10，每个信道的中心频率间隔为2MHz。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>信道</th>
+<th>频宽(MHz)</th>
+<th>中心频率(MHz)</th>
+<th>5 MHz</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11</td>
+<td>5</td>
+<td>2405</td>
+<td>2402.5~2407.5</td>
+</tr>
+<tr>
+<td>12</td>
+<td>5</td>
+<td>2410</td>
+<td>2407.5~2412.5</td>
+</tr>
+<tr>
+<td>13</td>
+<td>5</td>
+<td>2415</td>
+<td>2412.5~2417.5</td>
+</tr>
+<tr>
+<td>14</td>
+<td>5</td>
+<td>2420</td>
+<td><strong>2417.5~2422.5</strong></td>
+</tr>
+<tr>
+<td>15</td>
+<td>5</td>
+<td>2425</td>
+<td><strong>2422.5~2427.5</strong></td>
+</tr>
+<tr>
+<td>16</td>
+<td>5</td>
+<td>2430</td>
+<td>2427.5~2432.5</td>
+</tr>
+<tr>
+<td>17</td>
+<td>5</td>
+<td>2435</td>
+<td>2432.5~2437.5</td>
+</tr>
+<tr>
+<td>18</td>
+<td>5</td>
+<td>2440</td>
+<td>2437.5~2442.5</td>
+</tr>
+<tr>
+<td>19</td>
+<td>5</td>
+<td>2445</td>
+<td><strong>2442.5~2447.5</strong></td>
+</tr>
+<tr>
+<td>20</td>
+<td>5</td>
+<td>2450</td>
+<td><strong>2447.5~2452.5</strong></td>
+</tr>
+<tr>
+<td>21</td>
+<td>5</td>
+<td>2455</td>
+<td>2452.5~2457.5</td>
+</tr>
+<tr>
+<td>22</td>
+<td>5</td>
+<td>2460</td>
+<td>2457.5~2462.5</td>
+</tr>
+<tr>
+<td>23</td>
+<td>5</td>
+<td>2465</td>
+<td>2462.5~2467.5</td>
+</tr>
+<tr>
+<td>24</td>
+<td>5</td>
+<td>2470</td>
+<td>2467.5~2472.5</td>
+</tr>
+<tr>
+<td>25</td>
+<td>5</td>
+<td>2475</td>
+<td><strong>2472.5~2477.5</strong></td>
+</tr>
+<tr>
+<td>26</td>
+<td>5</td>
+<td>2480</td>
+<td>2477.5~2482.5</td>
+</tr>
+</tbody></table>
+<p><em>注意：以上带宽是5MHz，且没有为信道提供保护带宽。</em></p>
+<p><img src="/2024/12/13/2024/WiFi-Channel-Algorithm/image-20241213141631183.png" alt="image-20241213141631183"></p>
+<p>在环境中存在 Wi-Fi 的情况下，Zigbee 工作就会收到干扰。</p>
+<h2 id="蓝牙频段"><a href="#蓝牙频段" class="headerlink" title="蓝牙频段"></a>蓝牙频段</h2><p>在经典蓝牙（BR&#x2F;EDR）中，ISM频段被划分为79个1 MHz带宽的信道（从2402 MHz到2480 MHz），信道中心频率  <code>f=2402+k MHz, k=0,…,78</code>。</p>
+<p>对于蓝牙低能耗（BLE, Bluetooth Low Energy）技术，频段同样是2.4 GHz ISM频段，但它仅使用了其中的40个信道，每个信道的带宽为2 MHz，信道中心频率 <code>f=2402+k*2 MHz, k=0,…,39</code>。BLE的信道划分是为了优化功耗和提高效率，同时保持与经典蓝牙技术的共存。对于信道的分配如下：</p>
+<ul>
+<li>广播信道：3个，固定在37、38、39信道</li>
+<li>数据信道：37个，自适应调频</li>
+</ul>
+<p>无线数据：1Mbps、2Mbps</p>
+<blockquote>
+<p>Bluetooth采用的是跳频技术，按照约定好的随机序列从一个Channel以每秒1600跳的频率到另一个Channel。Bluetooth设备在固定的时间里(625us)在一个Channel收发数据，接着跳到另一个Channel，这里可能会用到所有的Bluetooth Channel。<br>显然，从上面Wi-Fi和Bluetooth的技术实现来看，相邻的Wi-Fi和Bluetooth设备有可能会出现信号重叠情况，也就是说可能会出现干扰。<br>由于Bluetooth使用跳频技术，它的信号并不会长时间停留在某个Wi-Fi Channel内，因此这里的相互影响并不会持续很久。<br>另外，Bluetooth还提供AFH (Adaptive Frequency Hopping，自适应跳频)技术，当某些Bluetooth Channel在一定时间内受到的干扰比较严重时，它可能会把这些Channel剔出跳频序列。</p>
+</blockquote>
+<h2 id="信道选择算法"><a href="#信道选择算法" class="headerlink" title="信道选择算法"></a>信道选择算法</h2><p>首先需要说明的一点，市面上没有所谓的 “最优信道选择算法标准”，不同的路由器厂家实现的算法可能不同。</p>
+<p>这里仅参考谷歌学术的技术发明专利的实现：</p>
+<ul>
+<li>方法1：<a href="https://patents.google.com/patent/CN104507113A/zh">一种检测各个信道wifi信号质量的方法</a> </li>
+<li>方法2：<a href="https://patents.google.com/patent/CN103974369B/zh?q=(%E6%97%A0%E7%BA%BF%E4%BF%A1%E9%81%93%E8%AF%84%E5%88%86%E6%9C%BA%E5%88%B6)&oq=%E6%97%A0%E7%BA%BF%E4%BF%A1%E9%81%93%E8%AF%84%E5%88%86%E6%9C%BA%E5%88%B6">一种基于wlan无线信道评分机制的信道选择方法及其系统</a></li>
+</ul>
+<h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><p>背景描述：同一信道内的设备越多，干扰越大，相近两个信道内设备的数量越多，影响比同一信道的影响次要一些，以此类推。</p>
+<p>关键步骤如下：</p>
+<ol>
+<li><p>收集指定路由器周围的WiFi信息，WiFi信息包括每个信道的热点个数和信号强度；</p>
+</li>
+<li><p>根据 <em><strong>公式</strong></em> 计算每个信道的拥挤指数；</p>
+</li>
+<li><p>将指定路由器置于拥挤指数最小的信道。</p>
+</li>
+</ol>
+<p><em><strong>公式</strong></em>：</p>
+<p><img src="/2024/12/13/2024/WiFi-Channel-Algorithm/image-20241213155922492.png" alt="image-20241213155922492"><br>$$<br>{\alpha_n} &#x3D; (200 * {X_n} + 0.2 * {Y_n}) + 1&#x2F;2 (200 * {X_(n-1)} + 0.2 * {Y_(n-1)}) + 1&#x2F;4 (200 * {X_(n-2)} + 0.2 * {Y_(n-2)})<br>$$</p>
+<p>$$<br>{\alpha_n} ：信道n拥堵指数<br>{X_n}：信道n热点个数<br>{Y_n}：信道n所有信号强度之和<br>$$</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.espressif.com/sites/default/files/documentation/esp8266_wi-fi_channel_selection_guidelines_cn_1.pdf">1、乐鑫 ESP8266 Wi-Fi 信道选择指南</a></p>
+<p><a href="https://en.wikipedia.org/wiki/List_of_WLAN_channels">2、List of WLAN channels</a></p>
+<p><a href="https://www.metageek.com/training/resources/zigbee-wifi-coexistence/">3、ZigBee 与 Wi-Fi 共存</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/ISM%E9%A2%91%E6%AE%B5">4、ISM频段</a></p>
+]]></content>
+      <categories>
+        <category>Wi-Fi</category>
+      </categories>
+      <tags>
+        <tag>WiFi Channel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NIZ X87 T系列 三模键盘</title>
+    <url>/2024/12/11/2024/NIZ-X87-Keyboard/</url>
+    <content><![CDATA[<h2 id="说明书"><a href="#说明书" class="headerlink" title="说明书"></a>说明书</h2><p>图一：</p>
+<p><img src="/2024/12/11/2024/NIZ-X87-Keyboard/NIZ-x87-01.png"></p>
+<p>图二：</p>
+<p><img src="/2024/12/11/2024/NIZ-X87-Keyboard/NIZ-x87-02.png" alt="NIZ-x87-02"></p>
+<h2 id="电源开关"><a href="#电源开关" class="headerlink" title="电源开关"></a>电源开关</h2><p>ESC按键右边的 <code>小圆点按键</code> </p>
+<h2 id="系统模式切换"><a href="#系统模式切换" class="headerlink" title="系统模式切换"></a>系统模式切换</h2><p>组合键：<code>Fn + 左Alt</code>，可以进行系统模式切换。</p>
+<h2 id="蓝牙连接"><a href="#蓝牙连接" class="headerlink" title="蓝牙连接"></a>蓝牙连接</h2><p>插入USB适配器到电脑，打开键盘电源，长按组合键3秒：</p>
+<ul>
+<li><code>Fn + Del (按键上有蓝牙LOG1)</code>，ESC按键下边第一个灯变成 <strong>红色</strong>，并持续快闪，说明进入配对状态。</li>
+<li><code>Fn + End (按键上有蓝牙LOG2)</code>，ESC按键下边第一个灯变成 <strong>绿色</strong>，并持续快闪，说明进入配对状态。</li>
+<li><code>Fn + PgDn (按键上有蓝牙LOG3)</code>，ESC按键下边第一个灯变成 <strong>蓝色</strong>，并持续快闪，说明进入配对状态。</li>
+</ul>
+<h2 id="电量查询"><a href="#电量查询" class="headerlink" title="电量查询"></a>电量查询</h2><p>在仅支持蓝牙连接的情况下查询剩余电量，按下组合键：<code>Fn + T</code>。右上角指示灯闪烁，3个灯亮说明满电。</p>
+<h2 id="恢复出厂设置"><a href="#恢复出厂设置" class="headerlink" title="恢复出厂设置"></a>恢复出厂设置</h2><p>组合键：<code>ESC + 左Ctrl + F12 + 右Ctrl</code></p>
+]]></content>
+      <categories>
+        <category>Computer</category>
+      </categories>
+      <tags>
+        <tag>键盘</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: rgb and hsv</title>
+    <url>/2024/12/09/2024/esp-rgb-and-hsv/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>led control</tag>
+        <tag>strip led(RMT or SPI)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: ota</title>
+    <url>/2024/11/30/2024/esp-ota/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ota</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: ESP-IDF VSCode Configuration</title>
+    <url>/2024/11/29/2024/esp-idf-vscode-configuration/</url>
+    <content><![CDATA[<p>环境介绍：</p>
+<ul>
+<li>VSCode：v1.92.2</li>
+<li>C&#x2F;C++ 扩展</li>
+<li>nRF Kconfig 扩展</li>
+<li>CMake Tools 扩展</li>
+<li>Makefile Tools 扩展</li>
+</ul>
+<p>为什么我明明已经安装了 <code>esp-idf</code> 环境，但是 VSCode 打开工程后，编程却没有 <code>esp-idf</code>  函数、变量、宏等 智能提示。但是我发现对于GNU标准库 <code>glibc</code> 中头文件的函数可以出现智能提示。例如：stdio.h、stdlib.h、time.h、math.h、assert.h</p>
+<p>VSCode <code>C/C++ 扩展</code> 能够对于GNU标准库的智能提示，原因是：默认自动加载了GCC头文件路径。例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 通过命令查询 GCC 的配置信息，包括头文件路径</span></span><br><span class="line">$ gcc -E -x c++ - -v &lt; /dev/null</span><br><span class="line">省略部分...</span><br><span class="line"><span class="comment">#include &quot;...&quot; search starts here:</span></span><br><span class="line"><span class="comment">#include &lt;...&gt; search starts here:</span></span><br><span class="line"> /usr/include/c++/11</span><br><span class="line"> /usr/include/x86_64-linux-gnu/c++/11</span><br><span class="line"> /usr/include/c++/11/backward</span><br><span class="line"> /usr/lib/gcc/x86_64-linux-gnu/11/include</span><br><span class="line"> /usr/local/include</span><br><span class="line"> /usr/include/x86_64-linux-gnu</span><br><span class="line"> /usr/include</span><br><span class="line">End of search list.</span><br><span class="line">省略部分...</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>/usr/include</code> 就是 GNU标准库的C相关头文件路径，<code>/usr/include/c++/11</code> 就是GNU标准库的C++相关头文件路径。</p>
+<p>C相关的标准库头文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ caojun@caojun-NMH-WCX9:~$ <span class="built_in">ls</span> /usr/include/</span><br><span class="line"></span><br><span class="line">aio.h         drm                getopt.h                   misc             paths.h             scsi           thread_db.h</span><br><span class="line">aliases.h     elf.h              gio-unix-2.0               mntent.h         pcre2.h             search.h       threads.h</span><br><span class="line">alloca.h      endian.h           GL                         monetary.h       pcre2posix.h        selinux        tic.h</span><br><span class="line">argp.h        envz.h             glib-2.0                   mosquitto.h      pcrecpparg.h        semaphore.h    time.h</span><br><span class="line">argz.h        err.h              glob.h                     mqtt_protocol.h  pcrecpp.h           sepol          tirpc</span><br><span class="line">ar.h          errno.h            gnumake.h                  mqueue.h         pcre.h              setjmp.h       ttyent.h</span><br><span class="line">arpa          error.h            gnu-versions.h             mtd              pcreposix.h         sgtty.h        uchar.h</span><br><span class="line">asm-generic   eti.h              gobject-introspection-1.0  nc_tparm.h       pcre_scanner.h      shadow.h       ucontext.h</span><br><span class="line">assert.h      etip.h             grp.h                      ncurses_dll.h    pcre_stringpiece.h  signal.h       ulimit.h</span><br><span class="line">avahi-client  execinfo.h         gshadow.h                  ncurses.h        pixman-1            sound          unctrl.h</span><br><span class="line">avahi-common  expat_external.h   iconv.h                    ncursesw         pngconf.h           spawn.h        unistd.h</span><br><span class="line">blkid         expat.h            ifaddrs.h                  net              png.h               stab.h         utime.h</span><br><span class="line">brotli        fcntl.h            inttypes.h                 netash           pnglibconf.h        stdc-predef.h  utmp.h</span><br><span class="line">byteswap.h    features.h         iproute2                   netatalk         poll.h              stdint.h       utmpx.h</span><br><span class="line">c++           features-time64.h  langinfo.h                 netax25          printf.h            stdio_ext.h    uuid</span><br><span class="line">cairo         fenv.h             lastlog.h                  netdb.h          proc_service.h      stdio.h        values.h</span><br><span class="line">complex.h     finclude           libgen.h                   neteconet        protocols           stdlib.h       video</span><br><span class="line">cpio.h        FlexLexer.h        libintl.h                  netinet          pthread.h           string.h       wait.h</span><br><span class="line">crypt.h       fmtmsg.h           libmount                   netipx           pty.h               strings.h      wchar.h</span><br><span class="line">ctype.h       fnmatch.h          libpng                     netiucv          pwd.h               sudo_plugin.h  wctype.h</span><br><span class="line">cursesapp.h   fontconfig         libpng16                   netpacket        python3.10          syscall.h      wordexp.h</span><br><span class="line">cursesf.h     form.h             limits.h                   netrom           rdma                sysexits.h     X11</span><br><span class="line">curses.h      freetype2          link.h                     netrose          readline            syslog.h       x86_64-linux-gnu</span><br><span class="line">cursesm.h     fstab.h            linux                      nfs              re_comp.h           tar.h          xcb</span><br><span class="line">cursesp.h     fts.h              locale.h                   nl_types.h       regex.h             termcap.h      xen</span><br><span class="line">cursesw.h     ftw.h              malloc.h                   nss.h            regexp.h            term_entry.h   xorg</span><br><span class="line">cursslk.h     gcalc-2            math.h                     obstack.h        resolv.h            term.h         zconf.h</span><br><span class="line">dbus-1.0      gci-2              mcheck.h                   openssl          rpc                 termio.h       zlib.h</span><br><span class="line">dirent.h      gconv.h            memory.h                   openvpn          rpcsvc              termios.h</span><br><span class="line">dlfcn.h       gdb                menu.h                     panel.h          sched.h             tgmath.h</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>C++标准库相关的头文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> /usr/include/c++/11/</span><br><span class="line">algorithm  cfenv      concepts            ctgmath       fenv.h            latch            ostream           span          tr1</span><br><span class="line">any        cfloat     condition_variable  ctime         filesystem        limits           parallel          sstream       tr2</span><br><span class="line">array      charconv   coroutine           cuchar        forward_list      list             pstl              stack         tuple</span><br><span class="line">atomic     chrono     csetjmp             cwchar        fstream           locale           queue             stdexcept     typeindex</span><br><span class="line">backward   cinttypes  csignal             cwctype       functional        map              random            stdlib.h      typeinfo</span><br><span class="line">barrier    ciso646    cstdalign           cxxabi.h      future            math.h           ranges            stop_token    type_traits</span><br><span class="line">bit        climits    cstdarg             debug         initializer_list  memory           ratio             streambuf     unordered_map</span><br><span class="line">bits       clocale    cstdbool            decimal       iomanip           memory_resource  regex             string        unordered_set</span><br><span class="line">bitset     cmath      cstddef             deque         ios               mutex            scoped_allocator  string_view   utility</span><br><span class="line">cassert    codecvt    cstdint             exception     iosfwd            new              semaphore         syncstream    valarray</span><br><span class="line">ccomplex   compare    cstdio              execution     iostream          numbers          <span class="built_in">set</span>               system_error  variant</span><br><span class="line">cctype     complex    cstdlib             experimental  istream           numeric          shared_mutex      tgmath.h      vector</span><br><span class="line">cerrno     complex.h  cstring             ext           iterator          optional         source_location   thread        version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>对于 esp-idf 相关的头文件需要用户自定义配置文件，让VSCode 能够找到 esp-idf 的头文件。</p>
+<p>在当前项目的同一级创建 <code>.vscode</code> 目录，在该目录下创建这个文件：  <code>c_cpp_properties.json</code></p>
+<ul>
+<li><p>settings.json</p>
+<p>该文件是默认创建的</p>
+</li>
+<li><p>c_cpp_properties.json</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ESP-IDF&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;$&#123;workspaceFolder&#125;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="string">&quot;/home/your_username/esp/esp-idf/components/**&quot;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="number">4</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：<code>/home/your_username/esp/esp-idf/components/**</code> 根据 esp-idf 实际安装路径</em></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ESP-IDF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp: nvs</title>
+    <url>/2024/11/28/2024/esp-nvs/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>nvs</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>esp: button component</title>
     <url>/2024/11/26/2024/esp-button-component/</url>
-    <content><![CDATA[<h2 id="button组件"><a href="#button组件" class="headerlink" title="button组件"></a>button组件</h2><p><a href="https://components.espressif.com/">esp组件仓库</a>  </p>
+    <content><![CDATA[<h2 id="button组件"><a href="#button组件" class="headerlink" title="button组件"></a>button组件</h2><p>ESP 按键：<a href="https://docs.espressif.com/projects/esp-iot-solution/zh_CN/latest/input_device/button.html">https://docs.espressif.com/projects/esp-iot-solution/zh_CN&#x2F;latest&#x2F;input_device&#x2F;button.html</a></p>
+<p>按键组件实现了 GPIO 和 ADC 两种按键，并允许同时创建两种不同的按键。</p>
+<p><em>注意：</em></p>
+<p>*1、GPIO 按键需注意上下拉问题，组件内部会启用芯片内部的上下拉电阻，但是在仅支持输入的 IO 内部没有电阻， <strong>需要外部连接</strong>。*</p>
+<p><em>2、ADC 按键需注意电压不能超过 ADC 量程。</em></p>
+<h3 id="按键事件"><a href="#按键事件" class="headerlink" title="按键事件"></a>按键事件</h3><p>每个按键拥有下表的 8 个事件：</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BUTTON_PRESS_DOWN</td>
+<td>按下</td>
+</tr>
+<tr>
+<td>BUTTON_PRESS_UP</td>
+<td>弹起</td>
+</tr>
+<tr>
+<td>BUTTON_PRESS_REPEAT</td>
+<td>按下弹起次数 &gt;&#x3D; 2次</td>
+</tr>
+<tr>
+<td>BUTTON_PRESS_REPEAT_DONE</td>
+<td>重复按下结束</td>
+</tr>
+<tr>
+<td>BUTTON_SINGLE_CLICK</td>
+<td>按下弹起 1 次</td>
+</tr>
+<tr>
+<td>BUTTON_DOUBLE_CLICK</td>
+<td>按下弹起 2 次</td>
+</tr>
+<tr>
+<td>BUTTON_MULTIPLE_CLICK</td>
+<td>指定重复按下次数 N 次，达成时触发</td>
+</tr>
+<tr>
+<td>BUTTON_LONG_PRESS_START</td>
+<td>按下时间达到阈值的瞬间</td>
+</tr>
+<tr>
+<td>BUTTON_LONG_PRESS_HOLD</td>
+<td>长按期间一直触发</td>
+</tr>
+<tr>
+<td>BUTTON_LONG_PRESS_UP</td>
+<td>长按弹起</td>
+</tr>
+<tr>
+<td>BUTTON_PRESS_REPEAT_DONE</td>
+<td>多次按下弹起结束</td>
+</tr>
+<tr>
+<td>BUTTON_PRESS_END</td>
+<td>表示 button 此次检测已结束</td>
+</tr>
+</tbody></table>
+<p><a href="https://components.espressif.com/">esp组件仓库</a>  </p>
 <ul>
 <li><a href="https://components.espressif.com/components/espressif/button/versions/3.4.0">espressif&#x2F;button</a>：当前最新版本是v3.4.0</li>
 </ul>
@@ -23,6 +790,10 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-NMH-WCX9:~/esp/app-example/get-started/button$ <span class="built_in">ls</span> -al</span><br><span class="line">total 84</span><br><span class="line">drwxrwxr-x  5 pi pi  4096 11月 26 14:39 .</span><br><span class="line">drwxrwxr-x 16 pi pi  4096 11月 20 14:18 ..</span><br><span class="line">drwxrwxr-x  8 pi pi  4096 11月 26 14:39 build</span><br><span class="line">-rw-rw-r--  1 pi pi   244 11月 26 14:36 CMakeLists.txt</span><br><span class="line">-rw-rw-r--  1 pi pi   637 11月 26 14:39 dependencies.lock</span><br><span class="line">drwxrwxr-x  2 pi pi  4096 11月 26 14:12 main</span><br><span class="line">drwxrwxr-x  4 pi pi  4096 11月 26 14:39 managed_components</span><br><span class="line">-rw-rw-r--  1 pi pi 56876 11月 26 14:39 sdkconfig</span><br></pre></td></tr></table></figure>
 
 <p>很明显，dependencies.lock、sdkconfig文件是自动新建的，managed_components文件夹也是自动被新建的。</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>源码地址：<a href="https://github.com/eiSouthBoy/esp-idf-example/tree/main/002-button">https://github.com/eiSouthBoy/esp-idf-example/tree/main/002-button</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;freertos/task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;esp_log.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;iot_button.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUTTON_ACTIVE_LEVEL 0  <span class="comment">// 低电平有效</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUTTON_GPIO_0 CONFIG_BUTTON_GPIO_NUM</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LED_GPIO_4 CONFIG_LED_GPIO_NUM</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">const</span> <span class="type">char</span> *TAG = <span class="string">&quot;button-example&quot;</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">uint8_t</span> g_led_state = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 按键事件类型表 */</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *button_event_table[] = &#123;</span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_DOWN&quot;</span>,        <span class="comment">// 按下</span></span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_UP&quot;</span>,          <span class="comment">// 弹起</span></span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_REPEAT&quot;</span>,      <span class="comment">// 按下弹起次数 &gt;= 2次</span></span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_REPEAT_DONE&quot;</span>, <span class="comment">// 重复按下结束</span></span><br><span class="line">    <span class="string">&quot;BUTTON_SINGLE_CLICK&quot;</span>,      <span class="comment">// 按下弹起一次</span></span><br><span class="line">    <span class="string">&quot;BUTTON_DOUBLE_CLICK&quot;</span>,      <span class="comment">// 按下弹起两次</span></span><br><span class="line">    <span class="string">&quot;BUTTON_MULTIPLE_CLICK&quot;</span>,    <span class="comment">// 指定重复按下次数 N 次，达成时触发</span></span><br><span class="line">    <span class="string">&quot;BUTTON_LONG_PRESS_START&quot;</span>,  <span class="comment">// 按下时间达到阈值的瞬间</span></span><br><span class="line">    <span class="string">&quot;BUTTON_LONG_PRESS_HOLD&quot;</span>,   <span class="comment">// 长按期间一直触发</span></span><br><span class="line">    <span class="string">&quot;BUTTON_LONG_PRESS_UP&quot;</span>,     <span class="comment">// 长按弹起</span></span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_REPEAT_DONE&quot;</span>, <span class="comment">// 多次按下弹起结束</span></span><br><span class="line">    <span class="string">&quot;BUTTON_PRESS_END&quot;</span>          <span class="comment">// 表示button此次检测已结束</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 按键事件回调函数 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">button_event_cb</span><span class="params">(<span class="type">void</span> *arg, <span class="type">void</span> *data)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> btn_event[<span class="number">64</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">snprintf</span>(btn_event, <span class="number">64</span>, <span class="string">&quot;%s&quot;</span>, button_event_table[(<span class="type">button_event_t</span>)data]);</span><br><span class="line">    ESP_LOGI(TAG, <span class="string">&quot;Button event %s&quot;</span>, btn_event);</span><br><span class="line">    iot_button_print_event((<span class="type">button_handle_t</span>)arg);</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == <span class="built_in">strcmp</span>(btn_event, <span class="string">&quot;BUTTON_PRESS_DOWN&quot;</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        g_led_state = !g_led_state;</span><br><span class="line">        ESP_LOGI(TAG, <span class="string">&quot;Turning the LED %s!&quot;</span>, g_led_state == <span class="literal">true</span> ? <span class="string">&quot;ON&quot;</span> : <span class="string">&quot;OFF&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Set the GPIO level according to the state (LOW or HIGH)*/</span></span><br><span class="line">        gpio_set_level(LED_GPIO_4, g_led_state);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 按键初始化操作 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">app_driver_button_init</span><span class="params">(<span class="type">uint32_t</span> button_num)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">esp_err_t</span> err;</span><br><span class="line">    <span class="type">button_config_t</span> btn_cfg = &#123;</span><br><span class="line">        .type = BUTTON_TYPE_GPIO,</span><br><span class="line">        .gpio_button_config = &#123;</span><br><span class="line">            .gpio_num = button_num,</span><br><span class="line">            .active_level = BUTTON_ACTIVE_LEVEL,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">button_handle_t</span> btn = iot_button_create(&amp;btn_cfg);</span><br><span class="line">    assert(btn);</span><br><span class="line">    <span class="comment">/* 根据不同的按键事件注册回调 */</span></span><br><span class="line">    err = iot_button_register_cb(btn, BUTTON_PRESS_DOWN, button_event_cb, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_PRESS_UP, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_PRESS_REPEAT, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_PRESS_REPEAT_DONE, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_SINGLE_CLICK, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_DOUBLE_CLICK, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_LONG_PRESS_START, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_LONG_PRESS_HOLD, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_LONG_PRESS_UP, button_event_cb, NULL);</span></span><br><span class="line">    <span class="comment">// err |= iot_button_register_cb(btn, BUTTON_PRESS_END, button_event_cb, NULL);</span></span><br><span class="line"></span><br><span class="line">    ESP_ERROR_CHECK(err);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* LED灯初始化 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">app_driver_led_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    ESP_LOGI(TAG, <span class="string">&quot;Example configured to GPIO LED(GPIO %d)!&quot;</span>, LED_GPIO_4);</span><br><span class="line">    gpio_reset_pin(LED_GPIO_4);</span><br><span class="line">    gpio_set_direction(LED_GPIO_4, GPIO_MODE_OUTPUT); <span class="comment">/* Set the GPIO as a push/pull output */</span></span><br><span class="line">    gpio_set_level(LED_GPIO_4, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">app_main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    app_driver_led_init();</span><br><span class="line">    app_driver_button_init(BUTTON_GPIO_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当 ESP32-DevKitC 开发板上的 Boot 按键被按下后，外接 GPIO4 的LED灯将会点亮，再次按下，LED灯熄灭。</p>
 ]]></content>
       <categories>
         <category>esp</category>
@@ -80,17 +851,126 @@
 <p>以下内容来自AI的回答</p>
 </blockquote>
 <p>在嵌入式系统设计中，硬件通信接口或协议是实现不同设备之间数据交换的关键。这些接口和协议根据传输距离、速度、功耗等因素的不同而有所区别。下面是一些常见的硬件通信接口或协议：</p>
+<h2 id="UART"><a href="#UART" class="headerlink" title="UART"></a>UART</h2><p>UART （Universal Asynchronous Receiver&#x2F;Transmitter，通用异步收发器）是一种非常基础的串行通信协议，它允许两个设备之间进行<strong>串行、异步、全双工</strong>的数据传输。它简单易用，适用于短距离通信。</p>
+<p>串口只需要 2根线（TX 和 RX） 就可以实现数据发送和接受，TX用于发送数据，RX用于接收数据（收发不是一根线，所以是全双工通信），通信双方只要采用相同的帧格式和波特率，就能在未共享时钟信号的情况下，可以完成通信过程（收发不同步，所以是异步串行通信）。</p>
+<h3 id="电气标准"><a href="#电气标准" class="headerlink" title="电气标准"></a>电气标准</h3><p>串口有4种电气标准，分别是：TTL、RS232、RS422、RS485。这4种串口只在电气信号上有差别，在帧格式、传输逻辑、软件操作上基本上都是一样的。</p>
+<p>串口的4种电气标准比较：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>TTL</th>
+<th>RS232</th>
+<th>RS422</th>
+<th>RS485</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>信号类型</td>
+<td>电平信号</td>
+<td>电平信号</td>
+<td>差分信号</td>
+<td>差分信号</td>
+</tr>
+<tr>
+<td>电压范围</td>
+<td>0~3.3V&#x2F;5.0V</td>
+<td>+15V&#x2F;-15V</td>
+<td>-0.25V~+6V</td>
+<td>-7V~+12V</td>
+</tr>
+<tr>
+<td>抗干扰性</td>
+<td>弱</td>
+<td>较强</td>
+<td>强</td>
+<td>强</td>
+</tr>
+<tr>
+<td>传输距离</td>
+<td>1m</td>
+<td>10m</td>
+<td>1.2km</td>
+<td>1.2km</td>
+</tr>
+<tr>
+<td>负载数量</td>
+<td>100Kbps</td>
+<td>100Kbps</td>
+<td>10Mbps</td>
+<td>10Mbps</td>
+</tr>
+<tr>
+<td>传输模式</td>
+<td>1</td>
+<td>1</td>
+<td>10</td>
+<td>32</td>
+</tr>
+<tr>
+<td>导线数量</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>TTL（Transistor-Transistor Logic）</strong></p>
+<p>TTL电平是指这种逻辑电路中使用的电压标准，用于表示二进制的“0”和“1”。</p>
+<p>逻辑低电平”0” 通常指 <em><strong>接近</strong></em> 0V的电压，一般认为低于 0.8V 为低电平。</p>
+<p>逻辑高电平”1” 通常指相对较高的电压，对于传统的5V TTL逻辑，高电平通常是在 <code>2V~5V</code> 之间；对于3.3V TTL逻辑，高电平则在 <code>2V~3.3V</code> 之间。</p>
+</li>
+<li><p><strong>RS232（Recommended Standard 232）</strong></p>
+<p>RS-232使用 <em><strong>负逻辑</strong></em>，即逻辑“1”为负电压，通常在 <code>-3V~-15V</code> 之间，逻辑“0”为正电压，通常在<code>+3V~+15V</code> 之间）。这种较高的电压范围有助于提高抗噪能力，但同时也限制了其适用于低功耗应用。</p>
+</li>
+<li><p><strong>RS422（Recommended Standard 422）</strong></p>
+<p>RS-422 使用差分信号传输，这意味着每条数据线都有一个对应的反相线。</p>
+<p>差分信号线之间的电压差用来表示逻辑电平，而不是相对于地线的绝对电压。</p>
+<p>发送端：逻辑“1”对应于<code>+2V到+6V</code> 之间的电压差，而逻辑“0”则对应于 <code>-2V到-6V</code> 之间的电压差。</p>
+<p>接收端：逻辑“1”对应于电压差 <code>大于+0.2V</code>，而逻辑“0”则对应于电压差 <code>小于-0.2V</code>。</p>
+</li>
+<li><p><strong>RS485（Recommended Standard 485）</strong></p>
+<p>RS485 使用差分信号传输，这意味着每条数据线都有一个对应的反相线。</p>
+<p>差分信号线之间的电压差用来表示逻辑电平。</p>
+<p>发送端：逻辑“1”对应于电压差 <code>+0.2V到+6V</code> 之间，而逻辑“0”则对应于电压差  <code>-0.2V到-6V</code> 之间。</p>
+<p>接收端：逻辑“1”对应于电压差 <code>大于+0.2V</code>，而逻辑“0”则对应于电压差 <code>小于-0.2V</code>。</p>
+</li>
+</ul>
+<h3 id="帧结构"><a href="#帧结构" class="headerlink" title="帧结构"></a>帧结构</h3><p><img src="/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113119541.png" alt="image-20241208113119541"></p>
+<p>我们在使用上位机串口软件（例如：Putty），需要选择串口名称、波特率、数据位、停止位、校验位和流控。</p>
+<p><img src="/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113706448.png" alt="image-20241208113706448"></p>
+<h3 id="串口控制"><a href="#串口控制" class="headerlink" title="串口控制"></a>串口控制</h3><blockquote>
+<p>为什么开发板通过USB接到电脑后，电脑可以通过串口调试助手与开发板通信？</p>
+</blockquote>
+<p>电脑（Ubuntu 22.04）一般默认安装了不同 “USB to UART Bridge” 芯片厂家的驱动，所以当开发板通过USB接入电脑，系统中的已安装的驱动能够自动识别并正确配置不同芯片厂家的 “USB to UART Bridge” 设备，从而创建像 <code>/dev/ttyUSB0</code> 这样的设备节点，以便用户空间程序可以与这些设备进行通信。</p>
+<p><em>USB to UART芯片：Silicon（芯科） CP2102、FDTI（飞特帝亚） FT232、Prolific（旺玖） PL2303、南京沁恒 CH340。</em></p>
+<p>在 Ubuntu 22.04 系统查看自带驱动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">uname</span> -r</span><br><span class="line">6.8.0-49-generic</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">ls</span> /lib/modules/$(<span class="built_in">uname</span> -r)/kernel/drivers/usb/serial</span><br><span class="line">aircable.ko         f81232.ko       iuu_phoenix.ko  mxuport.ko   quatech2.ko          usbserial.ko</span><br><span class="line">ark3116.ko          f81534.ko       keyspan.ko      navman.ko    safe_serial.ko       usb-serial-simple.ko</span><br><span class="line">belkin_sa.ko        ftdi_sio.ko     keyspan_pda.ko  omninet.ko   sierra.ko            usb_wwan.ko</span><br><span class="line">ch341.ko            garmin_gps.ko   kl5kusb105.ko   opticon.ko   spcp8x5.ko           visor.ko</span><br><span class="line">cp210x.ko           io_edgeport.ko  kobil_sct.ko    option.ko    ssu100.ko            whiteheat.ko</span><br><span class="line">cyberjack.ko        io_ti.ko        mct_u232.ko     oti6858.ko   symbolserial.ko      wishbone-serial.ko</span><br><span class="line">cypress_m8.ko       ipaq.ko         metro-usb.ko    pl2303.ko    ti_usb_3410_5052.ko  xr_serial.ko</span><br><span class="line">digi_acceleport.ko  ipw.ko          mos7720.ko      qcaux.ko     upd78f0730.ko        xsens_mt.ko</span><br><span class="line">empeg.ko            ir-usb.ko       mos7840.ko      qcserial.ko  usb_debug.ko</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Ubuntu 22.04 系统默认就支持 <em>Silicon cp210x.ko、南京沁恒 ch341.ko、FTDI ftdi_sio.ko、Prolific pl2303.ko</em>。</p>
+<p>USB to UART Bridge芯片通过串口驱动识别后，可以查看到如下信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ lsusb</span><br><span class="line">Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub</span><br><span class="line">Bus 003 Device 003: ID 27c6:5125 Shenzhen Goodix Technology Co.,Ltd. Goodix Fingerprint Device </span><br><span class="line">Bus 003 Device 002: ID 0489:e0df Foxconn / Hon Hai </span><br><span class="line">Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br><span class="line">Bus 002 Device 005: ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet</span><br><span class="line">Bus 002 Device 004: ID 05e3:0626 Genesys Logic, Inc. USB3.1 Hub</span><br><span class="line">Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub</span><br><span class="line">Bus 001 Device 005: ID 13d3:56f8 IMC Networks ov9734_azurewave_camera</span><br><span class="line">Bus 001 Device 003: ID 046d:c52f Logitech, Inc. Unifying Receiver</span><br><span class="line">Bus 001 Device 009: ID 10c4:ea60 Silicon Labs CP210x UART Bridge</span><br><span class="line">Bus 001 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub</span><br><span class="line">Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查看详细信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> lsusb -v</span><br><span class="line">Bus 001 Device 009: ID 10c4:ea60 Silicon Labs CP210x UART Bridge</span><br><span class="line">Device Descriptor:</span><br><span class="line">  bLength                18</span><br><span class="line">  bDescriptorType         1</span><br><span class="line">  bcdUSB               2.00</span><br><span class="line">  bDeviceClass            0 </span><br><span class="line">  bDeviceSubClass         0 </span><br><span class="line">  bDeviceProtocol         0 </span><br><span class="line">  bMaxPacketSize0        64</span><br><span class="line">  idVendor           0x10c4 Silicon Labs</span><br><span class="line">  idProduct          0xea60 CP210x UART Bridge</span><br><span class="line">  bcdDevice            1.00</span><br><span class="line">  iManufacturer           1 Silicon Labs</span><br><span class="line">  iProduct                2 CP2102N USB to UART Bridge Controller</span><br><span class="line">  iSerial                 3 6a7f096aba1aef11a7db0b764909ffd0</span><br><span class="line">  bNumConfigurations      1</span><br><span class="line">  Configuration Descriptor:</span><br><span class="line">    bLength                 9</span><br><span class="line">    bDescriptorType         2</span><br><span class="line">    wTotalLength       0x0020</span><br><span class="line">    bNumInterfaces          1</span><br><span class="line">    bConfigurationValue     1</span><br><span class="line">    iConfiguration          0 </span><br><span class="line">    bmAttributes         0x80</span><br><span class="line">      (Bus Powered)</span><br><span class="line">    MaxPower              100mA</span><br><span class="line">    Interface Descriptor:</span><br><span class="line">      bLength                 9</span><br><span class="line">      bDescriptorType         4</span><br><span class="line">      bInterfaceNumber        0</span><br><span class="line">      bAlternateSetting       0</span><br><span class="line">      bNumEndpoints           2</span><br><span class="line">      bInterfaceClass       255 Vendor Specific Class</span><br><span class="line">      bInterfaceSubClass      0 </span><br><span class="line">      bInterfaceProtocol      0 </span><br><span class="line">      iInterface              0 </span><br><span class="line">      Endpoint Descriptor:</span><br><span class="line">        bLength                 7</span><br><span class="line">        bDescriptorType         5</span><br><span class="line">        bEndpointAddress     0x02  EP 2 OUT</span><br><span class="line">        bmAttributes            2</span><br><span class="line">          Transfer Type            Bulk</span><br><span class="line">          Synch Type               None</span><br><span class="line">          Usage Type               Data</span><br><span class="line">        wMaxPacketSize     0x0040  1x 64 bytes</span><br><span class="line">        bInterval               0</span><br><span class="line">      Endpoint Descriptor:</span><br><span class="line">        bLength                 7</span><br><span class="line">        bDescriptorType         5</span><br><span class="line">        bEndpointAddress     0x82  EP 2 IN</span><br><span class="line">        bmAttributes            2</span><br><span class="line">          Transfer Type            Bulk</span><br><span class="line">          Synch Type               None</span><br><span class="line">          Usage Type               Data</span><br><span class="line">        wMaxPacketSize     0x0040  1x 64 bytes</span><br><span class="line">        bInterval               0</span><br><span class="line">Device Status:     0x0000</span><br><span class="line">  (Bus Powered)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中比较关键的字段：</p>
+<ul>
+<li><p>idVendor：不要修改</p>
+</li>
+<li><p>idProduct：不要修改</p>
+</li>
+<li><p>iManufacturer：可自定修改</p>
+</li>
+<li><p>iProduct：可自定义修改</p>
+</li>
+</ul>
+<p><em>注意：Key使用Silicon Labs提供 Simplicity Studio 软件 修改上述字段</em></p>
+<h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><p>SPI （Serial Peripheral Interface，串行外设接口）是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</p>
 <ol>
-<li><p><strong>UART (Universal Asynchronous Receiver&#x2F;Transmitter)</strong></p>
-<ul>
-<li>UART 是一种非常基础的串行通信协议，它允许两个设备之间进行异步数据传输。它简单易用，适用于短距离通信。</li>
-</ul>
-</li>
-<li><p><strong>SPI (Serial Peripheral Interface)</strong></p>
-<ul>
-<li>SPI 是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</li>
-</ul>
-</li>
 <li><p><strong>I2C (Inter-Integrated Circuit)</strong></p>
 <ul>
 <li>I2C 是一种多主机总线，使用两根线（SDA 数据线和 SCL 时钟线）进行半双工通信。它广泛应用于需要连接多个低速外围设备的场合。</li>
@@ -328,7 +1208,217 @@
   <entry>
     <title>esp: idf project architecture</title>
     <url>/2024/11/15/2024/esp-idf-project-architecture/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<p><a href="https://www.bilibili.com/video/BV18keGeaEhE/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=a8965eb911e5c2e6ddd23064aced2e6b">入门 ESP-IDF 工程结构【新手超详细教程】</a></p>
+<blockquote>
+<p>目的：更高效的开发和管理自己的 ESP-IDF 工程</p>
+</blockquote>
+<h2 id="工程结构"><a href="#工程结构" class="headerlink" title="工程结构"></a>工程结构</h2><p>一个 <code>ESP-IDF</code> 工程可以看作是多个<strong>组件</strong>的集合。那么什么是组件呢？ 组件其实就是独立的代码模块，乐鑫提供基础的系统组件，例如：</p>
+<p><img src="/2024/11/15/2024/esp-idf-project-architecture/image-20241130130141239.png" alt="image-20241130130141239"></p>
+<p>例如：开发一个智能台灯需要的组件：</p>
+<ol>
+<li>ESP-IDF基础库：提供基本的功能库和底层硬件绑定</li>
+<li>FreeRTOS 操作系统：实时操作系统内核，管理不同的任务</li>
+<li>WiFi 驱动：连接无线网络，发送和接受控制指令</li>
+<li>TCP&#x2F;IP 协议栈：处理网络通信</li>
+<li>应用层协议：处理来自云端的控制指令</li>
+<li>灯的控制驱动：控制灯开&#x2F;关和亮度</li>
+<li>主程序：将所有组件整合在一起，实现功能逻辑</li>
+</ol>
+<p>一个标准的ESP-IDF工程只是一个文件夹，包括一些组件和配置文件。通过工程顶层 <code>CMakeLists.txt</code> 文件，将所有组件整合在一起，通过 <code>cmake</code> 工具生成 <code>makefile</code> 文件，接下来使用 <code>ninja (或make)</code> 工具根据 <code>makefile</code> 执行编译、链接等步骤。CMakeLists.txt的位置：工程的顶层目录内和其他组件内，所有组件都要有自己的CMakeList.txt，包括main组件。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 详细执行步骤，当前处于工程目录下</span></span><br><span class="line"><span class="built_in">mkdir</span> -p build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake .. -G Ninja</span><br><span class="line">ninja</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>ESP-IDF 把上面的操作步骤封装一句命令：<code>idf.py build</code>。</p>
+<h2 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h2><p>以 <code>hello-world</code> 工程来说明 ESP-IDF 的工程结构：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ tree -l 1</span><br><span class="line">.</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── main</span><br><span class="line">│   ├── CMakeLists.txt</span><br><span class="line">│   └── main.c</span><br><span class="line">└── README.md</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过CMakeLists.txt可以注册组件，工程顶层 <code>CMakeLists.txt</code> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 遵循CMakeLists.txt的语法</span></span><br><span class="line"><span class="comment"># 指定cmake最小版本要求</span></span><br><span class="line">cmake_minimum_required(VERSION 3.16)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入cmake各种功能，用来配置项目和检索组件</span></span><br><span class="line">include(<span class="variable">$ENV</span>&#123;IDF_PATH&#125;/tools/cmake/project.cmake)</span><br><span class="line"><span class="comment"># 指定工程名称，编译后二进制的名字</span></span><br><span class="line">project(hello_world)</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>main/CMakeLists.txt</code> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># mian组件会默认require IDF的相关组件依赖，其他组件需要手动添加依赖</span></span><br><span class="line">idf_component_register(SRCS </span><br><span class="line">							<span class="string">&quot;main.c&quot;</span></span><br><span class="line">                    INCLUDE_DIRS </span><br><span class="line">                    		<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>idf.py set-target esp32</code> ，自动创建 <code>build</code> 目录，并将过程文件放到该目录下，同时工程目录自动创建 <code>sdkconfig</code> 文件。</p>
+<blockquote>
+<p>idf.py set-target 支持哪些目标芯片系列？ 执行命令 <code>idf.py --list-targets</code> 就可以看到支持的芯片系列</p>
+</blockquote>
+<p>执行 <code>idf.py menuconfig</code> ，出现编译配置菜单，用户可以修改配置项。</p>
+<p>执行 <code>idf.py build</code> ，开始编译。</p>
+<p>执行 <code>idf.py -p /dev/ttyUSB0 flash</code> ，通过指定的串口 &#x2F;dev&#x2F;ttyUSB0 将固件烧录到ESP硬件。</p>
+<p>执行 <code>idf.py -p /dev/ttyUSB0 monitor</code> ，通过指定的串口 &#x2F;dev&#x2F;ttyUSB0 监控串口日志。</p>
+<p>关于上述的构建系统的操作步骤建议参考乐鑫官方的教程：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html">构建系统（CMake 版）</a></p>
+<h2 id="导入组件"><a href="#导入组件" class="headerlink" title="导入组件"></a>导入组件</h2><p>导入组件到 ESP-IDF 工程的方式：</p>
+<ol>
+<li>导入 ESP-IDF 本地框架下组件（自动导入，无需用户操作）</li>
+<li>通过工程目录下的 CMakeLists.txt 指定额外的组件</li>
+<li>在工程目录下创建 component 文件夹，并将自定义组件放进来。而且不需要在工程目录下的 CMakeLists.txt 下声明就可以直接使用组件。</li>
+<li>通过组件管理器将<a href="https://components.espressif.com/">乐鑫官方组件仓库</a>导入组件，在工程目录下执行 <code>idf.py add-dependency &quot;[命名空间]/&lt;组件名&gt;[版本号]&quot;</code>，例如：<code>idf.py add-dependency &quot;espressif/button^3.4.0&quot;</code></li>
+</ol>
+<p>对于组件的说明和解读，建议参考乐鑫官方的教程：<a href="https://docs.espressif.com/projects/esp-techpedia/zh_CN/latest/esp-friends/advanced-development/component-management.html?highlight=cmakelists%20txt">组件管理和使用</a></p>
+<h2 id="sdkconfig-defaults"><a href="#sdkconfig-defaults" class="headerlink" title="sdkconfig.defaults"></a>sdkconfig.defaults</h2><p>执行 <code>idf.py menuconfig</code> 后，会将用户修改后的配置项更改到 <code>sdkconfig</code> 文件。但是如果用户希望新建 <code>sdkconfig</code> 时，就能够根据默认的配置载入sdkconfig文件中，解决方式就是利用 <code>sdkconfig.defaults</code> 文件。</p>
+<p>例如：当用户使用的开发板 ESP-DevKitC，该开发板的flash大小，以及按键对应的GPIO都是固定好的。在第一次 <code>idf.py menuconfig</code> 配置好后，接着执行 <code>idf.py save-defconfig</code> 就会创建 <code>sdkconfig.defaults</code> 文件，以后的工程就可以拷贝这个文件使用。</p>
+<h2 id="Kconfig"><a href="#Kconfig" class="headerlink" title="Kconfig"></a>Kconfig</h2><p>每个组件还可以包含一个 <code>Kconfig</code> 文件，它用于定义 <code>menuconfig</code> 时展示的 <a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html#component-configuration">组件配置</a> 选项。某些组件可能还会包含 <code>Kconfig.projbuild</code> 和 <code>project_include.cmake</code> 特殊文件，它们用于 <a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html#override-project-config">覆盖项目的部分设置</a>。</p>
+<p>组件中编辑好的 <code>Kconfig.projbuild</code> 文件，可以通过 <code>idf.py menuconfig</code> 来修改Kconfig 的配置项。</p>
+<h2 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h2><blockquote>
+<p>分区表是什么？</p>
+</blockquote>
+<p>每片 ESP32 的 flash 可以包含多个应用程序，以及多种不同类型的数据（例如校准数据、文件系统数据、参数存储数据等）。因此，我们在 flash 的 <a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-reference/kconfig.html#config-partition-table-offset">默认偏移地址</a> 0x8000 处烧写一张分区表。</p>
+<p>分区表的长度为 0xC00 字节，最多可以保存 95 条分区表条目。MD5校验和 附加在分区表之后，用于在运行时验证分区表的完整性。分区表占据了整个 flash 扇区，大小为 0x1000 (4 KB)。因此，它后面的任何分区至少需要位于 (<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/kconfig.html#config-partition-table-offset">默认偏移地址</a>) + 0x1000 处，即从 0x9000 初开始。</p>
+<p>如果用户没有在 menuconfig 中选择用户自定义分区表，那么就会使用默认的分区表，默认定义的flash为2MB</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ESP-IDF Partition Table</span></span><br><span class="line"><span class="comment"># Name,   Type, SubType, Offset,  Size,   Flags</span></span><br><span class="line">nvs,      data, nvs,     0x9000,  0x6000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000, 1M,</span><br></pre></td></tr></table></figure>
+
+<p>自定义分区表，首先在 menuconfig 使能用户自定义分区表，然后设置实际flash大小，接着在项目顶层文件夹下创建 <code>partitions.csv</code> 文件</p>
+<p>这里还可能涉及文件系统，可以参考乐鑫官方教程：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/storage/spiffs.html">SPIFFS 文件系统</a></p>
+<p>关于分区表的介绍和使用，请参考乐鑫官方的教程：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/partition-tables.html">分区表</a></p>
+<ul>
+<li><p>Name 字段</p>
+<p>Name 字段可以是任何有意义的名称，但不能超过 16 个字节，其中包括了一个空字节。</p>
+</li>
+<li><p>Type 字段</p>
+<p>Type 字段可以设置为 app（0x00）或者 data （0x01） ，也可以直接使用数字 0<del>254 （或者十六进制 0x00</del>0xfe），但要注意的是 0x00~0x3f 不可以使用，这部分预留给 esp-idf 的核心功能。</p>
+<p><em>注意：启动加载器将忽略 app （0x00）和 data（0x01） 以外的其他分区类型！！！</em></p>
+</li>
+<li><p>SubType 字段</p>
+<p>SubType 字段长度为 8 bit，内容与具体分区 Type 字段有关。目前 esp-idf 仅仅规定了 app （0x00）和 data（0x01）两种分区类型的子类型含义。</p>
+<ul>
+<li><p>当 Type 设置为 app （0x00）时，SubType 字段可以设置为：f<em>actory（0x00）、ota_0（0x10）、…、ota_15（0x1f）或者 test（0x20）。</em></p>
+<p><strong>factory （0x00）是默认的 app 分区。启动加载器将默认加载该应用程序。但如果存在类型为 data&#x2F;ota 分区，则启动加载器将加载 data&#x2F;ota 分区中的数据，进而判断启动哪个 OTA 镜像文件。</strong></p>
+<p>OTA 升级永远都不会更新 factory 分区中的内容。如果你希望在 OTA 项目中预留更多 flash ，可以删除 factory 分区，转而使用 ota_0 分区。</p>
+<p>ota_0（0x10）~ ota_15（0x1f）为 OTA 应用程序分区，启动加载器将根据 OTA 数据分区中的数据来决定加载哪个 OTA 应用程序分区中的程序。<em>在使用 OTA 功能时，应用程序应至少拥有 2 个 OTA 应用程序分区（即 ota_0 和 ota_1）。</em></p>
+</li>
+<li><p>当 Type 设置为 data （0x01）时，Subtype 字段可以设置为：<em>ota（0x00）、phy（0x01）、nvs（0x02）、nvs_keys（0x04） 、或 其他子类型。</em></p>
+<p><strong>ota （0x00）</strong>即 OTA数据分区，用于存储当前所选择的 OTA 应用程序的信息。<strong>这个分区的大小要设置为 0x2000。</strong></p>
+<p><strong>phy （0x01）</strong>用于存放 PHY 初始化数据，从而保证可以为每一个设备单独配置 PHY，而非必须采用固件中的统一 PHY 初始化数据。默认配置下， phy 分区并不启动，而是直接将 phy 初始化数据编译至应用程序中，从而节省分区表空间。如果需要从此分区加载 phy 初始化数据，打开配置菜单，使能 <code>CONFIG_ESP_PHY_INIT_DATA_IN_PARTITION</code> 选项，除此之外，还需要手动将 phy 初始化数据烧录至设备 flash ，因为 esp-idf 编译系统并不会自动完成该操作。</p>
+<p><strong>nvs（0x02）</strong>是专门用于给 <strong>非易失性存储（NVS）API</strong> 使用的分区。用于存储每台设备的 PHY 校准数据（并不是 PHY 初始化数据）。用于存储 Wi-Fi 数据（如果程序中使用了 <code>esp_wifi_set_storage(WIFI_STORAGE_FLASH)</code> 的话）。NVS API 还可以用于其他应用程序数据。强烈建议为 NVS 分区分配至少 0x3000 字节大小的空间。如果使用 NVS API 存储大量数据，则需要增加 nvs 分区的大小，默认是 0x6000 字节。</p>
+<p>nvs_keys（0x04）是 NVS 秘钥分区。用于存储加密秘钥（如果启动了 NVS 加密功能的话）。此分区应该至少分配 0x1000 字节（即 4096 字节）。</p>
+</li>
+</ul>
+</li>
+<li><p>偏移地址（Offset）和 大小（Size）字段</p>
+<ul>
+<li>偏移地址表示 SPI flash 中的分区地址，扇区大小为 0x1000（4KB）。因此，偏移地址必须是 4KB 的整数倍。</li>
+<li>若 csv 文件中的分区偏移地址为空，则该分区会接在前一个分区之后；若为首个分区，则接在分区表之后。</li>
+<li><strong>app 分区的偏移地址必须与 0x10000（64KB）对齐。</strong></li>
+<li>若启动了安全启动 V1（Secure Boot），则 app 分区的大小与 0x10000（64KB）对齐。</li>
+<li>app 分区的大小和偏移地址可以采用 <code>十进制数</code> 或 <code>以0x为前缀的十六进制数</code>，且支持 K 或 M 的倍数单位。</li>
+</ul>
+</li>
+<li><p>Flags 字段</p>
+<p>目前 Flags 字段仅支持 <code>encrypted</code> 和 <code>readonly</code>。如果 Flags 字段设置为 <code>encrypted</code> ，且启用了 flash 加密功能，则该分区将会被加密。<em>注意：无论是否设置 Flags 字段，app 分区都将保持加密。</em></p>
+<p>如果 Flags 字段设置为 <code>readonly</code> ，则该分区为只读分区。readonly 标记仅支持 除 ota 和 coredump 子类型外的 data 分区。使用 readonly 标记，防止意外写入 如出厂数据分区等包含设备特定配置数据的分区。 </p>
+<p>可以使用冒号连接不同的标记，来同时指定多个标记，例如 <code>encrypted:readonly</code>。</p>
+</li>
+</ul>
+<h3 id="内置分区表"><a href="#内置分区表" class="headerlink" title="内置分区表"></a>内置分区表</h3><p>ESP-IDF 提供了内置分区表，用户通过 <code>idf.py menuconfig</code> 勾选即可。”Single factory app, no OTA” 分区表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># ESP-IDF Partition Table</span><br><span class="line"># Name,   Type, SubType, Offset,  Size,   Flags</span><br><span class="line">nvs,      data, nvs,     0x9000,  0x6000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000, 1M,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 flash 的 0x10000（即64 KB）偏移地址处存放一个标记为 “factory” 的二进制应用程序，且启动加载器默认加载这个程序。</li>
+<li>分区表中还定义了两个数据区域，分别用于存储 NVS 库专用分区和 PHY 初始化数据。</li>
+</ul>
+<p>“Factory app, two OTA definitions” 分区表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># ESP-IDF Partition Table</span><br><span class="line"># Name,   Type, SubType, Offset,  Size, Flags</span><br><span class="line">nvs,      data, nvs,     0x9000,  0x4000,</span><br><span class="line">otadata,  data, ota,     0xd000,  0x2000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000,  1M,</span><br><span class="line">ota_0,    app,  ota_0,   0x110000, 1M,</span><br><span class="line">ota_1,    app,  ota_1,   0x210000, 1M,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分区表中定义了三个应用程序分区，这三个分区的类型都被设置为 “app” ，但具体 app 类型不同。其中位于 0x10000 偏移地址处的为出厂应用程序（factory），其余两个为 OTA 应用程序（ota_0, ota_1）。</li>
+<li>新增了一个名为 “otadata” 的数据分区，用于保存 OTA 升级时需要的数据。启动加载器会查询该分区的数据，以判断应该从哪个 OTA 应用程序分区加载程序。如果 “otadata” 分区为空，则会执行出厂程序。</li>
+</ul>
+<h3 id="自定义分区表"><a href="#自定义分区表" class="headerlink" title="自定义分区表"></a>自定义分区表</h3><p>除了使用 ESP-IDF 的内置分区表外，还可以自定义分区表。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Name,   Type, SubType,  Offset,   Size,  Flags</span><br><span class="line">nvs,      data, nvs,      0x9000,  0x4000</span><br><span class="line">otadata,  data, ota,      0xd000,  0x2000</span><br><span class="line">phy_init, data, phy,      0xf000,  0x1000</span><br><span class="line">factory,  app,  factory,  0x10000,  1M</span><br><span class="line">ota_0,    app,  ota_0,    ,         1M</span><br><span class="line">ota_1,    app,  ota_1,    ,         1M</span><br><span class="line">nvs_key,  data, nvs_keys, ,        0x1000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增了一个名为 “nvs_key” 的数据分区，大小为 4KB。</li>
+<li>其中三个分区的 <code>Offset</code> 字段可以为空，因为 <code>gen_esp32part.py</code> 工具会从分区表位置的后台开始自动计算并填充分区的偏移地址，通知确保每个分区的偏移地址正确对齐。</li>
+</ul>
+<h3 id="生成二进制分区表"><a href="#生成二进制分区表" class="headerlink" title="生成二进制分区表"></a>生成二进制分区表</h3><p>烧写到 ESP32 中的分区表采用二进制格式，而不是 csv 文件本身。partition_table&#x2F;gen_esp32part.py 工具可以实现 csv 文件和二进制文件之间的转换。</p>
+<p>如果在项目配置菜单 <code>idf.py menuconfig</code> 中设置了分区表 csv 文件的名称，然后构建项目 <code>idf.py build</code> 或 执行 <code>idf.py partition-table</code> 。这时，转换将在编译过程自动完成。</p>
+<ul>
+<li><p>手动将 csv 文件转换为二进制文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python gen_esp32part.py input_partitions.csv binary_partitions.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动将二进制文件转换为csv 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python gen_esp32part.py binary_partitions.bin input_partitions.csv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印二进制分区表的内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">idf.py partition-table</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">python gen_esp32part.py binary_partitions.bin</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="分区大小检查"><a href="#分区大小检查" class="headerlink" title="分区大小检查"></a>分区大小检查</h3><p>esp-idf 构建系统将自动检查生成的二进制文件大小与可用分区大小是否匹配，如果二进制文件太大，则会构建失败并报错提示。</p>
+<h3 id="MD5校验和"><a href="#MD5校验和" class="headerlink" title="MD5校验和"></a>MD5校验和</h3><p>二进制格式的分区表中含有一个 MD5 校验和。这个 MD5 校验和是根据分区表内容计算的，可在设备启动阶段用于验证分区表的完整性。</p>
+<h3 id="烧写分区表"><a href="#烧写分区表" class="headerlink" title="烧写分区表"></a>烧写分区表</h3><p>使用 esptool.py 工具烧写分区表，命令：<code>idf.py partition-flash</code>。或者 执行命令 <code>idf.py flash</code> ，烧写所有内容，包括分区表。</p>
+<h2 id="OTA"><a href="#OTA" class="headerlink" title="OTA"></a>OTA</h2><p>OTA（Over-The-Air）升级机制可以让设备在固件 <strong>正常运行时</strong> 通过Wi-Fi、蓝牙或以太网 接收数据进行自我更新。</p>
+<p>要运行 OTA 机制，需要配置设备的分区表，该分区表至少包括两个 OTA 应用程序分区（即 ota_0 和 ota_1）和 一个 OTA 数据分区。</p>
+<p>OTA 功能启动后，向当前 <strong>未用于启动的 OTA 应用程序分区</strong> 写入新的应用固件镜像。镜像验证后， OTA 数据分区更新，指定在下一次启动时使用新镜像。</p>
+<h3 id="OTA-数据分区"><a href="#OTA-数据分区" class="headerlink" title="OTA 数据分区"></a>OTA 数据分区</h3><p>所有使用 OTA 功能项目，其分区表 <em><strong>必须</strong></em> 包含一个 OTA 数据分区，Type 字段为 data，SubType 字段为 ota。</p>
+<p>工厂启动设置下，OTA 数据分区中应没有数据。如果分区表中有工厂应用程序，esp-idf 引导加载程序会启动工厂应用程序。如果分区表没有工厂应用程序，则启动第一个可用的 OTA 分区，通常是 ota_0。</p>
+<p>第一次 OTA 升级后，OTA 数据分区更新，指定下一次启动哪个 OTA 应用程序分区。</p>
+<p>OTA 数据分区的容量是 2 个 flash 扇区的大小，即0x2000 字节（8 KB），防止写入时电源故障引发问题。两个扇区单独擦除、写入匹配数据，若存在不一致，则用计数器字段判定按个扇区为最新数据。</p>
+<h3 id="应用程序回滚"><a href="#应用程序回滚" class="headerlink" title="应用程序回滚"></a>应用程序回滚</h3><p>应用程序回滚的主要目的：确保设备在更新后正常工作。如果新版应用程序出现严重故障，该功能科使设备回滚到之前正常运行的应用版本。</p>
+<p>在使能回滚并且 OTA 升级应用程序至新版本后， 可能出现的结果：</p>
+<ul>
+<li><p>应用程序运行正常</p>
+<p><code>esp_ota_mark_app_valid_cancel_rollback()</code> 将正在运行的应用程序状态标记为 <code>ESP_OTA_IMG_VALID</code>，启动此应用程序无限制。</p>
+</li>
+<li><p>应用程序出现严重故障，无法继续工作，必须回滚到 OTA 升级之前的版本</p>
+<p><code>esp_ota_mark_app_invalid_rollback_and_reboot()</code> 将正在运行的版本标记为 <code>ESP_OTA_IMG_INVALID</code> ，然后系统复位。引导加载程序不会选择次版本，而是启动 OTA 升级之前的版本。</p>
+</li>
+<li><p>如果 <code>CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE</code> 使能（默认情况下是没有使能的），则无需调用函数便可系统复位，并回滚到 OTA 升级之前的版本。</p>
+</li>
+</ul>
+<h3 id="OTA工具"><a href="#OTA工具" class="headerlink" title="OTA工具"></a>OTA工具</h3><p>app_update 组件中有 <code>app_update/otatool.py</code> 工具，用于在目标设备完成 OTA 分区相关的操作：</p>
+<ul>
+<li>读取 otadata 分区</li>
+<li>擦除 otadata 分区，将设备复位至工厂应用程序</li>
+<li>切换 OTA 分区</li>
+<li>擦除 OTA 分区</li>
+<li>写入 OTA 分区</li>
+<li>读取 OTA 分区</li>
+</ul>
+<h2 id="存储器类型"><a href="#存储器类型" class="headerlink" title="存储器类型"></a>存储器类型</h2><p>esp-idf 区分了指令总线（IRAM、IROM、RTC FAST memory）和 数据总线（DRAM、DROM）。</p>
+<p>指令存储器是可以执行的，只能通过 4 字节对齐读取或写入。</p>
+<p>数据存储器不可执行，可以通过单独的字节操作访问。</p>
+<h3 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h3><p>非常量静态数据（.data段）和 零初始化数据（.bss段）由链接器放入内部 SRAM 作为数据存储。此区域中的剩余空间可在程序运行时用作堆 heap。</p>
+<p>如果使用蓝牙堆栈，内部 DRAM 区域的可用大小将减少 64 KB。</p>
+<p>如果使用内存跟踪功能，内部 DRAM 区域的可用大小将减少 16 KB 或者 32 KB。</p>
+<blockquote>
+<p><strong>ESP32 上有 520 KB 的可用 SRAM，其中320 KB的DRAM 和 200 KB的IRAM。但是由于技术限制，用于静态分区的DRAM 最多可为 160 KB，剩余的 160 KB 只能在运行时分配为堆 heap。</strong></p>
+</blockquote>
+<h3 id="IRAM"><a href="#IRAM" class="headerlink" title="IRAM"></a>IRAM</h3><p>esp-idf 将内部 SRAM0 的部分区域分配为 指令RAM。</p>
+<ul>
+<li>如果在注册中断处理程序时，使用了 <code>ESP_INTR_FLAG_IRAM</code> ，则中断处理程序必须放入 IRAM。</li>
+<li>可将一些时序关键代码放入IRAM，以减少从 flash  中加载代码造成的相关损失。</li>
+</ul>
+<p>编译 hello_world 项目时，执行 <code>idf.py size</code> 查看 DRAM、IRAM 和 flash 的使用：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Total sizes:</span><br><span class="line">Used static DRAM:   10956 bytes ( 169780 remain, 6.1% used)</span><br><span class="line">      .data size:    8716 bytes</span><br><span class="line">      .bss  size:    2240 bytes</span><br><span class="line">Used static IRAM:   51074 bytes (  79998 remain, 39.0% used)</span><br><span class="line">      .text size:   50047 bytes</span><br><span class="line">   .vectors size:    1027 bytes</span><br><span class="line">Used Flash size :  116999 bytes</span><br><span class="line">           .text:   79067 bytes</span><br><span class="line">         .rodata:   37676 bytes</span><br><span class="line">Total image size:  176789 bytes (.bin may be padded larger)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ESP-IDF</tag>
+      </tags>
   </entry>
   <entry>
     <title>WiFi Easy Connect</title>
@@ -422,6 +1512,9 @@
 <li>Micro&#x2F;mini，早期的安卓手机上使用Micro USB比较常见。</li>
 </ul>
 <p>USB各种接口图片：<a href="https://www.usbzh.com/article/detail-144.html">https://www.usbzh.com/article/detail-144.html</a></p>
+<p><img src="/2024/11/08/2024/USB-OTG/bcd5da92bffa7b9eb7b092bc9d9428b9.jpg" alt="bcd5da92bffa7b9eb7b092bc9d9428b9"></p>
+<p>引脚：</p>
+<p><img src="/2024/11/08/2024/USB-OTG/IMG_1552.PNG" alt="IMG_1552"></p>
 <p><strong>USB Device：</strong></p>
 <p>USB Device 是连接到USB Host的外设，它响应Host的命令和请求，提供特定的功能或服务。USB Device可以是简单的输入设备（如键盘、鼠标）、存储设备（如U盘、外置硬盘）、打印机、摄像头等。</p>
 <p><strong>USB Host：</strong></p>
@@ -7428,7 +8521,7 @@
 </li>
 </ul>
 <h2 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h2><p>信道也称作通道(Channel)、频段，是以无线信号（电磁波）作为传输载体的数据信号传送通道。</p>
-<p>不管是802.11b&#x2F;g还是802.11a&#x2F;b&#x2F;g&#x2F;n&#x2F;ac一般都支持13个信道。它们的中心频率虽然不同，但是因为都占据一定的频率范围，所以会有一些相互重叠的情况。</p>
+<p>IEEE 802.11 为ISM（免执照）频段中的低功率 Wi-Fi定义了 14 个信道。不管是802.11b&#x2F;g还是802.11a&#x2F;b&#x2F;g&#x2F;n&#x2F;ac一般都支持 13 个信道。它们的中心频率虽然不同，但是因为都占据一定的频率范围，所以会有一些相互重叠的情况。</p>
 <p>2.4GHz频带的信道划分14个信道（2412 MHz ~ 2484 MHz），但第14信道一般不用，每个信道的有效宽度是 20MHz，另外还有2MHz的强制隔离频带。2.4G WiFi信道分布图可以看到信道之间会彼此重叠，从而容易造成WiFi干扰，但1、6、11信道除外，这三个信道没有重叠部分，故路由器一般将这三个信道作为默认的信道来使用。</p>
 <table>
 <thead>
@@ -7510,6 +8603,7 @@
 </tr>
 </tbody></table>
 <p><img src="/2024/08/12/2024/wpa-supplicant-application/2.4G.png" alt="2.4G"></p>
+<p><em>注意：</em></p>
 <h2 id="WPA-SUPPLICANT"><a href="#WPA-SUPPLICANT" class="headerlink" title="WPA_SUPPLICANT"></a>WPA_SUPPLICANT</h2><blockquote>
 <p>wap_supplicant是什么？</p>
 </blockquote>
@@ -8240,7 +9334,7 @@
 <p>至此，在ubuntu22.04容器上基于hexo搭建个人博客就完成了。后续还会修改博客的主题（选择：next主题），并对next主题自定义修改，以及部署到Github。</p>
 ]]></content>
       <categories>
-        <category>Blog</category>
+        <category>hexo</category>
       </categories>
       <tags>
         <tag>hexo</tag>

@@ -28,13 +28,16 @@
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
 <meta property="og:description" content="在嵌入式领域中，涉及到许多硬件通信接口或协议，特别是在学习ESP芯片时，看到了很多支持很多接口类型，但是我对这些又不太懂，所以有必要对自己进行科普下。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113119541.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113706448.png">
 <meta property="article:published_time" content="2024-11-17T18:47:43.000Z">
-<meta property="article:modified_time" content="2024-11-20T02:10:56.800Z">
+<meta property="article:modified_time" content="2024-12-09T03:21:21.782Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="esp32">
 <meta property="article:tag" content="Interface">
 <meta property="article:tag" content="Protocol">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113119541.png">
 
 
 <link rel="canonical" href="https://eisouthboy.github.io/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/">
@@ -92,7 +95,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">69</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">51</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">78</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">59</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -130,7 +133,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -143,6 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UART"><span class="nav-number">1.</span> <span class="nav-text">UART</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E6%B0%94%E6%A0%87%E5%87%86"><span class="nav-number">1.1.</span> <span class="nav-text">电气标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A7%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">帧结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B2%E5%8F%A3%E6%8E%A7%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text">串口控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SPI"><span class="nav-number">2.</span> <span class="nav-text">SPI</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -157,18 +161,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-count">78</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -519,7 +523,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-11-20 02:10:56" itemprop="dateModified" datetime="2024-11-20T02:10:56+00:00">2024-11-20</time>
+      <time title="Modified: 2024-12-09 03:21:21" itemprop="dateModified" datetime="2024-12-09T03:21:21+00:00">2024-12-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -553,17 +557,126 @@ if(canvas.getContext){
 <p>以下内容来自AI的回答</p>
 </blockquote>
 <p>在嵌入式系统设计中，硬件通信接口或协议是实现不同设备之间数据交换的关键。这些接口和协议根据传输距离、速度、功耗等因素的不同而有所区别。下面是一些常见的硬件通信接口或协议：</p>
+<h2 id="UART"><a href="#UART" class="headerlink" title="UART"></a>UART</h2><p>UART （Universal Asynchronous Receiver&#x2F;Transmitter，通用异步收发器）是一种非常基础的串行通信协议，它允许两个设备之间进行<strong>串行、异步、全双工</strong>的数据传输。它简单易用，适用于短距离通信。</p>
+<p>串口只需要 2根线（TX 和 RX） 就可以实现数据发送和接受，TX用于发送数据，RX用于接收数据（收发不是一根线，所以是全双工通信），通信双方只要采用相同的帧格式和波特率，就能在未共享时钟信号的情况下，可以完成通信过程（收发不同步，所以是异步串行通信）。</p>
+<h3 id="电气标准"><a href="#电气标准" class="headerlink" title="电气标准"></a>电气标准</h3><p>串口有4种电气标准，分别是：TTL、RS232、RS422、RS485。这4种串口只在电气信号上有差别，在帧格式、传输逻辑、软件操作上基本上都是一样的。</p>
+<p>串口的4种电气标准比较：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>TTL</th>
+<th>RS232</th>
+<th>RS422</th>
+<th>RS485</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>信号类型</td>
+<td>电平信号</td>
+<td>电平信号</td>
+<td>差分信号</td>
+<td>差分信号</td>
+</tr>
+<tr>
+<td>电压范围</td>
+<td>0~3.3V&#x2F;5.0V</td>
+<td>+15V&#x2F;-15V</td>
+<td>-0.25V~+6V</td>
+<td>-7V~+12V</td>
+</tr>
+<tr>
+<td>抗干扰性</td>
+<td>弱</td>
+<td>较强</td>
+<td>强</td>
+<td>强</td>
+</tr>
+<tr>
+<td>传输距离</td>
+<td>1m</td>
+<td>10m</td>
+<td>1.2km</td>
+<td>1.2km</td>
+</tr>
+<tr>
+<td>负载数量</td>
+<td>100Kbps</td>
+<td>100Kbps</td>
+<td>10Mbps</td>
+<td>10Mbps</td>
+</tr>
+<tr>
+<td>传输模式</td>
+<td>1</td>
+<td>1</td>
+<td>10</td>
+<td>32</td>
+</tr>
+<tr>
+<td>导线数量</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>TTL（Transistor-Transistor Logic）</strong></p>
+<p>TTL电平是指这种逻辑电路中使用的电压标准，用于表示二进制的“0”和“1”。</p>
+<p>逻辑低电平”0” 通常指 <em><strong>接近</strong></em> 0V的电压，一般认为低于 0.8V 为低电平。</p>
+<p>逻辑高电平”1” 通常指相对较高的电压，对于传统的5V TTL逻辑，高电平通常是在 <code>2V~5V</code> 之间；对于3.3V TTL逻辑，高电平则在 <code>2V~3.3V</code> 之间。</p>
+</li>
+<li><p><strong>RS232（Recommended Standard 232）</strong></p>
+<p>RS-232使用 <em><strong>负逻辑</strong></em>，即逻辑“1”为负电压，通常在 <code>-3V~-15V</code> 之间，逻辑“0”为正电压，通常在<code>+3V~+15V</code> 之间）。这种较高的电压范围有助于提高抗噪能力，但同时也限制了其适用于低功耗应用。</p>
+</li>
+<li><p><strong>RS422（Recommended Standard 422）</strong></p>
+<p>RS-422 使用差分信号传输，这意味着每条数据线都有一个对应的反相线。</p>
+<p>差分信号线之间的电压差用来表示逻辑电平，而不是相对于地线的绝对电压。</p>
+<p>发送端：逻辑“1”对应于<code>+2V到+6V</code> 之间的电压差，而逻辑“0”则对应于 <code>-2V到-6V</code> 之间的电压差。</p>
+<p>接收端：逻辑“1”对应于电压差 <code>大于+0.2V</code>，而逻辑“0”则对应于电压差 <code>小于-0.2V</code>。</p>
+</li>
+<li><p><strong>RS485（Recommended Standard 485）</strong></p>
+<p>RS485 使用差分信号传输，这意味着每条数据线都有一个对应的反相线。</p>
+<p>差分信号线之间的电压差用来表示逻辑电平。</p>
+<p>发送端：逻辑“1”对应于电压差 <code>+0.2V到+6V</code> 之间，而逻辑“0”则对应于电压差  <code>-0.2V到-6V</code> 之间。</p>
+<p>接收端：逻辑“1”对应于电压差 <code>大于+0.2V</code>，而逻辑“0”则对应于电压差 <code>小于-0.2V</code>。</p>
+</li>
+</ul>
+<h3 id="帧结构"><a href="#帧结构" class="headerlink" title="帧结构"></a>帧结构</h3><p><img src="/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113119541.png" alt="image-20241208113119541"></p>
+<p>我们在使用上位机串口软件（例如：Putty），需要选择串口名称、波特率、数据位、停止位、校验位和流控。</p>
+<p><img src="/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/image-20241208113706448.png" alt="image-20241208113706448"></p>
+<h3 id="串口控制"><a href="#串口控制" class="headerlink" title="串口控制"></a>串口控制</h3><blockquote>
+<p>为什么开发板通过USB接到电脑后，电脑可以通过串口调试助手与开发板通信？</p>
+</blockquote>
+<p>电脑（Ubuntu 22.04）一般默认安装了不同 “USB to UART Bridge” 芯片厂家的驱动，所以当开发板通过USB接入电脑，系统中的已安装的驱动能够自动识别并正确配置不同芯片厂家的 “USB to UART Bridge” 设备，从而创建像 <code>/dev/ttyUSB0</code> 这样的设备节点，以便用户空间程序可以与这些设备进行通信。</p>
+<p><em>USB to UART芯片：Silicon（芯科） CP2102、FDTI（飞特帝亚） FT232、Prolific（旺玖） PL2303、南京沁恒 CH340。</em></p>
+<p>在 Ubuntu 22.04 系统查看自带驱动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">uname</span> -r</span><br><span class="line">6.8.0-49-generic</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">ls</span> /lib/modules/$(<span class="built_in">uname</span> -r)/kernel/drivers/usb/serial</span><br><span class="line">aircable.ko         f81232.ko       iuu_phoenix.ko  mxuport.ko   quatech2.ko          usbserial.ko</span><br><span class="line">ark3116.ko          f81534.ko       keyspan.ko      navman.ko    safe_serial.ko       usb-serial-simple.ko</span><br><span class="line">belkin_sa.ko        ftdi_sio.ko     keyspan_pda.ko  omninet.ko   sierra.ko            usb_wwan.ko</span><br><span class="line">ch341.ko            garmin_gps.ko   kl5kusb105.ko   opticon.ko   spcp8x5.ko           visor.ko</span><br><span class="line">cp210x.ko           io_edgeport.ko  kobil_sct.ko    option.ko    ssu100.ko            whiteheat.ko</span><br><span class="line">cyberjack.ko        io_ti.ko        mct_u232.ko     oti6858.ko   symbolserial.ko      wishbone-serial.ko</span><br><span class="line">cypress_m8.ko       ipaq.ko         metro-usb.ko    pl2303.ko    ti_usb_3410_5052.ko  xr_serial.ko</span><br><span class="line">digi_acceleport.ko  ipw.ko          mos7720.ko      qcaux.ko     upd78f0730.ko        xsens_mt.ko</span><br><span class="line">empeg.ko            ir-usb.ko       mos7840.ko      qcserial.ko  usb_debug.ko</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Ubuntu 22.04 系统默认就支持 <em>Silicon cp210x.ko、南京沁恒 ch341.ko、FTDI ftdi_sio.ko、Prolific pl2303.ko</em>。</p>
+<p>USB to UART Bridge芯片通过串口驱动识别后，可以查看到如下信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ lsusb</span><br><span class="line">Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub</span><br><span class="line">Bus 003 Device 003: ID 27c6:5125 Shenzhen Goodix Technology Co.,Ltd. Goodix Fingerprint Device </span><br><span class="line">Bus 003 Device 002: ID 0489:e0df Foxconn / Hon Hai </span><br><span class="line">Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br><span class="line">Bus 002 Device 005: ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet</span><br><span class="line">Bus 002 Device 004: ID 05e3:0626 Genesys Logic, Inc. USB3.1 Hub</span><br><span class="line">Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub</span><br><span class="line">Bus 001 Device 005: ID 13d3:56f8 IMC Networks ov9734_azurewave_camera</span><br><span class="line">Bus 001 Device 003: ID 046d:c52f Logitech, Inc. Unifying Receiver</span><br><span class="line">Bus 001 Device 009: ID 10c4:ea60 Silicon Labs CP210x UART Bridge</span><br><span class="line">Bus 001 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub</span><br><span class="line">Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查看详细信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> lsusb -v</span><br><span class="line">Bus 001 Device 009: ID 10c4:ea60 Silicon Labs CP210x UART Bridge</span><br><span class="line">Device Descriptor:</span><br><span class="line">  bLength                18</span><br><span class="line">  bDescriptorType         1</span><br><span class="line">  bcdUSB               2.00</span><br><span class="line">  bDeviceClass            0 </span><br><span class="line">  bDeviceSubClass         0 </span><br><span class="line">  bDeviceProtocol         0 </span><br><span class="line">  bMaxPacketSize0        64</span><br><span class="line">  idVendor           0x10c4 Silicon Labs</span><br><span class="line">  idProduct          0xea60 CP210x UART Bridge</span><br><span class="line">  bcdDevice            1.00</span><br><span class="line">  iManufacturer           1 Silicon Labs</span><br><span class="line">  iProduct                2 CP2102N USB to UART Bridge Controller</span><br><span class="line">  iSerial                 3 6a7f096aba1aef11a7db0b764909ffd0</span><br><span class="line">  bNumConfigurations      1</span><br><span class="line">  Configuration Descriptor:</span><br><span class="line">    bLength                 9</span><br><span class="line">    bDescriptorType         2</span><br><span class="line">    wTotalLength       0x0020</span><br><span class="line">    bNumInterfaces          1</span><br><span class="line">    bConfigurationValue     1</span><br><span class="line">    iConfiguration          0 </span><br><span class="line">    bmAttributes         0x80</span><br><span class="line">      (Bus Powered)</span><br><span class="line">    MaxPower              100mA</span><br><span class="line">    Interface Descriptor:</span><br><span class="line">      bLength                 9</span><br><span class="line">      bDescriptorType         4</span><br><span class="line">      bInterfaceNumber        0</span><br><span class="line">      bAlternateSetting       0</span><br><span class="line">      bNumEndpoints           2</span><br><span class="line">      bInterfaceClass       255 Vendor Specific Class</span><br><span class="line">      bInterfaceSubClass      0 </span><br><span class="line">      bInterfaceProtocol      0 </span><br><span class="line">      iInterface              0 </span><br><span class="line">      Endpoint Descriptor:</span><br><span class="line">        bLength                 7</span><br><span class="line">        bDescriptorType         5</span><br><span class="line">        bEndpointAddress     0x02  EP 2 OUT</span><br><span class="line">        bmAttributes            2</span><br><span class="line">          Transfer Type            Bulk</span><br><span class="line">          Synch Type               None</span><br><span class="line">          Usage Type               Data</span><br><span class="line">        wMaxPacketSize     0x0040  1x 64 bytes</span><br><span class="line">        bInterval               0</span><br><span class="line">      Endpoint Descriptor:</span><br><span class="line">        bLength                 7</span><br><span class="line">        bDescriptorType         5</span><br><span class="line">        bEndpointAddress     0x82  EP 2 IN</span><br><span class="line">        bmAttributes            2</span><br><span class="line">          Transfer Type            Bulk</span><br><span class="line">          Synch Type               None</span><br><span class="line">          Usage Type               Data</span><br><span class="line">        wMaxPacketSize     0x0040  1x 64 bytes</span><br><span class="line">        bInterval               0</span><br><span class="line">Device Status:     0x0000</span><br><span class="line">  (Bus Powered)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中比较关键的字段：</p>
+<ul>
+<li><p>idVendor：不要修改</p>
+</li>
+<li><p>idProduct：不要修改</p>
+</li>
+<li><p>iManufacturer：可自定修改</p>
+</li>
+<li><p>iProduct：可自定义修改</p>
+</li>
+</ul>
+<p><em>注意：Key使用Silicon Labs提供 Simplicity Studio 软件 修改上述字段</em></p>
+<h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><p>SPI （Serial Peripheral Interface，串行外设接口）是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</p>
 <ol>
-<li><p><strong>UART (Universal Asynchronous Receiver&#x2F;Transmitter)</strong></p>
-<ul>
-<li>UART 是一种非常基础的串行通信协议，它允许两个设备之间进行异步数据传输。它简单易用，适用于短距离通信。</li>
-</ul>
-</li>
-<li><p><strong>SPI (Serial Peripheral Interface)</strong></p>
-<ul>
-<li>SPI 是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</li>
-</ul>
-</li>
 <li><p><strong>I2C (Inter-Integrated Circuit)</strong></p>
 <ul>
 <li>I2C 是一种多主机总线，使用两根线（SDA 数据线和 SCL 时钟线）进行半双工通信。它广泛应用于需要连接多个低速外围设备的场合。</li>

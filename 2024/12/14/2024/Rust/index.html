@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Rust 一门赋予每个人构建可靠且高效软件能力的语言。记录了《Rust 程序设计语言》学习过程和理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust Program Language">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/12/14/2024/Rust/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="Rust 一门赋予每个人构建可靠且高效软件能力的语言。记录了《Rust 程序设计语言》学习过程和理解。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-14T15:07:04.000Z">
+<meta property="article:modified_time" content="2024-12-15T06:56:22.907Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="Rust">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/12/14/2024/Rust/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/12/14/2024/Rust/","path":"2024/12/14/2024/Rust/","title":"Rust Program Language"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Rust Program Language | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">78</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">59</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Rust-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">Rust 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VSCode-Rust%E6%8F%92%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">VSCode Rust插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rust-%E8%AF%AD%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">Rust 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE"><span class="nav-number">3.1.</span> <span class="nav-text">数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E5%B8%B8%E9%87%8F"><span class="nav-number">3.1.1.</span> <span class="nav-text">变量和常量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E8%97%8F"><span class="nav-number">3.1.2.</span> <span class="nav-text">隐藏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.3.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%87%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">标量类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.3.2.</span> <span class="nav-text">复合类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81"><span class="nav-number">3.3.</span> <span class="nav-text">控制流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E7%BB%93%E6%9E%84"><span class="nav-number">3.3.1.</span> <span class="nav-text">分支结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="nav-number">3.3.2.</span> <span class="nav-text">循环结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">3.4.</span> <span class="nav-text">结构体</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/12/14/2024/Rust/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Rust Program Language | eiSouthBoy's Blog">
+      <meta itemprop="description" content="Rust 一门赋予每个人构建可靠且高效软件能力的语言。记录了《Rust 程序设计语言》学习过程和理解。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust Program Language
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-12-14 15:07:04" itemprop="dateCreated datePublished" datetime="2024-12-14T15:07:04+00:00">2024-12-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-15 06:56:22" itemprop="dateModified" datetime="2024-12-15T06:56:22+00:00">2024-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">Rust 一门赋予每个人构建可靠且高效软件能力的语言。记录了《Rust 程序设计语言》学习过程和理解。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://kaisery.github.io/trpl-zh-cn/">《Rust 程序设计语言》 简体中文版</a></p>
+<p><a target="_blank" rel="noopener" href="https://doc.rust-lang.org/stable/book/#the-rust-programming-language">《The Rust Programming Language》英文版</a></p>
+<p>熟悉关于Rust单词：</p>
+<ul>
+<li>Rustacean：Rust编程语言的用户或开发者。</li>
+</ul>
+<p>什么选择 Rust？</p>
+<ul>
+<li><p>高性能</p>
+<p>Rust 速度惊人且<strong>内存</strong>利用率极高。由于没有运行时和垃圾回收，它能够胜任对性能要求特别高的服务，可以在<strong>嵌入式设备</strong>上运行，还能轻松和其他语言集成。</p>
+</li>
+<li><p>可靠性</p>
+<p>Rust 丰富的类型系统和所有权模型保证了<strong>内存安全</strong>和<strong>线程安全</strong>，让您在编译期就能够消除各种各样的错误。</p>
+</li>
+<li><p>生产力</p>
+<p>Rust 拥有出色的文档、友好的编译器和清晰的错误提示信息， 还集成了一流的工具——包管理器和构建工具， 智能地自动补全和类型检验的多编辑器支持， 以及自动格式化代码等等。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Rust">Rust</a> 的历史？</p>
+<p>Rust语言原本是 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Mozilla">Mozilla</a> 员工 <code>Graydon Hoare</code> 的个人项目，而 Mozilla 于2009年开始赞助这个项目，并且在2010年首次公开。也在同一年，其编译器源代码开始由原本的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/OCaml">OCaml语言</a>转移到用Rust语言，进行自我编译工作，称做“rustc”，并于2011年实际完成。这个可自我编译的编译器在架构上采用了<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/LLVM">LLVM</a>做为它的后端。</p>
+<p>第一个有版本号的Rust编译器于2012年1月发布。<em><strong>Rust 1.0是第一个稳定版本，于2015年5月15日发布</strong></em>。</p>
+<p><strong>Rust 开发工具</strong>：</p>
+<ul>
+<li><em>Cargo</em> 是内置的依赖管理器和构建工具，它能轻松增加、编译和管理依赖，并使依赖在 Rust 生态系统中保持一致。</li>
+<li><em>Rustfmt</em> 格式化工具确保开发者遵循一致的代码风格。</li>
+<li><em>rust-analyzer</em> 为集成开发环境（IDE）提供了强大的代码补全和内联错误信息功能</li>
+</ul>
+<p><strong>Rust 应用场景：</strong></p>
+<ul>
+<li>命令行工具</li>
+<li>Web服务</li>
+<li>DevOps工具</li>
+<li>嵌入式设备</li>
+<li>音视频分析与转码</li>
+<li>加密货币</li>
+<li>生物信息学</li>
+<li>搜索引擎</li>
+<li>物联网（IOT）程序</li>
+<li>机器学习</li>
+</ul>
+<h2 id="Rust-安装"><a href="#Rust-安装" class="headerlink" title="Rust 安装"></a>Rust 安装</h2><p>通过 <code>rustup</code>  安装官方的编译器 <code>rustc</code> 和 构建系统工具&amp;包管理工具 <code>cargo</code>。</p>
+<p>在 Linux 或 macOS 的命令行终端执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">alex@alex-NMH-WCX9:~$ curl --proto &#x27;=https&#x27; --tlsv1.2 https://sh.rustup.rs -sSf | sh</span><br><span class="line">info: downloading installer</span><br><span class="line"></span><br><span class="line">Welcome to Rust!</span><br><span class="line"></span><br><span class="line">This will download and install the official compiler for the Rust</span><br><span class="line">programming language, and its package manager, Cargo.</span><br><span class="line"></span><br><span class="line">Rustup metadata and toolchains will be installed into the Rustup</span><br><span class="line">home directory, located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.rustup</span><br><span class="line"></span><br><span class="line">This can be modified with the RUSTUP_HOME environment variable.</span><br><span class="line"></span><br><span class="line">The Cargo home directory is located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.cargo</span><br><span class="line"></span><br><span class="line">This can be modified with the CARGO_HOME environment variable.</span><br><span class="line"></span><br><span class="line">The cargo, rustc, rustup and other commands will be added to</span><br><span class="line">Cargo&#x27;s bin directory, located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.cargo/bin</span><br><span class="line"></span><br><span class="line">This path will then be added to your PATH environment variable by</span><br><span class="line">modifying the profile files located at:</span><br><span class="line"></span><br><span class="line">  /home/alex/.profile</span><br><span class="line">  /home/alex/.bashrc</span><br><span class="line"></span><br><span class="line">You can uninstall at any time with rustup self uninstall and</span><br><span class="line">these changes will be reverted.</span><br><span class="line"></span><br><span class="line">Current installation options:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   default host triple: x86_64-unknown-linux-gnu</span><br><span class="line">     default toolchain: stable (default)</span><br><span class="line">               profile: default</span><br><span class="line">  modify PATH variable: yes</span><br><span class="line"></span><br><span class="line">1) Proceed with standard installation (default - just press enter)</span><br><span class="line">2) Customize installation</span><br><span class="line">3) Cancel installation</span><br><span class="line">&gt;</span><br><span class="line"></span><br><span class="line">info: profile set to &#x27;default&#x27;</span><br><span class="line">info: default host triple is x86_64-unknown-linux-gnu</span><br><span class="line">info: syncing channel updates for &#x27;stable-x86_64-unknown-linux-gnu&#x27;</span><br><span class="line">info: latest update on 2024-11-28, rust version 1.83.0 (90b35a623 2024-11-26)</span><br><span class="line">info: downloading component &#x27;cargo&#x27;</span><br><span class="line">  8.6 MiB /   8.6 MiB (100 %) 140.8 KiB/s in 58s ETA:  0s </span><br><span class="line">info: downloading component &#x27;clippy&#x27;</span><br><span class="line">  2.7 MiB /   2.7 MiB (100 %) 155.8 KiB/s in 17s ETA:  0s</span><br><span class="line">info: downloading component &#x27;rust-docs&#x27;</span><br><span class="line"> 16.4 MiB /  16.4 MiB (100 %) 244.4 KiB/s in  1m 44s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rust-std&#x27;</span><br><span class="line"> 26.1 MiB /  26.1 MiB (100 %) 146.2 KiB/s in  4m  0s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rustc&#x27;</span><br><span class="line"> 69.3 MiB /  69.3 MiB (100 %) 134.4 KiB/s in 11m 10s ETA:  0s    </span><br><span class="line">info: downloading component &#x27;rustfmt&#x27;</span><br><span class="line">  2.4 MiB /   2.4 MiB (100 %) 150.4 KiB/s in 22s ETA:  0s</span><br><span class="line">info: installing component &#x27;cargo&#x27;</span><br><span class="line">info: installing component &#x27;clippy&#x27;</span><br><span class="line">info: installing component &#x27;rust-docs&#x27;</span><br><span class="line"> 16.4 MiB /  16.4 MiB (100 %)  10.9 MiB/s in  1s ETA:  0s</span><br><span class="line">info: installing component &#x27;rust-std&#x27;</span><br><span class="line"> 26.1 MiB /  26.1 MiB (100 %)  16.5 MiB/s in  1s ETA:  0s</span><br><span class="line">info: installing component &#x27;rustc&#x27;</span><br><span class="line"> 69.3 MiB /  69.3 MiB (100 %)  17.9 MiB/s in  3s ETA:  0s</span><br><span class="line">info: installing component &#x27;rustfmt&#x27;</span><br><span class="line">info: default toolchain set to &#x27;stable-x86_64-unknown-linux-gnu&#x27;</span><br><span class="line"></span><br><span class="line">  stable-x86_64-unknown-linux-gnu installed - rustc 1.83.0 (90b35a623 2024-11-26)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Rust is installed now. Great!</span><br><span class="line"></span><br><span class="line">To get started you may need to restart your current shell.</span><br><span class="line">This would reload your PATH environment variable to include</span><br><span class="line">Cargo&#x27;s bin directory ($HOME/.cargo/bin).</span><br><span class="line"></span><br><span class="line">To configure your current shell, you need to source</span><br><span class="line">the corresponding env file under $HOME/.cargo.</span><br><span class="line"></span><br><span class="line">This is usually done by running one of the following (note the leading DOT):</span><br><span class="line">. &quot;$HOME/.cargo/env&quot;            # For sh/bash/zsh/ash/dash/pdksh</span><br><span class="line">source &quot;$HOME/.cargo/env.fish&quot;  # For fish</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>安装完成，重启当前的 Terminal ，检查 rustc 版本，执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rustc --version</span><br><span class="line">rustc 1.83.0 (90b35a623 2024-11-26)</span><br></pre></td></tr></table></figure>
+
+<p>接着检查 cargo 版本，执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cargo --verison</span><br><span class="line">cargo 1.83.0 (5ffbef321 2024-10-29)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="VSCode-Rust插件"><a href="#VSCode-Rust插件" class="headerlink" title="VSCode Rust插件"></a>VSCode Rust插件</h2><ul>
+<li><p><strong>rust-analyzer</strong>：实时编译和分析 Rust 代码，提示代码中的错误，还可以代码跳转，并对类型进行标准。</p>
+</li>
+<li><p><strong>Even Better TOML</strong>：支持 .toml 文件语法高亮</p>
+</li>
+<li><p>Error Lens：支持获得错误提示</p>
+</li>
+<li><p>CodeLLDB：支持 Debugger 程序</p>
+</li>
+<li><p>Rust Syntax：支持 Rust 语法高亮</p>
+</li>
+<li><p><strong>Git Graph</strong>：支持 Git 以图形化显示，还是可以进行通过UI执行 git 命令</p>
+</li>
+</ul>
+<h2 id="Rust-语法"><a href="#Rust-语法" class="headerlink" title="Rust 语法"></a>Rust 语法</h2><p>但凡编程语言，基本都会有一个共性：数据、数据类型、关键字、分支结构、循环结构、函数。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><h4 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h4><p>变量默认是不可改变的（immutable）。</p>
+<p>常量（constants）是绑定到一个名称的、不允许改变的值，不过常量与变量还是有一些区别。</p>
+<ul>
+<li>声明常量使用 <code>const</code> 关键字，不允许对常量使用 <code>mut</code>，并且 必须 注明值的类型。</li>
+<li>常量不光默认不可变，它总是不可变。</li>
+<li>常量 只能 被设置为常量表达式，而不可以是其他任何 只能 在运行时计算出的值。</li>
+</ul>
+<p>声明一个常量的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> THREE_HOURS_IN_SECONDS: <span class="type">u32</span> = <span class="number">60</span> * <span class="number">60</span> * <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Rust 对常量的命名约定是在单词之间使用全大写加下划线（非强制性要求）。</p>
+<h4 id="隐藏"><a href="#隐藏" class="headerlink" title="隐藏"></a>隐藏</h4><p>可以定义一个与之前变量同名的新变量，第一个变量被第二个变量 隐藏（Shadowing） 了，不仅隐藏了变量名称，而且还隐藏了变量类型。这在C语言中是不被允许的，而且编译会报错：重复定义变量。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = x + <span class="number">1</span>;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">x</span> = x * <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;the value of x in the inner scope is: &#123;x&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;the value of x is: &#123;x&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>Rust 是静态类型语言，也就是说：在编译时就必须知道所有变量的类型。根据值及其使用方式，编译器通常可以推断出我们想要的类型，尽管我们没有显示说明具体类型。</p>
+<p>Rust 有两类数据类型子集：标量（scalar）和 复合（compound）。</p>
+<p>标量类型代表一个单独的值。Rust 有 4 种基本的标量类型：<strong>整型、浮点型、布尔类型、字符类型</strong>。</p>
+<h5 id="标量类型"><a href="#标量类型" class="headerlink" title="标量类型"></a>标量类型</h5><p>Rust 中的<strong>整型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th>有符号</th>
+<th>无符号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8 bit</td>
+<td>i8</td>
+<td>u8</td>
+</tr>
+<tr>
+<td>16 bit</td>
+<td>i16</td>
+<td>u16</td>
+</tr>
+<tr>
+<td>32 bit</td>
+<td>i32</td>
+<td>u32</td>
+</tr>
+<tr>
+<td>64 bit</td>
+<td>i64</td>
+<td>u64</td>
+</tr>
+<tr>
+<td>128 bit</td>
+<td>i128</td>
+<td>u128</td>
+</tr>
+<tr>
+<td>arch</td>
+<td>isize</td>
+<td>usize</td>
+</tr>
+</tbody></table>
+<p><em>注意：isize 和 usize 类型依赖运行程序的计算机架构：32位架构上他们是32位的，64为架构上他们是64位的。</em></p>
+<p>Rust 整型字面值：</p>
+<table>
+<thead>
+<tr>
+<th>数字字面值</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Decimal（十进制）</td>
+<td>98_222</td>
+</tr>
+<tr>
+<td>Hex（十六进制）</td>
+<td>0xff</td>
+</tr>
+<tr>
+<td>Octal（八进制）</td>
+<td>0o77</td>
+</tr>
+<tr>
+<td>Binary（二进制）</td>
+<td>0b1111_0000</td>
+</tr>
+<tr>
+<td>Byte（单字节字符，仅限于u8）</td>
+<td>b’A’</td>
+</tr>
+</tbody></table>
+<p>如果没有显示定义数字类型，Rust 的默认整型类型通常是 i32。</p>
+<p>Rust 的<strong>浮点数类型</strong>是 f32 和 f64，默认浮点数类型是 f64，所有浮点数类型都是有符号的。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">2.0</span>; <span class="comment">// f64</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span>: <span class="type">f32</span> = <span class="number">3.0</span>; <span class="comment">// f32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rust 的<strong>布尔类型</strong>：true 和 false。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">t</span> = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">f</span>: <span class="type">bool</span> = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Rust 的<strong>字符类型</strong>：char，char 类型的大小为四字节，并代表了一个 Unicode 标量值，这意味着它可以比 ASCII 表示更多内容。在 Rust 中，带变音符号的字母，中文、日文、韩文等字符，emoji （绘文字）以及零长度的空表字符都是有效的 char 值。</p>
+<p><em>注意：这里一定把C语言中的char 类型区分开来，C语言中char 类型只有1个字节。</em></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = <span class="string">&#x27;z&#x27;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z</span>: <span class="type">char</span> = <span class="string">&#x27;Z&#x27;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">heart_eyed_cat</span> = &#x27;😻&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h5><p>复合类型可以将多个值组合成一个类型。Rust 有两个原生的复合类型：元组（tuple）和 数组（array）。</p>
+<p>元组是一个将多个其他数据类型的值组合到一个复合类型的主要方式。元组长度固定：一旦声明，其长度不会增加或减小。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">tup</span>: (<span class="type">i32</span>, <span class="type">f64</span>, <span class="type">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 元组解构 方式1</span></span><br><span class="line">    <span class="keyword">let</span> (x, y, z) = tup;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x is: &#123;x&#125;, y is: &#123;y&#125;, z is: &#123;z&#125;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 元组解构 方式2</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">one</span> = tup.<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">two</span> = tup.<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">three</span> = tup.<span class="number">2</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;one is: &#123;one&#125;, two is: &#123;two&#125;, three is: &#123;three&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>数组是将多个相同数据类型组合到一起。Rust 中的数组长度是固定的。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">1</span> ,<span class="number">2</span> <span class="number">3</span>, <span class="number">4</span> ,<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">months</span> = [<span class="string">&quot;January&quot;</span>, <span class="string">&quot;February&quot;</span>, <span class="string">&quot;March&quot;</span>, <span class="string">&quot;April&quot;</span>, <span class="string">&quot;May&quot;</span>, <span class="string">&quot;June&quot;</span>, <span class="string">&quot;July&quot;</span>,</span><br><span class="line">              <span class="string">&quot;August&quot;</span>, <span class="string">&quot;September&quot;</span>, <span class="string">&quot;October&quot;</span>, <span class="string">&quot;November&quot;</span>, <span class="string">&quot;December&quot;</span>];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">let</span> <span class="variable">b</span>: [<span class="type">i32</span>; <span class="number">5</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]; <span class="comment">// 显示声明数组中元素的数据类型</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = [<span class="number">3</span>; <span class="number">5</span>]; <span class="comment">// 数组c包含5个元素，每个元素的值都是3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：通过索引访问数组中的元素，索引从0开始</em></p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>Rust 使用 <code>fn</code> 关键字声明函数。Rust 代码中的函数和变量名使用 <em><strong>snake case</strong></em> 规范风格。在 <em>snake case</em> 中，所有字母都是 <em><strong>小写</strong></em> 并使用 <em><strong>下划线</strong></em> 分隔单词。</p>
+<p>在函数签名中， <em><strong>必须</strong></em> 声明每个参数的类型：要求在函数定义中提供乐行注解，意味着编译器再也不需要你在代码的其他地方注明类型来支出你的意图。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span>: <span class="type">i32</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span>: <span class="type">i32</span> = <span class="number">15</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z</span>: <span class="type">i32</span> = <span class="title function_ invoke__">sum</span>(x, y);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;x&#125; + &#123;y&#125; == &#123;z&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 求两个整数的和 */</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum</span>(x: <span class="type">i32</span>, y: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>注意：在C语言中，sum函数的调用出现在定义之前是不被允许的，编译时会报错。但是在Rust 中，这种做法是没有问题的。</em></p>
+<h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><p>控制流一般是通过 <strong>分支结构</strong> 和 <strong>循环结构</strong> 实现。</p>
+<h4 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h4><p>Rust 代码中最常见的用来控制执行流的关键字是：<code>if</code> 、<code>else</code>、<code>else if</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">number</span> = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> number % <span class="number">4</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 4&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> number % <span class="number">3</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 3&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> number % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is divisible by 2&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;number is not divisible by 4, 3, or 2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h4><p>Rust 提供了多种循环：<code>loop</code>、<code>while</code>、<code>for</code>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;again!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用关键字 <code>break</code> 跳出循环体，使用关键字 <code>continue</code> 跳过这一轮循环，进入下一轮循环。</p>
+<p><strong>从循环返回值</strong>，即结束循环，然后返回一个值</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">counter</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="keyword">loop</span> &#123;</span><br><span class="line">        counter += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> counter == <span class="number">10</span> &#123;</span><br><span class="line">            <span class="keyword">break</span> counter * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The result is &#123;result&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>循环标签</strong>：在多个循环之间消除歧义</p>
+<p>这个功能有点像C语言中的 <code>goto</code> 跳转到指定标签功能。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="symbol">&#x27;counting_up</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;count = &#123;count&#125;&quot;</span>);</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">remaining</span> = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">loop</span> &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;remaining = &#123;remaining&#125;&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> remaining == <span class="number">9</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> count == <span class="number">2</span> &#123;</span><br><span class="line">                <span class="keyword">break</span> <span class="symbol">&#x27;counting_up</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            remaining -= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        count += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;End count = &#123;count&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>while 循环</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">number</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> number != <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;number&#125;!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        number -= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;LIFTOFF!!!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>for 循环</strong></p>
+<p>使用 for 循环遍历数组</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">element</span> <span class="keyword">in</span> a &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;the value is: &#123;element&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 for 循环遍历元组</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">number</span> <span class="keyword">in</span> (<span class="number">1</span>..<span class="number">4</span>).<span class="title function_ invoke__">rev</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;number&#125;!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;LIFTOFF!!!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><p>Rust 定义结构体，需要使用关键字 <code>struct</code> 并为整个结构体提供一个名字。 </p>
+<p>定义一个用户结构体：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    active: <span class="type">bool</span>,</span><br><span class="line">    username: <span class="type">String</span>,</span><br><span class="line">    email: <span class="type">String</span>,</span><br><span class="line">    sign_in_count: <span class="type">u64</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">        email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;User Info:</span></span><br><span class="line"><span class="string">             username: &#123;&#125;</span></span><br><span class="line"><span class="string">             email: &#123;&#125;</span></span><br><span class="line"><span class="string">             active: &#123;&#125;</span></span><br><span class="line"><span class="string">             sign_in_count: &#123;&#125;&quot;</span>, user1.username, user1.email, </span><br><span class="line">             user1.active, user1.sign_in_count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>定义一个长方形结构体：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Rectangle</span> &#123;</span><br><span class="line">    width: <span class="type">u32</span>,</span><br><span class="line">    height: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rect1</span> = Rectangle &#123;</span><br><span class="line">        width: <span class="number">30</span>,</span><br><span class="line">        height: <span class="number">50</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;The area of the rectangle is &#123;&#125; square pixels.&quot;</span>,</span><br><span class="line">        <span class="title function_ invoke__">area</span>(&amp;rect1)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">area</span>(rectangle: &amp;Rectangle) <span class="punctuation">-&gt;</span> <span class="type">u32</span> &#123;</span><br><span class="line">    rectangle.width * rectangle.height</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/12/14/2024/Tasmota/" rel="prev" title="Tasmota">
+                  <i class="fa fa-angle-left"></i> Tasmota
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"eiSouthBoy","repo":"eiSouthBoy.github.io","client_id":"Ov23lioGiC4GZkdKzlzG","client_secret":"d1d3666fa3943b4b4a3d692904a5bfb00ede1ebe","admin_user":"eiSouthBoy","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"en","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"93f178143dd28a2049c7e69299a134af"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
