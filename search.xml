@@ -1,6 +1,818 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>esp: ethernet</title>
+    <url>/2024/12/30/2024/Ethernet/</url>
+    <content><![CDATA[<p><a href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/network/esp_eth.html">ESP32 以太网</a></p>
+<h2 id="以太网"><a href="#以太网" class="headerlink" title="以太网"></a>以太网</h2><p>先参考别人优秀的文章：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/network/esp_eth.html">以太网基础知识</a></p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ethernet</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker Command</title>
+    <url>/2024/12/26/2024/Docker/</url>
+    <content><![CDATA[<p><strong>在Docker Hub上查询镜像：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-NMH-WCX9:~$ docker search hello-world</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>在Docker Hub上拉取镜像：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-NMH-WCX9:~$ docker pull hello-world</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>查看容器列表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-NMH-WCX9:~$ docker ps -a</span><br><span class="line">CONTAINER ID   IMAGE                     COMMAND                  CREATED        STATUS       PORTS                                                 NAMES</span><br><span class="line">8a024dac6f5d   hexo_ubuntu22.04:latest   <span class="string">&quot;/usr/local/bin/hexo…&quot;</span>   3 days ago     Up 3 hours   22/tcp, 0.0.0.0:8123-&gt;4000/tcp, [::]:8123-&gt;4000/tcp   hexo-server</span><br><span class="line">c8d2b2520c00   8a3cdc4d1ad3              <span class="string">&quot;/bin/bash&quot;</span>              3 months ago   Up 3 hours   127.0.0.1:8122-&gt;22/tcp                                loving_hertz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>查看镜像列表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]</span></span><br><span class="line">pi@pi-NMH-WCX9:~$ docker images</span><br><span class="line">REPOSITORY           TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hexo_ubuntu22.04     latest    261dea374744   3 days ago      1.11GB</span><br><span class="line">docker_ubuntu22-04   latest    2a0823f51114   3 months ago    3.42GB</span><br><span class="line">ubuntu               22.04     8a3cdc4d1ad3   6 months ago    77.9MB</span><br><span class="line">ubuntu               20.04     5f5250218d28   6 months ago    72.8MB</span><br><span class="line">hello-world          latest    d2c94e258dcb   20 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>创建&amp;运行容器：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</span></span><br><span class="line"><span class="comment"># 注意：IMAGE 即可以是 IMAGE_ID，也可以是 REPOSITORY:TAG , 或 REPOSITORY </span></span><br><span class="line">pi@pi-NMH-WCX9:~$ docker run hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">&quot;hello-world&quot;</span> image from the Docker Hub.</span><br><span class="line">    (amd64)</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https://hub.docker.com/</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/get-started/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>在运行容器执行命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]</span></span><br><span class="line"><span class="comment">#Execute a command in a running container</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#Aliases:</span></span><br><span class="line"><span class="comment">#  docker container exec, docker exec</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#Options:</span></span><br><span class="line"><span class="comment">#  -d, --detach               Detached mode: run command in the background</span></span><br><span class="line"><span class="comment">#      --detach-keys string   Override the key sequence for detaching a container</span></span><br><span class="line"><span class="comment">#  -e, --env list             Set environment variables</span></span><br><span class="line"><span class="comment">#      --env-file list        Read in a file of environment variables</span></span><br><span class="line"><span class="comment">#  -i, --interactive          Keep STDIN open even if not attached</span></span><br><span class="line"><span class="comment">#      --privileged           Give extended privileges to the command</span></span><br><span class="line"><span class="comment">#  -t, --tty                  Allocate a pseudo-TTY</span></span><br><span class="line"><span class="comment">#  -u, --user string          Username or UID (format: &quot;&lt;name|uid&gt;[:&lt;group|gid&gt;]&quot;)</span></span><br><span class="line"><span class="comment">#  -w, --workdir string       Working directory inside the container</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>删除容器：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Usage:  docker rm [OPTIONS] CONTAINER [CONTAINER...]</span></span><br><span class="line"><span class="comment"># 注意：CONTAINER 即容器ID，一般前4位数就可以代表一个容器</span></span><br><span class="line">pi@pi-NMH-WCX9:~$ docker <span class="built_in">rm</span> d3e2</span><br><span class="line">d3e2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>删除镜像：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Usage:  docker rmi [OPTIONS] IMAGE [IMAGE...]</span></span><br><span class="line">pi@pi-NMH-WCX9:~$ docker <span class="built_in">rm</span> d2c9</span><br><span class="line">d2c9</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp-idf: WireGuard</title>
+    <url>/2024/12/25/2024/esp-wiregrard/</url>
+    <content><![CDATA[<h2 id="WireGuard"><a href="#WireGuard" class="headerlink" title="WireGuard"></a>WireGuard</h2><blockquote>
+<p>WireGuard是什么？</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/WireGuard">WireGuard</a>是由 Jason A. Donenfeld 开发的自由及 <strong>开源加密VPN程序及协议</strong>，旨在获得比 IPsec 和 OpenVPN 更好的性能，后两者都是常见的隧道协议。WireGuard协议的流量经由 <strong>UDP</strong> 传输，端口号默认使用 <strong>51820</strong>。</p>
+<p>WireGuard 被设计为通用 VPN，可在嵌入式接口和超级计算机上运行，适用于许多不同情况。它最初是为 Linux 内核发布的，现在已跨平台（Windows、macOS、BSD、iOS、Android）并可广泛部署。</p>
+<p>WireGuard组网：</p>
+<p><img src="/2024/12/25/2024/esp-wiregrard/aa5de9f7573fe39410257462bd87d1a80e107d69.png@1192w.webp" alt="img"></p>
+<p>WireGuard服务器（具备公网IP）形成了虚拟局域网那个的网关，位于不同地域的WireGuard客户端可以连接到WireGuard服务，客户端就成了虚拟局域网中的一台主机。</p>
+<p>例如：上图中，Ubuntu客户端、windows客户端、Android&#x2F;iOS客户端可以通过WireGuard服务间隔访问NAS，逻辑上形成了一条虚拟通道。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>在WireGuard中的实体主机都是同级的，互称为对等方（peer）。WireGuard 在网络层上运行。因此，无法使用 DHCP，且必须为服务器（WireGuard主机）和客户端（WireGuard主机）上的隧道设备分配静态 IP 地址或 IPv6 本地链接地址。</p>
+<p><strong>WireGuard处理数据：发送流程和接收流程</strong></p>
+<p>当 WireGuard 将网络数据包发送到对等点时（主机A –&gt; 主机B）：</p>
+<ol>
+<li>WireGuard 从数据包读取目标 IP，并将其与本地配置中允许的 IP 地址列表（即wg0.conf文件中peer配置项）进行比较。如果未找到 peer，WireGuard 会丢弃数据包。</li>
+<li>如果 peer 有效，WireGuard 使用<strong>对等方A的公钥</strong>对数据包进行加密。</li>
+<li>发送主机查找主机的最新互联网 IP 地址，并将加密数据包发送到此地址。</li>
+</ol>
+<p>当 WireGuard 接收数据包时（主机A &lt;– 主机B）：</p>
+<ol>
+<li>WireGuard 使用<strong>主机A的私钥</strong>解密数据包。</li>
+<li>WireGuard 从数据包读取内部源地址，并在本地主机上对等点的设置中查询 IP 地址是否配置。如果源 IP 位于允许列表中，WireGuard 会接受数据包。如果 IP 地址不在列表中，WireGuard 会丢弃数据包。</li>
+</ol>
+<h3 id="应用部署"><a href="#应用部署" class="headerlink" title="应用部署"></a>应用部署</h3><p>在Ubuntu 22.04 上安装 WireGuard：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install wireguard</span><br></pre></td></tr></table></figure>
+
+<p><em>主要：Linux内核版本要大于或等于 V5.6</em></p>
+<p>在Ubuntu 22.04 上创建WireGuard公钥和私钥：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/wireguard</span><br><span class="line"><span class="comment"># 私钥</span></span><br><span class="line">wg genkey &gt; server_privatekey</span><br><span class="line"><span class="comment"># 公钥</span></span><br><span class="line">wg pubkey &lt; server_privatekey &gt; server_publickey</span><br></pre></td></tr></table></figure>
+
+<p>开启内核IP转发：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1、打开 /etc/sysctl.conf 文件，找到 net.ipv4.ip_forward = 1，若被注释，则取消注释</span></span><br><span class="line"><span class="comment"># 2、重载 /etc/sysctl.conf 文件，执行 sysctl -p /etc/sysctl.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>配置WireGuard文件，创建文件 <code>/etc/wireguard/wg0.conf</code>，并编辑：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Interface]</span><br><span class="line"><span class="comment"># 本机密钥</span></span><br><span class="line">PrivateKey = fOqpewDm2F4rMS0aW5DQW2S9ixnc= <span class="comment"># 上一步生成的publickey</span></span><br><span class="line"><span class="comment"># 本机地址</span></span><br><span class="line">Address = 192.168.1.1/24 <span class="comment"># 定义wg网络的网管地址</span></span><br><span class="line"><span class="comment"># 监听端口</span></span><br><span class="line">ListenPort = 9993 <span class="comment"># 定义wg对外的端口，可修改</span></span><br><span class="line"><span class="comment"># ====== ens0 根据实际修改 ======</span></span><br><span class="line">PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o ens0 -j MASQUERADE</span><br><span class="line"><span class="comment"># ====== ens0 根据实际修改 ======</span></span><br><span class="line">PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o ens0 -j MASQUERADE</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下两个可选</span></span><br><span class="line">DNS = 1.1.1.1, 8.8.8.8</span><br><span class="line">MTU = 1420</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端配置</span></span><br><span class="line"><span class="comment"># Client1_192.168.1.11</span></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = Client1公钥，在客户端可看到</span><br><span class="line">AllowedIPs = 192.168.1.11/32</span><br><span class="line"></span><br><span class="line"><span class="comment"># Client2_192.168.1.12</span></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = Client2公钥，在客户端可看到</span><br><span class="line">AllowedIPs = 192.168.1.12/32</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>设置 WireGuard 开机启动、状态、启动、停止、关闭开机启动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> wg-quick@wg0.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl status wg-quick@wg0.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start wg-quick@wg0.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl stop wg-quick@wg0.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> wg-quick@wg0.service</span><br></pre></td></tr></table></figure>
+
+<p>查看 WireGuard 信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pi@pi-desktop:/etc/wireguard$ <span class="built_in">sudo</span> wg</span><br><span class="line">interface: wg0</span><br><span class="line">  public key: r0VIDOSXDd+/xvvNc7PYprYfcMBiqft54FmoiFiEjAo=</span><br><span class="line">  private key: (hidden)</span><br><span class="line">  listening port: 51820</span><br><span class="line"></span><br><span class="line">peer: q55Vuknq7WEA/m4aJ2gD1ZxlgE2kymKT6PaLyCXgllg=</span><br><span class="line">  endpoint: 192.168.5.197:51820</span><br><span class="line">  allowed ips: 192.168.4.0/24</span><br><span class="line">  latest handshake: 1 minute, 55 seconds ago</span><br><span class="line">  transfer: 163.88 KiB received, 162.79 KiB sent</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="抓包分析"><a href="#抓包分析" class="headerlink" title="抓包分析"></a>抓包分析</h3><p>树莓派4B部署WireGuard服务，WireGuard分配wg0的IP地址是：<code>192.168.4.254/24</code>，WireGuard服务的端口号是：<code>58120</code>，本地局域网eth0的IP地址是：<code>192.168.5.196/24</code>。</p>
+<p>ESP32部署WireGuard服务，WireGuard分配IP地址是：<code>192.168.4.48/24</code>，WireGuard服务的端口号是：<code>58120</code>，本地局域网的IP地址是：<code>192.168.5.197/24</code>。</p>
+<p>现在，ESP32通过WireGuard服务给的IP地址去 ping 树莓派4B的IP地址（即 192.168.4.48  ping 192.168.4.254）。通过ESP32的串口日志，发现可以ping通。</p>
+<p>在树莓派4B上使用 <code>tcpdump</code> 命令抓eth0 的数据包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -w wg_capture.pcap</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/12/25/2024/esp-wiregrard/image-20241226151652849.png" alt="image-20241226151652849"></p>
+<p>然后，在树莓派4B上使用 <code>tcpdump</code> 命令抓wg0 的数据包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -w wg_capture2.pcap</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/12/25/2024/esp-wiregrard/image-20241226152115669.png" alt="image-20241226152115669"></p>
+<h2 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h2><blockquote>
+<p>VPN是什么？</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/%E8%99%9B%E6%93%AC%E7%A7%81%E4%BA%BA%E7%B6%B2%E8%B7%AF">虚拟专用网</a>（英语：Virtual Private Network，缩写：VPN）将专用网络延伸到公共网络上，使用户能够在共享或公共网络上发送和接收数据，就像他们的计算设备直接连接到专用网络上一样。</p>
+<p>VPN 用于通过 <strong>公有网络</strong> 安全且匿名地传输数据。它们的原理是通过掩蔽用户 IP 地址并加密数据，使未获得接收信息授权的人无法读取。</p>
+<p>VPN的按照使用场景类型：</p>
+<ul>
+<li><p>服务器–站点（远程访问VPN）</p>
+<p><img src="/2024/12/25/2024/esp-wiregrard/image-20241225151625332.png" alt="image-20241225151625332"></p>
+</li>
+<li><p>站点–站点VPN</p>
+<p><img src="/2024/12/25/2024/esp-wiregrard/image-20241225151733026.png" alt="image-20241225151733026"></p>
+</li>
+</ul>
+<p>VPN按照网络层次模型分类：</p>
+<ul>
+<li>二层VPN（即数据链路层）：L2TP VPN</li>
+<li>三层VPN（即网络层）：GRE VPN 和 IPsec VPN</li>
+<li>七层VPN（即应用层）：SSL VPN</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><p><a href="https://zhichao.org/posts/wireguard">通过 WireGuard 与 IPv6 异地组网 实现远程访问局域网</a></p>
+<p><a href="https://www.cnblogs.com/douzilink/p/18336451">实践]wireguard安装和配置</a></p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>WireGuard</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>esp-idf: freeRTOS</title>
+    <url>/2024/12/25/2024/esp-freeRTOS/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>freeRTOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ESP BluFi 配网</title>
+    <url>/2024/12/20/2024/esp-blufi/</url>
+    <content><![CDATA[<h2 id="蓝牙"><a href="#蓝牙" class="headerlink" title="蓝牙"></a>蓝牙</h2><p><a href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/ble/overview.html">ESP 低功耗蓝牙</a></p>
+<p>蓝牙技术分为经典蓝牙（Bluetooth Classic）和低功耗蓝牙（Bluetooth LE），例如蓝牙耳机使用的就是经典蓝牙，蓝牙手表使用的就是低功耗蓝牙。低功耗蓝牙和经典蓝牙并不互相兼容，在蓝牙4.0标准，SIG 才引入低功耗蓝牙。</p>
+<p>低功耗蓝牙协议定义了三层软件结构，从上到下：</p>
+<ul>
+<li><p>应用层（Application Layer）</p>
+<p>应用层即以 Bluetooth LE 为底层通信技术所构建的应用，依赖于主机层向上提供的 API 接口。</p>
+</li>
+<li><p>主机层（Host Layer）</p>
+<p>主机层负责实现 <strong>L2CAP</strong>、<strong>GATT&#x2F;ATT</strong>、SMP、<strong>GAP</strong> 等底层蓝牙协议，向上对应用层提供 API 接口，向下通过主机控制器接口 (Host Controller Interface, HCI) 与控制器层通信。</p>
+</li>
+<li><p>控制器层（Controller Layer）</p>
+<p>控制器层包括物理层 (Physical Layer, PHY) 和链路层 (Link Layer, LL) 两层，向下直接与控制器硬件进行交互，向上通过 HCI 与主机层进行通信。</p>
+</li>
+</ul>
+<p>在 SIG 发布的蓝牙核心规范 (Core Specification) 允许主机层和控制器层在物理上分离，此时 HCI 体现为物理接口，包括 <strong>SDIO</strong>、<strong>USB</strong> 以及 <strong>UART</strong> 等；当然，主机层和控制器层可以共存于同一芯片，以实现更高的集成度，此时 HCI 体现为逻辑接口，常被称为虚拟主机控制器接口 (Virtual Host Controller Interface, VHCI)。一般认为，主机层和控制器层组成了 Bluetooth LE 协议栈 (Bluetooth LE Stack)。</p>
+<p>作为应用开发者，在开发过程中我们主要与主机层提供的 API 接口打交道，这要求我们对主机层中的蓝牙协议有一定的了解。</p>
+<h3 id="设备发现"><a href="#设备发现" class="headerlink" title="设备发现"></a>设备发现</h3><p>广播 (Advertising) 与扫描 (Scanning) 是 Bluetooth LE 设备在进入连接前在设备发现 (Device Discovery) 阶段的工作状态。</p>
+<p>广播是设备通过蓝牙天线，向外发送广播数据包的过程。由于广播者在广播时并不知道环境中是否存在接收方，也不知道接收方会在什么时候启动天线，所以需要周期性地发送广播数据包，直到有设备响应。</p>
+<p>举个例子：智能手机连接蓝牙手表前，蓝牙手表要先作为广播者向空中三个广播信道（37、38、39）发送广播数据包，以便让智能手机能够找到它，然后智能手机作为扫描者开始向空中广播信道（37、38、39）扫描广播数据包。</p>
+<p>蓝牙使用的是 2.4GHz ISM频段，经典蓝牙将 2.4GHz ISM频段划分为 79 个 1MHz 带宽的信道，而低功耗蓝牙则划分 40 个 2MHz 带宽的信道。为了解决数据冲突的问题，蓝牙使用自适应调频技术（Adaptive Frequency Hopping，AFH），该技术可以判断 RF（Radio Frequency） 信道的拥挤程度，通过调频避开拥挤的 RF 信道，以提高通信质量。</p>
+<p>在 Bluetooth LE 4.2 标准中， RF 信道分为两种类型，如下</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>数量</th>
+<th>编号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>广播信道 (Advertising Channel)</td>
+<td>3</td>
+<td>37-39</td>
+<td>用于发送广播数据包和扫描响应数据包</td>
+</tr>
+<tr>
+<td>数据信道 (Data Channel)</td>
+<td>37</td>
+<td>0-36</td>
+<td>用于发送数据通道数据包</td>
+</tr>
+</tbody></table>
+<h3 id="广播数据包结构"><a href="#广播数据包结构" class="headerlink" title="广播数据包结构"></a>广播数据包结构</h3><p>在 Bluetooth LE 4.2 标准给出了广播数据包的格式定义：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">----------------------------------------------------------------------</span><br><span class="line">|  Preamble  |  Access Address  |  Protocol Data Unit  |     CRC     |</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">    1 Byte           4 Byte            2 ~ 39 Byte          3 Byte</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>预置码（Preamble）：特殊的比特序列，用于设备时钟同步。</li>
+<li>访问地址（Access Address）：标记广播数据包的地址。</li>
+<li>协议数据单元（Protocol Data Unit）：有效数据的存放区域。</li>
+<li>循环冗余校验和（CRC）：用于循环用于校验</li>
+</ul>
+<p>其中 Protocol Data Uint（PDU） 格式定义：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">----------------------------</span><br><span class="line">|  Header  |    Payload    |</span><br><span class="line">----------------------------</span><br><span class="line">   2 Byte     0 ~ 37 Byte</span><br></pre></td></tr></table></figure>
+
+<p>Header 字段细分为如下：</p>
+<ul>
+<li><p>PDU 类型：4 bit，用于设备的广播行为</p>
+<p>在蓝牙标准中，共有以下三对广播行为：</p>
+<ul>
+<li><strong>可连接（Connectable）和 不可连接（Non-connectable）</strong></li>
+<li><strong>可扫描（Scannable）和 不可扫描（Non-scannable）</strong></li>
+<li><strong>不定向（Undirected）和 定向（Directed）</strong></li>
+</ul>
+<p>根据上面的广播行为可以组合成以下 4 种常见的广播类型：</p>
+<ul>
+<li><strong>ADV_IND</strong>（可连接、可扫描、定向）：最常见的广播类型</li>
+<li><strong>ADV_DIRECT_IND</strong>（可连接、不可扫描、不定向）：常用于已知设备重连</li>
+<li><strong>ADV_NONCONN_IND</strong>（不可连接、不可扫描、定向）：作为信标设备，仅向外发送广播数据</li>
+<li><strong>ADV_SVAN_IND</strong>（不可连接、可扫描、定向）：作为信标设备，一般用于广播数据包长度不足的情况</li>
+</ul>
+</li>
+<li><p>保留位：1 bit</p>
+</li>
+<li><p>通道选择位：1 bit，标记广播者是否支持 LE 通道选择算法</p>
+</li>
+<li><p>发送地址类型：1 bit，0表示公共地址；1表示随机地址</p>
+</li>
+<li><p>接收地址类型：1 bit，同上</p>
+</li>
+<li><p>有效负载长度：8 bit</p>
+</li>
+</ul>
+<p>其中 Payload 格式定义：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-------------------------------</span><br><span class="line">|    AdvA    |    AdvAData    |</span><br><span class="line">-------------------------------</span><br><span class="line">   6 Byte        0 ~ 31 Byte</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>AdvA：广播设备的MAC地址</li>
+<li>AdvData：广播数据</li>
+</ul>
+<p>其中 AdvData 格式定义：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">----------------------------------------------</span><br><span class="line">|  AD Length  |  AD Type  |      AD Data     |</span><br><span class="line">----------------------------------------------</span><br><span class="line">     1 Byte        n          AD Length - n </span><br></pre></td></tr></table></figure>
+
+<h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><p>扫描行为分为以下两种：</p>
+<ul>
+<li>被动扫描（Passive Scanning）：扫描者只接收广播数据包</li>
+<li>主动扫描（Active Scanning）：扫描者在接收广播数据包后，还向可扫描广播者发送扫描请求（Scan Request）</li>
+</ul>
+<p>可扫描广播者在接收到扫描请求之后，会广播扫描响应 (Scan Response) 数据包，以向感兴趣的扫描者发送更多的广播信息。扫描响应数据包的结构与广播数据包完全一致，区别在于 PDU 头中的 PDU 类型不同。</p>
+<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p><em>在 Bluetooth LE 5.0 引入扩展广播特性以后， Legacy ADV 和 Extended ADV 对应的连接建立过程略有差异，下以 Legacy ADV 对应的连接建立过程为例。</em></p>
+<p>当扫描者（智能手机）在某一个广播信道（37、38、39）接收到一个广播数据包时，若该广播者（智能手表）是可连接的，那么扫描者可以在同一广播信道发送连接请求 (Connection Request)。对于广播者来说，它可以设置 <em>接受列表 (Filter Accept List)</em> 以过滤不受信任的设备，或接受任一扫描者的连接请求。随后，广播者（Advertiser）转变为外围设备（Peripheral），扫描者（Scanner）转变为中央设备（Central），两者之间可以在数据信道（0 ~ 36）进行双向通信。</p>
+<p>当连接建立后，中央设备与外围设备会周期性地进行数据交换，这个数据交换的周期被称为连接间隔 (Connection Interval)。一次数据交换的过程被称为连接事件 (Connection Event)。即便任意一方在连接间隔开始时无需发送数据，也必须发送空数据包以维持连接。</p>
+<p>最大传输单元 (Maximum Transmission Unit, MTU) 指的是 <em><strong>单个 ATT 数据包</strong></em> 的最大字节数。**”数据通道数据包” 和 “广播数据包”（上文已有说明） 的最外层结构一致，区别在于 PDU 的结构。**</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">----------------------------------------------------------------------</span><br><span class="line">|  Preamble  |  Access Address  |  Protocol Data Unit  |     CRC     |</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">    1 Byte           4 Byte                                 3 Byte</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：在广播通道（37、38、39）传输的数据包称为 广播数据包；而在数据通道（0 ~ 36）传输的数据包称为 数据通道数据包，它们之间的PDU是不同的。</em></p>
+<p>数据通道数据包 的 PDU 可以分为三部分：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-------------------------------------------------------------------</span><br><span class="line">|  LL Header  |          Payload         |  Message Integrity Check  |</span><br><span class="line">-------------------------------------------------------------------</span><br><span class="line">   2 Byte     0 ~ 27 / 0 ~ 251 Byte              4 Byte</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>LL Header：头部</p>
+</li>
+<li><p>Payload：有效负载</p>
+<p>在 Bluetooth LE 4.2 <strong>以前</strong>，有效负载最大值为 <strong>27</strong> 字节； Bluetooth LE 4.2 引入了数据长度扩展 (Data Length Extension, DLE) 特性，有效负载的最大值可达 <strong>251</strong> 字节。</p>
+</li>
+<li><p>Message Integrity Check：消息完整性检查。该项为可选项</p>
+</li>
+</ul>
+<p>其中 Payload 格式结构：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">------------------------------------------------------</span><br><span class="line">|  L2CAP Header  |  ATT Data(ATT Header + ATT Data)  |</span><br><span class="line">------------------------------------------------------</span><br><span class="line">      4 Byte        0 ~ 23 / 0 ~ 247 Byte</span><br></pre></td></tr></table></figure>
+
+<p>MTU 的默认值为 23 字节（即 ATT Data 大小），恰好是 Bluetooth LE 4.2 以前，单个数据 PDU 的最大可承载 ATT 数据字节数。</p>
+<p>其中 L2CAP Header 的帧格式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------</span><br><span class="line">|  Length  |             CHannel ID           |</span><br><span class="line">-----------------------------------------------</span><br><span class="line">   2 Byte                  2 Byte</span><br></pre></td></tr></table></figure>
+
+<p>L2CAP协议使用信令来控制两个设备之间的L2CAP层的连接建立，配置更新等功能。</p>
+<p>其中ATT Data 的帧格式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">------------------------------------------------------</span><br><span class="line">|  ATT Header  |                ATT Data             |</span><br><span class="line">------------------------------------------------------</span><br><span class="line">      3 Byte                   0 ~ 244 Byte</span><br></pre></td></tr></table></figure>
+
+<p>对于 ATT Header 的帧格式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">------------------------------------------------------</span><br><span class="line">|  Op Code  |             Attribute Handle           |</span><br><span class="line">------------------------------------------------------</span><br><span class="line">      1 Byte                   2 Byte</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/12/20/2024/esp-blufi/2967398-20230619164514422-892424101.png" alt="img"></p>
+<h3 id="GAP"><a href="#GAP" class="headerlink" title="GAP"></a>GAP</h3><p>GAP 层的全称为 <strong>通用访问规范</strong> (Generic Access Profile, GAP)，定义了 Bluetooth LE 设备之间的连接行为以及设备在连接中所扮演的角色。</p>
+<p>GAP 状态和角色，GAP 中共定义了三种设备的连接状态以及五种不同的设备角色：</p>
+<ul>
+<li><p>空闲（Idle）</p>
+<p>此时设备无角色，处于就绪状态（Standby）</p>
+</li>
+<li><p>设备发现（Device Discovey）</p>
+<ul>
+<li>广播者（Advertiser）</li>
+<li>扫描者（Scanner）</li>
+<li>连接发起者（Initiator）</li>
+</ul>
+</li>
+<li><p>连接（Connection）</p>
+<ul>
+<li>外围设备（Peripheral）</li>
+<li>中央设备（Central）</li>
+</ul>
+</li>
+</ul>
+<p>GAP 根据不同状态下的角色变化：</p>
+<p><img src="/2024/12/20/2024/esp-blufi/ble-gap-state-diagram.png" alt="img"></p>
+<p>外围设备（Peripheral）一般作为GATT Server，例如蓝牙手表；中心设备（Central）一般作为GATT Client，例如智能手机。</p>
+<p>低功耗蓝牙网络拓扑：Bluetooth LE 设备可以同时与多个 Bluetooth LE 设备建立连接，扮演多个外围设备或中央设备角色，或同时作为外围设备和中央设备。例如我现在使用的 NIZ-X87-三模键盘 就可以连接三个不同的智能设备（Windows笔记本电脑、macOS笔记本电脑、平板电脑）。</p>
+<h3 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h3><p>GATT 服务是 Bluetooth LE 连接中两个设备进行数据交换的基础设施，其最小数据单元是属性。</p>
+<h3 id="ATT"><a href="#ATT" class="headerlink" title="ATT"></a>ATT</h3><p>GATT&#x2F;ATT 层定义了进入连接状态后，设备之间的数据交换方式，包括<em>数据的表示与交换过程</em>。</p>
+<p>ATT 的全称是 <strong>属性协议</strong> (Attribute Protocol, ATT)，定义了一种称为<strong>属性 (Attribute)</strong> 的基本数据结构，以及基于服务器&#x2F;客户端架构的数据访问方式。从编程的角度来看，属性是一个数据结构，它包括了数据结构和数据值，就如同C语言中结构体的概念。</p>
+<p>属性的数据结构一般由以下四部分组成：</p>
+<ul>
+<li><p>句柄（Handle）</p>
+</li>
+<li><p>类型（Type）</p>
+</li>
+<li><p>值（Value）</p>
+</li>
+<li><p>权限（Permission）</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">------------------------------------------------------</span><br><span class="line">|  句柄  |       类型       |       值      |    权限   |</span><br><span class="line">------------------------------------------------------</span><br><span class="line">  2 字节    2 字节/ 16字节       0 ~ 512字节	具体实现</span><br></pre></td></tr></table></figure>
+
+<p>在协议栈实现中，属性一般被放置称为 <strong>属性表</strong> 的结构体数据中管理。一个属性在这张表中的索引，就是属性的句柄，常为无符号整型。</p>
+<p>属性的类型由 UUID 表示，可以分为 2字节、4字节、16字节 三类。2字节 UUID 由 SIG 同一定义，可以在其公开发布的标准文档中查询；其他两种长度的UUID用于表示厂商自定义的属性类型，其中 16 字节 UUID 较为常用。</p>
+<h4 id="句柄"><a href="#句柄" class="headerlink" title="句柄"></a>句柄</h4><p>句柄犹如指向属性实体的指针，对端设备可通过句柄来访问该属性，它是一个2字节长度的十六进制码，起始于 <code>0x0001</code> ，在系统初始化时，各个属性的句柄逐步加一，最大不能超过 <code>0xffff</code>。</p>
+<h4 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h4><p>类型是用来区分当前属性是 <code>服务项</code> 或 <code>特征值</code> ，它用 UUID表示，UUID（Universally  Unique Identified，通用唯一识别码）是一个软件构建标准，并非 BLE 独有的概念。一个合法的UUID，一定是随机的、全球唯一的，不应该出现两个相同的UUID。标准的UUID用一串 <em><strong>16字节大小</strong></em> 的十六进制字符串表示，例如：<code>f6257d37-34e5-41dd-8f40-e308210498b4</code> 。</p>
+<p>BLE 的属性类型是有限的，分为4个大类：</p>
+<ul>
+<li>首要服务项（Primary Service）</li>
+<li>次要服务项（Secondary Service）</li>
+<li>包含服务项（Include）</li>
+<li>特征值（Characteristic）</li>
+</ul>
+<p>这些属性类型分别对应了指定的UUID，BLE对这些UUID与属性类型的映射关系做了规定：</p>
+<ul>
+<li><p>0x1800 ~ 0x26ff：服务项类型</p>
+</li>
+<li><p>0x2700 ~ 0x27ff：单位</p>
+</li>
+<li><p>0x2800 ~ 0x28ff：属性类型</p>
+</li>
+<li><p>0x2900 ~ 0x29ff：描述符类型</p>
+</li>
+<li><p>0x2a00 ~ 0x7fff：特征值类型</p>
+</li>
+</ul>
+<p>例如：UUID &#x3D; 0x1800 时，表示它是一个首要服务项</p>
+<p>标准的UUID是16字节，为什么可以用2字节表示？</p>
+<p>因为用2字节表示的UUID是常用的，为了减少传输的数据量，BLE协议做了一个转换约定，给定了一个固定的	16字节模版，只设置2字节为变化量，其它为常量，2字节的UUID在系统内部会被替换，进而转换成标准的16	16字节UUID。</p>
+<p>BLE 中UUID模板：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0000XXXX-0000-1000-8000-00805F9B34FB</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>XXXX</code> 就是变化量，其它的都是常量。例如 2字节的UUID&#x3D;<code>0x2A00</code> 将会转换为 UUID&#x3D;<code>00002A00-0000-1000-8000-00805F9B34FB</code>。</p>
+<p>如果 2字节的UUID&#x3D;<code>0xABCD</code> ，那么BLE的属性类型就是 <code>ABCD</code>，很明显这个值已经超过了BLE定义最大上限，当主机端扫描到该属性类型，会将其当做是 “用户自定义的类型”，然后从其它位置获取该UUID的真实值。</p>
+<h4 id="值"><a href="#值" class="headerlink" title="值"></a>值</h4><p>属性值是用来存放数据的。如果该属性是服务项类型或者是特征值声明类型，那么它的属性值就是UUID信息。如果是普通的特征值，则属性值就是用户的数据。属性值需要预留空间以保存用户数据。</p>
+<h4 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h4><p>权限主要分为以下四种：</p>
+<ul>
+<li><p>访问权限（Access）：只读、只写、读写</p>
+</li>
+<li><p>加密权限（Encryption）：加密、不加密</p>
+</li>
+<li><p>认证权限（Authentication）：需要认证、无需认证</p>
+<p>认证是指相互确认对方身份。完成认证流程的两个设备，双方建立信任关系，二者之间的通信可以认为是安全的。BLE中，“认证” 过程就是配对，需要用户输入PIN码完成配对。</p>
+</li>
+<li><p>授权权限（Authorization）：需要授权、无需授权</p>
+<p>授权要求设备必须是可信的，因此授权的管控等级要高于认证。理解二者的关系，需要引入一个概念：Trusted Device。一个没有经过认证的设备，被称为Unknown Device（未知设备）；经过了认证的设备会在绑定信息中被标记为Untrusted Device（不可信设备）；经过了认证的设备，并且在绑定信息中被标记为Trusted 的设备，被称为Trusted Device（可信设备）。</p>
+<p>授权要求设备为Trusted Device（可信任设备）。在实际使用中，经过配对以后设备即为Untrusted Device——认证，在代码中调用API可以设置设备为Trusted Device——授权。</p>
+</li>
+</ul>
+<h3 id="GATT"><a href="#GATT" class="headerlink" title="GATT"></a>GATT</h3><p>GATT 的全称是通用属性规范 (Generic Attribute Profile)，<em><strong>在 ATT 的基础上</strong></em>，定义了以下三个概念</p>
+<ul>
+<li>特征数据 (Characteristic)</li>
+<li>服务 (Service)</li>
+<li>规范 (Profile)</li>
+</ul>
+<p>特征数据（Characteristic）和服务（Service）都是以属性（Attribute）作为基本数据结构组合而成复合数据结构（即结构体嵌套）。</p>
+<p>规范（Profile）是一个预定义的服务集合，实现了某种规范中所定义的所有服务的设备满足该规范。例如 Heart Rate Profile 规范由 Heart Rate Service 和 Device Information Service 两个服务组成，那么可以称实现了 Heart Rate Service 和 Device Information Service 服务的设备符合 Heart Rate Profile 规范。</p>
+<p>三个概念层次关系用一张图表示：</p>
+<p><img src="/2024/12/20/2024/esp-blufi/ble-gatt-architecture.png" alt="img"></p>
+<p>一个服务（Service）的数据结构大致可以分为两部分：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>名称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>服务声明属性 (Service Declaration Attribute)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>特征数据定义属性 (Characteristic Definition Attributes)</td>
+</tr>
+</tbody></table>
+<p>服务声明属性的 UUID 为 0x2800，访问权限为只读，值为标识服务类型的 UUID ，例如 Heart Rate Service 的 UUID 为 0x180D，那么其服务声明属性就可以表示为</p>
+<table>
+<thead>
+<tr>
+<th>Handle</th>
+<th>UUID</th>
+<th>Permissions</th>
+<th>Value</th>
+<th>Attribute Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0x2800</td>
+<td>Read-only</td>
+<td>0x180D</td>
+<td>Service Declaration</td>
+</tr>
+</tbody></table>
+<p>一个特征数据（Characteristic ）通常由以下三个属性组成：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>名称</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>特征数据声明 (Characteristic Declaration)</td>
+<td>含有特征数据值的读写属性 (Properties)、句柄以及 UUID 信息</td>
+<td>UUID 为 0x2803，只读属性</td>
+</tr>
+<tr>
+<td>2</td>
+<td>特征数据值 (Characteristic Value)</td>
+<td>实际的用户数据</td>
+<td>UUID 标识特征数据的类型</td>
+</tr>
+<tr>
+<td>3</td>
+<td>特征数据描述符 (Characteristic Descriptor)</td>
+<td>特征数据的其他描述信息</td>
+<td><strong>可选属性</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>什么是特征数据描述符？</p>
+</blockquote>
+<p>特征数据描述符起到对特征数据进行补充说明的作用。最常见的特征数据描述符是客户端特征数据配置描述符 (Client Characteristic Configuration Descriptor, CCCD)，下由 CCCD 代指。当特征数据支持由服务器端发起的 数据操作 （通知或指示）时，必须使用 CCCD 描述相关信息；这是一个可读写属性，用于 GATT 客户端告知服务器是否需要启用通知或指示，写值操作也被称为订阅 (Subscribe) 或取消订阅。例如：智能手机向蓝牙手表订阅了温湿度信息，那么当蓝牙手表的温湿度传感器检测环境温湿度变化后，要主动向智能手机上报温湿度数据。</p>
+<p>特征数据的三种特征数据属性都属于特征数据定义属性。</p>
+<p>ATT和GATT的关系：</p>
+<p>ATT层定义了一个通信的基本框架，数据的基本结构，以及通信的指令，而GATT层就是定义service和characteristic，GATT层用来赋予每个数据一个具体的内涵，让数据变得有结构和意义。换句话说，没有GATT层，低功耗蓝牙也可以通信起来，但会产生兼容性问题以及通信的低效率。</p>
+<h3 id="GATT-数据操作"><a href="#GATT-数据操作" class="headerlink" title="GATT 数据操作"></a>GATT 数据操作</h3><p>数据操作指的是对 GATT 服务器上的特征数据进行访问的操作，主要可以分为以下两类：</p>
+<ul>
+<li>由客户端发起的操作</li>
+<li>由服务器发起的操作</li>
+</ul>
+<h4 id="由客户端发起的操作"><a href="#由客户端发起的操作" class="headerlink" title="由客户端发起的操作"></a>由客户端发起的操作</h4><p>由客户端发起的操作有以下三种：</p>
+<ul>
+<li><p>读（Read）</p>
+<p>从 GATT 服务器上拉取某一特征数据的当前值</p>
+</li>
+<li><p>写（Write）</p>
+<p>普通的写操作要求 GATT 服务器在收到客户端的写请求以及写对应数据后，进行确认相应</p>
+</li>
+<li><p>写（无需响应）（Write without response）</p>
+<p>快速写操作，不需要服务器进行确认响应</p>
+</li>
+</ul>
+<h4 id="由服务器发起的操作"><a href="#由服务器发起的操作" class="headerlink" title="由服务器发起的操作"></a>由服务器发起的操作</h4><p>由服务器发起的操作分为两种：</p>
+<ul>
+<li><p>通知（Notify）</p>
+<p>通知是 GATT 服务器主动向客户端推送数据的操作，不需要客户端回复确认响应</p>
+</li>
+<li><p>指示（Indicate）</p>
+<p>与通知相似，区别在于指示需要客户端回复确认，因此此数据推送速度比通知慢。</p>
+</li>
+</ul>
+<h2 id="BluFi-数据帧"><a href="#BluFi-数据帧" class="headerlink" title="BluFi 数据帧"></a>BluFi 数据帧</h2><p><a href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/ble/blufi.html">BluFi 定义的帧格式</a>按照是否分片可以分为两种：</p>
+<p><strong>帧不分片格式：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">---------------------------------------------------------------------</span><br><span class="line">|  类型  |   帧控制  |  序列号  |  数据长度  |       数据       |  校验  |</span><br><span class="line">---------------------------------------------------------------------</span><br><span class="line">  1 Byte    1 Byte    1 Byte    1 Byte     <span class="variable">$&#123;Data Length&#125;</span>     2 Byte</span><br></pre></td></tr></table></figure>
+
+<p><strong>帧分片格式：</strong></p>
+<p>如果 使能 “帧控制” 字段中的分片位，则 “数据” 字段中会出现 2 字节的内容总长度。该 内容总长度 表示帧的剩余部分的总长度，并用于报告终端需要分配的内容大小。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------------</span><br><span class="line">|  类型  |   帧控制  |  序列号  |  数据长度  |              数据              |  校验  |</span><br><span class="line">-----------------------------------------------------------------------------------</span><br><span class="line">  1 Byte    1 Byte    1 Byte    1 Byte      2 Byte + (<span class="variable">$&#123;Data Length&#125;</span> - 2)     2 Byte</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：</em></p>
+<p><em>1、通常情况下，<strong>控制帧</strong>不包含数据字段，ACK 帧类型除外。</em></p>
+<p><em>2、校验字段不一定有，需要根据 帧控制 字段的b’0000 0010 位判断是否存在校验字段</em></p>
+<h3 id="类型字段"><a href="#类型字段" class="headerlink" title="类型字段"></a>类型字段</h3><p><strong>类型</strong> 字段占 1 字节，分为 <strong>类型</strong> 和 <strong>子类型</strong> 两部分。其中，<strong>类型</strong> 占低 2 位，表明该帧为 <strong>数据帧</strong> 或是 <strong>控制帧</strong>；<strong>子类型</strong> 占高 6 位，表示此数据帧或者控制帧的具体含义。</p>
+<ul>
+<li>控制帧，暂不进行加密，可校验。低 2 位表示为 b’00</li>
+<li>数据帧，可加密，可校验。低 2 位表示为 b’01</li>
+</ul>
+<h4 id="控制帧"><a href="#控制帧" class="headerlink" title="控制帧"></a>控制帧</h4><p><strong>低 2 位表示为 b’00</strong>，其中 高 6 位 定义的控制帧子类型有：</p>
+<ul>
+<li><p>b’000000（0）：ACK</p>
+</li>
+<li><p>b’000001（1）：将 ESP 设备设置为安全模式</p>
+</li>
+<li><p>b’000010（2）：设置 Wi-Fi 的 opmode</p>
+</li>
+<li><p>b’000011（3）：将 ESP 设备连接至AP</p>
+</li>
+<li><p>b’000100（4）：断开 ESP 设备与AP的连接</p>
+</li>
+<li><p>b’000101（5）：获取 ESP 设备的 Wi-Fi 模式和状态等信息</p>
+</li>
+<li><p>b’000110（6）：断开 STA 设备与SoftAP 的连接</p>
+</li>
+<li><p>b’000111（7）：获取版本信息</p>
+</li>
+<li><p>b’001000（8）：断开 BLE GATT 连接</p>
+</li>
+<li><p>b’001001（9）：获取 Wi-Fi 列表</p>
+</li>
+</ul>
+<p>从 <code>esp-idf/components/bt/common/btc/profile/esp/blufi/include/blufi_int.h</code> 可以找到上述的子类型定义。</p>
+<h4 id="数据帧"><a href="#数据帧" class="headerlink" title="数据帧"></a>数据帧</h4><p><strong>低 2 位表示为 b’01</strong>，其中 高 6 位定义的数据帧子类型有：</p>
+<ul>
+<li><p>b’000000（0）：发送协商数据</p>
+</li>
+<li><p>b’000001（1）：发送 STA 模式的 BSSID</p>
+</li>
+<li><p>b’000010（2）：发送 STA 模式的 SSID</p>
+</li>
+<li><p>b’000011（3）：发送 STA 模式的密码</p>
+</li>
+<li><p>b’000100（4）：发送 SoftAP模式的SSID</p>
+</li>
+<li><p>b’000101（5）：发送 SoftAP模式的密码</p>
+</li>
+<li><p>b’000110（6）：设置 SoftAP模式的最大连接数</p>
+</li>
+<li><p>b’000111（7）：设置 SoftAP模式的认证模式</p>
+</li>
+<li><p>b’001000（8）：设置SoftAP模式的通道数量</p>
+</li>
+<li><p>b’001001（9）：用户名</p>
+</li>
+<li><p>b’001010（10）：CA认证</p>
+</li>
+<li><p>b’001011（11）：客户端认证</p>
+</li>
+<li><p>b’001100（12）：服务端认证</p>
+</li>
+<li><p>b’001101（13）：客户端私钥</p>
+</li>
+<li><p>b’001110（14）：服务端私钥</p>
+</li>
+<li><p>b’001111（15）：Wi-Fi 连接状态报告</p>
+</li>
+<li><p>b’010000（16）：版本</p>
+</li>
+<li><p>b’010001（17）：Wi-Fi 热点列表</p>
+</li>
+<li><p>b’010010（18）：报告异常</p>
+</li>
+<li><p>b’010011（19）：自定义数据</p>
+</li>
+<li><p>b’010100（20）：设置最大 Wi-Fi 重连次数</p>
+</li>
+<li><p>b’010101（21）：设置 Wi-Fi 连接失败原因</p>
+</li>
+<li><p>b’010110（22）：设置 Wi-Fi 连接失败的 RSSI</p>
+</li>
+</ul>
+<p>从 <code>esp-idf/components/bt/common/btc/profile/esp/blufi/include/blufi_int.h</code> 可以找到上述的子类型定义。</p>
+<h3 id="帧控制字段"><a href="#帧控制字段" class="headerlink" title="帧控制字段"></a>帧控制字段</h3><ul>
+<li>0x01（b’0000 0001）：表示帧是否加密。1表示加密，0表示未加密</li>
+<li>0x02（b’0000 0010）：表示帧尾是否包含校验位。0表示不包含校验位，1表示包含校验位</li>
+<li>0x04（b’0000 0100）：表示数据方向。0表示 手机 –&gt; ESP，1表示 ESP –&gt; 手机</li>
+<li>0x08（b’0000 1000）：表示是否要求对方回复ACK。0表示不要求，1表示要求</li>
+<li>0x10（b’0001 0000）：表示是否有后续的数据分片。0表示没有分片，1表示有分片</li>
+<li>其他：保留</li>
+</ul>
+<h3 id="序列号"><a href="#序列号" class="headerlink" title="序列号"></a>序列号</h3><p>序列号用于序列控制。</p>
+<p>帧发送时，<strong>无论帧的类型是什么</strong>，序列都会自动加 1，用来防止重放攻击 (Replay Attack)。每次重新连接后，序列清零。</p>
+<h3 id="数据长度"><a href="#数据长度" class="headerlink" title="数据长度"></a>数据长度</h3><p>数据长度用于指示数据字段的总长度，不包含校验部分。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>对于不同的类型或子类型，数据字段的含义均不同</p>
+<h3 id="校验"><a href="#校验" class="headerlink" title="校验"></a>校验</h3><p>此字段占两个字节，用来校验序列、数据长度以及明文。</p>
+<h2 id="BluFi-UUID"><a href="#BluFi-UUID" class="headerlink" title="BluFi UUID"></a>BluFi UUID</h2><p>BluFi Service UUID： 0xFFFF，16 bit</p>
+<p>BluFi（手机 &gt; ESP32）特性：0xFF01，主要权限：可写</p>
+<p>BluFi（ESP32 &gt; 手机）特性：0xFF02，主要权限：可读可通知</p>
+<h2 id="源码阅读"><a href="#源码阅读" class="headerlink" title="源码阅读"></a>源码阅读</h2><p>首先注册 BluFi Profile，它的UUID&#x3D;0xFFFF。当ESP32接收到BluFi的数据后，交给 <code>void btc_blufi_recv_handler(uint8_t *data, int len)</code> 处理。</p>
+<p>第一步：判断序列号是否为期待的值；</p>
+<p>第二步：判断数据加密，若加密则先解密；</p>
+<p>第三步，判断帧尾是否包含校验位，若有加密位则进行CRC校验；</p>
+<p>第四步：判断是否有ACK位，若有发送ACK应答；</p>
+<p>第五步：判断是否有后续的数据分片，若有则先缓存数据，接着等待下一帧数据。</p>
+<p>一个数据包接收完成后（分片的数据数据要把多个数据包组合），交给 <code>void btc_blufi_protocol_handler(uint8_t type, uint8_t *data, int len)</code> 处理。第一步，判断数据类型：控制帧类型 or 数据帧类型。第二步，判断子类型。</p>
+<p><code>void btc_blufi_protocol_handler(uint8_t type, uint8_t *data, int len)</code> 函数根据 type 类型判断帧是否为 BLUFI 类型的帧，通过 <code>type &amp; 0x03</code> 来得出帧是否为 BLUFI 类型。接着判断帧是控制帧，还是数据帧。如果是控制帧，则接着判断控制帧的子类型，通过 <code>(type &amp; 0xFC) &gt;&gt; 2</code> ，首先 type &amp; b’1111 1100，即低2位不考虑，然后右移两位，得到高6位。</p>
+<p>BluFi 数据结构体定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* BLUFI protocol */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">blufi_hdr</span>&#123;</span></span><br><span class="line">    <span class="type">uint8_t</span> type;</span><br><span class="line">    <span class="type">uint8_t</span> fc;</span><br><span class="line">    <span class="type">uint8_t</span> seq;</span><br><span class="line">    <span class="type">uint8_t</span> data_len;</span><br><span class="line">    <span class="type">uint8_t</span> data[<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果用户需要保证配网数据的安全性，那么在发送配网数据前，APP 和 ESP设备 需要进行DH秘钥协商。</p>
+<blockquote>
+<p>什么是DH秘钥协商算法？</p>
+</blockquote>
+<p>DH（Diffie-Hellman）秘钥协商算法是一种允许双方在不安全的通信信道上安全地建立共享密钥的方法。这个方法是由Whitfield Diffie和Martin Hellman于1976年提出，是第一个被公开发布的密钥交换协议，它解决了两个实体在没有事先交换秘密的情况下如何通过公共网络创建一个共同的秘密的问题。</p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>配网</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>乐鑫 ESP-NOW</title>
+    <url>/2024/12/18/2024/esp-now/</url>
+    <content><![CDATA[<h2 id="ESP-NOW-介绍"><a href="#ESP-NOW-介绍" class="headerlink" title="ESP-NOW 介绍"></a>ESP-NOW 介绍</h2><p><a href="https://www.espressif.com/zh-hans/solutions/low-power-solutions/esp-now">ESP-NOW</a> 是乐鑫定义的一种无线通信协议，能够在无路由器的情况下直接、快速、低功耗地控制智能设备。它能够与 Wi-Fi 和 Bluetooth LE 共存，支持乐鑫 ESP8266、ESP32、ESP32-S 和 ESP32-C 等多系列 SoC。ESP-NOW 广泛应用于智能家电、远程控制和传感器等领域。</p>
+<p>关于 <a href="https://docs.espressif.com/projects/esp-faq/zh_CN/latest/application-solution/esp-now.html">ESP-NOW FAQ</a> ，最大传输速率、应用场景、信道选择、配对限制等。</p>
+<p><strong>1、ESP-NOW 配对限制最多 20 个设备，是否有办法控制更多的设备？</strong></p>
+<p>使用广播包进行控制即可，目的地址包含在 payload 中，不受配对数量限制。仅需配置正确的广播地址即可。</p>
+<p><strong>2、ESP-NOW 最多可以控制多少个设备？</strong></p>
+<p>这取决于具体的通信方式：</p>
+<ul>
+<li>如使用单播包，支持同时最多配对并控制 20 个设备。</li>
+<li>如使用 ESP-NOW 加密模式，支持同时最多配对并控制 6 个设备。</li>
+<li>如使用广播包，仅需配置正确的广播地址即可。控制设备的数量理论上没有上限，但需考虑设备过多时的干扰问题。</li>
+</ul>
+<p><strong>3、为什么将 ESP-NOW 用户数据包的最大数据长度限制为 250 字节，这个数值可以修改吗？</strong></p>
+<ul>
+<li><strong>最长长度目前不能修改</strong>。因为 ESP-NOW 使用动作帧中的供应商特定元素字段传输数据，802.11 协议规定一个供应商特定元素中的<code>长度</code>字段只有 1 个字节 (0xff &#x3D; 255)，因此限制了正文部分 ESP-NOW 数据长度，最长为 250 字节。</li>
+<li>或者您可以使用 API <code>esp_wifi_80211_tx()</code> 发送数据，使用 sniffer 模式接收数据。这样同样可以实现只工作在 Wi-Fi 层并且不使用 TCP&#x2F;IP 协议栈。</li>
+</ul>
+<p><strong>4、ESP-NOW 是否可以与 Wi-Fi 一起使用？</strong></p>
+<p>可以，但需要注意的是 ESP-NOW 的信道要和所连接的 AP 的信道相同。</p>
+<p><strong>5、ESP-NOW 设备间通信需要连接路由器吗？</strong></p>
+<p>ESP-NOW 的交互方式为直接从 <strong>设备到设备</strong> 进行通信，不需要通过路由器来转发数据。</p>
+<p><strong>6、使用 ESP-NOW 应用时，需要注意什么？</strong></p>
+<ul>
+<li>连接 Wi-Fi 以后不能再切换信道，只能在当前 Wi-Fi 信道收发数据。</li>
+<li>如果设备进入 Modem-sleep 模式，将无法接受来自 ESP-NOW 的数据。</li>
+</ul>
+<p>7、如果保证数据安全性？</p>
+<p>ESP-NOW 可以通过 ECDH 和 AES128-CCM 来保护数据安全。</p>
+<ul>
+<li>使用 ECDH 和所有权证明 (PoP) 字符串授权会话、生成共享密钥</li>
+<li>使用 AES256-CTR 模式加密配置数据</li>
+<li>使用 AES128-CCM 模式加密 ESP-NOW 数据</li>
+</ul>
+<h2 id="ESP-NOW-数据帧"><a href="#ESP-NOW-数据帧" class="headerlink" title="ESP-NOW 数据帧"></a>ESP-NOW 数据帧</h2><p>ESP-IDF 编程指南：<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/network/esp_now.html">ESP-NOW</a></p>
+<p>ESP-NOW 是一种由乐鑫公司定义的 <em><strong>无连接</strong></em> Wi-Fi 通信协议。在 ESP-NOW 中，应用程序数据被封装在各个<em><strong>供应商的动作帧</strong></em>中，然后在无连接的情况下，从一个 Wi-Fi 设备传输到另一个 Wi-Fi 设备。</p>
+<p>目前 ESP-NOW 支持两个版本：v1.0 和 v2.0：</p>
+<ul>
+<li>v2.0 的设备支持的最大数据包长度为 1490 (<code>ESP_NOW_MAX_DATA_LEN_V2</code>) 字节；</li>
+<li>v1.0 的设备支持的最大数据包长度为 250 (<code>ESP_NOW_MAX_DATA_LEN</code>) 字节。</li>
+</ul>
+<p>v2.0 设备可以接收来自 v2.0 和 v1.0 设备的数据包。v1.0 设备只能接收来自 v1.0 设备的数据包。</p>
+<p>当然，v1.0 设备也可以接收长度不超过 250 (<code>ESP_NOW_MAX_IE_DATA_LEN</code>) 的 v2.0 数据包，只是如果长度超过此值，就只接收前 250 (<code>ESP_NOW_MAX_IE_DATA_LEN</code>) 字节，或是直接丢弃数据包。</p>
+<p>ESP-NOW 帧格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">|   MAC 报头   |  分类代码  |  组织标识符  |  随机值  |  供应商特定内容  |   FCS   |</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">   24 字节        1 字节        3 字节      4 字节      7-x 字节       4 字节</span><br></pre></td></tr></table></figure>
+
+<p><strong>帧数据包大小范围：43 字节 ~ 293 字节</strong></p>
+<p>供应商特定内容 帧格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--------------------------------------------------------------------------------------</span><br><span class="line">|  元素 ID  |  长度  |  组织标识符  |  类型  |        保留       |  版本    |     正文     |</span><br><span class="line">--------------------------------------------------------------------------------------</span><br><span class="line">                                          </span><br><span class="line">   1 字节     1 字节     3 字节      1 字节   7~4 比特| 3~0 比特   1 字节       0-250 字节</span><br></pre></td></tr></table></figure>
+
+<p><strong>最大有效载荷：250 字节</strong></p>
+<p>配对设备：即将对方设备的MAC地址通过 <code>esp_now_add_peer()</code> 将其添加到配对设备列表中。配对设备的最大数量是 20，其中加密设备的数量不超过17，默认值是 7。</p>
+<p>由于ESPNOW帧数据最大有效载荷：250 字节，乐鑫将帧数据有效载荷封装了应用层，其中应用层报头占用：20 字节，剩余 230 字节用于 body 部分。</p>
+<p>应用层数据报：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">| 类型 | 版本 | 保留 | 数据大小 | 自定义帧头 | 目标MAC地址 | 源MAC地址 |   数据     |</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line"> 4 bit  2 bit  2 bit 1 Byte    6 Byte      6 字节       6 Byte     0~230 Byte</span><br></pre></td></tr></table></figure>
+
+<p>其中自定义帧头：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line">| 魔术数 | 信道 | 过滤相邻信道干扰位 | 过滤弱信号位 | 安全模式 |  保留 | 广播位 | 群组 | ACK位 | 重传次数 | TTL  | RSSI |</span><br><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line"> 2 byte  4 bit       1bit           1 bit       1 bit    4 bit  1 bit   1bit   1 bit   5 bit    5 bit  8 bit</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="ESP-NOW-Control"><a href="#ESP-NOW-Control" class="headerlink" title="ESP-NOW Control"></a>ESP-NOW Control</h2><p>对于 <a href="https://github.com/espressif/esp-now/tree/master/examples/control">ESP-NOW Control Example</a> 的解读。</p>
+<p>ESP-NOW 根据数据流定义了两个角色：发起者（initiator）和响应者（responder）。同一个设备即可单独作为发起者，也可以单独作为响应者，也可以即作为发起者又作为响应者。</p>
+<p>在物联网系统中，通常开关、传感器、液晶屏，而灯、插座作为响应者。</p>
+<p>在 ESP-NOW Control Example 中，乐鑫又在 esp_now.h 的基础上封住了如下几个库：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">- control</span><br><span class="line">- debug</span><br><span class="line">- espnow</span><br><span class="line">- ota</span><br><span class="line">- provisioning</span><br><span class="line">- security</span><br><span class="line">- utils</span><br></pre></td></tr></table></figure>
+
+<p>用户可以基于上述几个库开发上层应用，当然如果用户希望不想使用这几个库，也可以直接使用 esp_now.h 更加原始的库，然后用户自定义esp_now 应用层数据格式。</p>
+<p>在 espnow&#x2F;include&#x2F;espnow.h 中封装了esp_now 应用层数据结构：</p>
+<p>自定义类型帧头的数据结构：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_frame_head_s</span> &#123;</span></span><br><span class="line">	<span class="type">uint16_t</span> magic;						<span class="comment">// 2字节，魔术数字，用来表示数据包格式</span></span><br><span class="line">    <span class="type">uint8_t</span> channel              : <span class="number">4</span>;	<span class="comment">// 占用4位，表示使用的Wi-Fi信道</span></span><br><span class="line">    <span class="type">bool</span> filter_adjacent_channel : <span class="number">1</span>;	<span class="comment">// 占用1位，是否过滤相邻信道的干扰</span></span><br><span class="line">    <span class="type">bool</span> filter_weak_signal      : <span class="number">1</span>;	<span class="comment">// 占用1位，是否过滤弱信号</span></span><br><span class="line">    <span class="type">bool</span> security                : <span class="number">1</span>;	<span class="comment">// 占用1位，是否启用安全模式</span></span><br><span class="line">    <span class="type">uint16_t</span>                     : <span class="number">4</span>;	<span class="comment">// 占用4位，未命名填充位域，通常用于对齐或保留</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Configure broadcast */</span></span><br><span class="line">    <span class="type">bool</span> broadcast              : <span class="number">1</span>;	<span class="comment">// 占用1位，是否为广播或单播</span></span><br><span class="line">    <span class="type">bool</span> group                  : <span class="number">1</span>;	<span class="comment">// 占用1位，是否为广播的群组</span></span><br><span class="line">    <span class="type">bool</span> ack                    : <span class="number">1</span>;	<span class="comment">// 占用1位，是否需要ACK确认</span></span><br><span class="line">    <span class="type">uint16_t</span> retransmit_count   : <span class="number">5</span>;	<span class="comment">// 占用5位，重传次数</span></span><br><span class="line">    <span class="type">uint8_t</span> forward_ttl         : <span class="number">5</span>;	<span class="comment">// 占用5位，转发TTL（Time To Live）</span></span><br><span class="line">    <span class="type">int8_t</span> forward_rssi         : <span class="number">8</span>;	<span class="comment">// 占用8位，转发时的RSSI（接收信号强度指示）</span></span><br><span class="line">&#125; __attribute__ ((packed)) <span class="type">espnow_frame_head_t</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">uint8_t</span> type    : <span class="number">4</span>;			<span class="comment">// 占用4位，表示数据包类型</span></span><br><span class="line">    <span class="type">uint8_t</span> version : <span class="number">2</span>;			<span class="comment">// 占用2位，表示版本号</span></span><br><span class="line">    <span class="type">uint8_t</span>         : <span class="number">2</span>;			<span class="comment">// 未命名的2位，通常用户填充或保留</span></span><br><span class="line">    <span class="type">uint8_t</span> size;					<span class="comment">// 1字节，表示payload有效载荷大小</span></span><br><span class="line">    <span class="type">espnow_frame_head_t</span> frame_head;	<span class="comment">// 6字节，一个自定义类型的帧头</span></span><br><span class="line">    <span class="type">uint8_t</span> dest_addr[<span class="number">6</span>];			<span class="comment">// 6字节，目标MAC地址</span></span><br><span class="line">    <span class="type">uint8_t</span> src_addr[<span class="number">6</span>];			<span class="comment">// 6字节，源MAC地址</span></span><br><span class="line">    <span class="type">uint8_t</span> payload[<span class="number">0</span>];				<span class="comment">// 可变长度数组，payload有效载荷从这里开始</span></span><br><span class="line">&#125; __attribute__((packed)) <span class="type">espnow_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>__attribute__((packed))</code>: 这是一个GCC编译器属性，告诉编译器不要对结构体成员进行默认的对齐优化，即按照每个成员声明的顺序紧密排列，以保证结构体在内存中的布局与协议要求一致，这对于网络通信非常重要。</p>
+</blockquote>
+<p>那么对于 <code>espnow_frame_head_t</code> 结构体大小是 6 Byte，<code>espnow_data_t</code> 的结构体大小是 20 Bype。</p>
+<p><em>注意：uint8_t payload[0] 在结构体中不占用，通过sizeof(espnow_data_t) 得出只有 20 Byte</em></p>
+<p>数据包类型定义如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Divide ESP-NOW data into multiple pipes</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_DATA_TYPE_ACK,            <span class="comment">/**&lt; For reliable data transmission */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_FORWARD,        <span class="comment">/**&lt; Set to forward packets */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_GROUP,          <span class="comment">/**&lt; Send a packet that sets the group type */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_PROV,           <span class="comment">/**&lt; Network configuration packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_CONTROL_BIND,   <span class="comment">/**&lt; Binding or unbinding packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_CONTROL_DATA,   <span class="comment">/**&lt; Control data packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_OTA_STATUS,     <span class="comment">/**&lt; Status packet for rapid upgrade of batch Device */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_OTA_DATA,       <span class="comment">/**&lt; Data packet for rapid upgrade of batch Device */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DEBUG_LOG,      <span class="comment">/**&lt; Equipment debugging log packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DEBUG_COMMAND,  <span class="comment">/**&lt; Equipment debugging command packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DATA,           <span class="comment">/**&lt; User-defined use */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY_STATUS,<span class="comment">/**&lt; Security status packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY,       <span class="comment">/**&lt; Security handshake packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY_DATA,  <span class="comment">/**&lt; Security packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_RESERVED,       <span class="comment">/**&lt; Reserved for other function */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_MAX,</span><br><span class="line">&#125; <span class="type">espnow_data_type_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 control&#x2F;include&#x2F;espnow_ctrl.h 中对于 initiator 和 responder 的控制数据封装了数据结构：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* espnow_attribute_t 结构：控制属性，有light、button、battery */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BASE              = <span class="number">0x0000</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_POWER              = <span class="number">0x0001</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_POWER_ADD          = <span class="number">0x0002</span>,</span><br><span class="line"></span><br><span class="line">    ESPNOW_ATTRIBUTE_ATTRIBUTE          = <span class="number">0x0003</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; light */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_LIGHT_BASE         = <span class="number">0x0100</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BRIGHTNESS         = <span class="number">0x0101</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BRIGHTNESS_ADD     = <span class="number">0x0102</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_HUE                = <span class="number">0x0103</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_HUE_ADD            = <span class="number">0x0104</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_SATURATION         = <span class="number">0x0105</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_SATURATION_ADD     = <span class="number">0x0106</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_WARM               = <span class="number">0x0107</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_WARM_ADD           = <span class="number">0x0108</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_COLD               = <span class="number">0x0109</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_COLD_ADD           = <span class="number">0x010a</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_RED                = <span class="number">0x010b</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_RED_ADD            = <span class="number">0x010c</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_GREEN              = <span class="number">0x010d</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_GREEN_ADD          = <span class="number">0x010e</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BLUE               = <span class="number">0x010f</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BLUE_ADD           = <span class="number">0x0110</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_MODE               = <span class="number">0x0111</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_MODE_ADD           = <span class="number">0x0112</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; button */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BUTTON_BASE        = <span class="number">0x0200</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_1              = <span class="number">0x0201</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_2              = <span class="number">0x0202</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_3              = <span class="number">0x0203</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_4              = <span class="number">0x0204</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_5              = <span class="number">0x0205</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_6              = <span class="number">0x0206</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_7              = <span class="number">0x0207</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_8              = <span class="number">0x0208</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_9              = <span class="number">0x0209</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_10             = <span class="number">0x0210</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; battery */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BATTERY_BASE       = <span class="number">0x0300</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_STATUS_LOW_BATTERY = <span class="number">0x0301</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BATTERY_LEVEL      = <span class="number">0x0302</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_CHARGING_STATE     = <span class="number">0x0303</span>,</span><br><span class="line">&#125; <span class="type">espnow_attribute_t</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_ctrl_data_s</span> &#123;</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_ESPNOW_CONTROL_AUTO_CHANNEL_SENDING</span></span><br><span class="line">    <span class="type">espnow_frame_head_t</span> frame_head;		<span class="comment">// 6字节</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="type">espnow_attribute_t</span> initiator_attribute; <span class="comment">// 2字节        /**&lt; Initiator&#x27;s attribute */</span></span><br><span class="line">    <span class="type">espnow_attribute_t</span> responder_attribute; <span class="comment">// 2字节        /**&lt; Responder&#x27;s attribute */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">bool</span> responder_value_b;   </span><br><span class="line">        <span class="type">int</span> responder_value_i;</span><br><span class="line">        <span class="type">float</span> responder_value_f;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="type">uint32_t</span> responder_value_s_flag : <span class="number">24</span>; </span><br><span class="line">            <span class="type">uint8_t</span> responder_value_s_size;</span><br><span class="line">        &#125;; <span class="comment">// 联合体根据实际使用时的计算大小</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> responder_value_s[<span class="number">0</span>];</span><br><span class="line">&#125; <span class="type">espnow_ctrl_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 espnow&#x2F;include&#x2F;espnow.h 中对于ESP_NOW 事件也进行了定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Enumerated list of control event id</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BIND          (ESP_EVENT_ESPNOW_CTRL_BASE + 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_UNBIND        (ESP_EVENT_ESPNOW_CTRL_BASE + 1)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BIND_ERROR    (ESP_EVENT_ESPNOW_CTRL_BASE + 2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Declaration of the task events family</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_DECLARE_BASE(id) extern esp_event_base_t const id</span></span><br><span class="line">ESP_EVENT_DECLARE_BASE(ESP_EVENT_ESPNOW);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_PROV_BASE          0x100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BASE          0x200</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_OTA_BASE           0x300</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_DEBUG_BASE         0x400</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_RESERVED_BASE      0x500</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ESP-NOW-Provisioning"><a href="#ESP-NOW-Provisioning" class="headerlink" title="ESP-NOW Provisioning"></a>ESP-NOW Provisioning</h2><p>在配网中也要对ESP32设备分为两种角色：发起者（initiator）和 响应者（responder）</p>
+<ul>
+<li><p>发起者</p>
+<p>1、持续扫描响应者发出 ESP-NOW 的 provision beacon（信标）</p>
+<p>2、当接收响应者发出的 provision beacon后，发送 “设备类型配置帧”，用于向响应者请求 Wi-Fi凭证（即AP的SSID和密码）</p>
+<p>3、如果接收到响应者发出的 provision 帧后，则从数据帧中获取 Wi-Fi 凭证，并连接到目标AP</p>
+</li>
+<li><p>响应者</p>
+<p>1、在 30 秒内，每 100 毫秒广播一次 provision beacon</p>
+<p>2、如果接收到发起者发出的 “设备类型配置帧” 后，则发出包含 Wi-Fi 凭证的 Wi-Fi 类型配置帧进行响应</p>
+</li>
+</ul>
+<p>在 provisioning&#x2F;include&#x2F;espnow_prov.h 定义了 esp_now 配网数据包类型：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_PROV_TYPE_BEACON,</span><br><span class="line">    ESPNOW_PROV_TYPE_DEVICE,</span><br><span class="line">    ESPNOW_PROV_TYPE_WIFI,</span><br><span class="line">&#125; <span class="type">espnow_prov_type_t</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当然配网数据包结构也要有：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ESPNOW_PACKED_STRUCT                __attribute__ ((packed))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_PROV_AUTH_INVALID, <span class="comment">/**&lt; Invalid mode */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_PRODUCT, <span class="comment">/**&lt; Product authentication */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_DEVICE,  <span class="comment">/**&lt; Device authentication */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_CERT,    <span class="comment">/**&lt; Certificate authentication */</span></span><br><span class="line">&#125; <span class="type">espnow_prov_auth_mode_t</span>;	<span class="comment">// 4 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_initiator_s</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> product_id[<span class="number">16</span>];                <span class="comment">/**&lt; Product ID */</span></span><br><span class="line">    <span class="type">char</span> device_name[<span class="number">16</span>];               <span class="comment">/**&lt; Device name */</span></span><br><span class="line">    <span class="type">espnow_prov_auth_mode_t</span> auth_mode;  <span class="comment">/**&lt; Authentication mode of provisioning */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">char</span> device_secret[<span class="number">32</span>];         <span class="comment">/**&lt; Device security key */</span></span><br><span class="line">        <span class="type">char</span> product_secret[<span class="number">32</span>];        <span class="comment">/**&lt; Product security key */</span></span><br><span class="line">        <span class="type">char</span> cert_secret[<span class="number">32</span>];           <span class="comment">/**&lt; Certify security key */</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">uint8_t</span> custom_size;                <span class="comment">/**&lt; Customer data size */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_data[<span class="number">0</span>];             <span class="comment">/**&lt; Customer data */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_initiator_t</span>;	<span class="comment">// 69 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_responder_s</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> product_id[<span class="number">16</span>];                <span class="comment">/**&lt; Product ID */</span></span><br><span class="line">    <span class="type">char</span> device_name[<span class="number">16</span>];               <span class="comment">/**&lt; Device name */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_responder_t</span>;	<span class="comment">// 32 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    WIFI_MODE_NULL = <span class="number">0</span>,  <span class="comment">/**&lt; null mode */</span></span><br><span class="line">    WIFI_MODE_STA,       <span class="comment">/**&lt; WiFi station mode */</span></span><br><span class="line">    WIFI_MODE_AP,        <span class="comment">/**&lt; WiFi soft-AP mode */</span></span><br><span class="line">    WIFI_MODE_APSTA,     <span class="comment">/**&lt; WiFi station + soft-AP mode */</span></span><br><span class="line">    WIFI_MODE_NAN,       <span class="comment">/**&lt; WiFi NAN mode */</span></span><br><span class="line">    WIFI_MODE_MAX</span><br><span class="line">&#125; <span class="type">wifi_mode_t</span>;	<span class="comment">// 4 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_wifi_s</span> &#123;</span></span><br><span class="line">    <span class="type">wifi_mode_t</span> mode;          <span class="comment">/**&lt; WiFi mode */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">wifi_ap_config_t</span>  ap;  <span class="comment">/**&lt; Configuration of AP */</span></span><br><span class="line">        <span class="type">wifi_sta_config_t</span> sta; <span class="comment">/**&lt; Configuration of STA */</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">char</span> token[<span class="number">32</span>];            <span class="comment">/**&lt; Token of the WiFi configuration */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_size;       <span class="comment">/**&lt; Customer data size */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_data[<span class="number">0</span>];    <span class="comment">/**&lt; Customer data */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_wifi_t</span>;	<span class="comment">// 217 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">uint8_t</span> type;								<span class="comment">// 1 Byte</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">espnow_prov_initiator_t</span> initiator_info;	<span class="comment">// 69 Byte</span></span><br><span class="line">        <span class="type">espnow_prov_responder_t</span> responder_info;	<span class="comment">// 32 Byte</span></span><br><span class="line">        <span class="type">espnow_prov_wifi_t</span> wifi_config;			<span class="comment">// 217 Byte</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125; __attribute__((packed)) <span class="type">espnow_prov_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>responder （dc:da:0c:d2:4f:74）创建定时器，每100ms发送 <code>ESPNOW_DATA_TYPE_PROV</code>  广播数据，并注册回调函数用来接收 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># responder 发送广播数据</span></span><br><span class="line">data(33): 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+<p>initiator（f0:9e:9e:99:12:60） 持续扫描 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据，接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据后，接着发送 <code>ESPNOW_DATA_TYPE_PROV</code> 的单播数据，并注册回调函数接收 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># initiator 接收广播数据</span></span><br><span class="line">data(33): 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># initiator 发送单播数据</span></span><br><span class="line">data(218): 01 69 6e 69 74 69 61 74 6f 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 00 06 00 23 21 8a 55 11 88 02 00 ff ff ff ff ff ff dc da 0c d2 4f 74 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <span class="built_in">fc</span> ab ca 3f eb 00 00 00 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 02 85 00 70 ec 00 00 00 00 01 01 42 d6 10 ac ca 3f 43 53 01 00 14 8d c9 3f e0 ab</span><br></pre></td></tr></table></figure>
+
+<p>responder 接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据后，接着发送 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的单播数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># responder 接收单播数据</span></span><br><span class="line">data(218): 01 69 6e 69 74 69 61 74 6f 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 00 06 00 23 21 8a 55 11 88 02 00 ff ff ff ff ff ff dc da 0c d2 4f 74 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <span class="built_in">fc</span> ab ca 3f eb 00 00 00 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 02 85 00 70 ec 00 00 00 00 01 01 42 d6 10 ac ca 3f 43 53 01 00 14 8d c9 3f e0 ab</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># responder 发送单播数据</span></span><br><span class="line">data(218): 02 00 00 00 00 43 55 42 45 43 5f 41 50 5f 32 2e 34 47 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 63 75 62 65 63 32 30 31 35 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+<p>initiator 接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据后，接着去连接目标AP</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">data(218): 02 00 00 00 00 43 55 42 45 43 5f 41 50 5f 32 2e 34 47 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 63 75 62 65 63 32 30 31 35 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ESP-NOW</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ESP-Prog 使用</title>
+    <url>/2024/12/18/2024/ESP-Prog/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># esp-prog 接入Ubuntu 22.04，查看信息</span></span><br><span class="line">$ <span class="built_in">sudo</span> dmesg</span><br><span class="line">[174352.562017] usb 1-3.3: new high-speed USB device number 50 using xhci_hcd</span><br><span class="line">[174352.664318] usb 1-3.3: New USB device found, idVendor=0403, idProduct=6010, bcdDevice= 7.00</span><br><span class="line">[174352.664329] usb 1-3.3: New USB device strings: Mfr=1, Product=2, SerialNumber=0</span><br><span class="line">[174352.664333] usb 1-3.3: Product: Dual RS232-HS</span><br><span class="line">[174352.664336] usb 1-3.3: Manufacturer: FTDI</span><br><span class="line">[174352.665417] ftdi_sio 1-3.3:1.0: FTDI USB Serial Device converter detected</span><br><span class="line">[174352.665463] usb 1-3.3: Detected FT2232H</span><br><span class="line">[174352.666121] usb 1-3.3: FTDI USB Serial Device converter now attached to ttyUSB0</span><br><span class="line">[174352.666547] ftdi_sio 1-3.3:1.1: FTDI USB Serial Device converter detected</span><br><span class="line">[174352.666589] usb 1-3.3: Detected FT2232H</span><br><span class="line">[174352.667209] usb 1-3.3: FTDI USB Serial Device converter now attached to ttyUSB1</span><br></pre></td></tr></table></figure>
+
+<p>FT2232H 是 FTDI 产品系列中的 USB转串口&#x2F;FIFO 开发模块，它利用 FT2232H USB高速（480 Mbps）双端口桥接芯片处理所有的USB信号和协议。</p>
+]]></content>
+      <categories>
+        <category>esp</category>
+      </categories>
+      <tags>
+        <tag>ESP-Prog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Rust Program Language</title>
     <url>/2024/12/14/2024/Rust/</url>
     <content><![CDATA[<p><a href="https://kaisery.github.io/trpl-zh-cn/">《Rust 程序设计语言》 简体中文版</a></p>
@@ -26,7 +838,7 @@
 <p>第一个有版本号的Rust编译器于2012年1月发布。<em><strong>Rust 1.0是第一个稳定版本，于2015年5月15日发布</strong></em>。</p>
 <p><strong>Rust 开发工具</strong>：</p>
 <ul>
-<li><em>Cargo</em> 是内置的依赖管理器和构建工具，它能轻松增加、编译和管理依赖，并使依赖在 Rust 生态系统中保持一致。</li>
+<li><em>Cargo</em> 是内置的依赖管理器和构建工具，它能轻松增加、编译和管理依赖，并使依赖在 Rust 生态系统中保持一致。Rust 的编译工具依赖 C 语言的编译工具，这意味着你的电脑上至少已经存在一个 C 语言的编译环境。如果你使用的是 Linux 系统，往往已经具备了 GCC 或 clang。</li>
 <li><em>Rustfmt</em> 格式化工具确保开发者遵循一致的代码风格。</li>
 <li><em>rust-analyzer</em> 为集成开发环境（IDE）提供了强大的代码补全和内联错误信息功能</li>
 </ul>
@@ -60,6 +872,8 @@
 </li>
 <li><p><strong>Even Better TOML</strong>：支持 .toml 文件语法高亮</p>
 </li>
+<li><p><strong>CodeLLDB</strong>：调试器</p>
+</li>
 <li><p>Error Lens：支持获得错误提示</p>
 </li>
 <li><p>CodeLLDB：支持 Debugger 程序</p>
@@ -68,6 +882,33 @@
 </li>
 <li><p><strong>Git Graph</strong>：支持 Git 以图形化显示，还是可以进行通过UI执行 git 命令</p>
 </li>
+</ul>
+<p>在 VSCode 中对 Rust 进行 Debug 调试，在当前项目的同一级目录创建 <code>.vscode</code> 文件夹，该文件夹下有 <code>launch.json</code> 文件，内容如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// Use IntelliSense to learn about possible attributes.</span></span><br><span class="line">    <span class="comment">// Hover to view descriptions of existing attributes.</span></span><br><span class="line">    <span class="comment">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lldb&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Debug&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/target/debug/$&#123;workspaceFolderBasename&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;cwd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>VSCode 定义了很多变量（<a href="https://code.visualstudio.com/docs/editor/variables-reference">Variables Reference</a>），用户可以直接使用：</p>
+<p><strong>Predefined variables</strong></p>
+<p>The following predefined variables are supported:</p>
+<ul>
+<li><strong>${userHome}</strong> - the path of the user’s home folder</li>
+<li><strong>${workspaceFolder}</strong> - the path of the folder opened in VS Code</li>
+<li><strong>${workspaceFolderBasename}</strong> - the name of the folder opened in VS Code without any slashes (&#x2F;)</li>
+<li><strong>${file}</strong> - the current opened file</li>
+<li><strong>${fileWorkspaceFolder}</strong> - the current opened file’s workspace folder</li>
+<li><strong>${relativeFile}</strong> - the current opened file relative to <code>workspaceFolder</code></li>
+<li><strong>${relativeFileDirname}</strong> - the current opened file’s dirname relative to <code>workspaceFolder</code></li>
+<li><strong>${fileBasename}</strong> - the current opened file’s basename</li>
+<li><strong>${fileBasenameNoExtension}</strong> - the current opened file’s basename with no file extension</li>
+<li><strong>${fileExtname}</strong> - the current opened file’s extension</li>
+<li><strong>${fileDirname}</strong> - the current opened file’s folder path</li>
+<li><strong>${fileDirnameBasename}</strong> - the current opened file’s folder name</li>
+<li><strong>${cwd}</strong> - the task runner’s current working directory upon the startup of VS Code</li>
+<li><strong>${lineNumber}</strong> - the current selected line number in the active file</li>
+<li><strong>${selectedText}</strong> - the current selected text in the active file</li>
+<li><strong>${execPath}</strong> - the path to the running VS Code executable</li>
+<li><strong>${defaultBuildTask}</strong> - the name of the default build task</li>
+<li><strong>${pathSeparator}</strong> - the character used by the operating system to separate components in file paths</li>
+<li><strong>${&#x2F;}</strong> - shorthand for <strong>${pathSeparator}</strong></li>
 </ul>
 <h2 id="Rust-语法"><a href="#Rust-语法" class="headerlink" title="Rust 语法"></a>Rust 语法</h2><p>但凡编程语言，基本都会有一个共性：数据、数据类型、关键字、分支结构、循环结构、函数。</p>
 <h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><h4 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h4><p>变量默认是不可改变的（immutable）。</p>
@@ -218,10 +1059,14 @@
 
 
 
-
-
-
-
+<h2 id="所有权"><a href="#所有权" class="headerlink" title="所有权"></a>所有权</h2><p><strong>所有权</strong>（<em>ownership</em>）是 Rust 用于如何管理内存的一组规则。所有程序都必须管理其运行时使用计算机内存的方式。</p>
+<p>Rust 则选择的方式：通过所有权系统管理内存，编译器在编译时会根据一系列的规则进行检查。如果违反了任何这些规则，程序都不能编译。在运行时，所有权系统的任何功能都不会减慢程序。</p>
+<p>所有权规则：</p>
+<ol>
+<li>Rust 中的每一个值都有一个 <strong>所有者</strong>（<em>owner</em>）。</li>
+<li>值在任一时刻有且只有一个所有者。</li>
+<li>当所有者（变量）离开作用域，这个值将被丢弃。</li>
+</ol>
 <h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><p>Rust 定义结构体，需要使用关键字 <code>struct</code> 并为整个结构体提供一个名字。 </p>
 <p>定义一个用户结构体：</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    active: <span class="type">bool</span>,</span><br><span class="line">    username: <span class="type">String</span>,</span><br><span class="line">    email: <span class="type">String</span>,</span><br><span class="line">    sign_in_count: <span class="type">u64</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">        email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;User Info:</span></span><br><span class="line"><span class="string">             username: &#123;&#125;</span></span><br><span class="line"><span class="string">             email: &#123;&#125;</span></span><br><span class="line"><span class="string">             active: &#123;&#125;</span></span><br><span class="line"><span class="string">             sign_in_count: &#123;&#125;&quot;</span>, user1.username, user1.email, </span><br><span class="line">             user1.active, user1.sign_in_count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -231,16 +1076,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><strong>方法</strong>（method）与函数类似：它们使用 <code>fn</code> 关键字和名称声明，可以拥有参数和返回值，同时包含在某处调用该方法时会执行的代码。不过方法与函数是不同的，因为它们在结构体的上下文中被定义，并且它们第一个参数总是 <code>self</code>，它代表调用该方法的结构体实例。</p>
 ]]></content>
       <categories>
         <category>Rust</category>
@@ -557,6 +1393,7 @@
 </tr>
 </tbody></table>
 <p><em>注意：以上带宽是5MHz，且没有为信道提供保护带宽。</em></p>
+<p><strong>2.4 GHz Zigbee信道频谱：</strong></p>
 <p><img src="/2024/12/13/2024/WiFi-Channel-Algorithm/image-20241213141631183.png" alt="image-20241213141631183"></p>
 <p>在环境中存在 Wi-Fi 的情况下，Zigbee 工作就会收到干扰。</p>
 <h2 id="蓝牙频段"><a href="#蓝牙频段" class="headerlink" title="蓝牙频段"></a>蓝牙频段</h2><p>在经典蓝牙（BR&#x2F;EDR）中，ISM频段被划分为79个1 MHz带宽的信道（从2402 MHz到2480 MHz），信道中心频率  <code>f=2402+k MHz, k=0,…,78</code>。</p>
@@ -617,6 +1454,29 @@
 </ul>
 <h2 id="电量查询"><a href="#电量查询" class="headerlink" title="电量查询"></a>电量查询</h2><p>在仅支持蓝牙连接的情况下查询剩余电量，按下组合键：<code>Fn + T</code>。右上角指示灯闪烁，3个灯亮说明满电。</p>
 <h2 id="恢复出厂设置"><a href="#恢复出厂设置" class="headerlink" title="恢复出厂设置"></a>恢复出厂设置</h2><p>组合键：<code>ESC + 左Ctrl + F12 + 右Ctrl</code></p>
+<h2 id="定义键盘"><a href="#定义键盘" class="headerlink" title="定义键盘"></a>定义键盘</h2><p>主控：ESP32-S3</p>
+<p>供电：锂电池 &amp; type-c</p>
+<p>轴体：腹灵灰雪静音轴 + 大键平衡杆</p>
+<p>配列：x87</p>
+<p>定位板：</p>
+<p>外壳：fusion 360 3D设计上壳和下壳。</p>
+<p>电路板：嘉立创打样</p>
+<h3 id="制作步骤"><a href="#制作步骤" class="headerlink" title="制作步骤"></a>制作步骤</h3><ol>
+<li><p><strong>配列定制</strong></p>
+<p><a href="https://www.keyboard-layout-editor.com/#/gists/f2cd364918027e103092f47329a8fa2c">keyboard-layout-editor</a> 定义键盘配列，复制配列信息到 <a href="http://builder.swillkb.com/">Plate &amp; Case Builder</a> 生成定位板 DXF 文件，可以导入 fusion 360。</p>
+</li>
+<li><p><strong>电路板制作</strong></p>
+<p>使用 <a href="https://lceda.cn/editor">嘉立创</a> 在线版或离线版 设计电路原理图，接着原理图转PCB完成连线。</p>
+<p>在 嘉立创商城 下单制作PCB</p>
+</li>
+<li><p><strong>外壳制作</strong></p>
+</li>
+<li><p><strong>组装试用</strong></p>
+</li>
+</ol>
+<p>参考链接：</p>
+<p><a href="https://www.bilibili.com/video/BV1yi421C7qV/?share_source=copy_web&vd_source=7e24f4cefdafbd8477369f33616312a9">ESP32-S3客制化键盘</a></p>
+<p><a href="https://oshwhub.com/esp-college/esp-keyboard">ESP-KeyBoard 嘉立创</a></p>
 ]]></content>
       <categories>
         <category>Computer</category>
@@ -845,14 +1705,14 @@
       </tags>
   </entry>
   <entry>
-    <title>esp: Hardware Communation Interface Or Protocol</title>
+    <title>硬件通信接口或协议</title>
     <url>/2024/11/17/2024/esp-Hardware-Communation-Interface-Or-Protocol/</url>
     <content><![CDATA[<blockquote>
 <p>以下内容来自AI的回答</p>
 </blockquote>
 <p>在嵌入式系统设计中，硬件通信接口或协议是实现不同设备之间数据交换的关键。这些接口和协议根据传输距离、速度、功耗等因素的不同而有所区别。下面是一些常见的硬件通信接口或协议：</p>
 <h2 id="UART"><a href="#UART" class="headerlink" title="UART"></a>UART</h2><p>UART （Universal Asynchronous Receiver&#x2F;Transmitter，通用异步收发器）是一种非常基础的串行通信协议，它允许两个设备之间进行<strong>串行、异步、全双工</strong>的数据传输。它简单易用，适用于短距离通信。</p>
-<p>串口只需要 2根线（TX 和 RX） 就可以实现数据发送和接受，TX用于发送数据，RX用于接收数据（收发不是一根线，所以是全双工通信），通信双方只要采用相同的帧格式和波特率，就能在未共享时钟信号的情况下，可以完成通信过程（收发不同步，所以是异步串行通信）。</p>
+<p>串口只需要 2根线（TX 和 RX） 就可以实现数据发送和接受，TX用于发送数据，RX用于接收数据（收发不是一根线，所以是全双工通信），通信双方只要 <em><strong>采用相同的帧格式和波特率</strong></em> ，就能在未共享时钟信号的情况下，可以完成通信过程（收发不同步，所以是异步串行通信）。</p>
 <h3 id="电气标准"><a href="#电气标准" class="headerlink" title="电气标准"></a>电气标准</h3><p>串口有4种电气标准，分别是：TTL、RS232、RS422、RS485。这4种串口只在电气信号上有差别，在帧格式、传输逻辑、软件操作上基本上都是一样的。</p>
 <p>串口的4种电气标准比较：</p>
 <table>
@@ -922,7 +1782,7 @@
 <p>逻辑高电平”1” 通常指相对较高的电压，对于传统的5V TTL逻辑，高电平通常是在 <code>2V~5V</code> 之间；对于3.3V TTL逻辑，高电平则在 <code>2V~3.3V</code> 之间。</p>
 </li>
 <li><p><strong>RS232（Recommended Standard 232）</strong></p>
-<p>RS-232使用 <em><strong>负逻辑</strong></em>，即逻辑“1”为负电压，通常在 <code>-3V~-15V</code> 之间，逻辑“0”为正电压，通常在<code>+3V~+15V</code> 之间）。这种较高的电压范围有助于提高抗噪能力，但同时也限制了其适用于低功耗应用。</p>
+<p>RS-232使用 <em><strong>负逻辑</strong></em>，即逻辑“1”为负电压，通常在 <code>-3V~-15V</code> 之间，逻辑“0”为正电压；通常在<code>+3V~+15V</code> 之间）。这种较高的电压范围有助于提高抗噪能力，但同时也限制了其适用于低功耗应用。</p>
 </li>
 <li><p><strong>RS422（Recommended Standard 422）</strong></p>
 <p>RS-422 使用差分信号传输，这意味着每条数据线都有一个对应的反相线。</p>
@@ -968,7 +1828,7 @@
 <li><p>iProduct：可自定义修改</p>
 </li>
 </ul>
-<p><em>注意：Key使用Silicon Labs提供 Simplicity Studio 软件 修改上述字段</em></p>
+<p><em>注意：使用Silicon Labs提供 Simplicity Studio 软件 修改上述字段</em></p>
 <h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><p>SPI （Serial Peripheral Interface，串行外设接口）是一种同步串行通信接口，通常用于微控制器与一个或多个外设之间的短距离通信。它使用主从架构，支持全双工通信。</p>
 <ol>
 <li><p><strong>I2C (Inter-Integrated Circuit)</strong></p>
@@ -1208,7 +2068,13 @@
   <entry>
     <title>esp: idf project architecture</title>
     <url>/2024/11/15/2024/esp-idf-project-architecture/</url>
-    <content><![CDATA[<p><a href="https://www.bilibili.com/video/BV18keGeaEhE/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=a8965eb911e5c2e6ddd23064aced2e6b">入门 ESP-IDF 工程结构【新手超详细教程】</a></p>
+    <content><![CDATA[<p>了解几个概念<a href="https://docs.espressif.com/projects/esp-techpedia/zh_CN/latest/esp-friends/get-started/board-selection.html">芯片，模组，开发板</a>：</p>
+<ul>
+<li>芯片</li>
+<li>模组</li>
+<li>开发板</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV18keGeaEhE/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=a8965eb911e5c2e6ddd23064aced2e6b">入门 ESP-IDF 工程结构【新手超详细教程】</a></p>
 <blockquote>
 <p>目的：更高效的开发和管理自己的 ESP-IDF 工程</p>
 </blockquote>
@@ -1390,6 +2256,9 @@
 <p>编译 hello_world 项目时，执行 <code>idf.py size</code> 查看 DRAM、IRAM 和 flash 的使用：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Total sizes:</span><br><span class="line">Used static DRAM:   10956 bytes ( 169780 remain, 6.1% used)</span><br><span class="line">      .data size:    8716 bytes</span><br><span class="line">      .bss  size:    2240 bytes</span><br><span class="line">Used static IRAM:   51074 bytes (  79998 remain, 39.0% used)</span><br><span class="line">      .text size:   50047 bytes</span><br><span class="line">   .vectors size:    1027 bytes</span><br><span class="line">Used Flash size :  116999 bytes</span><br><span class="line">           .text:   79067 bytes</span><br><span class="line">         .rodata:   37676 bytes</span><br><span class="line">Total image size:  176789 bytes (.bin may be padded larger)</span><br></pre></td></tr></table></figure>
 
+<h2 id="ESP-Component-Registry"><a href="#ESP-Component-Registry" class="headerlink" title="ESP Component Registry"></a>ESP Component Registry</h2><p>可以直接将组件仓库中的组件添加到项目依赖中，例如 在项目中添加 button 组件，在项目的顶层目录执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button=*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button^3.4.1&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button==3.4.1&quot;</span></span><br></pre></td></tr></table></figure>
+
 
 
 
@@ -1480,7 +2349,7 @@
 <li>ESP-IDF 提供详尽的<strong>软件组件使用</strong>和<strong>设计文档</strong>，有助于开发人员充分理解 ESP-IDF 功能，并从中挑选最适合构建其应用程序的模块。ESP-IDF 包含 100 多个示例，详细说明了其组件及硬件外设的功能和用法。它们经过了严格的测试和维护，是用户开启应用开发的有效参考。</li>
 </ul>
 <h2 id="idf常用命令"><a href="#idf常用命令" class="headerlink" title="idf常用命令"></a>idf常用命令</h2><p>使用 <code>idf.py</code> 命令即可显示帮助提示。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Options:</span><br><span class="line">--version				# 显示idf版本信息</span><br><span class="line">--list-targets			# 显示支持的SoC</span><br><span class="line">--ccache / --no-ccache	# 在编译是是否启用ccache环境以加快编译速度，默认是关闭的。</span><br><span class="line">-p PATH 				# 指定串口路径</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Commands:</span><br><span class="line">clean		# 从build目录删除编译输出文件</span><br><span class="line">fullclean	# 删除整个build目录中的文件</span><br><span class="line"></span><br><span class="line">set-target	# 设置编译目标SoC</span><br><span class="line">menuconfig	# 打开项目配置菜单</span><br><span class="line">erase-flash	# 擦除整个flash</span><br><span class="line">flash		# 烧录固件</span><br><span class="line">monitor 	# 显示串口日志输出</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Options:</span></span><br><span class="line">--version				<span class="comment"># 显示idf版本信息</span></span><br><span class="line">--list-targets			<span class="comment"># 显示支持的SoC</span></span><br><span class="line">--ccache / --no-ccache	<span class="comment"># 在编译是是否启用ccache环境以加快编译速度，默认是关闭的。</span></span><br><span class="line">-p PATH 				<span class="comment"># 指定串口路径</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Commands:</span></span><br><span class="line">clean		<span class="comment"># 从build目录删除编译输出文件</span></span><br><span class="line">fullclean	<span class="comment"># 删除整个build目录中的文件</span></span><br><span class="line"></span><br><span class="line">set-target	<span class="comment"># 设置编译目标SoC</span></span><br><span class="line">menuconfig	<span class="comment"># 打开项目配置菜单</span></span><br><span class="line">erase-flash	<span class="comment"># 擦除整个flash</span></span><br><span class="line">flash		<span class="comment"># 烧录固件</span></span><br><span class="line">monitor 	<span class="comment"># 显示串口日志输出</span></span><br><span class="line"></span><br><span class="line">add-dependency <span class="comment"># 在main目录下创建idf_component.yml,并在该文件中写入组件信息</span></span><br><span class="line">all                          Aliases: build. Build the project.</span><br><span class="line">app                          Build only the app.</span><br><span class="line">app-flash                    Flash the app only.</span><br><span class="line">bootloader                   Build only bootloader.</span><br><span class="line">bootloader-flash             Flash bootloader only.</span><br><span class="line">build-system-targets         Print list of build system targets.</span><br><span class="line"></span><br><span class="line">create-component             Create a new component.</span><br><span class="line">create-manifest              Create manifest <span class="keyword">for</span> specified component.</span><br><span class="line">create-project               Create a new project.</span><br><span class="line">create-project-from-example  Create a project from an example.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
