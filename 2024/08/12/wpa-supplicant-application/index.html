@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="wpa_supplicant应用在Wi-Fi应用中很常见，它作为后台常驻进程，为Wi-Fi客户端提供服务。那么wpa_supplicant涉及到哪些方面的知识点呢？以下内容就是我对于它的一下理解，并形成文字记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wpa-supplicant application">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="wpa_supplicant应用在Wi-Fi应用中很常见，它作为后台常驻进程，为Wi-Fi客户端提供服务。那么wpa_supplicant涉及到哪些方面的知识点呢？以下内容就是我对于它的一下理解，并形成文字记录。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/2.4G.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/image-20241016170128847.png">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/image-20241016211846477.png">
+<meta property="article:published_time" content="2024-08-12T01:27:33.000Z">
+<meta property="article:modified_time" content="2024-12-13T03:07:29.592Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="Wi-Fi">
+<meta property="article:tag" content="wpa_supplicant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/2.4G.png">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/","path":"2024/08/12/wpa-supplicant-application/","title":"wpa-supplicant application"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>wpa-supplicant application | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">95</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E7%83%AD%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">无线热点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E9%81%93"><span class="nav-number">2.</span> <span class="nav-text">信道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WPA-SUPPLICANT"><span class="nav-number">3.</span> <span class="nav-text">WPA_SUPPLICANT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dbus-for-wpa-supplicant%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.1.</span> <span class="nav-text">dbus for wpa_supplicant接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1"><span class="nav-number">4.2.</span> <span class="nav-text">fi.w1.wpa_supplicant1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-Interface"><span class="nav-number">4.3.</span> <span class="nav-text">fi.w1.wpa_supplicant1.Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-BSS"><span class="nav-number">4.4.</span> <span class="nav-text">fi.w1.wpa_supplicant1.BSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fi-w1-wpa-supplicant1-Network"><span class="nav-number">4.5.</span> <span class="nav-text">fi.w1.wpa_supplicant1.Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wpa-cli"><span class="nav-number">5.</span> <span class="nav-text">wpa_cli</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E4%BF%A1%E6%81%AF"><span class="nav-number">6.</span> <span class="nav-text">参考信息</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/12/wpa-supplicant-application/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="wpa-supplicant application | eiSouthBoy's Blog">
+      <meta itemprop="description" content="wpa_supplicant应用在Wi-Fi应用中很常见，它作为后台常驻进程，为Wi-Fi客户端提供服务。那么wpa_supplicant涉及到哪些方面的知识点呢？以下内容就是我对于它的一下理解，并形成文字记录。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          wpa-supplicant application
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-12 01:27:33" itemprop="dateCreated datePublished" datetime="2024-08-12T01:27:33+00:00">2024-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-13 03:07:29" itemprop="dateModified" datetime="2024-12-13T03:07:29+00:00">2024-12-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Wi-Fi/" itemprop="url" rel="index"><span itemprop="name">Wi-Fi</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">wpa_supplicant应用在Wi-Fi应用中很常见，它作为后台常驻进程，为Wi-Fi客户端提供服务。那么wpa_supplicant涉及到哪些方面的知识点呢？以下内容就是我对于它的一下理解，并形成文字记录。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="无线热点"><a href="#无线热点" class="headerlink" title="无线热点"></a>无线热点</h2><p>路由器能够建立无线热点（即AP模式，Access Point Mode），供手机或PC等无线设备上网。无线热点支持IEEE 802.11 b&#x2F;g&#x2F;n 标准可以同时有两个频率选择：2.4GHz 和 5GHz。</p>
+<p>2.4GHz 工作频段范围：2.4GHz ~ 2.4835GHz，共划分14个信道（但第14信道一般不用），每个信道频宽20MHz，其特点表现为频率低、波长（0.125m）长，传输距离远（覆盖范围大），但是传输速度慢。</p>
+<p>5GHz 工作频段范围：5.170GHz ~ 5.850GHz，大约有个45个信道，其中38、46、151、159信道频宽为40MHz，其余信道频宽均为20MHz，其特点表现为频率高、波长（0.052m）短，传输距离短（覆盖范围小），但传输速度快。</p>
+<p>无线热点的基本信息：</p>
+<ul>
+<li><p>网络名称（SSID）<br>  SSID不能唯一的表示一个无线热点，即多个无线热点能设置相同的SSID。<br>  SSID设置广播模式后，其他设置才能搜索到该SSID，否则该SSID被隐藏，只能通过手动输入SSID进行连接。</p>
+</li>
+<li><p>安全模式<br>  路由器中安全模式能设置无线热点的加密类型：OPEN、WPA2(AES)-PSK、WPA-PSK&#x2F;WPA2-PSK</p>
+</li>
+<li><p>加密类型</p>
+<p>  <strong>OPEN</strong>：开放式认证，任何人都可以连接并使用无线网络。</p>
+<p>  <strong>WEB</strong>：共享秘钥认证依赖于 <strong>WEB</strong> （Wired Equivalent Privacy，有线等效加密），使用RC4算法，秘钥分为64 bit 和 128 bit，且通信双方使用相同的秘钥。</p>
+<p>  <strong>WPA</strong>：采用TKIP（Temporal Key Integrity Protocol，临时秘钥完整性协议）来为每一个MAC帧生成不同的Key，以替代WEB。WPA有两种模式：企业模式（WPA-EAP）和 个人模式（WPA-PSK）。</p>
+<p>  <strong>WPA2</strong>：RSN被WFA组织成为WPA2，采用了CCMP加密方式。</p>
+<p>  <strong>WPA3</strong>：新一代Wi-Fi加密协议，用于替代WPA2。</p>
+</li>
+<li><p>密码（PSK）<br>  密码的有无取决于安全模式。若安全模式为 OPEN，则密码为空；若安全模式为其他类型，则密码不为空。</p>
+</li>
+</ul>
+<h2 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h2><p>信道也称作通道(Channel)、频段，是以无线信号（电磁波）作为传输载体的数据信号传送通道。</p>
+<p>IEEE 802.11 为ISM（免执照）频段中的低功率 Wi-Fi定义了 14 个信道。不管是802.11b&#x2F;g还是802.11a&#x2F;b&#x2F;g&#x2F;n&#x2F;ac一般都支持 13 个信道。它们的中心频率虽然不同，但是因为都占据一定的频率范围，所以会有一些相互重叠的情况。</p>
+<p>2.4GHz频带的信道划分14个信道（2412 MHz ~ 2484 MHz），但第14信道一般不用，每个信道的有效宽度是 20MHz，另外还有2MHz的强制隔离频带。2.4G WiFi信道分布图可以看到信道之间会彼此重叠，从而容易造成WiFi干扰，但1、6、11信道除外，这三个信道没有重叠部分，故路由器一般将这三个信道作为默认的信道来使用。</p>
+<table>
+<thead>
+<tr>
+<th>信道</th>
+<th>频宽(MHz)</th>
+<th>中心频率(MHz)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>20</td>
+<td>2412</td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>2417</td>
+</tr>
+<tr>
+<td>3</td>
+<td>20</td>
+<td>2422</td>
+</tr>
+<tr>
+<td>4</td>
+<td>20</td>
+<td>2427</td>
+</tr>
+<tr>
+<td>5</td>
+<td>20</td>
+<td>2432</td>
+</tr>
+<tr>
+<td>6</td>
+<td>20</td>
+<td>2437</td>
+</tr>
+<tr>
+<td>7</td>
+<td>20</td>
+<td>2442</td>
+</tr>
+<tr>
+<td>8</td>
+<td>20</td>
+<td>2447</td>
+</tr>
+<tr>
+<td>9</td>
+<td>20</td>
+<td>2452</td>
+</tr>
+<tr>
+<td>10</td>
+<td>20</td>
+<td>2457</td>
+</tr>
+<tr>
+<td>11</td>
+<td>20</td>
+<td>2462</td>
+</tr>
+<tr>
+<td>12</td>
+<td>20</td>
+<td>2467</td>
+</tr>
+<tr>
+<td>13</td>
+<td>20</td>
+<td>2472</td>
+</tr>
+<tr>
+<td>14</td>
+<td>20</td>
+<td>2484</td>
+</tr>
+</tbody></table>
+<p><img src="/2024/08/12/wpa-supplicant-application/2.4G.png" alt="2.4G"></p>
+<p><em>注意：</em></p>
+<h2 id="WPA-SUPPLICANT"><a href="#WPA-SUPPLICANT" class="headerlink" title="WPA_SUPPLICANT"></a>WPA_SUPPLICANT</h2><blockquote>
+<p>wap_supplicant是什么？</p>
+</blockquote>
+<p>wpa_supplicant 是适用于 Linux、BSD、Mac OS X 和 Windows 的 WPA Supplicant，支持 WPA、WPA2（IEEE 802.11i &#x2F; RSN）和 WPA3。它适用于台式机&#x2F;笔记本电脑和嵌入式系统。Supplicant 是客户端站中使用的 IEEE 802.1X&#x2F;WPA 组件。它与 WPA Authenticator 实现密钥协商，并控制 wlan 驱动程序的漫游和 IEEE 802.11 身份验证&#x2F;关联。</p>
+<p>获取wpa_supplicant仓库代码：<code>git clone git://w1.fi/hostap.git</code></p>
+<p>wpa_supplicant 被设计为在后台运行的“守护进程”程序，并充当控制无线连接的后端组件。wpa_supplicant 支持单独的前端程序，wpa_supplicant 包含基于命令行的前端 (wpa_cli) 和 GUI (wpa_gui)。</p>
+<p>wpa_supplicant应用主要包括程序：</p>
+<ul>
+<li>wpa_supplicant守护程序</li>
+<li>wpa_cli客户端程序</li>
+<li>wpa_passphrase密码工具程序</li>
+</ul>
+<p>wpa_supplicant的运行方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># -B: 在后台运行</span></span><br><span class="line"><span class="comment"># -i: 接口</span></span><br><span class="line"><span class="comment"># -c: 配置文件</span></span><br><span class="line"><span class="comment"># -D: 驱动(可多选)，可选项：</span></span><br><span class="line"><span class="comment">#          nl80211 = Linux nl80211/cfg80211</span></span><br><span class="line"><span class="comment">#          wext = Linux wireless extensions (generic)</span></span><br><span class="line"><span class="comment">#          wired = Wired Ethernet driver</span></span><br><span class="line"><span class="comment">#          macsec_linux = MACsec Ethernet driver for Linux</span></span><br><span class="line"><span class="comment">#          none = no driver (RADIUS server/WPS ER)</span></span><br><span class="line"><span class="comment"># -f: 日志文件输出位置</span></span><br><span class="line"><span class="comment"># -P: pid文件输出位置</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><em>注意事项：</em></p>
+<p><em>dbus-daemon需要知道如何转发消息，&#x2F;etc&#x2F;dbus-1&#x2F;system.d存放各个app的dbus服务接口配置，dbus-daemon启动时会遍历加载目录中的所有配置，加载分发情况。若没有配置服务，某个app注册自身服务名时，会报错：Connection “:1.6” is not allowed to own the service “org.bluez” due to security policies in the configuration file。</em></p>
+<p><em>默认配置文件路径：<code>/etc/dbus-1/system.d/wpa_supplicant.conf</code>，该文件的详细信息如下所示：</em></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">busconfig</span> <span class="keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">busconfig</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">user</span>=<span class="string">&quot;root&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">send_interface</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">allow</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">policy</span> <span class="attr">context</span>=<span class="string">&quot;default&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">own</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">send_destination</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deny</span> <span class="attr">receive_sender</span>=<span class="string">&quot;fi.w1.wpa_supplicant1&quot;</span> <span class="attr">receive_type</span>=<span class="string">&quot;signal&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">policy</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">busconfig</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>wpa_supplicant结构图：</p>
+<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016170128847.png" alt="image-20241016170128847"></p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>wpa_supplicant.conf 作为 wpa_supplicant 应用程序的配置文件，可以持久化保存一些信息。而配置文件的默认保存路径是：<code>/etc/wpa_supplicant/wpa_supplicant.conf</code></p>
+<p>wpa_supplicant.conf 可以设置哪些配置？</p>
+<ul>
+<li>指定wpa_supplicant控制接口</li>
+<li>是否允许配置文件更新</li>
+<li>默认网络配置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 必须为wpa_supplicant指定一个控制接口，并且必须赋予它更新配置的权限</span><br><span class="line">ctrl_interface=/var/run/wpa_supplicant</span><br><span class="line">update_config=1</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_AP_2.4G&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	psk=&quot;zte2015&quot;</span><br><span class="line">	priority=1</span><br><span class="line">	disabled=1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">	ssid=&quot;ZTE_5GCPE_F876&quot;</span><br><span class="line">	scan_ssid=1</span><br><span class="line">	key_mgmt=NONE</span><br><span class="line">	priority=2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>从通信层次上划分：</p>
+<ul>
+<li><p><strong>上行接口</strong>：wpa_supplicant提供向上的控制接口 control interface，用于与其他模块（如UI）进行通信，其他模块可以通过control interface 来获取信息或下发命令。</p>
+</li>
+<li><p><strong>下行接口</strong>：wpa_supplicant通过socket通信机制实现下行接口，与内核（驱动程序）进行通信，获取信息或下发命令。</p>
+</li>
+</ul>
+<p>其中wpa_supplicant的上行接口的实现方式：</p>
+<ul>
+<li>基于传统dbus机制实现与其他进程间的IPC通信</li>
+<li>通过Unix domain socket机制实现进程间的IPC通信</li>
+</ul>
+<p>wpa_supplicant提供的<a target="_blank" rel="noopener" href="https://w1.fi/wpa_supplicant/devel/dbus.html">D-Bus API接口</a>，通过执行命令：<code>wpa_supplicant -h</code>，其结果中有 <code>-u</code> 选项就是使能D-Bus控制接口。</p>
+<p>另外我通过 <code>dbus-send</code> 工具执行查询dbus服务（命令如下所示），其结果中发现有这么一个服务：<code>fi.w1.wpa_supplicant1</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListNames</span><br></pre></td></tr></table></figure>
+
+<p>借助D-Bus图形工具 <strong>D-Feet</strong> 可以查看到更具体的信息：</p>
+<p><img src="/2024/08/12/wpa-supplicant-application/image-20241016211846477.png" alt="image-20241016211846477"></p>
+<h3 id="dbus-for-wpa-supplicant接口"><a href="#dbus-for-wpa-supplicant接口" class="headerlink" title="dbus for wpa_supplicant接口"></a>dbus for wpa_supplicant接口</h3><p>wpa_supplicant dbus api 文档涉及到各个不同接口：</p>
+<ul>
+<li><strong>fi.w1.wpa_supplicant1</strong></li>
+<li><strong>fi.w1.wpa_supplicant1.Interface</strong></li>
+<li>fi.w1.wpa_supplicant1.Interface.WPS</li>
+<li>fi.w1.wpa_supplicant1.Interface.P2PDevice</li>
+<li><strong>fi.w1.wpa_supplicant1.BSS</strong></li>
+<li><strong>fi.w1.wpa_supplicant1.Network</strong></li>
+<li>fi.w1.wpa_supplicant1.Peer</li>
+<li>fi.w1.wpa_supplicant1.Group</li>
+<li>fi.w1.wpa_supplicant1.PersistentGroup</li>
+</ul>
+<h3 id="fi-w1-wpa-supplicant1"><a href="#fi-w1-wpa-supplicant1" class="headerlink" title="fi.w1.wpa_supplicant1"></a>fi.w1.wpa_supplicant1</h3><p>由在总线中注册名为 fi.w1.wpa_supplicant1 的主 wpa_supplicant D-Bus 对象实现的接口。</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant1</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CreateInterface ( a{sv} : args ) –&gt; o : interface</td>
+<td>在 wpa_supplicant 中注册一个无线接口。</td>
+</tr>
+<tr>
+<td>RemoveInterface ( o : interface ) –&gt; nothing</td>
+<td>从 wpa_supplicant 取消注册无线接口。</td>
+</tr>
+<tr>
+<td>GetInterface ( s : ifname ) –&gt; o : interface</td>
+<td>返回与 wpa_supplicant 已控制的接口相关的对象的 D-Bus 路径。</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string DebugLevel</td>
+<td>[readwrite]</td>
+<td>全局 wpa_supplicant 调试级别。</td>
+</tr>
+<tr>
+<td>bool DebugTimestamp</td>
+<td>[readwrite]</td>
+<td>确定时间戳是否显示在调试日志中（全局参数）。</td>
+</tr>
+<tr>
+<td>bool DebugShowKeys</td>
+<td>[readwrite]</td>
+<td>确定键名是否显示在调试日志中。</td>
+</tr>
+<tr>
+<td>array{object} Interfaces</td>
+<td>[read]</td>
+<td>一个包含指向 D-Bus 对象路径的数组，每个对象代表受控的接口。</td>
+</tr>
+<tr>
+<td>array{string} EapMethods</td>
+<td>[read]</td>
+<td>包含受支持的 EAP 方法名称的数组。</td>
+</tr>
+<tr>
+<td>array{string} Capabilities</td>
+<td>[read]</td>
+<td>具有支持功能的阵列</td>
+</tr>
+<tr>
+<td>array{byte} WFDIEs</td>
+<td>[readwrite]</td>
+<td>Wi-Fi 显示子元素。</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InterfaceAdded ( o : interface, a{sv} : properties )</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>InterfaceRemoved ( o : interface )</td>
+<td>移除接口</td>
+</tr>
+<tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>属性变化</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-Interface"><a href="#fi-w1-wpa-supplicant1-Interface" class="headerlink" title="fi.w1.wpa_supplicant1.Interface"></a>fi.w1.wpa_supplicant1.Interface</h3><p>由添加到 wpa_supplicant 的网络接口相关对象实现的接口，即由 fi.w1.wpa_supplicant1.CreateInterface 返回的接口。</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant1</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.Interface</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index  (index is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scan ( a{sv} : args ) –&gt; nothing</td>
+<td>触发扫描</td>
+</tr>
+<tr>
+<td>Disconnect ( ) –&gt; nothing</td>
+<td>断开网络</td>
+</tr>
+<tr>
+<td>AddNetwork ( a{sv} : args ) –&gt; o : network</td>
+<td>新增网络到接口</td>
+</tr>
+<tr>
+<td>RemoveNetwork ( o : network ) –&gt; nothing</td>
+<td>移除网络接口</td>
+</tr>
+<tr>
+<td>RemoveAllNetworks ( ) –&gt; nothing</td>
+<td>移除所有网络接口</td>
+</tr>
+<tr>
+<td>SelectNetwork ( o : network ) –&gt; nothing</td>
+<td>尝试与已配置的网络关联</td>
+</tr>
+<tr>
+<td>Reassociate ( ) –&gt; nothing</td>
+<td>尝试重新关联</td>
+</tr>
+<tr>
+<td>Reattach ( ) –&gt; nothing</td>
+<td>尝试重新关联至当前 BSS</td>
+</tr>
+<tr>
+<td>Reconnect ( ) –&gt; nothing</td>
+<td>如果处于断开连接状态，则尝试重新连接并连接。</td>
+</tr>
+<tr>
+<td>AddBlob ( s : name, ay : data ) –&gt; nothing</td>
+<td>向接口添加一个 blob</td>
+</tr>
+<tr>
+<td>RemoveBlob ( s : name ) –&gt; nothing</td>
+<td>从接口移除一个 blob</td>
+</tr>
+<tr>
+<td>GetBlob ( s : name ) –&gt; ay : data</td>
+<td>返回先前添加的 Blob 的 Blob 数据</td>
+</tr>
+<tr>
+<td>AutoScan ( s : arg ) –&gt; nothing</td>
+<td>设置接口的自动扫描参数</td>
+</tr>
+<tr>
+<td>TDLSDiscover ( s : peer_address ) –&gt; nothing</td>
+<td>启动对等方的 TDLS 发现</td>
+</tr>
+<tr>
+<td>TDLSSetup ( s : peer_address ) –&gt; nothing</td>
+<td>为对等方设置 TDLS 会话</td>
+</tr>
+<tr>
+<td>TDLSStatus ( s : peer_address ) –&gt; s</td>
+<td>返回相对于对等方的 TDLS 状态</td>
+</tr>
+<tr>
+<td>TDLSTeardown ( s : peer_address ) –&gt; nothing</td>
+<td>拆除与对等方的 TDLS 会话</td>
+</tr>
+<tr>
+<td>EAPLogoff ( ) –&gt; nothing</td>
+<td>IEEE 802.1X EAPOL 状态机注销</td>
+</tr>
+<tr>
+<td>EAPLogon ( ) –&gt; nothing</td>
+<td>IEEE 802.1X EAPOL 状态机登录</td>
+</tr>
+<tr>
+<td>NetworkReply ( o : network, s : field, s : value ) –&gt; nothing</td>
+<td>提供NetworkRequest()请求的参数</td>
+</tr>
+<tr>
+<td>SetPKCS11EngineAndModulePath ( s : pkcs11_engine_path, s : pkcs11_module_path ) –&gt; nothing</td>
+<td>设置 PKCS #11 引擎和模块路径</td>
+</tr>
+<tr>
+<td>SignalPoll ( ) –&gt; a{sv} : properties</td>
+<td>获取当前连接的信号属性</td>
+</tr>
+<tr>
+<td>FlushBSS ( u : age ) –&gt; nothing</td>
+<td>从缓存中刷新 BSS 条目</td>
+</tr>
+<tr>
+<td>SubscribeProbeReq ( ) –&gt; nothing</td>
+<td>订阅以接收探测请求事件</td>
+</tr>
+<tr>
+<td>UnsubscribeProbeReq ( ) –&gt; nothing</td>
+<td>取消接收探测请求事件</td>
+</tr>
+</tbody></table>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>array{string, variant} Capabilities</td>
+<td>read</td>
+<td>接口功能</td>
+</tr>
+<tr>
+<td>string State</td>
+<td>read</td>
+<td>接口状态</td>
+</tr>
+<tr>
+<td>bool Scanning</td>
+<td>read</td>
+<td>确定接口是否已在扫描</td>
+</tr>
+<tr>
+<td>uint32 ApScan</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 ap_scan 条目相同。可能的值为 0、1 或 2</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireAge</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_age 条目相同</td>
+</tr>
+<tr>
+<td>uint32 BSSExpireCount</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 bss_expiration_scan_count 条目相同</td>
+</tr>
+<tr>
+<td>string Country</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的国家&#x2F;地区条目相同</td>
+</tr>
+<tr>
+<td>string Ifname</td>
+<td>read</td>
+<td>接口控制的网络接口名称，例如 wlan0</td>
+</tr>
+<tr>
+<td>string BridgeIfname</td>
+<td>read</td>
+<td>该接口控制的桥接网络接口名称，例如 br0</td>
+</tr>
+<tr>
+<td>string Driver</td>
+<td>read</td>
+<td>接口使用的驱动程序的名称，例如 nl80211</td>
+</tr>
+<tr>
+<td>object CurrentBSS</td>
+<td>read</td>
+<td>表示与 wpa_supplicant 关联的 BSS 的 D-Bus 对象的路径，如果根本没有关联，则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>object CurrentNetwork</td>
+<td>read</td>
+<td>表示 wpa_supplicant 当前使用的配置网络的 D-Bus 对象的路径，如果没有使用则为“&#x2F;”</td>
+</tr>
+<tr>
+<td>string CurrentAuthMode</td>
+<td>read</td>
+<td>当前身份验证类型</td>
+</tr>
+<tr>
+<td>array{string} Blobs</td>
+<td>read</td>
+<td>添加到界面的 blob 名称列表</td>
+</tr>
+<tr>
+<td>array{object} BSSs</td>
+<td>read</td>
+<td>代表接口已知的 BSS 的 D-Bus 对象路径列表，例如扫描结果</td>
+</tr>
+<tr>
+<td>array{object} Networks</td>
+<td>read</td>
+<td>代表已配置网络的 D-Bus 对象路径列表</td>
+</tr>
+<tr>
+<td>bool FastReauth</td>
+<td>readwrite</td>
+<td>与 wpa_supplicant 配置文件中的 fast_reauth 条目相同</td>
+</tr>
+<tr>
+<td>int32 ScanInterval</td>
+<td>readwrite</td>
+<td>扫描合适 AP 的间隔时间（以秒为单位）。必须 &gt;&#x3D; 0</td>
+</tr>
+<tr>
+<td>string PKCS11EnginePath</td>
+<td>read</td>
+<td>PKCS #11 引擎路径</td>
+</tr>
+<tr>
+<td>string PKCS11ModulePath</td>
+<td>read</td>
+<td>PKCS #11 模块路径</td>
+</tr>
+<tr>
+<td>int32 DisconnectReason</td>
+<td>read</td>
+<td>最近的 IEEE 802.11 断开连接原因代码。负值表示本地生成的断开连接</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ScanDone ( b : success )</td>
+<td>扫描完成</td>
+</tr>
+<tr>
+<td>BSSAdded ( o : BSS, a{sv} : properties )</td>
+<td>BSS新增</td>
+</tr>
+<tr>
+<td>BSSRemoved ( o : BSS )</td>
+<td>BSS移除</td>
+</tr>
+<tr>
+<td>BlobAdded ( s : blobName )</td>
+<td>blob新增</td>
+</tr>
+<tr>
+<td>BlobRemoved ( s : blobName )</td>
+<td>blob移除</td>
+</tr>
+<tr>
+<td>NetworkAdded ( o : network, a{sv} : properties )</td>
+<td>network新增</td>
+</tr>
+<tr>
+<td>NetworkRemoved ( o : network )</td>
+<td>network移除</td>
+</tr>
+<tr>
+<td>NetworkSelected ( o : network )</td>
+<td>network选择</td>
+</tr>
+<tr>
+<td>StaAuthorized ( s : mac )</td>
+<td>已授权新站使用接口</td>
+</tr>
+<tr>
+<td>StaDeauthorized ( s : mac )</td>
+<td>已取消对某个站的接口授权</td>
+</tr>
+<tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性有改变</td>
+</tr>
+<tr>
+<td>Certification ( a{sv} : parameters )</td>
+<td>有关服务器 TLS 证书的信息</td>
+</tr>
+<tr>
+<td>EAP ( s : status, s : parameter )</td>
+<td>有关 EAP 对等状态的信息</td>
+</tr>
+<tr>
+<td>NetworkRequest ( o : network, s : field, s : txt )</td>
+<td>请求网络参数。NetworkResponse() 用于提供所请求的参数</td>
+</tr>
+<tr>
+<td>ProbeRequest ( a{sv} : args )</td>
+<td>有关已接收探测请求帧的信息。此信号仅发送给已使用 SubscribeProbeReq() 订阅接收事件的单个应用程序</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-BSS"><a href="#fi-w1-wpa-supplicant1-BSS" class="headerlink" title="fi.w1.wpa_supplicant1.BSS"></a>fi.w1.wpa_supplicant1.BSS</h3><p>表示已扫描 BSS（即扫描结果）的对象实现的接口</p>
+<p><strong>接口介绍：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Service: fi.w1.wpa_supplicant1</span><br><span class="line">:Interface: fi.w1.wpa_supplicant1.BSS</span><br><span class="line">:Object path: /fi/w1/wpa_supplicant1/Interfaces/index/BSSs/serial  (serial is 0、1、2 ...)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方法介绍:</strong></p>
+<p>无</p>
+<p><strong>属性介绍:</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>array{byte} BSSID</td>
+<td>read</td>
+<td>BSS的BSSID</td>
+</tr>
+<tr>
+<td>array{byte} SSID</td>
+<td>read</td>
+<td>BSS的SSID</td>
+</tr>
+<tr>
+<td>array{string, variant} WPA</td>
+<td>read</td>
+<td>BSS的WPA信息</td>
+</tr>
+<tr>
+<td>array{string, variant} RSN</td>
+<td>read</td>
+<td>BSS的RSN信息</td>
+</tr>
+<tr>
+<td>array{string, variant} WPS</td>
+<td>read</td>
+<td>BSS的WPS信息</td>
+</tr>
+<tr>
+<td>array{byte} IEs</td>
+<td>read</td>
+<td>BSS 的所有 IE 作为 TLV 链</td>
+</tr>
+<tr>
+<td>bool Privacy</td>
+<td>read</td>
+<td>指示 BSS 是否支持隐私</td>
+</tr>
+<tr>
+<td>string Mode</td>
+<td>read</td>
+<td>描述 BSS 的模式</td>
+</tr>
+<tr>
+<td>uint16 Frequency</td>
+<td>read</td>
+<td>BSS 的频率（MHz）</td>
+</tr>
+<tr>
+<td>array{uint32} Rates</td>
+<td>read</td>
+<td>按降序排列的 BSS 支持的速率（单位为比特&#x2F;秒）</td>
+</tr>
+<tr>
+<td>int16 Signal</td>
+<td>read</td>
+<td>BSS 信号强度</td>
+</tr>
+<tr>
+<td>uint32 Age</td>
+<td>read</td>
+<td>自上次看到 BSS 以来的秒数</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
+</tr>
+</tbody></table>
+<h3 id="fi-w1-wpa-supplicant1-Network"><a href="#fi-w1-wpa-supplicant1-Network" class="headerlink" title="fi.w1.wpa_supplicant1.Network"></a>fi.w1.wpa_supplicant1.Network</h3><p>由代表配置网络的对象实现的接口，即由 fi.w1.wpa_supplicant1.Interface.AddNetwork 返回。</p>
+<p><strong>方法介绍：</strong></p>
+<p>无</p>
+<p><strong>属性介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>权限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bool Enabled</td>
+<td>readwrite</td>
+<td>确定配置的网络是否启用</td>
+</tr>
+<tr>
+<td>array{string,variant}</td>
+<td>readwrite</td>
+<td>wpa_supplicant 配置文件的“网络”块的条目</td>
+</tr>
+</tbody></table>
+<p><strong>信号介绍：</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PropertiesChanged ( a{sv} : properties )</td>
+<td>一些属性发生了改变</td>
+</tr>
+</tbody></table>
+<h2 id="wpa-cli"><a href="#wpa-cli" class="headerlink" title="wpa_cli"></a>wpa_cli</h2><p>wpa_cli是wpa_supplicant的客户端，可以实现WiFi的扫描、连接、断开、移除等功能。</p>
+<h2 id="参考信息"><a href="#参考信息" class="headerlink" title="参考信息"></a>参考信息</h2><p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Wpa_supplicant">1、wpa_supplicant</a></p>
+<p><a target="_blank" rel="noopener" href="https://w1.fi/wpa_supplicant/devel/">2、wpa_supplicant &#x2F; hostapd</a></p>
+<p><a target="_blank" rel="noopener" href="https://w1.fi/wpa_supplicant/devel/dbus.html">3、wpa_supplicant 官方dbus接口文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenbin7/p/3266164.html">4、wpa_supplicant提供的接口</a></p>
+<p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/external/wpa_supplicant_8/+/master/wpa_supplicant/examples/wpas-dbus-new.py">5、wpa_supplicant dbus api example using python</a></p>
+<p><a target="_blank" rel="noopener" href="https://kingtuo123.com/posts/wpa_supplicant/">6、使用 wpa_supplicant 连接无线网络</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Wi-Fi/" rel="tag"># Wi-Fi</a>
+              <a href="/tags/wpa-supplicant/" rel="tag"># wpa_supplicant</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/11/Blog-deploy-to-Github-Page/" rel="prev" title="Blog deploy to Github Page.md">
+                  <i class="fa fa-angle-left"></i> Blog deploy to Github Page.md
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/13/Matter-Standard/" rel="next" title="Matter Standard">
+                  Matter Standard <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

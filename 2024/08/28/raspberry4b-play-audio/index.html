@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bluetooth：raspberry4b play audio">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-28T06:12:36.000Z">
+<meta property="article:modified_time" content="2024-11-17T02:55:35.186Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="raspberry4b">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/","path":"2024/08/28/raspberry4b-play-audio/","title":"bluetooth：raspberry4b play audio"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>bluetooth：raspberry4b play audio | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">95</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%98%E8%B5%B7"><span class="nav-number">1.</span> <span class="nav-text">缘起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">2.</span> <span class="nav-text">验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%B3%E6%9C%BA%E5%8F%A3%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">2.1.</span> <span class="nav-text">耳机口播放音频</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%93%9D%E7%89%99%E9%9F%B3%E5%93%8D%E6%92%AD%E6%94%BE%E9%9F%B3%E9%A2%91"><span class="nav-number">3.</span> <span class="nav-text">蓝牙音响播放音频</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85bluealsa"><span class="nav-number">3.1.</span> <span class="nav-text">编译安装bluealsa</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cbluealsa"><span class="nav-number">3.2.</span> <span class="nav-text">运行bluealsa</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/08/28/raspberry4b-play-audio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="bluetooth：raspberry4b play audio | eiSouthBoy's Blog">
+      <meta itemprop="description" content="此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bluetooth：raspberry4b play audio
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-28 06:12:36" itemprop="dateCreated datePublished" datetime="2024-08-28T06:12:36+00:00">2024-08-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-17 02:55:35" itemprop="dateModified" datetime="2024-11-17T02:55:35+00:00">2024-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/bluetooth/" itemprop="url" rel="index"><span itemprop="name">bluetooth</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">此前已经在raspberry4b上安装了Ubuntu24.04系统，想尝试在raspberry4b能够播放音频，以及验证播放音频的方式。例如：通过3.5mm耳机口播放音频和蓝牙音响播放音频。下文就是对这些内容的详细记录，以便后续查阅。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>环境介绍：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 硬件信息</span></span><br><span class="line">树莓派4B 8GB</span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统信息</span></span><br><span class="line"><span class="built_in">uname</span> -a</span><br><span class="line">Linux caojun-desktop 6.8.0-1010-raspi <span class="comment">#11-Ubuntu SMP PREEMPT_DYNAMIC Thu Aug  8 23:22:41 UTC 2024 aarch64 aarch64 aarch64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p><code>&#123;% post_link 'bluetoothctl client tool' %&#125;</code> 介绍了为什么要写一个蓝牙应用库，既然选择了在树莓派上开发，那么就需要在树莓派上验证蓝牙应用库的可用性。通过树莓派运行蓝牙应用库连接蓝牙音响设备播放音频文件，我就可以证明蓝牙应用库的可用性。</p>
+<p>在购入树莓派之前，我有查询过树莓派可以实现多媒体应用：视频和音频。树莓派硬件自带了一个3.5mm的音频输出口，以及两个micro hdmi接口。</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>查看树莓派4B有哪些音频播放接口，可以通过一下两种方式：</p>
+<ul>
+<li><p>方式1：执行命令 <code>cat /proc/asound/cards</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0 [Headphones     ]: bcm2835_headpho - bcm2835 Headphones</span><br><span class="line">                     bcm2835 Headphones</span><br><span class="line">1 [vc4hdmi0       ]: vc4-hdmi - vc4-hdmi-0</span><br><span class="line">                     vc4-hdmi-0</span><br><span class="line">2 [vc4hdmi1       ]: vc4-hdmi - vc4-hdmi-1</span><br><span class="line">                     vc4-hdmi-1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式2：执行命令 <code>sudo apaly -l</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">**** List of PLAYBACK Hardware Devices ****</span><br><span class="line">card 0: Headphones [bcm2835 Headphones], device 0: bcm2835 Headphones [bcm2835 Headphones]</span><br><span class="line">  Subdevices: 8/8</span><br><span class="line">  Subdevice <span class="comment">#0: subdevice #0</span></span><br><span class="line">  Subdevice <span class="comment">#1: subdevice #1</span></span><br><span class="line">  Subdevice <span class="comment">#2: subdevice #2</span></span><br><span class="line">  Subdevice <span class="comment">#3: subdevice #3</span></span><br><span class="line">  Subdevice <span class="comment">#4: subdevice #4</span></span><br><span class="line">  Subdevice <span class="comment">#5: subdevice #5</span></span><br><span class="line">  Subdevice <span class="comment">#6: subdevice #6</span></span><br><span class="line">  Subdevice <span class="comment">#7: subdevice #7</span></span><br><span class="line">card 1: vc4hdmi0 [vc4-hdmi-0], device 0: MAI PCM i2s-hifi-0 [MAI PCM i2s-hifi-0]</span><br><span class="line">  Subdevices: 1/1</span><br><span class="line">  Subdevice <span class="comment">#0: subdevice #0</span></span><br><span class="line">card 2: vc4hdmi1 [vc4-hdmi-1], device 0: MAI PCM i2s-hifi-0 [MAI PCM i2s-hifi-0]</span><br><span class="line">  Subdevices: 1/1</span><br><span class="line">  Subdevice <span class="comment">#0: subdevice #0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>通过上述查询接口，树莓派4B提供了3个音频接口：bcm2835 Headphones（即3.5mm耳机口）、vc4-hdmi-0、vc4-hdmi-1</p>
+<h3 id="耳机口播放音频"><a href="#耳机口播放音频" class="headerlink" title="耳机口播放音频"></a>耳机口播放音频</h3><p>准备工作：</p>
+<ul>
+<li>3.5mm耳机线插入树莓派</li>
+<li>树莓派中下载alsa-utils工具</li>
+</ul>
+<p>可以通过命令查询alsa-utils是否安装：<code>dpkg -l | grep alsa-utils</code>，若没有安装，则通过命令安装：<code>sudo apt install alsa-utils</code></p>
+<p>alsa-utils工具包含了：aplay（播放音频） 、 arecord（录制音频） 、 alsamixer（基于文本界面的音频设备管理） 、 amixer（调整设备音量），而且在 <code>/usr/share/soudns/alsa</code> 目录下会提供多个wav音频文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ll /usr/share/sounds/alsa/</span><br><span class="line">-rw-r--r--  1 root root 137134  4月  7 15:09 Front_Center.wav</span><br><span class="line">-rw-r--r--  1 root root 142128  4月  7 15:09 Front_Left.wav</span><br><span class="line">-rw-r--r--  1 root root 146990  4月  7 15:09 Front_Right.wav</span><br><span class="line">-rw-r--r--  1 root root 135202  4月  7 15:09 Noise.wav</span><br><span class="line">-rw-r--r--  1 root root 130096  4月  7 15:09 Rear_Center.wav</span><br><span class="line">-rw-r--r--  1 root root 126064  4月  7 15:09 Rear_Left.wav</span><br><span class="line">-rw-r--r--  1 root root 146480  4月  7 15:09 Rear_Right.wav</span><br><span class="line">-rw-r--r--  1 root root 134868  4月  7 15:09 Side_Left.wav</span><br><span class="line">-rw-r--r--  1 root root 129966  4月  7 15:09 Side_Right.wav</span><br></pre></td></tr></table></figure>
+
+<p>可以先通过alsamixer选择默认音频设备，并调节音量。接着通过aplay播放wav音频文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 播放方式1</span></span><br><span class="line"><span class="built_in">sudo</span> aplay /usr/share/sounds/alsa/Front_Center.wav</span><br><span class="line"></span><br><span class="line"><span class="comment"># 播放方式2, 指定CARD和DEV</span></span><br><span class="line"><span class="built_in">sudo</span> aplay /usr/share/sounds/alsa/Front_Center.wav -D plughw:CARD=0,DEV=0</span><br></pre></td></tr></table></figure>
+
+<p>若一切正常，则会从耳机中听到英文声音：Frong Center</p>
+<p>调节设备音量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 音量调节至90%</span></span><br><span class="line">amixer sset Master 90%</span><br><span class="line"></span><br><span class="line"><span class="comment"># 音量调节至20%</span></span><br><span class="line">amixer sset Master 20%</span><br></pre></td></tr></table></figure>
+
+<p>再次播放wav音频文件，验证音量设备是否成功。</p>
+<p><em>注意：这里发现一个奇怪的现象：对于alsa-utils工具包的软件都需要使用管理员权限执行，即sudo，否则就会有问题。</em></p>
+<h2 id="蓝牙音响播放音频"><a href="#蓝牙音响播放音频" class="headerlink" title="蓝牙音响播放音频"></a>蓝牙音响播放音频</h2><p>树莓派通过蓝牙适配器连接蓝牙音响，然后播放音频文件。其中主要解决的问题是：蓝牙连接成功后，如何将将音频文件传输到蓝牙音响，并输出音频？</p>
+<p>通过互联网上的资料，我可以确认有两种解决方案：</p>
+<ul>
+<li><p>bluez+bluealsa</p>
+<p><code>bluealsa</code> 是一个用于将 ALSA（Advanced Linux Sound Architecture，高级Linux音频架构）与 Bluetooth 低功耗（即 BLE）音频协议相结合的解决方案。它使得 Linux 系统能够通过 BLE 连接蓝牙音频设备，并让蓝牙音频设备播放音频文件。</p>
+<p>bluealsa 的核心是<code>bluealsa</code>与 BlueZ 蓝牙守护进程<code>bluetoothd</code>和本地蓝牙适配器交互的守护进程。它处理 A2DP、HFP 和 HSP 的配置文件（即Profile）连接和配置逻辑，并通过 D-Bus 将生成的音频流呈现给应用程序。</p>
+</li>
+<li><p>bluez+pulseaudio</p>
+</li>
+</ul>
+<h3 id="编译安装bluealsa"><a href="#编译安装bluealsa" class="headerlink" title="编译安装bluealsa"></a>编译安装bluealsa</h3><p><a target="_blank" rel="noopener" href="https://github.com/Arkq/bluez-alsa">Github 开源项目：bluez-alsa</a></p>
+<p>该开源项目README.md文件给出了一个提示：</p>
+<blockquote>
+<p>警告：</p>
+<p>从tag 4.3.1版本最新的源文件为核心组件使用了新的名字：</p>
+<ul>
+<li><code>bluealsa</code> daemon现在改为了 <code>bluealsad</code> daemon</li>
+<li><code>bluealsa-cli</code> utility现在改为了 <code>bluealsactl</code> utility</li>
+</ul>
+</blockquote>
+<p>由于安装Ubuntu 24.04的树莓派目前不支持通过apt安装bluealsa，故这里通过编译安装，以下是详细过程。</p>
+<ul>
+<li><p>对于如何通过源码编译构建，该项目也很贴心的给出了指引文件<a target="_blank" rel="noopener" href="https://github.com/arkq/bluez-alsa/blob/master/INSTALL.md">INSTALL.md</a>。更加详细的编译安装教程可以查看<a target="_blank" rel="noopener" href="https://github.com/arkq/bluez-alsa/wiki/Installation-from-source">Installation from source</a>，甚至不同的操作系统也都给出了，例如：Debain&#x2F;Raspberry Pi OS&#x2F;Ubuntu、Fedora、Arch。这里选择Ubuntu的安装过程即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装编译环境</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git automake build-essential libtool pkg-config python3-docutils</span><br><span class="line"><span class="built_in">sudo</span> apt-get install libasound2-dev libbluetooth-dev libdbus-1-dev libglib2.0-dev libsbc-dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过git克隆blue-alsa仓库到本地</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 克隆仓库</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/arkq/bluez-alsa.git</span><br><span class="line"><span class="built_in">cd</span> blue-alsa</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>准备编译构建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用自动配置工具适配当前开发环境，最后生成configure配置文件</span></span><br><span class="line">autoreconf --install --force</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建build目录，存放编译过程文件</span></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在build目录下，运行配置文件（这里没有增加额外的参数）</span></span><br><span class="line">../configure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和安装</span></span><br><span class="line">make</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="运行bluealsa"><a href="#运行bluealsa" class="headerlink" title="运行bluealsa"></a>运行bluealsa</h3><p>在连接蓝牙音频设备之前，确保 <code>hciconfig -a</code> 可以查询到hci接口，确保 <code>bluetoothd</code> 已经运行。然后运行 <code>bluealsa</code> ，执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行方式1，以root权限运行，注意：这里有bluealsa后台打印信息输出 </span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行方式2，以root权限运行，禁止bluealsa后台打印信息输出</span></span><br><span class="line"><span class="built_in">sudo</span> bluealsa --profile=a2dp-source &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行方式3，通过systemd运行bluealsa</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start bluealsa.service</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 <code>bluetoothctl</code> 搜索、配对、连接蓝牙音频设备（此部分不做说明），修改asoundrc.conf，最后使用 <code>aplay</code> 播放wav音频文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改asoundrc.conf</span></span><br><span class="line">pcm.!default <span class="string">&quot;bluealsa&quot;</span></span><br><span class="line">ctl.!default <span class="string">&quot;bluealsa&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># aplay播放wav文件</span></span><br><span class="line"><span class="built_in">sudo</span> aplay /usr/share/sounds/alsa/Front_Center.wav</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>asoundrc.conf</strong></p>
+<p>ALSA 正常工作不需要用户端文件<code>.asoundrc</code> 或 <code>asound.conf</code>配置文件。<code>asoundrc.conf</code> 文件用于通过 alsa-lib 层实现额外的功能，例如路由和采样率转换。</p>
+<p>alsa-lib 软件包提供了 <code>/usr/share/alsa/alsa.conf</code> 文件作为<em>主入口点</em>。该文件负责包含系统上所有可能的 .asoundrc 格式文件。alsa.conf 会加载系统全局自定义设置文件 &#x2F;etc&#x2F;asound.conf 和每个用户的自定义设置文件 ~&#x2F;.asoundrc。</p>
+<p>用户自定义的 <code>~/.asoundrd.conf </code> 文件需要用户手动创建，并且文件该作用域大于全局自定义的 <code>/etc/asoundrc.conf</code> 。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://cursorhu.github.io/2021/09/09/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%BD%BF%E7%94%A8ALSA-A2DP-PulseAudio%E8%87%AA%E5%88%B6%E8%93%9D%E7%89%99%E9%9F%B3%E7%AE%B1/">1、树莓派笔记：使用ALSA+A2DP+PulseAudio自制蓝牙音箱</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.alsa-project.org/main/index.php/Asoundrc">2、Asoundrc</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/raspberry4b/" rel="tag"># raspberry4b</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/21/ssh-remote-login/" rel="prev" title="ssh remote login">
+                  <i class="fa fa-angle-left"></i> ssh remote login
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/31/Matter-Switches-and-Controls-DeviceTypes/" rel="next" title="Matter Device: Switches and Controls Device Types">
+                  Matter Device: Switches and Controls Device Types <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

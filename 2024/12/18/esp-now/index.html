@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="ESP-NOW 无线通信协议的理解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="乐鑫 ESP-NOW">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/12/18/esp-now/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="ESP-NOW 无线通信协议的理解">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-18T10:55:44.000Z">
+<meta property="article:modified_time" content="2024-12-20T06:05:30.871Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="ESP-NOW">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/12/18/esp-now/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/12/18/esp-now/","path":"2024/12/18/esp-now/","title":"乐鑫 ESP-NOW"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>乐鑫 ESP-NOW | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">95</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP-NOW-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">ESP-NOW 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP-NOW-%E6%95%B0%E6%8D%AE%E5%B8%A7"><span class="nav-number">2.</span> <span class="nav-text">ESP-NOW 数据帧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP-NOW-Control"><span class="nav-number">3.</span> <span class="nav-text">ESP-NOW Control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP-NOW-Provisioning"><span class="nav-number">4.</span> <span class="nav-text">ESP-NOW Provisioning</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/12/18/esp-now/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="乐鑫 ESP-NOW | eiSouthBoy's Blog">
+      <meta itemprop="description" content="ESP-NOW 无线通信协议的理解">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          乐鑫 ESP-NOW
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-12-18 10:55:44" itemprop="dateCreated datePublished" datetime="2024-12-18T10:55:44+00:00">2024-12-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-20 06:05:30" itemprop="dateModified" datetime="2024-12-20T06:05:30+00:00">2024-12-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">ESP-NOW 无线通信协议的理解</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="ESP-NOW-介绍"><a href="#ESP-NOW-介绍" class="headerlink" title="ESP-NOW 介绍"></a>ESP-NOW 介绍</h2><p><a target="_blank" rel="noopener" href="https://www.espressif.com/zh-hans/solutions/low-power-solutions/esp-now">ESP-NOW</a> 是乐鑫定义的一种无线通信协议，能够在无路由器的情况下直接、快速、低功耗地控制智能设备。它能够与 Wi-Fi 和 Bluetooth LE 共存，支持乐鑫 ESP8266、ESP32、ESP32-S 和 ESP32-C 等多系列 SoC。ESP-NOW 广泛应用于智能家电、远程控制和传感器等领域。</p>
+<p>关于 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-faq/zh_CN/latest/application-solution/esp-now.html">ESP-NOW FAQ</a> ，最大传输速率、应用场景、信道选择、配对限制等。</p>
+<p><strong>1、ESP-NOW 配对限制最多 20 个设备，是否有办法控制更多的设备？</strong></p>
+<p>使用广播包进行控制即可，目的地址包含在 payload 中，不受配对数量限制。仅需配置正确的广播地址即可。</p>
+<p><strong>2、ESP-NOW 最多可以控制多少个设备？</strong></p>
+<p>这取决于具体的通信方式：</p>
+<ul>
+<li>如使用单播包，支持同时最多配对并控制 20 个设备。</li>
+<li>如使用 ESP-NOW 加密模式，支持同时最多配对并控制 6 个设备。</li>
+<li>如使用广播包，仅需配置正确的广播地址即可。控制设备的数量理论上没有上限，但需考虑设备过多时的干扰问题。</li>
+</ul>
+<p><strong>3、为什么将 ESP-NOW 用户数据包的最大数据长度限制为 250 字节，这个数值可以修改吗？</strong></p>
+<ul>
+<li><strong>最长长度目前不能修改</strong>。因为 ESP-NOW 使用动作帧中的供应商特定元素字段传输数据，802.11 协议规定一个供应商特定元素中的<code>长度</code>字段只有 1 个字节 (0xff &#x3D; 255)，因此限制了正文部分 ESP-NOW 数据长度，最长为 250 字节。</li>
+<li>或者您可以使用 API <code>esp_wifi_80211_tx()</code> 发送数据，使用 sniffer 模式接收数据。这样同样可以实现只工作在 Wi-Fi 层并且不使用 TCP&#x2F;IP 协议栈。</li>
+</ul>
+<p><strong>4、ESP-NOW 是否可以与 Wi-Fi 一起使用？</strong></p>
+<p>可以，但需要注意的是 ESP-NOW 的信道要和所连接的 AP 的信道相同。</p>
+<p><strong>5、ESP-NOW 设备间通信需要连接路由器吗？</strong></p>
+<p>ESP-NOW 的交互方式为直接从 <strong>设备到设备</strong> 进行通信，不需要通过路由器来转发数据。</p>
+<p><strong>6、使用 ESP-NOW 应用时，需要注意什么？</strong></p>
+<ul>
+<li>连接 Wi-Fi 以后不能再切换信道，只能在当前 Wi-Fi 信道收发数据。</li>
+<li>如果设备进入 Modem-sleep 模式，将无法接受来自 ESP-NOW 的数据。</li>
+</ul>
+<p>7、如果保证数据安全性？</p>
+<p>ESP-NOW 可以通过 ECDH 和 AES128-CCM 来保护数据安全。</p>
+<ul>
+<li>使用 ECDH 和所有权证明 (PoP) 字符串授权会话、生成共享密钥</li>
+<li>使用 AES256-CTR 模式加密配置数据</li>
+<li>使用 AES128-CCM 模式加密 ESP-NOW 数据</li>
+</ul>
+<h2 id="ESP-NOW-数据帧"><a href="#ESP-NOW-数据帧" class="headerlink" title="ESP-NOW 数据帧"></a>ESP-NOW 数据帧</h2><p>ESP-IDF 编程指南：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/network/esp_now.html">ESP-NOW</a></p>
+<p>ESP-NOW 是一种由乐鑫公司定义的 <em><strong>无连接</strong></em> Wi-Fi 通信协议。在 ESP-NOW 中，应用程序数据被封装在各个<em><strong>供应商的动作帧</strong></em>中，然后在无连接的情况下，从一个 Wi-Fi 设备传输到另一个 Wi-Fi 设备。</p>
+<p>目前 ESP-NOW 支持两个版本：v1.0 和 v2.0：</p>
+<ul>
+<li>v2.0 的设备支持的最大数据包长度为 1490 (<code>ESP_NOW_MAX_DATA_LEN_V2</code>) 字节；</li>
+<li>v1.0 的设备支持的最大数据包长度为 250 (<code>ESP_NOW_MAX_DATA_LEN</code>) 字节。</li>
+</ul>
+<p>v2.0 设备可以接收来自 v2.0 和 v1.0 设备的数据包。v1.0 设备只能接收来自 v1.0 设备的数据包。</p>
+<p>当然，v1.0 设备也可以接收长度不超过 250 (<code>ESP_NOW_MAX_IE_DATA_LEN</code>) 的 v2.0 数据包，只是如果长度超过此值，就只接收前 250 (<code>ESP_NOW_MAX_IE_DATA_LEN</code>) 字节，或是直接丢弃数据包。</p>
+<p>ESP-NOW 帧格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">|   MAC 报头   |  分类代码  |  组织标识符  |  随机值  |  供应商特定内容  |   FCS   |</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">   24 字节        1 字节        3 字节      4 字节      7-x 字节       4 字节</span><br></pre></td></tr></table></figure>
+
+<p><strong>帧数据包大小范围：43 字节 ~ 293 字节</strong></p>
+<p>供应商特定内容 帧格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------------------------------</span><br><span class="line">|  元素 ID  |  长度  |  组织标识符  |  类型  |        保留       |  版本    |     正文     |</span><br><span class="line">--------------------------------------------------------------------------------------</span><br><span class="line">                                          </span><br><span class="line">   1 字节     1 字节     3 字节      1 字节   7~4 比特| 3~0 比特   1 字节       0-250 字节</span><br></pre></td></tr></table></figure>
+
+<p><strong>最大有效载荷：250 字节</strong></p>
+<p>配对设备：即将对方设备的MAC地址通过 <code>esp_now_add_peer()</code> 将其添加到配对设备列表中。配对设备的最大数量是 20，其中加密设备的数量不超过17，默认值是 7。</p>
+<p>由于ESPNOW帧数据最大有效载荷：250 字节，乐鑫将帧数据有效载荷封装了应用层，其中应用层报头占用：20 字节，剩余 230 字节用于 body 部分。</p>
+<p>应用层数据报：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">| 类型 | 版本 | 保留 | 数据大小 | 自定义帧头 | 目标MAC地址 | 源MAC地址 |   数据     |</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line"> 4 bit  2 bit  2 bit 1 Byte    6 Byte      6 字节       6 Byte     0~230 Byte</span><br></pre></td></tr></table></figure>
+
+<p>其中自定义帧头：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line">| 魔术数 | 信道 | 过滤相邻信道干扰位 | 过滤弱信号位 | 安全模式 |  保留 | 广播位 | 群组 | ACK位 | 重传次数 | TTL  | RSSI |</span><br><span class="line">-----------------------------------------------------------------------------------------------------------</span><br><span class="line"> 2 byte  4 bit       1bit           1 bit       1 bit    4 bit  1 bit   1bit   1 bit   5 bit    5 bit  8 bit</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="ESP-NOW-Control"><a href="#ESP-NOW-Control" class="headerlink" title="ESP-NOW Control"></a>ESP-NOW Control</h2><p>对于 <a target="_blank" rel="noopener" href="https://github.com/espressif/esp-now/tree/master/examples/control">ESP-NOW Control Example</a> 的解读。</p>
+<p>ESP-NOW 根据数据流定义了两个角色：发起者（initiator）和响应者（responder）。同一个设备即可单独作为发起者，也可以单独作为响应者，也可以即作为发起者又作为响应者。</p>
+<p>在物联网系统中，通常开关、传感器、液晶屏，而灯、插座作为响应者。</p>
+<p>在 ESP-NOW Control Example 中，乐鑫又在 esp_now.h 的基础上封住了如下几个库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- control</span><br><span class="line">- debug</span><br><span class="line">- espnow</span><br><span class="line">- ota</span><br><span class="line">- provisioning</span><br><span class="line">- security</span><br><span class="line">- utils</span><br></pre></td></tr></table></figure>
+
+<p>用户可以基于上述几个库开发上层应用，当然如果用户希望不想使用这几个库，也可以直接使用 esp_now.h 更加原始的库，然后用户自定义esp_now 应用层数据格式。</p>
+<p>在 espnow&#x2F;include&#x2F;espnow.h 中封装了esp_now 应用层数据结构：</p>
+<p>自定义类型帧头的数据结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_frame_head_s</span> &#123;</span></span><br><span class="line">	<span class="type">uint16_t</span> magic;						<span class="comment">// 2字节，魔术数字，用来表示数据包格式</span></span><br><span class="line">    <span class="type">uint8_t</span> channel              : <span class="number">4</span>;	<span class="comment">// 占用4位，表示使用的Wi-Fi信道</span></span><br><span class="line">    <span class="type">bool</span> filter_adjacent_channel : <span class="number">1</span>;	<span class="comment">// 占用1位，是否过滤相邻信道的干扰</span></span><br><span class="line">    <span class="type">bool</span> filter_weak_signal      : <span class="number">1</span>;	<span class="comment">// 占用1位，是否过滤弱信号</span></span><br><span class="line">    <span class="type">bool</span> security                : <span class="number">1</span>;	<span class="comment">// 占用1位，是否启用安全模式</span></span><br><span class="line">    <span class="type">uint16_t</span>                     : <span class="number">4</span>;	<span class="comment">// 占用4位，未命名填充位域，通常用于对齐或保留</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Configure broadcast */</span></span><br><span class="line">    <span class="type">bool</span> broadcast              : <span class="number">1</span>;	<span class="comment">// 占用1位，是否为广播或单播</span></span><br><span class="line">    <span class="type">bool</span> group                  : <span class="number">1</span>;	<span class="comment">// 占用1位，是否为广播的群组</span></span><br><span class="line">    <span class="type">bool</span> ack                    : <span class="number">1</span>;	<span class="comment">// 占用1位，是否需要ACK确认</span></span><br><span class="line">    <span class="type">uint16_t</span> retransmit_count   : <span class="number">5</span>;	<span class="comment">// 占用5位，重传次数</span></span><br><span class="line">    <span class="type">uint8_t</span> forward_ttl         : <span class="number">5</span>;	<span class="comment">// 占用5位，转发TTL（Time To Live）</span></span><br><span class="line">    <span class="type">int8_t</span> forward_rssi         : <span class="number">8</span>;	<span class="comment">// 占用8位，转发时的RSSI（接收信号强度指示）</span></span><br><span class="line">&#125; __attribute__ ((packed)) <span class="type">espnow_frame_head_t</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">uint8_t</span> type    : <span class="number">4</span>;			<span class="comment">// 占用4位，表示数据包类型</span></span><br><span class="line">    <span class="type">uint8_t</span> version : <span class="number">2</span>;			<span class="comment">// 占用2位，表示版本号</span></span><br><span class="line">    <span class="type">uint8_t</span>         : <span class="number">2</span>;			<span class="comment">// 未命名的2位，通常用户填充或保留</span></span><br><span class="line">    <span class="type">uint8_t</span> size;					<span class="comment">// 1字节，表示payload有效载荷大小</span></span><br><span class="line">    <span class="type">espnow_frame_head_t</span> frame_head;	<span class="comment">// 6字节，一个自定义类型的帧头</span></span><br><span class="line">    <span class="type">uint8_t</span> dest_addr[<span class="number">6</span>];			<span class="comment">// 6字节，目标MAC地址</span></span><br><span class="line">    <span class="type">uint8_t</span> src_addr[<span class="number">6</span>];			<span class="comment">// 6字节，源MAC地址</span></span><br><span class="line">    <span class="type">uint8_t</span> payload[<span class="number">0</span>];				<span class="comment">// 可变长度数组，payload有效载荷从这里开始</span></span><br><span class="line">&#125; __attribute__((packed)) <span class="type">espnow_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>__attribute__((packed))</code>: 这是一个GCC编译器属性，告诉编译器不要对结构体成员进行默认的对齐优化，即按照每个成员声明的顺序紧密排列，以保证结构体在内存中的布局与协议要求一致，这对于网络通信非常重要。</p>
+</blockquote>
+<p>那么对于 <code>espnow_frame_head_t</code> 结构体大小是 6 Byte，<code>espnow_data_t</code> 的结构体大小是 20 Bype。</p>
+<p><em>注意：uint8_t payload[0] 在结构体中不占用，通过sizeof(espnow_data_t) 得出只有 20 Byte</em></p>
+<p>数据包类型定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Divide ESP-NOW data into multiple pipes</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_DATA_TYPE_ACK,            <span class="comment">/**&lt; For reliable data transmission */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_FORWARD,        <span class="comment">/**&lt; Set to forward packets */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_GROUP,          <span class="comment">/**&lt; Send a packet that sets the group type */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_PROV,           <span class="comment">/**&lt; Network configuration packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_CONTROL_BIND,   <span class="comment">/**&lt; Binding or unbinding packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_CONTROL_DATA,   <span class="comment">/**&lt; Control data packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_OTA_STATUS,     <span class="comment">/**&lt; Status packet for rapid upgrade of batch Device */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_OTA_DATA,       <span class="comment">/**&lt; Data packet for rapid upgrade of batch Device */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DEBUG_LOG,      <span class="comment">/**&lt; Equipment debugging log packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DEBUG_COMMAND,  <span class="comment">/**&lt; Equipment debugging command packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_DATA,           <span class="comment">/**&lt; User-defined use */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY_STATUS,<span class="comment">/**&lt; Security status packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY,       <span class="comment">/**&lt; Security handshake packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_SECURITY_DATA,  <span class="comment">/**&lt; Security packet */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_RESERVED,       <span class="comment">/**&lt; Reserved for other function */</span></span><br><span class="line">    ESPNOW_DATA_TYPE_MAX,</span><br><span class="line">&#125; <span class="type">espnow_data_type_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 control&#x2F;include&#x2F;espnow_ctrl.h 中对于 initiator 和 responder 的控制数据封装了数据结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* espnow_attribute_t 结构：控制属性，有light、button、battery */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BASE              = <span class="number">0x0000</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_POWER              = <span class="number">0x0001</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_POWER_ADD          = <span class="number">0x0002</span>,</span><br><span class="line"></span><br><span class="line">    ESPNOW_ATTRIBUTE_ATTRIBUTE          = <span class="number">0x0003</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; light */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_LIGHT_BASE         = <span class="number">0x0100</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BRIGHTNESS         = <span class="number">0x0101</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BRIGHTNESS_ADD     = <span class="number">0x0102</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_HUE                = <span class="number">0x0103</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_HUE_ADD            = <span class="number">0x0104</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_SATURATION         = <span class="number">0x0105</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_SATURATION_ADD     = <span class="number">0x0106</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_WARM               = <span class="number">0x0107</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_WARM_ADD           = <span class="number">0x0108</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_COLD               = <span class="number">0x0109</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_COLD_ADD           = <span class="number">0x010a</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_RED                = <span class="number">0x010b</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_RED_ADD            = <span class="number">0x010c</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_GREEN              = <span class="number">0x010d</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_GREEN_ADD          = <span class="number">0x010e</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BLUE               = <span class="number">0x010f</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BLUE_ADD           = <span class="number">0x0110</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_MODE               = <span class="number">0x0111</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_MODE_ADD           = <span class="number">0x0112</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; button */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BUTTON_BASE        = <span class="number">0x0200</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_1              = <span class="number">0x0201</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_2              = <span class="number">0x0202</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_3              = <span class="number">0x0203</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_4              = <span class="number">0x0204</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_5              = <span class="number">0x0205</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_6              = <span class="number">0x0206</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_7              = <span class="number">0x0207</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_8              = <span class="number">0x0208</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_9              = <span class="number">0x0209</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_KEY_10             = <span class="number">0x0210</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**&lt; battery */</span></span><br><span class="line">    ESPNOW_ATTRIBUTE_BATTERY_BASE       = <span class="number">0x0300</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_STATUS_LOW_BATTERY = <span class="number">0x0301</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_BATTERY_LEVEL      = <span class="number">0x0302</span>,</span><br><span class="line">    ESPNOW_ATTRIBUTE_CHARGING_STATE     = <span class="number">0x0303</span>,</span><br><span class="line">&#125; <span class="type">espnow_attribute_t</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_ctrl_data_s</span> &#123;</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_ESPNOW_CONTROL_AUTO_CHANNEL_SENDING</span></span><br><span class="line">    <span class="type">espnow_frame_head_t</span> frame_head;		<span class="comment">// 6字节</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="type">espnow_attribute_t</span> initiator_attribute; <span class="comment">// 2字节        /**&lt; Initiator&#x27;s attribute */</span></span><br><span class="line">    <span class="type">espnow_attribute_t</span> responder_attribute; <span class="comment">// 2字节        /**&lt; Responder&#x27;s attribute */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">bool</span> responder_value_b;   </span><br><span class="line">        <span class="type">int</span> responder_value_i;</span><br><span class="line">        <span class="type">float</span> responder_value_f;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="type">uint32_t</span> responder_value_s_flag : <span class="number">24</span>; </span><br><span class="line">            <span class="type">uint8_t</span> responder_value_s_size;</span><br><span class="line">        &#125;; <span class="comment">// 联合体根据实际使用时的计算大小</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> responder_value_s[<span class="number">0</span>];</span><br><span class="line">&#125; <span class="type">espnow_ctrl_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 espnow&#x2F;include&#x2F;espnow.h 中对于ESP_NOW 事件也进行了定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Enumerated list of control event id</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BIND          (ESP_EVENT_ESPNOW_CTRL_BASE + 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_UNBIND        (ESP_EVENT_ESPNOW_CTRL_BASE + 1)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BIND_ERROR    (ESP_EVENT_ESPNOW_CTRL_BASE + 2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Declaration of the task events family</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_DECLARE_BASE(id) extern esp_event_base_t const id</span></span><br><span class="line">ESP_EVENT_DECLARE_BASE(ESP_EVENT_ESPNOW);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_PROV_BASE          0x100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_CTRL_BASE          0x200</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_OTA_BASE           0x300</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_DEBUG_BASE         0x400</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ESP_EVENT_ESPNOW_RESERVED_BASE      0x500</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ESP-NOW-Provisioning"><a href="#ESP-NOW-Provisioning" class="headerlink" title="ESP-NOW Provisioning"></a>ESP-NOW Provisioning</h2><p>在配网中也要对ESP32设备分为两种角色：发起者（initiator）和 响应者（responder）</p>
+<ul>
+<li><p>发起者</p>
+<p>1、持续扫描响应者发出 ESP-NOW 的 provision beacon（信标）</p>
+<p>2、当接收响应者发出的 provision beacon后，发送 “设备类型配置帧”，用于向响应者请求 Wi-Fi凭证（即AP的SSID和密码）</p>
+<p>3、如果接收到响应者发出的 provision 帧后，则从数据帧中获取 Wi-Fi 凭证，并连接到目标AP</p>
+</li>
+<li><p>响应者</p>
+<p>1、在 30 秒内，每 100 毫秒广播一次 provision beacon</p>
+<p>2、如果接收到发起者发出的 “设备类型配置帧” 后，则发出包含 Wi-Fi 凭证的 Wi-Fi 类型配置帧进行响应</p>
+</li>
+</ul>
+<p>在 provisioning&#x2F;include&#x2F;espnow_prov.h 定义了 esp_now 配网数据包类型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_PROV_TYPE_BEACON,</span><br><span class="line">    ESPNOW_PROV_TYPE_DEVICE,</span><br><span class="line">    ESPNOW_PROV_TYPE_WIFI,</span><br><span class="line">&#125; <span class="type">espnow_prov_type_t</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当然配网数据包结构也要有：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ESPNOW_PACKED_STRUCT                __attribute__ ((packed))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    ESPNOW_PROV_AUTH_INVALID, <span class="comment">/**&lt; Invalid mode */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_PRODUCT, <span class="comment">/**&lt; Product authentication */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_DEVICE,  <span class="comment">/**&lt; Device authentication */</span></span><br><span class="line">    ESPNOW_PROV_AUTH_CERT,    <span class="comment">/**&lt; Certificate authentication */</span></span><br><span class="line">&#125; <span class="type">espnow_prov_auth_mode_t</span>;	<span class="comment">// 4 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_initiator_s</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> product_id[<span class="number">16</span>];                <span class="comment">/**&lt; Product ID */</span></span><br><span class="line">    <span class="type">char</span> device_name[<span class="number">16</span>];               <span class="comment">/**&lt; Device name */</span></span><br><span class="line">    <span class="type">espnow_prov_auth_mode_t</span> auth_mode;  <span class="comment">/**&lt; Authentication mode of provisioning */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">char</span> device_secret[<span class="number">32</span>];         <span class="comment">/**&lt; Device security key */</span></span><br><span class="line">        <span class="type">char</span> product_secret[<span class="number">32</span>];        <span class="comment">/**&lt; Product security key */</span></span><br><span class="line">        <span class="type">char</span> cert_secret[<span class="number">32</span>];           <span class="comment">/**&lt; Certify security key */</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">uint8_t</span> custom_size;                <span class="comment">/**&lt; Customer data size */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_data[<span class="number">0</span>];             <span class="comment">/**&lt; Customer data */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_initiator_t</span>;	<span class="comment">// 69 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_responder_s</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> product_id[<span class="number">16</span>];                <span class="comment">/**&lt; Product ID */</span></span><br><span class="line">    <span class="type">char</span> device_name[<span class="number">16</span>];               <span class="comment">/**&lt; Device name */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_responder_t</span>;	<span class="comment">// 32 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    WIFI_MODE_NULL = <span class="number">0</span>,  <span class="comment">/**&lt; null mode */</span></span><br><span class="line">    WIFI_MODE_STA,       <span class="comment">/**&lt; WiFi station mode */</span></span><br><span class="line">    WIFI_MODE_AP,        <span class="comment">/**&lt; WiFi soft-AP mode */</span></span><br><span class="line">    WIFI_MODE_APSTA,     <span class="comment">/**&lt; WiFi station + soft-AP mode */</span></span><br><span class="line">    WIFI_MODE_NAN,       <span class="comment">/**&lt; WiFi NAN mode */</span></span><br><span class="line">    WIFI_MODE_MAX</span><br><span class="line">&#125; <span class="type">wifi_mode_t</span>;	<span class="comment">// 4 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">espnow_prov_wifi_s</span> &#123;</span></span><br><span class="line">    <span class="type">wifi_mode_t</span> mode;          <span class="comment">/**&lt; WiFi mode */</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">wifi_ap_config_t</span>  ap;  <span class="comment">/**&lt; Configuration of AP */</span></span><br><span class="line">        <span class="type">wifi_sta_config_t</span> sta; <span class="comment">/**&lt; Configuration of STA */</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">char</span> token[<span class="number">32</span>];            <span class="comment">/**&lt; Token of the WiFi configuration */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_size;       <span class="comment">/**&lt; Customer data size */</span></span><br><span class="line">    <span class="type">uint8_t</span> custom_data[<span class="number">0</span>];    <span class="comment">/**&lt; Customer data */</span></span><br><span class="line">&#125; ESPNOW_PACKED_STRUCT <span class="type">espnow_prov_wifi_t</span>;	<span class="comment">// 217 Byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">uint8_t</span> type;								<span class="comment">// 1 Byte</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="type">espnow_prov_initiator_t</span> initiator_info;	<span class="comment">// 69 Byte</span></span><br><span class="line">        <span class="type">espnow_prov_responder_t</span> responder_info;	<span class="comment">// 32 Byte</span></span><br><span class="line">        <span class="type">espnow_prov_wifi_t</span> wifi_config;			<span class="comment">// 217 Byte</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125; __attribute__((packed)) <span class="type">espnow_prov_data_t</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>responder （dc:da:0c:d2:4f:74）创建定时器，每100ms发送 <code>ESPNOW_DATA_TYPE_PROV</code>  广播数据，并注册回调函数用来接收 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># responder 发送广播数据</span></span><br><span class="line">data(33): 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+<p>initiator（f0:9e:9e:99:12:60） 持续扫描 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据，接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据后，接着发送 <code>ESPNOW_DATA_TYPE_PROV</code> 的单播数据，并注册回调函数接收 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># initiator 接收广播数据</span></span><br><span class="line">data(33): 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># initiator 发送单播数据</span></span><br><span class="line">data(218): 01 69 6e 69 74 69 61 74 6f 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 00 06 00 23 21 8a 55 11 88 02 00 ff ff ff ff ff ff dc da 0c d2 4f 74 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <span class="built_in">fc</span> ab ca 3f eb 00 00 00 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 02 85 00 70 ec 00 00 00 00 01 01 42 d6 10 ac ca 3f 43 53 01 00 14 8d c9 3f e0 ab</span><br></pre></td></tr></table></figure>
+
+<p>responder 接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的数据后，接着发送 <code>ESPNOW_DATA_TYPE_PROV</code> 类型的单播数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># responder 接收单播数据</span></span><br><span class="line">data(218): 01 69 6e 69 74 69 61 74 6f 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 00 06 00 23 21 8a 55 11 88 02 00 ff ff ff ff ff ff dc da 0c d2 4f 74 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <span class="built_in">fc</span> ab ca 3f eb 00 00 00 00 72 65 73 70 6f 6e 64 65 72 5f 74 65 73 74 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 02 85 00 70 ec 00 00 00 00 01 01 42 d6 10 ac ca 3f 43 53 01 00 14 8d c9 3f e0 ab</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># responder 发送单播数据</span></span><br><span class="line">data(218): 02 00 00 00 00 43 55 42 45 43 5f 41 50 5f 32 2e 34 47 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 63 75 62 65 63 32 30 31 35 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+<p>initiator 接收到 <code>ESPNOW_DATA_TYPE_PROV</code> 类型数据后，接着去连接目标AP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data(218): 02 00 00 00 00 43 55 42 45 43 5f 41 50 5f 32 2e 34 47 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 63 75 62 65 63 32 30 31 35 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ESP-NOW/" rel="tag"># ESP-NOW</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/12/18/ESP-Prog/" rel="prev" title="ESP-Prog 使用">
+                  <i class="fa fa-angle-left"></i> ESP-Prog 使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/12/20/esp-blufi/" rel="next" title="ESP BluFi 配网">
+                  ESP BluFi 配网 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

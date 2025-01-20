@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在使用esp-idf时，除了对环境安装有很多问题，同时对于esp-idf 项目文件结构也是疑问多多，幸运的是，看到了一个介绍很详细的视频。整理成文字进行记录下来，方便自己后续查阅。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="esp: idf project architecture">
+<meta property="og:url" content="https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="在使用esp-idf时，除了对环境安装有很多问题，同时对于esp-idf 项目文件结构也是疑问多多，幸运的是，看到了一个介绍很详细的视频。整理成文字进行记录下来，方便自己后续查阅。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/image-20241130130141239.png">
+<meta property="article:published_time" content="2024-11-15T12:25:09.000Z">
+<meta property="article:modified_time" content="2024-12-16T12:58:30.373Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="ESP-IDF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/image-20241130130141239.png">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/","path":"2024/11/15/esp-idf-project-architecture/","title":"esp: idf project architecture"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>esp: idf project architecture | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">95</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">工程结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">简单示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E7%BB%84%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">导入组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sdkconfig-defaults"><span class="nav-number">4.</span> <span class="nav-text">sdkconfig.defaults</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kconfig"><span class="nav-number">5.</span> <span class="nav-text">Kconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">6.</span> <span class="nav-text">分区表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">6.1.</span> <span class="nav-text">内置分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">6.2.</span> <span class="nav-text">自定义分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">6.3.</span> <span class="nav-text">生成二进制分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%A4%A7%E5%B0%8F%E6%A3%80%E6%9F%A5"><span class="nav-number">6.4.</span> <span class="nav-text">分区大小检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MD5%E6%A0%A1%E9%AA%8C%E5%92%8C"><span class="nav-number">6.5.</span> <span class="nav-text">MD5校验和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%A7%E5%86%99%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">6.6.</span> <span class="nav-text">烧写分区表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OTA"><span class="nav-number">7.</span> <span class="nav-text">OTA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OTA-%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA"><span class="nav-number">7.1.</span> <span class="nav-text">OTA 数据分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%9B%9E%E6%BB%9A"><span class="nav-number">7.2.</span> <span class="nav-text">应用程序回滚</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OTA%E5%B7%A5%E5%85%B7"><span class="nav-number">7.3.</span> <span class="nav-text">OTA工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.</span> <span class="nav-text">存储器类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DRAM"><span class="nav-number">8.1.</span> <span class="nav-text">DRAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IRAM"><span class="nav-number">8.2.</span> <span class="nav-text">IRAM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP-Component-Registry"><span class="nav-number">9.</span> <span class="nav-text">ESP Component Registry</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2024/11/15/esp-idf-project-architecture/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="esp: idf project architecture | eiSouthBoy's Blog">
+      <meta itemprop="description" content="在使用esp-idf时，除了对环境安装有很多问题，同时对于esp-idf 项目文件结构也是疑问多多，幸运的是，看到了一个介绍很详细的视频。整理成文字进行记录下来，方便自己后续查阅。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          esp: idf project architecture
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-15 12:25:09" itemprop="dateCreated datePublished" datetime="2024-11-15T12:25:09+00:00">2024-11-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-16 12:58:30" itemprop="dateModified" datetime="2024-12-16T12:58:30+00:00">2024-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/esp/" itemprop="url" rel="index"><span itemprop="name">esp</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">在使用esp-idf时，除了对环境安装有很多问题，同时对于esp-idf 项目文件结构也是疑问多多，幸运的是，看到了一个介绍很详细的视频。整理成文字进行记录下来，方便自己后续查阅。</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>了解几个概念<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-techpedia/zh_CN/latest/esp-friends/get-started/board-selection.html">芯片，模组，开发板</a>：</p>
+<ul>
+<li>芯片</li>
+<li>模组</li>
+<li>开发板</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV18keGeaEhE/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=a8965eb911e5c2e6ddd23064aced2e6b">入门 ESP-IDF 工程结构【新手超详细教程】</a></p>
+<blockquote>
+<p>目的：更高效的开发和管理自己的 ESP-IDF 工程</p>
+</blockquote>
+<h2 id="工程结构"><a href="#工程结构" class="headerlink" title="工程结构"></a>工程结构</h2><p>一个 <code>ESP-IDF</code> 工程可以看作是多个<strong>组件</strong>的集合。那么什么是组件呢？ 组件其实就是独立的代码模块，乐鑫提供基础的系统组件，例如：</p>
+<p><img src="/2024/11/15/esp-idf-project-architecture/image-20241130130141239.png" alt="image-20241130130141239"></p>
+<p>例如：开发一个智能台灯需要的组件：</p>
+<ol>
+<li>ESP-IDF基础库：提供基本的功能库和底层硬件绑定</li>
+<li>FreeRTOS 操作系统：实时操作系统内核，管理不同的任务</li>
+<li>WiFi 驱动：连接无线网络，发送和接受控制指令</li>
+<li>TCP&#x2F;IP 协议栈：处理网络通信</li>
+<li>应用层协议：处理来自云端的控制指令</li>
+<li>灯的控制驱动：控制灯开&#x2F;关和亮度</li>
+<li>主程序：将所有组件整合在一起，实现功能逻辑</li>
+</ol>
+<p>一个标准的ESP-IDF工程只是一个文件夹，包括一些组件和配置文件。通过工程顶层 <code>CMakeLists.txt</code> 文件，将所有组件整合在一起，通过 <code>cmake</code> 工具生成 <code>makefile</code> 文件，接下来使用 <code>ninja (或make)</code> 工具根据 <code>makefile</code> 执行编译、链接等步骤。CMakeLists.txt的位置：工程的顶层目录内和其他组件内，所有组件都要有自己的CMakeList.txt，包括main组件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 详细执行步骤，当前处于工程目录下</span></span><br><span class="line"><span class="built_in">mkdir</span> -p build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake .. -G Ninja</span><br><span class="line">ninja</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>ESP-IDF 把上面的操作步骤封装一句命令：<code>idf.py build</code>。</p>
+<h2 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h2><p>以 <code>hello-world</code> 工程来说明 ESP-IDF 的工程结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ tree -l 1</span><br><span class="line">.</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── main</span><br><span class="line">│   ├── CMakeLists.txt</span><br><span class="line">│   └── main.c</span><br><span class="line">└── README.md</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过CMakeLists.txt可以注册组件，工程顶层 <code>CMakeLists.txt</code> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 遵循CMakeLists.txt的语法</span></span><br><span class="line"><span class="comment"># 指定cmake最小版本要求</span></span><br><span class="line">cmake_minimum_required(VERSION 3.16)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入cmake各种功能，用来配置项目和检索组件</span></span><br><span class="line">include(<span class="variable">$ENV</span>&#123;IDF_PATH&#125;/tools/cmake/project.cmake)</span><br><span class="line"><span class="comment"># 指定工程名称，编译后二进制的名字</span></span><br><span class="line">project(hello_world)</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>main/CMakeLists.txt</code> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mian组件会默认require IDF的相关组件依赖，其他组件需要手动添加依赖</span></span><br><span class="line">idf_component_register(SRCS </span><br><span class="line">							<span class="string">&quot;main.c&quot;</span></span><br><span class="line">                    INCLUDE_DIRS </span><br><span class="line">                    		<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>idf.py set-target esp32</code> ，自动创建 <code>build</code> 目录，并将过程文件放到该目录下，同时工程目录自动创建 <code>sdkconfig</code> 文件。</p>
+<blockquote>
+<p>idf.py set-target 支持哪些目标芯片系列？ 执行命令 <code>idf.py --list-targets</code> 就可以看到支持的芯片系列</p>
+</blockquote>
+<p>执行 <code>idf.py menuconfig</code> ，出现编译配置菜单，用户可以修改配置项。</p>
+<p>执行 <code>idf.py build</code> ，开始编译。</p>
+<p>执行 <code>idf.py -p /dev/ttyUSB0 flash</code> ，通过指定的串口 &#x2F;dev&#x2F;ttyUSB0 将固件烧录到ESP硬件。</p>
+<p>执行 <code>idf.py -p /dev/ttyUSB0 monitor</code> ，通过指定的串口 &#x2F;dev&#x2F;ttyUSB0 监控串口日志。</p>
+<p>关于上述的构建系统的操作步骤建议参考乐鑫官方的教程：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html">构建系统（CMake 版）</a></p>
+<h2 id="导入组件"><a href="#导入组件" class="headerlink" title="导入组件"></a>导入组件</h2><p>导入组件到 ESP-IDF 工程的方式：</p>
+<ol>
+<li>导入 ESP-IDF 本地框架下组件（自动导入，无需用户操作）</li>
+<li>通过工程目录下的 CMakeLists.txt 指定额外的组件</li>
+<li>在工程目录下创建 component 文件夹，并将自定义组件放进来。而且不需要在工程目录下的 CMakeLists.txt 下声明就可以直接使用组件。</li>
+<li>通过组件管理器将<a target="_blank" rel="noopener" href="https://components.espressif.com/">乐鑫官方组件仓库</a>导入组件，在工程目录下执行 <code>idf.py add-dependency &quot;[命名空间]/&lt;组件名&gt;[版本号]&quot;</code>，例如：<code>idf.py add-dependency &quot;espressif/button^3.4.0&quot;</code></li>
+</ol>
+<p>对于组件的说明和解读，建议参考乐鑫官方的教程：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-techpedia/zh_CN/latest/esp-friends/advanced-development/component-management.html?highlight=cmakelists%20txt">组件管理和使用</a></p>
+<h2 id="sdkconfig-defaults"><a href="#sdkconfig-defaults" class="headerlink" title="sdkconfig.defaults"></a>sdkconfig.defaults</h2><p>执行 <code>idf.py menuconfig</code> 后，会将用户修改后的配置项更改到 <code>sdkconfig</code> 文件。但是如果用户希望新建 <code>sdkconfig</code> 时，就能够根据默认的配置载入sdkconfig文件中，解决方式就是利用 <code>sdkconfig.defaults</code> 文件。</p>
+<p>例如：当用户使用的开发板 ESP-DevKitC，该开发板的flash大小，以及按键对应的GPIO都是固定好的。在第一次 <code>idf.py menuconfig</code> 配置好后，接着执行 <code>idf.py save-defconfig</code> 就会创建 <code>sdkconfig.defaults</code> 文件，以后的工程就可以拷贝这个文件使用。</p>
+<h2 id="Kconfig"><a href="#Kconfig" class="headerlink" title="Kconfig"></a>Kconfig</h2><p>每个组件还可以包含一个 <code>Kconfig</code> 文件，它用于定义 <code>menuconfig</code> 时展示的 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html#component-configuration">组件配置</a> 选项。某些组件可能还会包含 <code>Kconfig.projbuild</code> 和 <code>project_include.cmake</code> 特殊文件，它们用于 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/build-system.html#override-project-config">覆盖项目的部分设置</a>。</p>
+<p>组件中编辑好的 <code>Kconfig.projbuild</code> 文件，可以通过 <code>idf.py menuconfig</code> 来修改Kconfig 的配置项。</p>
+<h2 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h2><blockquote>
+<p>分区表是什么？</p>
+</blockquote>
+<p>每片 ESP32 的 flash 可以包含多个应用程序，以及多种不同类型的数据（例如校准数据、文件系统数据、参数存储数据等）。因此，我们在 flash 的 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-reference/kconfig.html#config-partition-table-offset">默认偏移地址</a> 0x8000 处烧写一张分区表。</p>
+<p>分区表的长度为 0xC00 字节，最多可以保存 95 条分区表条目。MD5校验和 附加在分区表之后，用于在运行时验证分区表的完整性。分区表占据了整个 flash 扇区，大小为 0x1000 (4 KB)。因此，它后面的任何分区至少需要位于 (<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/kconfig.html#config-partition-table-offset">默认偏移地址</a>) + 0x1000 处，即从 0x9000 初开始。</p>
+<p>如果用户没有在 menuconfig 中选择用户自定义分区表，那么就会使用默认的分区表，默认定义的flash为2MB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ESP-IDF Partition Table</span></span><br><span class="line"><span class="comment"># Name,   Type, SubType, Offset,  Size,   Flags</span></span><br><span class="line">nvs,      data, nvs,     0x9000,  0x6000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000, 1M,</span><br></pre></td></tr></table></figure>
+
+<p>自定义分区表，首先在 menuconfig 使能用户自定义分区表，然后设置实际flash大小，接着在项目顶层文件夹下创建 <code>partitions.csv</code> 文件</p>
+<p>这里还可能涉及文件系统，可以参考乐鑫官方教程：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/stable/esp32/api-reference/storage/spiffs.html">SPIFFS 文件系统</a></p>
+<p>关于分区表的介绍和使用，请参考乐鑫官方的教程：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4/esp32/api-guides/partition-tables.html">分区表</a></p>
+<ul>
+<li><p>Name 字段</p>
+<p>Name 字段可以是任何有意义的名称，但不能超过 16 个字节，其中包括了一个空字节。</p>
+</li>
+<li><p>Type 字段</p>
+<p>Type 字段可以设置为 app（0x00）或者 data （0x01） ，也可以直接使用数字 0<del>254 （或者十六进制 0x00</del>0xfe），但要注意的是 0x00~0x3f 不可以使用，这部分预留给 esp-idf 的核心功能。</p>
+<p><em>注意：启动加载器将忽略 app （0x00）和 data（0x01） 以外的其他分区类型！！！</em></p>
+</li>
+<li><p>SubType 字段</p>
+<p>SubType 字段长度为 8 bit，内容与具体分区 Type 字段有关。目前 esp-idf 仅仅规定了 app （0x00）和 data（0x01）两种分区类型的子类型含义。</p>
+<ul>
+<li><p>当 Type 设置为 app （0x00）时，SubType 字段可以设置为：f<em>actory（0x00）、ota_0（0x10）、…、ota_15（0x1f）或者 test（0x20）。</em></p>
+<p><strong>factory （0x00）是默认的 app 分区。启动加载器将默认加载该应用程序。但如果存在类型为 data&#x2F;ota 分区，则启动加载器将加载 data&#x2F;ota 分区中的数据，进而判断启动哪个 OTA 镜像文件。</strong></p>
+<p>OTA 升级永远都不会更新 factory 分区中的内容。如果你希望在 OTA 项目中预留更多 flash ，可以删除 factory 分区，转而使用 ota_0 分区。</p>
+<p>ota_0（0x10）~ ota_15（0x1f）为 OTA 应用程序分区，启动加载器将根据 OTA 数据分区中的数据来决定加载哪个 OTA 应用程序分区中的程序。<em>在使用 OTA 功能时，应用程序应至少拥有 2 个 OTA 应用程序分区（即 ota_0 和 ota_1）。</em></p>
+</li>
+<li><p>当 Type 设置为 data （0x01）时，Subtype 字段可以设置为：<em>ota（0x00）、phy（0x01）、nvs（0x02）、nvs_keys（0x04） 、或 其他子类型。</em></p>
+<p><strong>ota （0x00）</strong>即 OTA数据分区，用于存储当前所选择的 OTA 应用程序的信息。<strong>这个分区的大小要设置为 0x2000。</strong></p>
+<p><strong>phy （0x01）</strong>用于存放 PHY 初始化数据，从而保证可以为每一个设备单独配置 PHY，而非必须采用固件中的统一 PHY 初始化数据。默认配置下， phy 分区并不启动，而是直接将 phy 初始化数据编译至应用程序中，从而节省分区表空间。如果需要从此分区加载 phy 初始化数据，打开配置菜单，使能 <code>CONFIG_ESP_PHY_INIT_DATA_IN_PARTITION</code> 选项，除此之外，还需要手动将 phy 初始化数据烧录至设备 flash ，因为 esp-idf 编译系统并不会自动完成该操作。</p>
+<p><strong>nvs（0x02）</strong>是专门用于给 <strong>非易失性存储（NVS）API</strong> 使用的分区。用于存储每台设备的 PHY 校准数据（并不是 PHY 初始化数据）。用于存储 Wi-Fi 数据（如果程序中使用了 <code>esp_wifi_set_storage(WIFI_STORAGE_FLASH)</code> 的话）。NVS API 还可以用于其他应用程序数据。强烈建议为 NVS 分区分配至少 0x3000 字节大小的空间。如果使用 NVS API 存储大量数据，则需要增加 nvs 分区的大小，默认是 0x6000 字节。</p>
+<p>nvs_keys（0x04）是 NVS 秘钥分区。用于存储加密秘钥（如果启动了 NVS 加密功能的话）。此分区应该至少分配 0x1000 字节（即 4096 字节）。</p>
+</li>
+</ul>
+</li>
+<li><p>偏移地址（Offset）和 大小（Size）字段</p>
+<ul>
+<li>偏移地址表示 SPI flash 中的分区地址，扇区大小为 0x1000（4KB）。因此，偏移地址必须是 4KB 的整数倍。</li>
+<li>若 csv 文件中的分区偏移地址为空，则该分区会接在前一个分区之后；若为首个分区，则接在分区表之后。</li>
+<li><strong>app 分区的偏移地址必须与 0x10000（64KB）对齐。</strong></li>
+<li>若启动了安全启动 V1（Secure Boot），则 app 分区的大小与 0x10000（64KB）对齐。</li>
+<li>app 分区的大小和偏移地址可以采用 <code>十进制数</code> 或 <code>以0x为前缀的十六进制数</code>，且支持 K 或 M 的倍数单位。</li>
+</ul>
+</li>
+<li><p>Flags 字段</p>
+<p>目前 Flags 字段仅支持 <code>encrypted</code> 和 <code>readonly</code>。如果 Flags 字段设置为 <code>encrypted</code> ，且启用了 flash 加密功能，则该分区将会被加密。<em>注意：无论是否设置 Flags 字段，app 分区都将保持加密。</em></p>
+<p>如果 Flags 字段设置为 <code>readonly</code> ，则该分区为只读分区。readonly 标记仅支持 除 ota 和 coredump 子类型外的 data 分区。使用 readonly 标记，防止意外写入 如出厂数据分区等包含设备特定配置数据的分区。 </p>
+<p>可以使用冒号连接不同的标记，来同时指定多个标记，例如 <code>encrypted:readonly</code>。</p>
+</li>
+</ul>
+<h3 id="内置分区表"><a href="#内置分区表" class="headerlink" title="内置分区表"></a>内置分区表</h3><p>ESP-IDF 提供了内置分区表，用户通过 <code>idf.py menuconfig</code> 勾选即可。”Single factory app, no OTA” 分区表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># ESP-IDF Partition Table</span><br><span class="line"># Name,   Type, SubType, Offset,  Size,   Flags</span><br><span class="line">nvs,      data, nvs,     0x9000,  0x6000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000, 1M,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 flash 的 0x10000（即64 KB）偏移地址处存放一个标记为 “factory” 的二进制应用程序，且启动加载器默认加载这个程序。</li>
+<li>分区表中还定义了两个数据区域，分别用于存储 NVS 库专用分区和 PHY 初始化数据。</li>
+</ul>
+<p>“Factory app, two OTA definitions” 分区表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ESP-IDF Partition Table</span><br><span class="line"># Name,   Type, SubType, Offset,  Size, Flags</span><br><span class="line">nvs,      data, nvs,     0x9000,  0x4000,</span><br><span class="line">otadata,  data, ota,     0xd000,  0x2000,</span><br><span class="line">phy_init, data, phy,     0xf000,  0x1000,</span><br><span class="line">factory,  app,  factory, 0x10000,  1M,</span><br><span class="line">ota_0,    app,  ota_0,   0x110000, 1M,</span><br><span class="line">ota_1,    app,  ota_1,   0x210000, 1M,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分区表中定义了三个应用程序分区，这三个分区的类型都被设置为 “app” ，但具体 app 类型不同。其中位于 0x10000 偏移地址处的为出厂应用程序（factory），其余两个为 OTA 应用程序（ota_0, ota_1）。</li>
+<li>新增了一个名为 “otadata” 的数据分区，用于保存 OTA 升级时需要的数据。启动加载器会查询该分区的数据，以判断应该从哪个 OTA 应用程序分区加载程序。如果 “otadata” 分区为空，则会执行出厂程序。</li>
+</ul>
+<h3 id="自定义分区表"><a href="#自定义分区表" class="headerlink" title="自定义分区表"></a>自定义分区表</h3><p>除了使用 ESP-IDF 的内置分区表外，还可以自定义分区表。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Name,   Type, SubType,  Offset,   Size,  Flags</span><br><span class="line">nvs,      data, nvs,      0x9000,  0x4000</span><br><span class="line">otadata,  data, ota,      0xd000,  0x2000</span><br><span class="line">phy_init, data, phy,      0xf000,  0x1000</span><br><span class="line">factory,  app,  factory,  0x10000,  1M</span><br><span class="line">ota_0,    app,  ota_0,    ,         1M</span><br><span class="line">ota_1,    app,  ota_1,    ,         1M</span><br><span class="line">nvs_key,  data, nvs_keys, ,        0x1000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增了一个名为 “nvs_key” 的数据分区，大小为 4KB。</li>
+<li>其中三个分区的 <code>Offset</code> 字段可以为空，因为 <code>gen_esp32part.py</code> 工具会从分区表位置的后台开始自动计算并填充分区的偏移地址，通知确保每个分区的偏移地址正确对齐。</li>
+</ul>
+<h3 id="生成二进制分区表"><a href="#生成二进制分区表" class="headerlink" title="生成二进制分区表"></a>生成二进制分区表</h3><p>烧写到 ESP32 中的分区表采用二进制格式，而不是 csv 文件本身。partition_table&#x2F;gen_esp32part.py 工具可以实现 csv 文件和二进制文件之间的转换。</p>
+<p>如果在项目配置菜单 <code>idf.py menuconfig</code> 中设置了分区表 csv 文件的名称，然后构建项目 <code>idf.py build</code> 或 执行 <code>idf.py partition-table</code> 。这时，转换将在编译过程自动完成。</p>
+<ul>
+<li><p>手动将 csv 文件转换为二进制文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python gen_esp32part.py input_partitions.csv binary_partitions.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动将二进制文件转换为csv 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python gen_esp32part.py binary_partitions.bin input_partitions.csv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印二进制分区表的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">idf.py partition-table</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">python gen_esp32part.py binary_partitions.bin</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="分区大小检查"><a href="#分区大小检查" class="headerlink" title="分区大小检查"></a>分区大小检查</h3><p>esp-idf 构建系统将自动检查生成的二进制文件大小与可用分区大小是否匹配，如果二进制文件太大，则会构建失败并报错提示。</p>
+<h3 id="MD5校验和"><a href="#MD5校验和" class="headerlink" title="MD5校验和"></a>MD5校验和</h3><p>二进制格式的分区表中含有一个 MD5 校验和。这个 MD5 校验和是根据分区表内容计算的，可在设备启动阶段用于验证分区表的完整性。</p>
+<h3 id="烧写分区表"><a href="#烧写分区表" class="headerlink" title="烧写分区表"></a>烧写分区表</h3><p>使用 esptool.py 工具烧写分区表，命令：<code>idf.py partition-flash</code>。或者 执行命令 <code>idf.py flash</code> ，烧写所有内容，包括分区表。</p>
+<h2 id="OTA"><a href="#OTA" class="headerlink" title="OTA"></a>OTA</h2><p>OTA（Over-The-Air）升级机制可以让设备在固件 <strong>正常运行时</strong> 通过Wi-Fi、蓝牙或以太网 接收数据进行自我更新。</p>
+<p>要运行 OTA 机制，需要配置设备的分区表，该分区表至少包括两个 OTA 应用程序分区（即 ota_0 和 ota_1）和 一个 OTA 数据分区。</p>
+<p>OTA 功能启动后，向当前 <strong>未用于启动的 OTA 应用程序分区</strong> 写入新的应用固件镜像。镜像验证后， OTA 数据分区更新，指定在下一次启动时使用新镜像。</p>
+<h3 id="OTA-数据分区"><a href="#OTA-数据分区" class="headerlink" title="OTA 数据分区"></a>OTA 数据分区</h3><p>所有使用 OTA 功能项目，其分区表 <em><strong>必须</strong></em> 包含一个 OTA 数据分区，Type 字段为 data，SubType 字段为 ota。</p>
+<p>工厂启动设置下，OTA 数据分区中应没有数据。如果分区表中有工厂应用程序，esp-idf 引导加载程序会启动工厂应用程序。如果分区表没有工厂应用程序，则启动第一个可用的 OTA 分区，通常是 ota_0。</p>
+<p>第一次 OTA 升级后，OTA 数据分区更新，指定下一次启动哪个 OTA 应用程序分区。</p>
+<p>OTA 数据分区的容量是 2 个 flash 扇区的大小，即0x2000 字节（8 KB），防止写入时电源故障引发问题。两个扇区单独擦除、写入匹配数据，若存在不一致，则用计数器字段判定按个扇区为最新数据。</p>
+<h3 id="应用程序回滚"><a href="#应用程序回滚" class="headerlink" title="应用程序回滚"></a>应用程序回滚</h3><p>应用程序回滚的主要目的：确保设备在更新后正常工作。如果新版应用程序出现严重故障，该功能科使设备回滚到之前正常运行的应用版本。</p>
+<p>在使能回滚并且 OTA 升级应用程序至新版本后， 可能出现的结果：</p>
+<ul>
+<li><p>应用程序运行正常</p>
+<p><code>esp_ota_mark_app_valid_cancel_rollback()</code> 将正在运行的应用程序状态标记为 <code>ESP_OTA_IMG_VALID</code>，启动此应用程序无限制。</p>
+</li>
+<li><p>应用程序出现严重故障，无法继续工作，必须回滚到 OTA 升级之前的版本</p>
+<p><code>esp_ota_mark_app_invalid_rollback_and_reboot()</code> 将正在运行的版本标记为 <code>ESP_OTA_IMG_INVALID</code> ，然后系统复位。引导加载程序不会选择次版本，而是启动 OTA 升级之前的版本。</p>
+</li>
+<li><p>如果 <code>CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE</code> 使能（默认情况下是没有使能的），则无需调用函数便可系统复位，并回滚到 OTA 升级之前的版本。</p>
+</li>
+</ul>
+<h3 id="OTA工具"><a href="#OTA工具" class="headerlink" title="OTA工具"></a>OTA工具</h3><p>app_update 组件中有 <code>app_update/otatool.py</code> 工具，用于在目标设备完成 OTA 分区相关的操作：</p>
+<ul>
+<li>读取 otadata 分区</li>
+<li>擦除 otadata 分区，将设备复位至工厂应用程序</li>
+<li>切换 OTA 分区</li>
+<li>擦除 OTA 分区</li>
+<li>写入 OTA 分区</li>
+<li>读取 OTA 分区</li>
+</ul>
+<h2 id="存储器类型"><a href="#存储器类型" class="headerlink" title="存储器类型"></a>存储器类型</h2><p>esp-idf 区分了指令总线（IRAM、IROM、RTC FAST memory）和 数据总线（DRAM、DROM）。</p>
+<p>指令存储器是可以执行的，只能通过 4 字节对齐读取或写入。</p>
+<p>数据存储器不可执行，可以通过单独的字节操作访问。</p>
+<h3 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h3><p>非常量静态数据（.data段）和 零初始化数据（.bss段）由链接器放入内部 SRAM 作为数据存储。此区域中的剩余空间可在程序运行时用作堆 heap。</p>
+<p>如果使用蓝牙堆栈，内部 DRAM 区域的可用大小将减少 64 KB。</p>
+<p>如果使用内存跟踪功能，内部 DRAM 区域的可用大小将减少 16 KB 或者 32 KB。</p>
+<blockquote>
+<p><strong>ESP32 上有 520 KB 的可用 SRAM，其中320 KB的DRAM 和 200 KB的IRAM。但是由于技术限制，用于静态分区的DRAM 最多可为 160 KB，剩余的 160 KB 只能在运行时分配为堆 heap。</strong></p>
+</blockquote>
+<h3 id="IRAM"><a href="#IRAM" class="headerlink" title="IRAM"></a>IRAM</h3><p>esp-idf 将内部 SRAM0 的部分区域分配为 指令RAM。</p>
+<ul>
+<li>如果在注册中断处理程序时，使用了 <code>ESP_INTR_FLAG_IRAM</code> ，则中断处理程序必须放入 IRAM。</li>
+<li>可将一些时序关键代码放入IRAM，以减少从 flash  中加载代码造成的相关损失。</li>
+</ul>
+<p>编译 hello_world 项目时，执行 <code>idf.py size</code> 查看 DRAM、IRAM 和 flash 的使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Total sizes:</span><br><span class="line">Used static DRAM:   10956 bytes ( 169780 remain, 6.1% used)</span><br><span class="line">      .data size:    8716 bytes</span><br><span class="line">      .bss  size:    2240 bytes</span><br><span class="line">Used static IRAM:   51074 bytes (  79998 remain, 39.0% used)</span><br><span class="line">      .text size:   50047 bytes</span><br><span class="line">   .vectors size:    1027 bytes</span><br><span class="line">Used Flash size :  116999 bytes</span><br><span class="line">           .text:   79067 bytes</span><br><span class="line">         .rodata:   37676 bytes</span><br><span class="line">Total image size:  176789 bytes (.bin may be padded larger)</span><br></pre></td></tr></table></figure>
+
+<h2 id="ESP-Component-Registry"><a href="#ESP-Component-Registry" class="headerlink" title="ESP Component Registry"></a>ESP Component Registry</h2><p>可以直接将组件仓库中的组件添加到项目依赖中，例如 在项目中添加 button 组件，在项目的顶层目录执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button=*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button^3.4.1&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">idf.py add-dependecy <span class="string">&quot;espressif/button==3.4.1&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ESP-IDF/" rel="tag"># ESP-IDF</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/15/WiFi-Easy-Connect/" rel="prev" title="WiFi Easy Connect">
+                  <i class="fa fa-angle-left"></i> WiFi Easy Connect
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/16/Captive-Portal/" rel="next" title="Captive Portal">
+                  Captive Portal <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
