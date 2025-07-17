@@ -29,7 +29,7 @@
 <meta property="og:description" content="在阅读CSA发布的matter-application-cluster-specification.pdf文档时，介绍了Matter所有的Cluster的类型，Cluster属于Endpoint，而Endpoint代表一种设备的能力。LevelControl Cluster是通用的Cluster。以下内容仅为LevelControl Cluster的内容介绍，以便后续回顾和查询。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-10T09:08:52.000Z">
-<meta property="article:modified_time" content="2025-01-10T06:19:23.947Z">
+<meta property="article:modified_time" content="2025-04-02T03:13:42.000Z">
 <meta property="article:author" content="eiSouthBoy">
 <meta property="article:tag" content="LevelControl Cluster">
 <meta name="twitter:card" content="summary">
@@ -90,7 +90,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">99</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">78</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">102</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">82</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -141,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-ID"><span class="nav-number">1.</span> <span class="nav-text">Cluster ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attributes"><span class="nav-number">2.</span> <span class="nav-text">Attributes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commands"><span class="nav-number">3.</span> <span class="nav-text">Commands</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-ID"><span class="nav-number">1.</span> <span class="nav-text">Cluster ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Features"><span class="nav-number">2.</span> <span class="nav-text">Features</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#On-Off-Feature"><span class="nav-number">2.1.</span> <span class="nav-text">On&#x2F;Off Feature</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attributes"><span class="nav-number">3.</span> <span class="nav-text">Attributes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commands"><span class="nav-number">4.</span> <span class="nav-text">Commands</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -156,7 +156,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">78</span>
+          <span class="site-state-item-count">82</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -167,7 +167,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-count">102</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -518,7 +518,7 @@ if(canvas.getContext){
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-01-10 06:19:23" itemprop="dateModified" datetime="2025-01-10T06:19:23+00:00">2025-01-10</time>
+      <time title="Modified: 2025-04-02 03:13:42" itemprop="dateModified" datetime="2025-04-02T03:13:42+00:00">2025-04-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -591,6 +591,81 @@ if(canvas.getContext){
 </tr>
 </tbody></table>
 <p><em>注意：Pulse Width Modulation cluster是临时性的</em></p>
+<h2 id="Features"><a href="#Features" class="headerlink" title="Features"></a>Features</h2><table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Code</th>
+<th>Feature</th>
+<th>Default</th>
+<th>Conformance</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>OO</td>
+<td>OnOff</td>
+<td>1</td>
+<td>O</td>
+<td>Dependency with the On&#x2F;Off cluster</td>
+</tr>
+<tr>
+<td>1</td>
+<td>LT</td>
+<td>Lighting</td>
+<td>0</td>
+<td>O</td>
+<td>Behavior that supports lighting applications</td>
+</tr>
+<tr>
+<td>2</td>
+<td>FQ</td>
+<td>Frequency</td>
+<td>0</td>
+<td>P</td>
+<td>Supports frequency attributes and behavior</td>
+</tr>
+</tbody></table>
+<h3 id="On-Off-Feature"><a href="#On-Off-Feature" class="headerlink" title="On&#x2F;Off Feature"></a>On&#x2F;Off Feature</h3><p>对于许多应用程序，LevelControl cluster与 On&#x2F;Off cluster之间需要密切的关系。本节介绍实现此服务器集群以及实施 On&#x2F;Off 服务器集群的终端节点所需的依赖项。在 FeatureMap 中的 On&#x2F;Off 功能位存在之前，此集群与 On&#x2F;Off 集群之间存在依赖关系。</p>
+<p>On&#x2F;Off cluster的 OnOff 属性和 Level Control cluster的 CurrentLevel 属性本质上是独立的变量，因为它们位于不同的群集上。但是，<strong>当两个集群都在同一终端节点上实现时，它们之间可能会引入依赖关系。</strong></p>
+<ul>
+<li>Effect of On&#x2F;Off Commands on the CurrentLevel attribute（On&#x2F;Off 命令对 CurrentLevel 属性的影响）</li>
+</ul>
+<p>​	OnLevel 属性决定了 On&#x2F;Off cluster的命令是否对 CurrentLevel 属性产生永久影响。如果定义了此属性（即已实现且不等于 null），则它们确实具有永久效果，否则则不具有。由于淡入淡出&#x2F;淡入淡出，总是存在临时效果。</p>
+<p>​	收到 On&#x2F;Off cluster的各种命令时，对 Level Control cluster的影响，例如，与 Level Control 关联时， On&#x2F;Off 命令的效果表中所述。在此表以及整个群集规范中，“level”表示 CurrentLevel 属性的值。</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action On Receipt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>On</td>
+<td>临时存储 CurrentLevel。将 CurrentLevel 设置为设备允许的最小级别。在 OnOffTransitionTime 时间段内，将 CurrentLevel 更改为 OnLevel，如果未定义 OnLevel，则更改为存储的级别。</td>
+</tr>
+<tr>
+<td>Off</td>
+<td>临时存储 CurrentLevel。将 CurrentLevel 更改为设备在 OnOffTransitionTime 时间段内允许的最小级别。如果未定义 OnLevel，则将 CurrentLevel 设置为存储的级别。</td>
+</tr>
+<tr>
+<td>Toggle</td>
+<td>如果 OnOff 属性的值为 FALSE，则按照 On 命令继续。否则，按照 Off 命令继续</td>
+</tr>
+</tbody></table>
+<p>上表中描述的目的是，在转换完成后，应恢复在发出任何 On、Off 或 Toggle 命令之前生效的 CurrentLevel。如果收到这些命令中的另一个，则在转换完成之前，应保留并恢复最初存储的 CurrentLevel。</p>
+<ul>
+<li>Effect of Level Control Commands on the OnOff Attribute（级别控制命令对 OnOff 属性的影响）</li>
+</ul>
+<p>​	Level Control 群集中提供了两组命令。它们是相同的，除了第一组（MoveToLevel、Move 和 Step 命令）不应影响 OnOff 属性，而第二组（“with On&#x2F;Off”变体）应影响。</p>
+<p>​	第一组用于保持 CurrentLevel 和 OnOff 属性之间的独立性，因此更改 CurrentLevel 不会影响 OnOff 属性。例如，这表示带有单独静音按钮的音量控制的行为，或者 “turn to set level and press to turn on on &#x2F; off” 调光器。</p>
+<p>​	第二组用于链接 CurrentLevel 和 OnOff 属性。当级别降低到最小值时， OnOff 属性会自动变为 FALSE，当级别增加到最小值以上时， OnOff 属性会自动变为 TRUE。例如，这表示没有独立开&#x2F;关开关的调光器的行为。</p>
+<p>​	对于 Stop 命令，包含 StopWithOnOff 只是为了对称，以便轻松选择一组或另一组命令 – 两个 Stop 命令是相同的，因为对 On&#x2F;Off 的依赖性是由正在停止的原始命令决定的。</p>
+<ul>
+<li>Effect of Level Control Commands Depends on OnOff</li>
+</ul>
+<p>​	在引入 Options 属性之前，如果同一端点上 On&#x2F;Off 集群的 OnOff 属性为 FALSE，则除那些以 ‘with On&#x2F;Off’ 为后缀的命令外，所有命令都无效。即使 On&#x2F;Off （OO） 功能集位设置为零，这仍然是正确的。要允许此类命令运行，请参阅下面的 Options 属性。</p>
 <h2 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h2><table>
 <thead>
 <tr>
@@ -755,34 +830,66 @@ if(canvas.getContext){
 <td>LT</td>
 </tr>
 </tbody></table>
-<p><strong>CurrentLevel Attribute</strong></p>
+<ul>
+<li><strong>CurrentLevel Attribute（当前亮度&#x2F;级别）</strong></li>
+</ul>
 <p>该属性暗示着设备当前级别。级别的含义取决于设备。</p>
-<p><strong>RemainingTime Attribute</strong></p>
-<p>该属性暗示着持续时间直到current命令执行完毕，它以十分之秒为单位。</p>
-<p><strong>MinLevel Attribute</strong></p>
-<p>该属性暗示着当前级别可以设置的最小值</p>
-<p><strong>MaxLevel Attribute</strong></p>
+<p>对于灯类，取值范围：1<del>254，即亮度范围，通常映射为1%</del>100%，算法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">level = (value - MinLevel) /(MaxLevel - MinLevel) * 100 </span><br></pre></td></tr></table></figure>
+
+<p>例如：value &#x3D; 200，映射为：79%</p>
+<ul>
+<li><strong>RemainingTime Attribute</strong></li>
+</ul>
+<p>该属性暗示着持续时间直到current命令执行完毕，它以 1&#x2F;10 秒为单位。</p>
+<ul>
+<li><strong>MinLevel Attribute（最小亮度，默认为1，不能为0）</strong></li>
+</ul>
+<p>该属性暗示着当前级别可以设置的最小值。</p>
+<ul>
+<li><strong>MaxLevel Attribute（最大亮度，默认为254）</strong></li>
+</ul>
 <p>该属性暗示着当前级别可以设置的最大值</p>
-<p><strong>CurrentFrequency Attribute</strong></p>
+<ul>
+<li><strong>CurrentFrequency Attribute</strong></li>
+</ul>
 <p>该属性暗示着设备处于当前级别时的频率。当前频率的值为0，表示是未知的。</p>
-<p><strong>MinFrequency Attribute</strong></p>
+<ul>
+<li><strong>MinFrequency Attribute</strong></li>
+</ul>
 <p>该属性暗示着当前频率可以设置的最小值。最小频率属性的值应该小于或等于最大频率属性的值。</p>
-<p><strong>MaxFrequency Attribute</strong></p>
+<ul>
+<li><strong>MaxFrequency Attribute</strong></li>
+</ul>
 <p>该属性暗示着当前频率可以设置的最小值。最大频率属性的值应该大于或等于最小属性的值。</p>
-<p><strong>Options Attribute</strong></p>
+<ul>
+<li><strong>Options Attribute</strong></li>
+</ul>
 <p>此属性应指示设备的选定选项。<br>选项属性是一个位图，它决定了某些集群命令的默认行为。每个依赖于选项属性的命令都应首先构造一个临时的选项位图，该位图在命令处理期间有效。临时选项位图具有与选项属性相同的格式和含义，但包括可能被命令字段覆盖的任何位。</p>
-<p><strong>OnOffTransitionTime Attribute</strong></p>
-<p>此属性应指示当同一个Endpoint上的 OnOff 集群收到On或 Off命令时，移动到目标级别或从目标级别移出所需的时间。以十分之一秒为单位。</p>
-<p><strong>OnLevel Attribute</strong></p>
+<ul>
+<li><strong>OnOffTransitionTime Attribute</strong></li>
+</ul>
+<p>此属性应指示当同一个Endpoint上的 OnOff 集群收到On或 Off命令时，移动到目标级别或从目标级别移出所需的时间。以 1&#x2F;10 秒为单位。</p>
+<ul>
+<li><strong>OnLevel Attribute（设备开启时的默认亮度）</strong></li>
+</ul>
 <p>此属性应指示当同一Endpoint上的 OnOff 集群的 OnOff 属性设置为 TRUE 时， CurrentLevel 属性被设置的值，这是处理 OnOff 集群命令的结果。如果未实现 OnLevel 属性，或将其设置为空值，则它不起作用。有关更多详细信息，请参阅开&#x2F;关命令对 CurrentLevel 属性的影响。</p>
-<p><strong>OnTrasitionTime Attribute</strong></p>
+<ul>
+<li><strong>OnTrasitionTime Attribute</strong></li>
+</ul>
 <p>此属性应指示当同一 Endpoint 上的 OnOff 集群收到 On 命令时，将当前级别从最低级别移至最高级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
-<p><strong>OffTransitionTime Attribute</strong></p>
+<ul>
+<li><strong>OffTransitionTime Attribute</strong></li>
+</ul>
 <p>此属性应指示当同一 Endpoint上 的 OnOff 集群收到 Off 命令时，将当前级别从最高级别移至最低级别所需的时间。它以 1&#x2F;10 秒为单位指定。如果未实现此属性，或包含空值，则应使用 OnOffTransitionTime。</p>
-<p><strong>DefaultMoveRate Attribute</strong></p>
+<ul>
+<li><strong>DefaultMoveRate Attribute</strong></li>
+</ul>
 <p>当收到带有空值速率参数的移动命令时，此属性应指示移动速率（以单位&#x2F;秒为单位）。</p>
-<p><strong>StartUpCurrentLevel Attribute</strong></p>
-<p>此属性应指示设备通电时所需的启动级别，并且此级别应反映在 CurrentLevel 属性中。StartUpCurrentLevel 属性的值如下所列：</p>
+<ul>
+<li><strong>StartUpCurrentLevel Attribute</strong></li>
+</ul>
+<p>此属性应指示<strong>设备通电时</strong>所需的启动级别，并且此级别应反映在 CurrentLevel 属性中。StartUpCurrentLevel 属性的值如下所列：</p>
 <table>
 <thead>
 <tr>
@@ -888,11 +995,15 @@ if(canvas.getContext){
 <td>M</td>
 </tr>
 </tbody></table>
-<p><strong>MoveToLevel Command</strong></p>
+<ul>
+<li><strong>MoveToLevel Command</strong></li>
+</ul>
 <p>收到此命令后，设备应从其当前级别移至级别字段中指定的值。“级别”的含义取决于设备 - 例如，对于灯来说，它可能表示亮度级别。</p>
 <p>移动应尽可能在技术上可行，即不是阶跃函数，并且移动到新级别所需的时间应等于 TransitionTime 字段的值（以十分之一秒为单位），或尽可能接近该值。</p>
 <p>如果 TransitionTime 字段的值为 null，则移动到新级别所需的时间应由 OnOffTransitionTime 属性决定。如果不存在 OnOffTransitionTime（可选属性），则设备应尽快移动到新级别。</p>
-<p><strong>Move Command</strong></p>
+<ul>
+<li><strong>Move Command</strong></li>
+</ul>
 <p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
 <p>收到此命令后，设备应从其当前级别开始以连续的方式向上或向下移动，如下所述：</p>
 <table>
@@ -911,7 +1022,9 @@ if(canvas.getContext){
 <td>按照“速率”字段中指定的速率降低设备的级别。如果级别达到设备允许的最低水平，则停止。</td>
 </tr>
 </tbody></table>
-<p><strong>Step Command</strong></p>
+<ul>
+<li><strong>Step Command</strong></li>
+</ul>
 <p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
 <p>收到此命令后，设备应从其当前级别向上或向下移动，如下所述：</p>
 <table>
@@ -930,13 +1043,19 @@ if(canvas.getContext){
 <td>将 CurrentLevel 降低 StepSize 单位，或直到达到设备允许的最低级别（如果在此过程中已达到）。在后一种情况下，过渡时间应按比例减少。</td>
 </tr>
 </tbody></table>
-<p><strong>Stop Command</strong></p>
+<ul>
+<li><strong>Stop Command</strong></li>
+</ul>
 <p>收到此命令后，设备应首先创建并处理临时选项位图，如 MoveToLevel 命令中所述。</p>
 <p>收到此命令后，当前正在执行的任何 MoveToLevel、Move 或 Step 命令（及其“带开&#x2F;关”变体）都应终止。收到 Stop 命令后，CurrentLevel 的值应保留为原值，RemainingTime 应设置为零。</p>
 <p>此命令在命令列表中有两个条目，一个用于 MoveToLevel、Move 和 Step 命令，另一个用于它们的“带 On&#x2F;Off”对应项。这只是为了对称，以便轻松选择一组或另一组命令 - Stop 命令是相同的，因为 On&#x2F;Off 的依赖性由要停止的原始命令决定。</p>
-<p><strong>MoveToClosestFrequecny Command</strong></p>
+<ul>
+<li><strong>MoveToClosestFrequecny Command</strong></li>
+</ul>
 <p>收到此命令后，设备应将其当前频率更改为请求的频率，或更改为其可以生成的最接近的频率。如果设备无法接近该频率，则应返回默认响应，错误代码为 CONSTRAINT_ERROR。确定请求的频率是否可以近似为支持的频率是制造商特定的决定。</p>
-<p><strong>With On&#x2F;Off Commands</strong></p>
+<ul>
+<li><strong>With On&#x2F;Off Commands</strong></li>
+</ul>
 <p>MoveToLevelWithOnOff、MoveWithOnOff 和 StepWithOnOff 命令分别与 MoveToLevel、Move 和 Step 命令具有相同的数据字段。</p>
 
     </div>

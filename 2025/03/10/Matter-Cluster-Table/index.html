@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="googleb175dd185668db05.html">
+  <meta name="msvalidate.01" content="BingSiteAuth.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC|Roboto/css?family=Noto+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Matter Table">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matter: Cluster and DeviceType Table">
+<meta property="og:url" content="https://eisouthboy.github.io/2025/03/10/Matter-Cluster-Table/index.html">
+<meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
+<meta property="og:description" content="Matter Table">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-10T19:25:25.000Z">
+<meta property="article:modified_time" content="2025-04-01T06:19:07.000Z">
+<meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="Matter Cluster">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://eisouthboy.github.io/2025/03/10/Matter-Cluster-Table/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2025/03/10/Matter-Cluster-Table/","path":"2025/03/10/Matter-Cluster-Table/","title":"Matter: Cluster and DeviceType Table"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Matter: Cluster and DeviceType Table | eiSouthBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">eiSouthBoy's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">102</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">82</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-Table"><span class="nav-number">1.</span> <span class="nav-text">Cluster Table</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%BF%85%E9%80%89-Cluster%EF%BC%88Root-Node-Endpoint-0-%E5%BF%85%E9%A1%BB%E5%AE%9E%E7%8E%B0%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">核心必选 Cluster（Root Node Endpoint 0 必须实现）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%8A%9F%E8%83%BD-Cluster%EF%BC%88%E6%A0%B9%E6%8D%AE%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B%E9%80%89%E6%8B%A9%E5%AE%9E%E7%8E%B0%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">通用功能 Cluster（根据设备类型选择实现）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E4%B8%93%E7%94%A8-Cluster"><span class="nav-number">1.3.</span> <span class="nav-text">设备专用 Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%AE%89%E5%85%A8-Cluster"><span class="nav-number">1.4.</span> <span class="nav-text">网络与安全 Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BA%A4%E4%BA%92-Cluster"><span class="nav-number">1.5.</span> <span class="nav-text">用户交互 Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81-Cluster"><span class="nav-number">1.6.</span> <span class="nav-text">其他重要 Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%82%E5%95%86%E8%87%AA%E5%AE%9A%E4%B9%89-Cluster"><span class="nav-number">1.7.</span> <span class="nav-text">厂商自定义 Cluster</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DeviceType-Table"><span class="nav-number">2.</span> <span class="nav-text">DeviceType Table</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="eiSouthBoy"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">eiSouthBoy</p>
+  <div class="site-description" itemprop="description">Talk is cheap. Show me your code.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">102</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eiSouthBoy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eiSouthBoy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/about/index.html" title="E-Mail → &#x2F;about&#x2F;index.html" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/caojun97/" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;caojun97&#x2F;" rel="noopener" target="_blank">cnblogs</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://eisouthboy.github.io/2025/03/10/Matter-Cluster-Table/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="eiSouthBoy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eiSouthBoy's Blog">
+      <meta itemprop="description" content="Talk is cheap. Show me your code.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Matter: Cluster and DeviceType Table | eiSouthBoy's Blog">
+      <meta itemprop="description" content="Matter Table">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Matter: Cluster and DeviceType Table
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-03-10 19:25:25" itemprop="dateCreated datePublished" datetime="2025-03-10T19:25:25+00:00">2025-03-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-04-01 06:19:07" itemprop="dateModified" datetime="2025-04-01T06:19:07+00:00">2025-04-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Matter/" itemprop="url" rel="index"><span itemprop="name">Matter</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">Matter Table</div>
+ 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>以下是 Matter v1.4 中所有标准 Cluster 的完整列表，包含 十进制&#x2F;十六进制 ID 和核心功能说明。这些 Cluster 分为 必选 和 可选 两类，适用于不同设备类型。</p>
+<h2 id="Cluster-Table"><a href="#Cluster-Table" class="headerlink" title="Cluster Table"></a>Cluster Table</h2><h3 id="核心必选-Cluster（Root-Node-Endpoint-0-必须实现）"><a href="#核心必选-Cluster（Root-Node-Endpoint-0-必须实现）" class="headerlink" title="核心必选 Cluster（Root Node Endpoint 0 必须实现）"></a>核心必选 Cluster（Root Node Endpoint 0 必须实现）</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Basic Information</strong></td>
+<td><strong>40</strong></td>
+<td><strong>0x0028</strong></td>
+<td><strong>设备基础信息（厂商ID、固件版本、序列号等）</strong></td>
+</tr>
+<tr>
+<td>Access Control</td>
+<td>31</td>
+<td>0x001F</td>
+<td>管理访问权限（用户权限、ACL 列表）</td>
+</tr>
+<tr>
+<td>General Commissioning</td>
+<td>48</td>
+<td>0x0030</td>
+<td>配网流程控制（网络扫描、加入网络、超时设置）</td>
+</tr>
+<tr>
+<td><strong>Network Commissioning</strong></td>
+<td><strong>49</strong></td>
+<td><strong>0x0031</strong></td>
+<td><strong>网络配置（Wi-Fi&#x2F;Thread 连接、信道选择）</strong></td>
+</tr>
+<tr>
+<td>General Diagnostic</td>
+<td>51</td>
+<td>0x0033</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Administrator Commissioning</strong></td>
+<td><strong>60</strong></td>
+<td><strong>0x003C</strong></td>
+<td><strong>管理员配网（设备重置、重新配网）</strong></td>
+</tr>
+<tr>
+<td><strong>Node Operational Credentials</strong></td>
+<td><strong>62</strong></td>
+<td><strong>0x003E</strong></td>
+<td><strong>安全凭证管理（根证书、操作证书）</strong></td>
+</tr>
+<tr>
+<td>Group Key Management</td>
+<td>63</td>
+<td>0x003F</td>
+<td>组密钥管理（群组通信加密）</td>
+</tr>
+<tr>
+<td>Localization Configuration</td>
+<td>43</td>
+<td>0x002B</td>
+<td>本地化配置（语言、时区）</td>
+</tr>
+<tr>
+<td>Time Sync</td>
+<td>56</td>
+<td>0x0038</td>
+<td>时间同步（UTC 时间、时区）</td>
+</tr>
+<tr>
+<td><strong>Descriptor</strong></td>
+<td><strong>29</strong></td>
+<td><strong>0x001D</strong></td>
+<td><strong>端点功能描述（设备类型、支持的Cluster列表）</strong></td>
+</tr>
+</tbody></table>
+<p>来源于：Matter-1.4-Device-Library-Specification.pdf 第2.1节 Root Node 的 Cluster Requirements</p>
+<h3 id="通用功能-Cluster（根据设备类型选择实现）"><a href="#通用功能-Cluster（根据设备类型选择实现）" class="headerlink" title="通用功能 Cluster（根据设备类型选择实现）"></a>通用功能 Cluster（根据设备类型选择实现）</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>On&#x2F;Off</td>
+<td>6</td>
+<td>0x0006</td>
+<td>开关控制（如灯、插座）</td>
+</tr>
+<tr>
+<td>Level Control</td>
+<td>8</td>
+<td>0x0008</td>
+<td>亮度&#x2F;级别控制（调光灯、风扇速度）</td>
+</tr>
+<tr>
+<td>Color Control</td>
+<td>768</td>
+<td>0x0300</td>
+<td>颜色控制（RGB 灯、色温调节）</td>
+</tr>
+<tr>
+<td>Thermostat</td>
+<td>513</td>
+<td>0x0201</td>
+<td>温控器（温度设定、模式切换）</td>
+</tr>
+<tr>
+<td>Door Lock</td>
+<td>257</td>
+<td>0x0101</td>
+<td>门锁控制（锁定&#x2F;解锁、用户密码管理）</td>
+</tr>
+<tr>
+<td>Window Covering</td>
+<td>258</td>
+<td>0x0102</td>
+<td>窗帘控制（升降、位置调节）</td>
+</tr>
+<tr>
+<td>Power Source</td>
+<td>47</td>
+<td>0x002F</td>
+<td>电源管理（电池电量、充电状态）</td>
+</tr>
+<tr>
+<td>Occupancy Sensing</td>
+<td>1030</td>
+<td>0x0406</td>
+<td>人体&#x2F;环境感应（移动检测、光照度）</td>
+</tr>
+</tbody></table>
+<h3 id="设备专用-Cluster"><a href="#设备专用-Cluster" class="headerlink" title="设备专用 Cluster"></a>设备专用 Cluster</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Illuminance Measurement</td>
+<td>1024</td>
+<td>0x0400</td>
+<td>光照度传感器（单位：lux）</td>
+</tr>
+<tr>
+<td>Temperature Measurement</td>
+<td>1025</td>
+<td>0x0401</td>
+<td>温度传感器（单位：℃）</td>
+</tr>
+<tr>
+<td>Pressure Measurement</td>
+<td>1026</td>
+<td>0x0402</td>
+<td>压力传感器（单位：kPa）</td>
+</tr>
+<tr>
+<td>Flow Measurement</td>
+<td>1027</td>
+<td>0x0403</td>
+<td>流量传感器（单位：m³&#x2F;h）</td>
+</tr>
+<tr>
+<td>Relative Humidity</td>
+<td>1028</td>
+<td>0x0404</td>
+<td>湿度传感器（单位：%）</td>
+</tr>
+<tr>
+<td>Carbon Dioxide Measurement</td>
+<td>1034</td>
+<td>0x040A</td>
+<td>CO₂浓度检测（单位：ppm）</td>
+</tr>
+<tr>
+<td>Smoke CO Alarm</td>
+<td>1285</td>
+<td>0x0505</td>
+<td>烟雾&#x2F;CO报警器（报警状态、自检）</td>
+</tr>
+</tbody></table>
+<h3 id="网络与安全-Cluster"><a href="#网络与安全-Cluster" class="headerlink" title="网络与安全 Cluster"></a>网络与安全 Cluster</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ethernet Network Diagnostics</td>
+<td>55</td>
+<td>0x0037</td>
+<td>以太网诊断（连接状态、错误统计）</td>
+</tr>
+<tr>
+<td>Wi-Fi Network Diagnostics</td>
+<td>54</td>
+<td>0x0036</td>
+<td>Wi-Fi诊断（信号强度、信道干扰）</td>
+</tr>
+<tr>
+<td>Thread Network Diagnostics</td>
+<td>53</td>
+<td>0x0035</td>
+<td>Thread网络诊断（PAN ID、路由表）</td>
+</tr>
+<tr>
+<td>Software Diagnostics</td>
+<td>52</td>
+<td>0x0034</td>
+<td>软件诊断（崩溃日志、内存使用）</td>
+</tr>
+<tr>
+<td>General Diagnostics</td>
+<td>51</td>
+<td>0x0033</td>
+<td>硬件诊断（温度、电压、运行状态）</td>
+</tr>
+</tbody></table>
+<h3 id="用户交互-Cluster"><a href="#用户交互-Cluster" class="headerlink" title="用户交互 Cluster"></a>用户交互 Cluster</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User Label</td>
+<td>65</td>
+<td>0x0041</td>
+<td>用户标签（自定义设备名称）</td>
+</tr>
+<tr>
+<td>Fixed Label</td>
+<td>64</td>
+<td>0x0040</td>
+<td>固定标签（预置的设备标识，如“卧室灯”）</td>
+</tr>
+<tr>
+<td>Mode Select</td>
+<td>85</td>
+<td>0x0055</td>
+<td>模式选择（如风扇的“自然风&#x2F;睡眠模式”）</td>
+</tr>
+<tr>
+<td>Account Login</td>
+<td>1294</td>
+<td>0x050E</td>
+<td>账户登录（用户身份验证）</td>
+</tr>
+</tbody></table>
+<h3 id="其他重要-Cluster"><a href="#其他重要-Cluster" class="headerlink" title="其他重要 Cluster"></a>其他重要 Cluster</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bridged Device Basic Information</strong></td>
+<td>57</td>
+<td>0x0039</td>
+<td>桥接设备基础信息（用于网关设备）</td>
+</tr>
+<tr>
+<td>Ota Software Update Provider</td>
+<td>62</td>
+<td>0x003E</td>
+<td>固件升级（OTA 更新服务端）</td>
+</tr>
+<tr>
+<td>Ota Software Update Requestor</td>
+<td>61</td>
+<td>0x003D</td>
+<td>固件升级请求（客户端发起更新）</td>
+</tr>
+<tr>
+<td>Wake on LAN</td>
+<td>1283</td>
+<td>0x0503</td>
+<td>网络唤醒（通过以太网唤醒设备）</td>
+</tr>
+</tbody></table>
+<h3 id="厂商自定义-Cluster"><a href="#厂商自定义-Cluster" class="headerlink" title="厂商自定义 Cluster"></a>厂商自定义 Cluster</h3><table>
+<thead>
+<tr>
+<th><strong>Cluster 名称</strong></th>
+<th><strong>十进制 ID</strong></th>
+<th><strong>十六进制 ID</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vendor-Specific</td>
+<td>0xFC00~0xFFFE</td>
+<td>自定义范围</td>
+<td>厂商自定义功能（需向 CSA 申请 ID 范围）</td>
+</tr>
+</tbody></table>
+<h2 id="DeviceType-Table"><a href="#DeviceType-Table" class="headerlink" title="DeviceType Table"></a>DeviceType Table</h2><p><strong>lighting（灯类）</strong></p>
+<table>
+<thead>
+<tr>
+<th>Device 名称</th>
+<th>十进制 ID</th>
+<th>十六进制 ID</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>On&#x2F;Off Light</td>
+<td>256</td>
+<td>0x0100</td>
+<td>开关灯</td>
+</tr>
+<tr>
+<td>Dimmable Light</td>
+<td>257</td>
+<td>0x0101</td>
+<td>调光灯</td>
+</tr>
+<tr>
+<td>Color Temperature Light</td>
+<td>268</td>
+<td>0x010C</td>
+<td>色温灯</td>
+</tr>
+<tr>
+<td>Extended Color Light</td>
+<td>269</td>
+<td>0x010D</td>
+<td>扩展灯</td>
+</tr>
+</tbody></table>
+<p><strong>插头&#x2F;插座和其他执行器</strong></p>
+<table>
+<thead>
+<tr>
+<th>Device 名称</th>
+<th>十进制 ID</th>
+<th>十六进制 ID</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>On&#x2F;Off Plug-in Unit</td>
+<td>266</td>
+<td>0x010A</td>
+<td>带开关的插头单元</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>其他设备类型</strong></p>
+<table>
+<thead>
+<tr>
+<th>Device 名称</th>
+<th>十进制 ID</th>
+<th>十六进制 ID</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Root Node</td>
+<td>22</td>
+<td>0x0016</td>
+<td>root node endpoint，对于任何一个Matter设备，Root Node都作为root endpoint 0。另外对于Endpoint Composition，Root Node endpoint 下Descriptor cluster 的 PartsList attribute 应该包含所有其他endpoint。</td>
+</tr>
+<tr>
+<td>Bridged Node</td>
+<td>19</td>
+<td>0x0013</td>
+<td>Bridged Node root endpoint，一般都为Aggregator设备的Descriptor Cluster 的 PartsList Attribute。另外对于Endpoint Composition，Bridged Node支持两种composition pattern：Separate Endpoint 和 One Endpoint。</td>
+</tr>
+<tr>
+<td>Aggregator</td>
+<td>14</td>
+<td>0x000E</td>
+<td>聚合类型，一般用于Matter Bridge网关设备</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Separate Endpoint（单独的端点）</p>
+<p>所有应用程序设备类型均在单独的端点上支持，而不是在桥接节点端点（Bridged Node Endpoint）上支持。桥接的节点端点的描述符群集零件列表（即Descriptor Cluster下 PartsList Attribute）应指示代表桥接设备功能的所有端点的列表，包括支持应用程序设备类型的端点，即系统模型规范中定义的全家庭模式。</p>
+</li>
+<li><p>One Endpoint</p>
+<p>同一终端节点支持桥接节点和一个或多个应用程序设备类型（遵循应用程序设备类型规则）。端点组合应符合应用程序设备类型定义。</p>
+</li>
+</ul>
+<p>对于Matter Bridge的核心概念需要参考：Matter-1.4-Core-Specification-1.pdf 第9.12节</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Matter-Cluster/" rel="tag"># Matter Cluster</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/03/03/Matter-Root-Node/" rel="prev" title="Matter Device：Root Node">
+                  <i class="fa fa-angle-left"></i> Matter Device：Root Node
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/03/19/Matter-Basic-Information-Cluster/" rel="next" title="Matter: Basic Information Cluster">
+                  Matter: Basic Information Cluster <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">eiSouthBoy</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/eiSouthBoy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
