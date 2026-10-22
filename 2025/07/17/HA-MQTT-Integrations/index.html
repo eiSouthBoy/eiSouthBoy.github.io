@@ -21,16 +21,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"eisouthboy.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}}},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Talk is cheap. Show me your code.">
+    <meta name="description" content="homeassistant内部集成了MQTT功能，可以将设备通过MQTT集成到HA，并且可以同步设备控制状态。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="eiSouthBoy&#39;s Blog">
+<meta property="og:title" content="HA MQTT Integrations">
 <meta property="og:url" content="https://eisouthboy.github.io/2025/07/17/HA-MQTT-Integrations/index.html">
 <meta property="og:site_name" content="eiSouthBoy&#39;s Blog">
-<meta property="og:description" content="Talk is cheap. Show me your code.">
+<meta property="og:description" content="homeassistant内部集成了MQTT功能，可以将设备通过MQTT集成到HA，并且可以同步设备控制状态。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-07-17T06:26:55.714Z">
-<meta property="article:modified_time" content="2025-07-17T06:26:55.714Z">
+<meta property="article:published_time" content="2025-07-17T14:40:00.000Z">
+<meta property="article:modified_time" content="2025-07-18T08:22:29.582Z">
 <meta property="article:author" content="eiSouthBoy">
+<meta property="article:tag" content="homeassistant">
+<meta property="article:tag" content="MQTT">
 <meta name="twitter:card" content="summary">
 
 
@@ -38,10 +40,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2025/07/17/HA-MQTT-Integrations/","path":"2025/07/17/HA-MQTT-Integrations/","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://eisouthboy.github.io/2025/07/17/HA-MQTT-Integrations/","path":"2025/07/17/HA-MQTT-Integrations/","title":"HA MQTT Integrations"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title> | eiSouthBoy's Blog</title>
+<title>HA MQTT Integrations | eiSouthBoy's Blog</title>
   
 
 
@@ -89,7 +91,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">102</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">82</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">106</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">18</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">83</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -127,7 +129,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -140,6 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E4%B8%BB%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">发现主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%8F%91%E7%8E%B0%E6%9C%89%E6%95%88%E8%BD%BD%E8%8D%B7"><span class="nav-number">2.2.</span> <span class="nav-text">设备发现有效载荷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Event"><span class="nav-number">2.2.1.</span> <span class="nav-text">Event</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sensor"><span class="nav-number">2.2.2.</span> <span class="nav-text">Sensor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Switch"><span class="nav-number">2.2.3.</span> <span class="nav-text">Switch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Button"><span class="nav-number">2.2.4.</span> <span class="nav-text">Button</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Update"><span class="nav-number">2.2.5.</span> <span class="nav-text">Update</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">触发器</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -154,18 +157,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">102</span>
+        <span class="site-state-item-count">106</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -493,12 +496,12 @@ if(canvas.getContext){
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | eiSouthBoy's Blog">
-      <meta itemprop="description" content="">
+      <meta itemprop="name" content="HA MQTT Integrations | eiSouthBoy's Blog">
+      <meta itemprop="description" content="homeassistant内部集成了MQTT功能，可以将设备通过MQTT集成到HA，并且可以同步设备控制状态。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          HA MQTT Integrations
         </h1>
 
         <div class="post-meta-container">
@@ -509,7 +512,23 @@ if(canvas.getContext){
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2025-07-17 06:26:55" itemprop="dateCreated datePublished" datetime="2025-07-17T06:26:55+00:00">2025-07-17</time>
+      <time title="Created: 2025-07-17 14:40:00" itemprop="dateCreated datePublished" datetime="2025-07-17T14:40:00+00:00">2025-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-07-18 08:22:29" itemprop="dateModified" datetime="2025-07-18T08:22:29+00:00">2025-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/HA/" itemprop="url" rel="index"><span itemprop="name">HA</span></a>
+        </span>
     </span>
 
   
@@ -522,6 +541,7 @@ if(canvas.getContext){
     </span>
 </div>
 
+            <div class="post-description">homeassistant内部集成了MQTT功能，可以将设备通过MQTT集成到HA，并且可以同步设备控制状态。</div>
  
         </div>
       </header>
@@ -529,7 +549,130 @@ if(canvas.getContext){
     
     
     
-    <div class="post-body" itemprop="articleBody">
+    <div class="post-body" itemprop="articleBody"><p>参考来源：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/mqtt/">Home Assistant MQTT</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/device_trigger.mqtt/">Home Assistant MQTT Device trigger</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://www.mqtt.cn/1101.html">深入理解Home Assistant MQTT：配置、自动化、发布等</a></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>在 Home Assistant（简称HA） 使用 MQTT功能的前提条件：</p>
+<ul>
+<li><p>MQTT Integration</p>
+<p>在HA中添加方式：Settings -&gt; Devices &amp; services。若在Discovered能够出现 <code>MQTT</code> 可以直接点击“ADD”，否则，点击“ADD INTEGRATION”，搜索“MQTT”，点击添加。</p>
+</li>
+<li><p>MQTT Broker</p>
+<p>可以在HA中通过Add-ons方式安装MQTT Broker，当然也可以使用其他主机中的MQTT Broker。</p>
+<p>在HA中添加方式：Settings -&gt; Add-ons -&gt; ADD-ON STORE。可以在 Official add-ons 中找到 “Mosquitto broker”，点击安装。</p>
+</li>
+</ul>
+<h2 id="发现"><a href="#发现" class="headerlink" title="发现"></a>发现</h2><p>在HA中可以通过三种方式来发现设备：</p>
+<ul>
+<li>通过 MQTT 发现配置MQTT组件</li>
+<li>通过 YAML 配置MQTT组件</li>
+<li>通过 子条目配置MQTT组件</li>
+</ul>
+<p>这里主要介绍一下 MQTT发现。在设备端按照HA MQTT设备发现规定的数据格式，将主题和消息发布到MQTT Broker后，HA端可以发现设备，并添加设备到MQTT集成。</p>
+<h3 id="发现主题"><a href="#发现主题" class="headerlink" title="发现主题"></a>发现主题</h3><p>发现主题特定的格式：<code>&lt;discovery_prefix&gt;/&lt;component&gt;/[&lt;node_id&gt;/]&lt;object_id&gt;/config</code></p>
+<ul>
+<li><code>&lt;discovery_prefix&gt;</code>：发现前缀默认为 <code>homeassistant</code>，该前缀可以修改。</li>
+<li><code>&lt;component&gt;</code>：受支持的MQTT集成之一。 </li>
+<li><code>&lt;node_id&gt;</code>：可选，提供主题的节点ID，HA不会使用此ID，但可用于构建MQTT主题。</li>
+<li><code>&lt;object_id&gt;</code>：设备的ID。这仅用于为每个设备创建单独的主题，不用于 <code>entity_id</code>。</li>
+</ul>
+<p>可以将<code>&lt;node_id&gt;</code>忽略，而将<code>&lt;object_id&gt;</code> 改为 <code>&lt;unique_id&gt;</code>更具有实用性。</p>
+<h3 id="设备发现有效载荷"><a href="#设备发现有效载荷" class="headerlink" title="设备发现有效载荷"></a>设备发现有效载荷</h3><p>有效载荷的格式需要根据具体的类型来决定，当前已经支持的类型有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/alarm_control_panel.mqtt/">Alarm control panel</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/binary_sensor.mqtt/">Binary sensor</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/button.mqtt/">Button</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/camera.mqtt/">Camera</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/cover.mqtt/">Cover</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/device_tracker.mqtt/">Device tracker</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/device_trigger.mqtt/">Device trigger</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/event.mqtt/">Event</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/fan.mqtt/">Fan</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/humidifier.mqtt/">Humidifier</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/image.mqtt/">Image</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/climate.mqtt/">Climate&#x2F;HVAC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/lawn_mower.mqtt/">Lawn mower</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/light.mqtt/">Light</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/lock.mqtt/">Lock</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/notify.mqtt/">Notify</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/number.mqtt/">Number</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/scene.mqtt/">Scene</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/select.mqtt/">Select</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/sensor.mqtt/">Sensor</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/siren.mqtt/">Siren</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/switch.mqtt/">Switch</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/update.mqtt/">Update</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/tag.mqtt/">Tag scanner</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/text.mqtt/">Text</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/vacuum.mqtt/">Vacuum</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/valve.mqtt/">Valve</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/water_heater.mqtt/">Water heater</a></li>
+</ul>
+<p>对部分类型进行详细介绍。</p>
+<h4 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h4><p><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/event.mqtt/"><code>mqtt</code>事件平台</a>允许您处理来自 MQTT 消息的事件信息。事件是在发生某些事件时发出的信号，例如，当用户按下门铃等物理按钮或遥控器上的按钮时。借助事件，您可以发送一些事件属性，使其成为实体的属性。MQTT 事件是无状态的。例如，门铃没有“开”或“关”之类的状态，而是被短暂按下。</p>
+<p>Topic：<code>homeassistant/event/701ECD78-press-1/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;connections&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;mac&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;70:1E:CD:78&quot;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;hw_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;manufacturer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SONOFF&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Smate&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Smate&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serial_number&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sw_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;event_types&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;Single press&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;Double press&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;Long press&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;availability_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m-subdevice/event/701ECD78-press-1/availability&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;state_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m-subdevice/event/701ECD78-press-1/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;event&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unique_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78-press-1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;value_template&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;\&quot;event_type\&quot;: \&quot;&#123;&#123; value_json.press &#125;&#125;\&quot;&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device_class&quot;</span><span class="punctuation">:</span> <span class="string">&quot;button&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Channel 1&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><code>event_type</code>：必选项</li>
+<li><code>platform</code>：必选项，值为event</li>
+<li><code>state_topic</code>：必选项，该主题的payload必须包含 <code>event_type</code> 字段，且该字段的值应该是 <code>event_type</code> 列表元素之一。</li>
+</ul>
+<h4 id="Sensor"><a href="#Sensor" class="headerlink" title="Sensor"></a>Sensor</h4><p><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/sensor.mqtt/"><code>mqtt</code>传感器平台</a>使用 MQTT 消息负载作为传感器值。如果此平台中的消息<code>state_topic</code>发布时带有<em>RETAIN</em>标志，传感器将收到包含最新已知值的即时更新。否则，初始状态将为未定义状态。</p>
+<p>Topic：<code>homeassistant/sensor/701ECD78-pairing-time/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;availability_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m-subdevice/sensor/701ECD78-pairing-time/availability&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;state_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m-subdevice/sensor/701ECD78-pairing-time/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sensor&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unique_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78-pairing-time&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;entity_category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;diagnostic&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;value_template&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;&#123; value_json.time &#125;&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Pairing time&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><code>platform</code>：必选项，值为sensor</li>
+<li><code>state_topic</code>：必选项</li>
+</ul>
+<h4 id="Switch"><a href="#Switch" class="headerlink" title="Switch"></a>Switch</h4><p><a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/switch.mqtt/"><code>mqtt</code>开关平台</a>可以用于控制设备属性打开&#x2F;关闭。</p>
+<p>Topic：<code>homeassistant/switch/E465B8CA6D98-ap-switch/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;availability_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/switch/E465B8CA6D98-ap-switch/availability&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;state_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/switch/E465B8CA6D98-ap-switch/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;switch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unique_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98-ap-switch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;AP(Access point)&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;command_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/switch/E465B8CA6D98-ap-switch/set&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device_class&quot;</span><span class="punctuation">:</span> <span class="string">&quot;switch&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><code>command_topic</code>：必选项，该主题用来发布命令来改变开关的状态。该主题的payload默认值为：<code>OFF</code> 或者 <code>ON</code></li>
+<li><code>platform</code>：必选项，值为switch</li>
+</ul>
+<h4 id="Button"><a href="#Button" class="headerlink" title="Button"></a>Button</h4><p><code>mqtt</code> 按钮平台允许您在前端按下按钮或调用按钮按下操作时发送 MQTT 消息。这可用于公开远程设备的某些服务，例如重启。</p>
+<p>Topic：<code>homeassistant/button/E465B8CA6D98-system-restart/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;availability_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/button/E465B8CA6D98-system-restart/availability&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;state_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/button/E465B8CA6D98-system-restart/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;button&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unique_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98-system-restart&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Restart&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;entity_category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;config&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;command_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/button/E465B8CA6D98-system-restart/set&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device_class&quot;</span><span class="punctuation">:</span> <span class="string">&quot;restart&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;payload_press&quot;</span><span class="punctuation">:</span> <span class="string">&quot;restart&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><code>command_topic</code>：必选项，触发案件来发布控制命令的MQTT消息</li>
+<li><code>platform</code>：必选项，值为button</li>
+</ul>
+<h4 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h4><p><code>mqtt</code> 更新平台允许您将可能通过 MQTT 公开已安装固件&#x2F;软件及其最新版本的设备作为更新实体集成到 Home Assistant 中。每次收到配置中 <code>topic</code> 下的消息时，该实体都会在 Home Assistant 中更新。</p>
+<p>Topic：<code>homeassistant/update/E465B8CA6D98-esp32d0wdr2-update/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;availability_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/update/E465B8CA6D98-esp32d0wdr2-update/availability&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;state_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/update/E465B8CA6D98-esp32d0wdr2-update/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;update&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;object_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unique_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;E465B8CA6D98-esp32d0wdr2-update&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;entity_category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;config&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;command_topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m/update/E465B8CA6D98-esp32d0wdr2-update/set&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device_class&quot;</span><span class="punctuation">:</span> <span class="string">&quot;firmware&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;payload_install&quot;</span><span class="punctuation">:</span> <span class="string">&quot;update_fw&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ESP32D0WDR2 firmware&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><code>platform</code>：必选项，值为update</li>
+</ul>
+<h2 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h2><p><code>mqtt</code> 设备触发平台使用 MQTT 消息有效负载来生成设备触发事件。MQTT设备触发器仅支持通过MQTT发现，不支持手动设备 <code>configuration.yaml</code>。</p>
+<p>Topic：<code>homeassistant/device_automation/701ECD78-press-1/singlePress/config</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;platform&quot;</span><span class="punctuation">:</span> <span class="string">&quot;device_automation&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Button 1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;automation_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;trigger&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;subtype&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Long press&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;payload&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Long press&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;topic&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dongle-m-subdevice/event/701ECD78-press-1/state&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;value_template&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;&#123; value_json.press &#125;&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Smate&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Smate&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;identifiers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;701ECD78&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;manufacturer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SONOFF&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sw_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><p><code>platform</code>：必选项，值为device_automation</p>
+</li>
+<li><p><code>type</code>：触发类型</p>
+</li>
+<li><p><code>subtype</code>：触发子类型，<code>type</code> 和 <code>subtype</code> 一起组合成了触发类型</p>
+</li>
+<li><p><code>topic</code>：由该主题来作为触发条件</p>
+</li>
+<li><p><code>payload</code>：由主题中的负载决定触发条件中的具体事件</p>
+</li>
+</ul>
+
     </div>
 
     
@@ -537,6 +680,10 @@ if(canvas.getContext){
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/homeassistant/" rel="tag"># homeassistant</a>
+              <a href="/tags/MQTT/" rel="tag"># MQTT</a>
+          </div>
 
         
 
@@ -547,6 +694,9 @@ if(canvas.getContext){
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/07/29/ERF32-Zigbee-Thread/" rel="next" title="Zigbee and Thread">
+                  Zigbee and Thread <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -566,7 +716,7 @@ if(canvas.getContext){
 
   <div class="copyright">
     &copy; 2021 – 
-    <span itemprop="copyrightYear">2025</span>
+    <span itemprop="copyrightYear">2026</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
